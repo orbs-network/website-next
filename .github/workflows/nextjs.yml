@@ -77,10 +77,10 @@ jobs:
         run: ${{ steps.detect-package-manager.outputs.runner }} next build
       - name: Set Environment Variables
         env:
-          NEXT_PUBLIC_BASE_PATH_URL: /${{ github.event.repository.name }}
+          BASE_PATH: /website-next
         run: |
-          echo "" > .env
-          echo NEXT_PUBLIC_BASE_PATH_URL=$NEXT_PUBLIC_BASE_PATH_URL >> .env
+          echo "" > .env.local
+          echo BASE_PATH=$BASE_PATH >> .env.local
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
         with:
