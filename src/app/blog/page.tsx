@@ -1,6 +1,6 @@
 import { getAllPosts } from '../lib/api'
 
-export default async function Page() {
+export default async function BlogPage() {
   const allPosts = await getAllPosts()
 
   return (
