@@ -1,16 +1,17 @@
-import type { Asset, EntryFields, EntrySkeletonType } from 'contentful'
-import type { TypeAuthorFields } from './TypeAuthor'
+import type { ChainModifiers, Entry, EntryFieldTypes, EntrySkeletonType, LocaleCode } from "contentful";
+import type { TypeAuthorSkeleton } from "./TypeAuthor";
 
 export interface TypeBlogPostFields {
-  title: EntryFields.Symbol
-  longTitle?: EntryFields.Symbol
-  heroImage: Asset
-  thumbnailImage: Asset
-  content: EntryFields.RichText
-  date: EntryFields.Date
-  shortDescription?: EntryFields.Symbol
-  slug?: EntryFields.Symbol
-  author: EntrySkeletonType<TypeAuthorFields>
+    title: EntryFieldTypes.Symbol;
+    longTitle?: EntryFieldTypes.Symbol;
+    heroImage: EntryFieldTypes.AssetLink;
+    thumbnailImage: EntryFieldTypes.AssetLink;
+    content: EntryFieldTypes.RichText;
+    date: EntryFieldTypes.Date;
+    shortDescription?: EntryFieldTypes.Symbol;
+    slug?: EntryFieldTypes.Symbol;
+    author: EntryFieldTypes.EntryLink<TypeAuthorSkeleton>;
 }
 
-export type TypeBlogPost = EntrySkeletonType<TypeBlogPostFields>
+export type TypeBlogPostSkeleton = EntrySkeletonType<TypeBlogPostFields, "blogPost">;
+export type TypeBlogPost<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeBlogPostSkeleton, Modifiers, Locales>;
