@@ -1,8 +1,9 @@
-import type { Asset, EntryFields, EntrySkeletonType } from 'contentful'
+import type { ChainModifiers, Entry, EntryFieldTypes, EntrySkeletonType, LocaleCode } from "contentful";
 
 export interface TypeAuthorFields {
-  name: EntryFields.Symbol
-  profilePicture?: Asset
+    name: EntryFieldTypes.Symbol;
+    profilePicture?: EntryFieldTypes.AssetLink;
 }
 
-export type TypeAuthor = EntrySkeletonType<TypeAuthorFields>
+export type TypeAuthorSkeleton = EntrySkeletonType<TypeAuthorFields, "author">;
+export type TypeAuthor<Modifiers extends ChainModifiers, Locales extends LocaleCode = LocaleCode> = Entry<TypeAuthorSkeleton, Modifiers, Locales>;
