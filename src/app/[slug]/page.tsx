@@ -1,8 +1,101 @@
+import type { ReactNode } from 'react'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { documentToReactComponents } from '@contentful/rich-text-react-renderer'
-import { getAllPosts, getPostBySlug, getAssetUrl } from '../lib/api'
+import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
+import { BLOCKS, INLINES } from '@contentful/rich-text-types'
+import { getAllPosts, getPostBySlug, getAssetUrl, getAuthorInfo } from '../lib/api'
+import { Author } from '../components/blog/Author'
+
+// Helper to unwrap paragraph from list item children
+function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
+  // Children is typically an array with a single <p> element
+  // We want to extract the content from inside the <p>
+  if (Array.isArray(children) && children.length === 1) {
+    const child = children[0]
+    // Check if it's a paragraph element and extract its children
+    if (
+      child &&
+      typeof child === 'object' &&
+      'type' in child &&
+      child.type === 'p' &&
+      'props' in child &&
+      child.props?.children
+    ) {
+      return child.props.children
+    }
+  }
+  return children
+}
+
+// Rich text rendering options for embedded assets and entries
+const richTextOptions: Options = {
+  renderNode: {
+    // Fix list items containing unnecessary <p> tags
+    [BLOCKS.LIST_ITEM]: (node, children) => (
+      <li>{unwrapParagraphFromListItem(children)}</li>
+    ),
+    [BLOCKS.EMBEDDED_ASSET]: (node) => {
+      const { file, title, description } = node.data.target.fields
+      const url = file?.url
+      const mimeType = file?.contentType
+
+      if (!url) return null
+
+      // Handle images
+      if (mimeType?.startsWith('image/')) {
+        return (
+          <figure className="my-8">
+            <Image
+              src={`https:${url}`}
+              alt={description || title || 'Embedded image'}
+              width={file.details?.image?.width || 800}
+              height={file.details?.image?.height || 600}
+              className="rounded-lg w-full h-auto"
+              unoptimized
+            />
+            {description && (
+              <figcaption className="text-center text-sm text-gray-500 mt-2">
+                {description}
+              </figcaption>
+            )}
+          </figure>
+        )
+      }
+
+      // Handle videos
+      if (mimeType?.startsWith('video/')) {
+        return (
+          <video controls className="w-full my-8 rounded-lg">
+            <source src={`https:${url}`} type={mimeType} />
+          </video>
+        )
+      }
+
+      // Handle other files as download links
+      return (
+        <a
+          href={`https:${url}`}
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 text-blue-600 hover:underline"
+        >
+          📎 {title || 'Download file'}
+        </a>
+      )
+    },
+    [INLINES.HYPERLINK]: (node, children) => (
+      <a
+        href={node.data.uri}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-blue-600 hover:underline"
+      >
+        {children}
+      </a>
+    ),
+  },
+}
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -30,7 +123,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: post.title,
-    description: post.shortDescription || post.longTitle || '',
+    description: post.shortDescription || '',
   }
 }
 
@@ -43,23 +136,24 @@ export default async function BlogPostPage({ params }: Props) {
   }
 
   const heroImageUrl = getAssetUrl(post.heroImage)
+  const author = getAuthorInfo(post.author)
 
   return (
     <article className="container mx-auto px-5 py-10">
       <header className="mb-10">
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-        {post.longTitle && (
-          <p className="text-xl text-gray-600 dark:text-gray-400 mb-4">
-            {post.longTitle}
-          </p>
-        )}
-        <time className="text-gray-500" dateTime={post.date}>
-          {new Date(post.date).toLocaleDateString('en-US', {
-            year: 'numeric',
-            month: 'long',
-            day: 'numeric',
-          })}
-        </time>
+        <div className="flex items-center gap-3 text-gray-500">
+          {author && (
+            <Author author={author} />
+          )}
+          <time dateTime={post.date}>
+            {new Date(post.date).toLocaleDateString('en-US', {
+              year: 'numeric',
+              month: 'long',
+              day: 'numeric',
+            })}
+          </time>
+        </div>
       </header>
 
       {heroImageUrl && (
@@ -75,7 +169,7 @@ export default async function BlogPostPage({ params }: Props) {
       )}
 
       <div className="prose prose-lg dark:prose-invert max-w-none">
-        {documentToReactComponents(post.content)}
+        {documentToReactComponents(post.content, richTextOptions)}
       </div>
     </article>
   )

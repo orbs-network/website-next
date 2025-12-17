@@ -1,6 +1,6 @@
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
-import { TypeBlogPostSkeleton } from '../generated-types'
+import { TypeBlogPostSkeleton, TypeAuthorSkeleton } from '../generated-types'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -8,6 +8,16 @@ type BlogPostFields = BlogPost['fields']
 
 // Type for assets that may or may not be resolved
 type MaybeAsset = Asset | UnresolvedLink<'Asset'> | undefined
+
+// Type for author entries that may or may not be resolved
+type MaybeAuthor = Entry<TypeAuthorSkeleton, undefined, string> | UnresolvedLink<'Entry'> | undefined
+
+// Author info extracted from an entry
+export type AuthorInfo = {
+  name: string
+  profilePictureUrl: string | null
+  profileUrl: string | null
+}
 
 /**
  * Safely extract URL from a Contentful asset that may be unresolved
@@ -18,6 +28,22 @@ export function getAssetUrl(asset: MaybeAsset): string | null {
   }
   const url = asset.fields?.file?.url
   return url ? `https:${url}` : null
+}
+
+/**
+ * Safely extract author info from a Contentful entry that may be unresolved
+ */
+export function getAuthorInfo(author: MaybeAuthor): AuthorInfo | null {
+  if (!author || !('fields' in author)) {
+    return null
+  }
+  
+  const fields = author.fields
+  return {
+    name: fields.name || 'Unknown Author',
+    profilePictureUrl: getAssetUrl(fields.profilePicture as MaybeAsset),
+    profileUrl: fields.profileUrl || null,
+  }
 }
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID
