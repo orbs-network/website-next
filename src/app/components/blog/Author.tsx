@@ -10,7 +10,7 @@ export function Author({ author }: { author: AuthorInfo }) {
         alt={author.name}
         width={40}
         height={40}
-        className="rounded-full object-cover w-10 h-10 max-w-10 max-h-10 min-w-10 min-h-10"
+        className="rounded-full object-cover object-top w-10 h-10 max-w-10 max-h-10 min-w-10 min-h-10"
         unoptimized
       />
     )}
@@ -20,7 +20,6 @@ export function Author({ author }: { author: AuthorInfo }) {
           href={author.profileUrl}
           target="_blank"
           rel="noopener noreferrer"
-          className="hover:text-blue-600 dark:hover:text-blue-400"
         >
           {author.name}
         </a>
