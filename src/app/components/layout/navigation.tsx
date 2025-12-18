@@ -2,11 +2,9 @@
 
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
-import { OrbsLogo } from './OrbsLogo'
+import { OrbsLogo } from './orbs-logo'
 
-const navLinks = [
-  { href: '/blog', label: 'Blog' },
-]
+const navLinks = [{ href: '/blog', label: 'Blog' }]
 
 export function Navigation() {
   const pathname = usePathname()
@@ -22,21 +20,17 @@ export function Navigation() {
             <OrbsLogo />
           </Link>
 
-          <ul className="flex items-center gap-8">  
+          <ul className="flex items-center gap-8">
             {navLinks.map(({ href, label }) => {
               console.log(href, pathname)
-              const isActive =
-                pathname === href ||
-                (href !== '/' && pathname.startsWith(href))
+              const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
 
               return (
                 <li key={href}>
                   <Link
                     href={href}
                     className={`text-sm font-medium transition-colors ${
-                      isActive
-                        ? 'border-b-2 border-gray-900 dark:border-white'
-                        : ''
+                      isActive ? 'border-b-2 border-gray-900 dark:border-white' : ''
                     }`}
                   >
                     {label}
@@ -50,4 +44,3 @@ export function Navigation() {
     </nav>
   )
 }
-

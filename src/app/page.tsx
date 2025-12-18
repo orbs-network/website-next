@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import { getAllPosts } from './lib/api'
-import { OrbsLogo } from './components/layout/OrbsLogo'
+import { OrbsLogo } from './components/layout/orbs-logo'
+import { Button } from '@/components/ui/button'
 
 export default async function Home() {
   const recentPosts = await getAllPosts().then((posts) => posts.slice(0, 3))
@@ -9,17 +10,16 @@ export default async function Home() {
     <div className="container mx-auto px-5 py-16">
       {/* Hero Section */}
       <section className="text-center mb-20">
-        <div className='mb-6 flex justify-center items-center'><OrbsLogo className='w-48 h-auto' /></div>
+        <div className="mb-6 flex justify-center items-center">
+          <OrbsLogo className="w-48 h-auto" />
+        </div>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
           Bringing CeFi execution to DeFi.
         </p>
-        <Link
-          href="/blog"
-          className="inline-flex items-center gap-2 bg-gray-900 dark:bg-white text-white dark:text-gray-900 px-6 py-3 rounded-lg font-medium hover:bg-gray-700 dark:hover:bg-gray-200 transition-colors"
-        >
-          View All Posts
-          <span aria-hidden="true">→</span>
-        </Link>
+
+        <Button asChild size="lg">
+          <Link href="/blog"> View Blog</Link>
+        </Button>
       </section>
 
       {/* Recent Posts Section */}
@@ -41,10 +41,7 @@ export default async function Home() {
                       {post.shortDescription}
                     </p>
                   )}
-                  <time
-                    className="text-sm text-gray-500"
-                    dateTime={post.date}
-                  >
+                  <time className="text-sm text-gray-500" dateTime={post.date}>
                     {new Date(post.date).toLocaleDateString('en-US', {
                       year: 'numeric',
                       month: 'long',
