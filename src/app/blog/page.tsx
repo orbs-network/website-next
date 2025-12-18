@@ -37,7 +37,7 @@ export default async function BlogPage() {
               key={post.slug}
               className="group rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden transition-shadow hover:shadow-lg"
             >
-              <Link href={`/${post.slug}`} className="block">
+              <Link href={`/${post.slug}`} className="h-full flex flex-col">
                 
                   <div className="aspect-video overflow-hidden relative">
                     <Image
@@ -49,7 +49,7 @@ export default async function BlogPage() {
                     />
                   </div>
                 
-                <div className="p-5">
+                <div className="p-5 flex flex-col justify-between flex-1">
                   <h2 className="text-xl font-bold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {post.title}
                   </h2>

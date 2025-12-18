@@ -139,7 +139,7 @@ export default async function BlogPostPage({ params }: Props) {
   const author = getAuthorInfo(post.author)
 
   return (
-    <article className="container mx-auto px-5 py-10">
+    <article className="container mx-auto px-5 py-10 max-w-4xl">
       <header className="mb-10">
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
         <div className="flex items-center gap-3 text-gray-500">
