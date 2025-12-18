@@ -38,7 +38,7 @@
     --sidebar-ring: #a3a3a3;
   }
 
-  .dark {
+  :root.dark {
     --background: #171717;
     --foreground: #fafafa;
     --card: #262626;
