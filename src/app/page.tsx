@@ -1,5 +1,6 @@
 import Link from 'next/link'
 import { getAllPosts } from './lib/api'
+import { OrbsLogo } from './components/layout/OrbsLogo'
 
 export default async function Home() {
   const recentPosts = await getAllPosts().then((posts) => posts.slice(0, 3))
@@ -8,11 +9,9 @@ export default async function Home() {
     <div className="container mx-auto px-5 py-16">
       {/* Hero Section */}
       <section className="text-center mb-20">
-        <h1 className="text-5xl font-bold mb-6 bg-gradient-to-r from-gray-900 via-gray-700 to-gray-900 dark:from-white dark:via-gray-300 dark:to-white bg-clip-text text-transparent">
-          Welcome to My Blog
-        </h1>
+        <div className='mb-6 flex justify-center items-center'><OrbsLogo className='w-48 h-auto' /></div>
         <p className="text-xl text-gray-600 dark:text-gray-400 max-w-2xl mx-auto mb-8">
-          Thoughts, stories, and ideas on technology, development, and more.
+          Bringing CeFi execution to DeFi.
         </p>
         <Link
           href="/blog"

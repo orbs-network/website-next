@@ -12,7 +12,7 @@
         "id": "blogPost",
         "type": "ContentType",
         "createdAt": "2024-08-13T10:32:07.824Z",
-        "updatedAt": "2025-12-17T13:36:59.363Z",
+        "updatedAt": "2025-12-17T17:16:52.964Z",
         "environment": {
           "sys": {
             "id": "master",
@@ -20,8 +20,8 @@
             "linkType": "Environment"
           }
         },
-        "publishedVersion": 21,
-        "publishedAt": "2025-12-17T13:36:59.363Z",
+        "publishedVersion": 23,
+        "publishedAt": "2025-12-17T17:16:52.964Z",
         "firstPublishedAt": "2024-08-13T10:32:08.110Z",
         "createdBy": {
           "sys": {
@@ -37,8 +37,8 @@
             "id": "5bHXDVvLe9RLNIAgj4XV9v"
           }
         },
-        "publishedCounter": 11,
-        "version": 22,
+        "publishedCounter": 12,
+        "version": 24,
         "publishedBy": {
           "sys": {
             "type": "Link",
@@ -71,7 +71,7 @@
           "name": "Hero Image",
           "type": "Link",
           "localized": true,
-          "required": true,
+          "required": false,
           "validations": [
           ],
           "disabled": false,
