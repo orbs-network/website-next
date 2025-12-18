@@ -38,17 +38,17 @@ export default async function BlogPage() {
               className="group rounded-lg border border-gray-200 dark:border-gray-800 overflow-hidden transition-shadow hover:shadow-lg"
             >
               <Link href={`/${post.slug}`} className="block">
-                {heroImageUrl && (
+                
                   <div className="aspect-video overflow-hidden relative">
                     <Image
-                      src={heroImageUrl}
+                      src={heroImageUrl || '/blog/placeholder.png'}
                       alt={post.title}
                       fill
                       className="object-cover transition-transform group-hover:scale-105"
                       unoptimized
                     />
                   </div>
-                )}
+                
                 <div className="p-5">
                   <h2 className="text-xl font-bold mb-2 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors">
                     {post.title}

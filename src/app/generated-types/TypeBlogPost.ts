@@ -3,7 +3,7 @@ import type { TypeAuthorSkeleton } from "./TypeAuthor";
 
 export interface TypeBlogPostFields {
     title: EntryFieldTypes.Symbol;
-    heroImage: EntryFieldTypes.AssetLink;
+    heroImage?: EntryFieldTypes.AssetLink;
     content: EntryFieldTypes.RichText;
     date: EntryFieldTypes.Date;
     shortDescription?: EntryFieldTypes.Symbol;
