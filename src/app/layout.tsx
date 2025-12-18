@@ -1,22 +1,22 @@
-import type { Metadata } from "next";
-import { Inter } from "next/font/google";
-import { Navigation } from "./components/layout/Navigation";
-import "./globals.css";
+import type { Metadata } from 'next'
+import { Inter } from 'next/font/google'
+import { Navigation } from './components/layout/navigation'
+import './globals.css'
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: "My Blog",
-    template: "%s | My Blog",
+    default: 'My Blog',
+    template: '%s | My Blog',
   },
-  description: "A personal blog built with Next.js and Contentful",
-};
+  description: 'A personal blog built with Next.js and Contentful',
+}
 
 export default function RootLayout({
   children,
 }: Readonly<{
-  children: React.ReactNode;
+  children: React.ReactNode
 }>) {
   return (
     <html lang="en">
@@ -25,5 +25,5 @@ export default function RootLayout({
         <main>{children}</main>
       </body>
     </html>
-  );
+  )
 }

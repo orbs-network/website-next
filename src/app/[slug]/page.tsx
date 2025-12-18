@@ -5,7 +5,7 @@ import { notFound } from 'next/navigation'
 import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { getAllPosts, getPostBySlug, getAssetUrl, getAuthorInfo } from '../lib/api'
-import { Author } from '../components/blog/Author'
+import { Author } from '../components/blog/author'
 
 // Helper to unwrap paragraph from list item children
 function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
@@ -32,9 +32,7 @@ function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
 const richTextOptions: Options = {
   renderNode: {
     // Fix list items containing unnecessary <p> tags
-    [BLOCKS.LIST_ITEM]: (node, children) => (
-      <li>{unwrapParagraphFromListItem(children)}</li>
-    ),
+    [BLOCKS.LIST_ITEM]: (node, children) => <li>{unwrapParagraphFromListItem(children)}</li>,
     [BLOCKS.EMBEDDED_ASSET]: (node) => {
       const { file, title, description } = node.data.target.fields
       const url = file?.url
@@ -54,11 +52,7 @@ const richTextOptions: Options = {
               className="rounded-lg w-full h-auto"
               unoptimized
             />
-            {description && (
-              <figcaption className="text-center text-sm text-gray-500 mt-2">
-                {description}
-              </figcaption>
-            )}
+            {description && <figcaption className="text-center text-sm text-gray-500 mt-2">{description}</figcaption>}
           </figure>
         )
       }
@@ -85,12 +79,7 @@ const richTextOptions: Options = {
       )
     },
     [INLINES.HYPERLINK]: (node, children) => (
-      <a
-        href={node.data.uri}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-blue-600 hover:underline"
-      >
+      <a href={node.data.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
         {children}
       </a>
     ),
@@ -143,9 +132,7 @@ export default async function BlogPostPage({ params }: Props) {
       <header className="mb-10">
         <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
         <div className="flex items-center gap-3 text-gray-500">
-          {author && (
-            <Author author={author} />
-          )}
+          {author && <Author author={author} />}
           <time dateTime={post.date}>
             {new Date(post.date).toLocaleDateString('en-US', {
               year: 'numeric',
@@ -158,13 +145,7 @@ export default async function BlogPostPage({ params }: Props) {
 
       {heroImageUrl && (
         <div className="mb-10 relative aspect-video">
-          <Image
-            src={heroImageUrl}
-            alt={post.title}
-            fill
-            className="object-cover rounded-lg"
-            unoptimized
-          />
+          <Image src={heroImageUrl} alt={post.title} fill className="object-cover rounded-lg" unoptimized />
         </div>
       )}
 
