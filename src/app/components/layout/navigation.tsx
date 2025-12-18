@@ -3,6 +3,7 @@
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { OrbsLogo } from './orbs-logo'
+import { ThemeToggle } from '../theme/theme-toggle'
 
 const navLinks = [{ href: '/blog', label: 'Blog' }]
 
@@ -20,25 +21,29 @@ export function Navigation() {
             <OrbsLogo />
           </Link>
 
-          <ul className="flex items-center gap-8">
-            {navLinks.map(({ href, label }) => {
-              console.log(href, pathname)
-              const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
+          <div className="flex items-center gap-8">
+            <ThemeToggle />
 
-              return (
-                <li key={href}>
-                  <Link
-                    href={href}
-                    className={`text-sm font-medium transition-colors ${
-                      isActive ? 'border-b-2 border-gray-900 dark:border-white' : ''
-                    }`}
-                  >
-                    {label}
-                  </Link>
-                </li>
-              )
-            })}
-          </ul>
+            <ul className="flex items-center gap-8">
+              {navLinks.map(({ href, label }) => {
+                console.log(href, pathname)
+                const isActive = pathname === href || (href !== '/' && pathname.startsWith(href))
+
+                return (
+                  <li key={href}>
+                    <Link
+                      href={href}
+                      className={`text-sm font-medium transition-colors ${
+                        isActive ? 'border-b-2 border-gray-900 dark:border-white' : ''
+                      }`}
+                    >
+                      {label}
+                    </Link>
+                  </li>
+                )
+              })}
+            </ul>
+          </div>
         </div>
       </div>
     </nav>
