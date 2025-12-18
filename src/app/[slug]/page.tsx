@@ -6,6 +6,9 @@ import { documentToReactComponents, Options } from '@contentful/rich-text-react-
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { getAllPosts, getPostBySlug, getAssetUrl, getAuthorInfo } from '../lib/api'
 import { Author } from '../components/blog/author'
+import { Button } from '@/components/ui/button'
+import Link from 'next/link'
+import { ArrowLeft } from 'lucide-react'
 
 // Helper to unwrap paragraph from list item children
 function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
@@ -128,30 +131,38 @@ export default async function BlogPostPage({ params }: Props) {
   const author = getAuthorInfo(post.author)
 
   return (
-    <article className="container mx-auto px-5 py-10 max-w-4xl">
-      <header className="mb-10">
-        <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-        <div className="flex items-center gap-3 text-gray-500">
-          {author && <Author author={author} />}
-          <time dateTime={post.date}>
-            {new Date(post.date).toLocaleDateString('en-US', {
-              year: 'numeric',
-              month: 'long',
-              day: 'numeric',
-            })}
-          </time>
-        </div>
-      </header>
+    <div className="container mx-auto p-5">
+      <Button variant="outline" asChild className="mb-10" size="sm">
+        <Link href="/blog">
+          <ArrowLeft /> Back
+        </Link>
+      </Button>
 
-      {heroImageUrl && (
-        <div className="mb-10 relative aspect-video">
-          <Image src={heroImageUrl} alt={post.title} fill className="object-cover rounded-lg" unoptimized />
-        </div>
-      )}
+      <article className="container mx-auto px-5 py-10 max-w-4xl">
+        <header className="mb-10">
+          <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
+          <div className="flex items-center gap-3 text-gray-500">
+            {author && <Author author={author} />}
+            <time dateTime={post.date}>
+              {new Date(post.date).toLocaleDateString('en-US', {
+                year: 'numeric',
+                month: 'long',
+                day: 'numeric',
+              })}
+            </time>
+          </div>
+        </header>
 
-      <div className="prose prose-lg dark:prose-invert max-w-none">
-        {documentToReactComponents(post.content, richTextOptions)}
-      </div>
-    </article>
+        {heroImageUrl && (
+          <div className="mb-10 relative aspect-video">
+            <Image src={heroImageUrl} alt={post.title} fill className="object-cover rounded-lg" unoptimized />
+          </div>
+        )}
+
+        <div className="prose prose-lg dark:prose-invert max-w-none">
+          {documentToReactComponents(post.content, richTextOptions)}
+        </div>
+      </article>
+    </div>
   )
 }
