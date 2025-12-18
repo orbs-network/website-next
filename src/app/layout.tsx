@@ -2,15 +2,16 @@ import type { Metadata } from 'next'
 import { Inter } from 'next/font/google'
 import { Navigation } from './components/layout/navigation'
 import './globals.css'
+import { ThemeProvider } from 'next-themes'
 
 const inter = Inter({ subsets: ['latin'] })
 
 export const metadata: Metadata = {
   title: {
-    default: 'My Blog',
-    template: '%s | My Blog',
+    default: 'Orbs',
+    template: '%s | Orbs',
   },
-  description: 'A personal blog built with Next.js and Contentful',
+  description: 'Bringing CeFi execution to DeFi.',
 }
 
 export default function RootLayout({
@@ -19,10 +20,12 @@ export default function RootLayout({
   children: React.ReactNode
 }>) {
   return (
-    <html lang="en">
+    <html lang="en" suppressHydrationWarning>
       <body className={inter.className}>
-        <Navigation />
-        <main>{children}</main>
+        <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
+          <Navigation />
+          <main>{children}</main>
+        </ThemeProvider>
       </body>
     </html>
   )
