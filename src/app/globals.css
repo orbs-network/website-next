@@ -4,6 +4,9 @@
 
 @layer base {
   :root {
+    --orbs-primary: #7988e8;
+    --orbs-secondary: #db89df;
+
     --radius: 0.625rem;
     --background: #ffffff;
     --foreground: #171717;
@@ -11,14 +14,14 @@
     --card-foreground: #171717;
     --popover: #ffffff;
     --popover-foreground: #171717;
-    --primary: #262626;
-    --primary-foreground: #fafafa;
-    --secondary: #f5f5f5;
-    --secondary-foreground: #262626;
+    --primary: var(--orbs-primary);
+    --primary-foreground: #ffffff;
+    --secondary: var(--orbs-secondary);
+    --secondary-foreground: #ffffff;
     --muted: #f5f5f5;
     --muted-foreground: #737373;
     --accent: #f5f5f5;
-    --accent-foreground: #262626;
+    --accent-foreground: #5e75e8;
     --destructive: #dc2626;
     --border: #e5e5e5;
     --input: #e5e5e5;
@@ -39,19 +42,22 @@
   }
 
   :root.dark {
+    --orbs-primary: #606bb6;
+    --orbs-secondary: #a869ab;
+
     --background: #171717;
     --foreground: #fafafa;
     --card: #262626;
     --card-foreground: #fafafa;
     --popover: #262626;
     --popover-foreground: #fafafa;
-    --primary: #e5e5e5;
-    --primary-foreground: #262626;
-    --secondary: #404040;
+    --primary: var(--orbs-primary);
+    --primary-foreground: #fafafa;
+    --secondary: var(--orbs-secondary);
     --secondary-foreground: #fafafa;
     --muted: #404040;
     --muted-foreground: #a3a3a3;
-    --accent: #404040;
+    --accent: #5e75e8;
     --accent-foreground: #fafafa;
     --destructive: #ef4444;
     --border: rgba(255, 255, 255, 0.1);

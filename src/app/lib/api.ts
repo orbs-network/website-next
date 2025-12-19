@@ -4,7 +4,7 @@ import { TypeBlogPostSkeleton, TypeAuthorSkeleton } from '../generated-types'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
-type BlogPostFields = BlogPost['fields']
+export type BlogPostFields = BlogPost['fields']
 
 // Type for assets that may or may not be resolved
 type MaybeAsset = Asset | UnresolvedLink<'Asset'> | undefined
@@ -37,7 +37,7 @@ export function getAuthorInfo(author: MaybeAuthor): AuthorInfo | null {
   if (!author || !('fields' in author)) {
     return null
   }
-  
+
   const fields = author.fields
   return {
     name: fields.name || 'Unknown Author',
@@ -52,8 +52,7 @@ const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN
 function getClient() {
   if (!spaceId || !accessToken) {
     throw new Error(
-      'Contentful environment variables are not set. ' +
-        'Please set CONTENTFUL_SPACE_ID and CONTENTFUL_ACCESS_TOKEN.'
+      'Contentful environment variables are not set. ' + 'Please set CONTENTFUL_SPACE_ID and CONTENTFUL_ACCESS_TOKEN.'
     )
   }
 
@@ -77,9 +76,7 @@ export async function getAllPosts(): Promise<BlogPostFields[]> {
     })
 }
 
-export async function getPostBySlug(
-  slug: string
-): Promise<BlogPostFields | null> {
+export async function getPostBySlug(slug: string): Promise<BlogPostFields | null> {
   const client = getClient()
 
   const posts = await client.getEntries<TypeBlogPostSkeleton>({
