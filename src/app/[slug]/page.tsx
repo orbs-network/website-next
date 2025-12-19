@@ -1,14 +1,12 @@
-import type { ReactNode } from 'react'
+import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
+import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
-import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
-import { BLOCKS, INLINES } from '@contentful/rich-text-types'
-import { getAllPosts, getPostBySlug, getAssetUrl, getAuthorInfo } from '../lib/api'
+import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
-import { Button } from '@/components/ui/button'
-import Link from 'next/link'
-import { ArrowLeft } from 'lucide-react'
+import { getAllPosts, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
+import { BackButton } from './back-button'
 
 // Helper to unwrap paragraph from list item children
 function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
@@ -132,6 +130,7 @@ export default async function BlogPostPage({ params }: Props) {
 
   return (
     <div className="container mx-auto p-5">
+      <BackButton />
       <article className="container mx-auto px-5 py-8 max-w-4xl">
         <header className="mb-10">
           <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
