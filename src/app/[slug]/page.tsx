@@ -7,6 +7,8 @@ import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
 import { getAllPosts, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
 import { BackButton } from './back-button'
+import { Heading3 } from '../components/typography'
+import { Separator } from '@/components/ui/separator'
 
 // Helper to unwrap paragraph from list item children
 function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
@@ -53,7 +55,9 @@ const richTextOptions: Options = {
               className="rounded-lg w-full h-auto"
               unoptimized
             />
-            {description && <figcaption className="text-center text-sm text-gray-500 mt-2">{description}</figcaption>}
+            {description && (
+              <figcaption className="text-center text-sm text-muted-foreground mt-2">{description}</figcaption>
+            )}
           </figure>
         )
       }
@@ -73,14 +77,19 @@ const richTextOptions: Options = {
           href={`https:${url}`}
           target="_blank"
           rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-blue-600 hover:underline"
+          className="inline-flex items-center gap-2 text-primary no-underline hover:underline hover:text-secondary"
         >
           📎 {title || 'Download file'}
         </a>
       )
     },
     [INLINES.HYPERLINK]: (node, children) => (
-      <a href={node.data.uri} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:underline">
+      <a
+        href={node.data.uri}
+        target="_blank"
+        rel="noopener noreferrer"
+        className="text-primary no-underline hover:underline hover:text-secondary"
+      >
         {children}
       </a>
     ),
@@ -155,6 +164,61 @@ export default async function BlogPostPage({ params }: Props) {
         <div className="prose prose-lg dark:prose-invert max-w-none">
           {documentToReactComponents(post.content, richTextOptions)}
         </div>
+
+        <Separator className="my-10" />
+
+        <footer className="mt-10 prose dark:prose-invert max-w-none">
+          <Heading3>About Orbs</Heading3>
+
+          <p>
+            Orbs is a decentralized Layer-3 (L3) blockchain designed specifically for advanced on-chain trading.
+            Utilizing a Proof-of-Stake consensus, Orbs acts as a supplementary execution layer, facilitating complex
+            logic and scripts beyond the native functionalities of smart contracts. Orbs-powered protocols, including
+            dLIMIT, dTWAP, Liquidity Hub, and Perpetual Hub, push the boundaries of DeFi by introducing CeFi-level
+            execution to on-chain trading.
+          </p>
+
+          <p>
+            With a global team of over forty dedicated contributors based in Tel Aviv, London, New York, Tokyo, Seoul,
+            Lisbon, and Limassol, Orbs continues to innovate at the forefront of blockchain technology.
+          </p>
+
+          <p>
+            For more information, visit{' '}
+            <a
+              href="https://www.orbs.com"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="text-primary no-underline hover:underline hover:text-secondary"
+            >
+              www.orbs.com
+            </a>{' '}
+            or join our community:
+          </p>
+
+          <ul>
+            <li>
+              <a
+                href="https://t.me/OrbsNetwork"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary no-underline hover:underline hover:text-secondary"
+              >
+                Telegram
+              </a>
+            </li>
+            <li>
+              <a
+                href="https://x.com/orbs_network"
+                target="_blank"
+                rel="noopener noreferrer"
+                className="text-primary no-underline hover:underline hover:text-secondary"
+              >
+                X
+              </a>
+            </li>
+          </ul>
+        </footer>
       </article>
     </div>
   )
