@@ -1,3 +1,4 @@
+import { Separator } from '@/components/ui/separator'
 import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
 import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { Metadata } from 'next'
@@ -5,10 +6,9 @@ import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
+import { Heading4 } from '../components/typography'
 import { getAllPosts, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
 import { BackButton } from './back-button'
-import { Heading3 } from '../components/typography'
-import { Separator } from '@/components/ui/separator'
 
 // Helper to unwrap paragraph from list item children
 function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
@@ -168,7 +168,7 @@ export default async function BlogPostPage({ params }: Props) {
         <Separator className="my-10" />
 
         <footer className="mt-10 prose dark:prose-invert max-w-none">
-          <Heading3>About Orbs</Heading3>
+          <Heading4>About Orbs</Heading4>
 
           <p>
             Orbs is a decentralized Layer-3 (L3) blockchain designed specifically for advanced on-chain trading.
