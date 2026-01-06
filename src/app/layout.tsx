@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { Montserrat } from 'next/font/google'
-import { Navigation } from './components/layout/navigation'
+import { Header } from './components/layout/header'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 
@@ -23,7 +23,7 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={montserrat.className}>
         <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-          <Navigation />
+          <Header />
           <main>{children}</main>
         </ThemeProvider>
       </body>
