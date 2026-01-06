@@ -52,7 +52,7 @@ const richTextOptions: Options = {
               alt={description || title || 'Embedded image'}
               width={file.details?.image?.width || 800}
               height={file.details?.image?.height || 600}
-              className="rounded-lg w-full h-auto"
+              className="rounded-[var(--radius)] w-full h-auto"
               unoptimized
             />
             {description && (
@@ -65,7 +65,7 @@ const richTextOptions: Options = {
       // Handle videos
       if (mimeType?.startsWith('video/')) {
         return (
-          <video controls className="w-full my-8 rounded-lg">
+          <video controls className="w-full my-8 rounded-[var(--radius)]">
             <source src={`https:${url}`} type={mimeType} />
           </video>
         )
@@ -157,7 +157,13 @@ export default async function BlogPostPage({ params }: Props) {
 
         {heroImageUrl && (
           <div className="mb-10 relative aspect-video">
-            <Image src={heroImageUrl} alt={post.title} fill className="object-cover rounded-lg" unoptimized />
+            <Image
+              src={heroImageUrl}
+              alt={post.title}
+              fill
+              className="object-cover rounded-[var(--radius)]"
+              unoptimized
+            />
           </div>
         )}
 
