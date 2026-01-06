@@ -1,7 +1,7 @@
 'use client'
 
 import { Button } from '@/components/ui/button'
-import { ArrowLeft } from 'lucide-react'
+import { ArrowLeftIcon } from 'lucide-react'
 import { useRouter } from 'next/navigation'
 
 export function BackButton() {
@@ -9,7 +9,7 @@ export function BackButton() {
 
   return (
     <Button variant="outline" onClick={router.back} size="sm">
-      <ArrowLeft /> Back
+      <ArrowLeftIcon className="size-4" /> Back
     </Button>
   )
 }

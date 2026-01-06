@@ -13,10 +13,7 @@ export function NavButton({
 }) {
   return (
     <Button variant="ghost" asChild>
-      <Link
-        href={href}
-        className={cn('uppercase text-xs tracking-widest font-medium transition-colors gap-0', className)}
-      >
+      <Link href={href} className={cn('uppercase text-xs tracking-widest font-medium transition-colors', className)}>
         {children}
       </Link>
     </Button>
