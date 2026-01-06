@@ -1,9 +1,6 @@
 import { Metadata } from 'next'
-import Image from 'next/image'
-import Link from 'next/link'
-import { getAllPosts, getAssetUrl, getAuthorInfo } from '../lib/api'
-import { Author } from '../components/blog/author'
 import { Heading1 } from '../components/typography'
+import { getAllPosts } from '../lib/api'
 import { BlogCard } from './blog-card'
 
 export const metadata: Metadata = {
