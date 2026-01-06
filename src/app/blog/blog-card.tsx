@@ -10,7 +10,7 @@ export function BlogCard({ post }: { post: BlogPostFields }) {
   const author = getAuthorInfo(post.author)
 
   return (
-    <Card key={post.slug} className="p-0 group overflow-hidden">
+    <Card key={post.slug} className="p-0 group overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <Link href={`/${post.slug}`} className="h-full flex flex-col">
         <CardHeader className="p-0 pb-4">
           <div className="aspect-video overflow-hidden relative">

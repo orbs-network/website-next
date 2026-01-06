@@ -24,17 +24,23 @@ export function NavMenu() {
               </li>
               <li>
                 <NavButton href="/products/3">
-                  <span className="lowercase">d</span>TWAP
+                  <span>
+                    <span className="lowercase">d</span>TWAP
+                  </span>
                 </NavButton>
               </li>
               <li>
                 <NavButton href="/products/3">
-                  <span className="lowercase">d</span>LIMIT
+                  <span>
+                    <span className="lowercase">d</span>LIMIT
+                  </span>
                 </NavButton>
               </li>
               <li>
                 <NavButton href="/products/3">
-                  <span className="lowercase">d</span>SLTP
+                  <span>
+                    <span className="lowercase">d</span>SLTP
+                  </span>
                 </NavButton>
               </li>
             </ul>
