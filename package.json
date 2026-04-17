@@ -7,6 +7,7 @@
     "build": "next build",
     "start": "next start",
     "lint": "next lint",
+    "test": "vitest run",
     "export-content": "contentful space export --config contentful-cli-config.json",
     "generate-types": "cf-content-types-generator src/contentful-types/*.json -o src/app/generated-types -X",
     "storybook": "storybook dev -p 6006",
