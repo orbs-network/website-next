@@ -12,6 +12,10 @@ const dirname =
 
 // More info at: https://storybook.js.org/docs/next/writing-tests/integrations/vitest-addon
 export default defineConfig({
+  // Pre-bundle deps that otherwise trigger a mid-run Vite reload on cold starts (CI).
+  optimizeDeps: {
+    include: ['@opentelemetry/api'],
+  },
   test: {
     projects: [
       {
