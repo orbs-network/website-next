@@ -1,5 +1,5 @@
 import { Metadata } from 'next'
-import { Heading1 } from '../components/typography'
+import { H1 } from '../components/typography'
 import { getAllPosts } from '../lib/api'
 import { BlogCard } from './blog-card'
 
@@ -11,7 +11,7 @@ export const metadata: Metadata = {
 function Heading() {
   return (
     <div className="flex flex-col items-center justify-center pt-10 pb-32">
-      <Heading1 className="inline-block text-center mx-auto">The Orbs Project Blog</Heading1>
+      <H1 className="inline-block text-center mx-auto">The Orbs Project Blog</H1>
       <p className="text-gray-600 dark:text-gray-400">
         Thoughts about the Orbs project, open source, blockchain and engineering.
       </p>
