@@ -1,6 +1,6 @@
 # Orbs 2.0 Design System — Implementation Plan
 
-**Status:** Wave 0 — Foundations (queued)
+**Status:** Wave 1 — Atomic primitives (in progress)
 **Last updated:** 2026-04-20
 **Owner:** Sukh + Claude
 
@@ -151,19 +151,25 @@ Sizes are v1 estimates read off the export; tune once real specs are available. 
 
 | # | PR | Branch | Status | PR link |
 |---|---|---|---|---|
-| — | Plan doc | `chore/design-system-plan` | in progress | — |
-| 0 | Design tokens | `feat/design-tokens` | queued | — |
-| 1.1 | Typography | `feat/typography` | blocked on #0 | — |
-| 1.2 | Buttons & Links | `feat/buttons-and-links` | blocked on #0 | — |
-| 1.3 | Icons & Logos | `feat/icons` | blocked on #0 | — |
-| 1.4 | Fields | `feat/fields` | blocked on #0 | — |
-| 1.5 | Tags & Badges | `feat/tags` | blocked on #0 | — |
+| — | Plan doc | `chore/design-system-plan` | in progress | [#2](https://github.com/orbs-network/website-next/pull/2) |
+| 0 | Design tokens | `feat/design-tokens` | **merged** | [#3](https://github.com/orbs-network/website-next/pull/3) |
+| 1.1 | Typography | `feat/typography` | in progress | — |
+| 1.2 | Buttons & Links | `feat/buttons-and-links` | in progress | — |
+| 1.3 | Icons & Logos | `feat/icons` | in progress | — |
+| 1.4 | Fields | `feat/fields` | in progress | — |
+| 1.5 | Tags & Badges | `feat/tags` | in progress | — |
 | 2.1 | Cards | `feat/cards` | blocked on Wave 1 | — |
 | 2.2 | Text Layouts | `feat/text-layouts` | blocked on Wave 1 | — |
 | 2.3 | Signup Area | `feat/signup-area` | blocked on Wave 1 | — |
 | 2.4 | Resources Nav | `feat/resources-nav` | blocked on Wave 1 | — |
 | 3.1 | Header | `feat/header` | blocked on Waves 1+2 | — |
 | 3.2 | Footer | `feat/footer` | blocked on Waves 1+2 | — |
+
+### Out-of-plan follow-ups
+
+| # | PR | Status | Notes |
+|---|---|---|---|
+| — | CI lint fix | merged | [#4](https://github.com/orbs-network/website-next/pull/4) — switched `next lint` → `eslint .` for Next 16 compatibility after discovering `next lint` was removed in v16. |
 
 ## After the design system
 
@@ -172,3 +178,4 @@ Homepage build. Uses the primitives and compositions above. Separate implementat
 ## Revision log
 
 - **2026-04-20** — Initial plan.
+- **2026-04-20** — Wave 0 (`feat/design-tokens`, #3) merged after two review rounds; lint CI hotfix (#4) shipped in parallel after Next 16 removed `next lint`. Wave 1 dispatched (1.1–1.5 in parallel worktrees).
