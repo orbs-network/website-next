@@ -1,5 +1,4 @@
 import { Button } from '@/components/ui/button'
-import { ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageSelector } from './language-selector'
@@ -23,10 +22,7 @@ export function Header() {
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <LanguageSelector />
-            <Button variant="outline" className="uppercase tracking-widest text-xs">
-              Get in Touch
-              <ArrowRightIcon className="size-4" />
-            </Button>
+            <Button size="sm">Get in Touch</Button>
           </div>
         </div>
       </div>
