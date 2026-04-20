@@ -8,9 +8,14 @@ type OrbsLogoProps = IconBaseProps & {
  * Orbs wordmark + glyph. Placeholder-quality approximation of the real
  * brand mark — three overlapping orbs (periwinkle / pink / cyan) next to an
  * "ORBS" wordmark. The designer will swap in the real asset before launch.
+ *
+ * The `color` variant keeps brand hex fills on the glyph but renders the
+ * wordmark in `currentColor` so it inherits the parent `text-*` color and
+ * stays legible in both light and dark themes. The `dark` variant uses
+ * `currentColor` for both glyph and wordmark; `white` hard-codes white.
  */
 export function OrbsLogo({ variant = 'color', width = '6em', height = '1.5em', ...rest }: OrbsLogoProps) {
-  const wordmarkFill = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#121214'
+  const wordmarkFill = variant === 'white' ? '#ffffff' : 'currentColor'
   const orb1 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#7A89E9'
   const orb2 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#DC8AE0'
   const orb3 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#2CEDFC'
