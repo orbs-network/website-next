@@ -125,16 +125,6 @@
   }
 
   :root.dark {
-    /* Neutrals */
-    --color-neutral-100: #ffffff;
-    --color-neutral-200: #f6f6f6;
-    --color-neutral-300: #e2e2e2;
-    --color-neutral-400: #c5c5c5;
-    --color-neutral-500: #59595a;
-    --color-neutral-600: #414142;
-    --color-neutral-700: #29292b;
-    --color-neutral-900: #121214;
-
     /* Periwinkle */
     --color-periwinkle-100: #ebedfc;
     --color-periwinkle-200: #cad0f6;
