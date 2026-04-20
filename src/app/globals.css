@@ -4,78 +4,211 @@
 
 @layer base {
   :root {
-    --orbs-primary: #7988e8;
-    --orbs-secondary: #db89df;
-
     --radius: 0rem;
-    --background: #ffffff;
-    --foreground: #171717;
-    --card: #ffffff;
-    --card-foreground: #171717;
-    --popover: #ffffff;
-    --popover-foreground: #171717;
-    --primary: var(--orbs-primary);
-    --primary-foreground: #ffffff;
-    --secondary: var(--orbs-secondary);
-    --secondary-foreground: #ffffff;
-    --muted: #f5f5f5;
-    --muted-foreground: #737373;
-    --accent: #f5f5f5;
-    --accent-foreground: #5e75e8;
-    --destructive: #dc2626;
-    --border: #e5e5e5;
-    --input: #e5e5e5;
-    --ring: #a3a3a3;
-    --chart-1: #f97316;
-    --chart-2: #14b8a6;
-    --chart-3: #3b82f6;
-    --chart-4: #facc15;
-    --chart-5: #f59e0b;
-    --sidebar: #fafafa;
-    --sidebar-foreground: #171717;
-    --sidebar-primary: #262626;
-    --sidebar-primary-foreground: #fafafa;
-    --sidebar-accent: #f5f5f5;
-    --sidebar-accent-foreground: #262626;
-    --sidebar-border: #e5e5e5;
-    --sidebar-ring: #a3a3a3;
+
+    /* Neutrals */
+    --color-neutral-100: #ffffff;
+    --color-neutral-200: #f6f6f6; /* Orbs Light */
+    --color-neutral-300: #e2e2e2;
+    --color-neutral-400: #c5c5c5;
+    --color-neutral-500: #59595a;
+    --color-neutral-600: #414142;
+    --color-neutral-700: #29292b;
+    --color-neutral-900: #121214; /* Orbs Dark */
+
+    /* Periwinkle */
+    --color-periwinkle-100: #ebedfc;
+    --color-periwinkle-200: #cad0f6;
+    --color-periwinkle-300: #95a1ed;
+    --color-periwinkle-400: #7a89e9; /* base */
+    --color-periwinkle-500: #626eba;
+    --color-periwinkle-600: #49528c;
+    --color-periwinkle-700: #31375d;
+
+    /* Pink */
+    --color-pink-100: #f8edf9;
+    --color-pink-200: #eed6ef;
+    --color-pink-300: #e0abe2;
+    --color-pink-400: #dc8ae0; /* base */
+    --color-pink-500: #b06eb3;
+    --color-pink-600: #58375a;
+    --color-pink-700: #2c1c2d;
+
+    /* Cyan */
+    --color-cyan-100: #d9fafc;
+    --color-cyan-200: #99f2f6;
+    --color-cyan-300: #67e9f4;
+    --color-cyan-400: #2cedfc; /* base */
+    --color-cyan-500: #23beca;
+    --color-cyan-600: #125f65;
+    --color-cyan-700: #082f32;
+
+    /* Lilac */
+    --color-lilac-100: #ece7f9;
+    --color-lilac-200: #d3c6f4;
+    --color-lilac-300: #b99dee;
+    --color-lilac-400: #a17ae9; /* base */
+    --color-lilac-500: #8165c7;
+    --color-lilac-600: #403263;
+    --color-lilac-700: #201932;
+
+    /* Indigo (only 3 dark stops in Figma; 600+700 share the darkest) */
+    --color-indigo-100: #d9dffc;
+    --color-indigo-200: #99a7f6;
+    --color-indigo-300: #5c6ff4;
+    --color-indigo-400: #3346f2; /* base */
+    --color-indigo-500: #1a2379;
+    --color-indigo-600: #0d123d;
+    --color-indigo-700: #0d123d;
+
+    /* Coral */
+    --color-coral-100: #fff2f2;
+    --color-coral-200: #ffd7d8;
+    --color-coral-300: #ffaeaf;
+    --color-coral-400: #ffadae; /* base */
+    --color-coral-500: #cc8788;
+    --color-coral-600: #664344;
+    --color-coral-700: #332122;
+
+    /* Semantic aliases (light theme) */
+    --color-bg: var(--color-neutral-200);
+    --color-surface: var(--color-neutral-100);
+    --color-fg: var(--color-neutral-900);
+    --color-fg-muted: var(--color-neutral-500);
+    --color-border: var(--color-neutral-300);
+    --color-accent-primary: var(--color-indigo-400);
+    --color-accent-primary-hover: var(--color-indigo-500);
+    --color-link: var(--color-indigo-400);
+
+    /* Typography scale */
+    --font-size-h1: 4.5rem; /* 72px */
+    --line-height-h1: 1.111; /* 80/72 */
+    --font-size-h2: 3.5rem; /* 56px */
+    --line-height-h2: 1.143; /* 64/56 */
+    --font-size-h3: 2rem; /* 32px */
+    --line-height-h3: 1.25; /* 40/32 */
+    --font-size-h4: 1.375rem; /* 22px */
+    --line-height-h4: 1.364; /* 30/22 */
+    --font-size-h5: 0.875rem; /* 14px */
+    --line-height-h5: 1.429; /* 20/14 */
+    --font-size-p: 1.125rem; /* 18px */
+    --line-height-p: 1.556; /* 28/18 */
+    --font-size-detail: 0.6875rem; /* 11px */
+    --line-height-detail: 1.455; /* 16/11 */
+    --font-size-field: 1.25rem; /* 20px */
+    --line-height-field: 1.4; /* 28/20 */
+
+    --tracking-tight: -0.01em;
+    --tracking-wide: 0.08em;
+    --tracking-wider: 0.12em;
+
+    /* shadcn compatibility shims (resolve to semantic tokens) */
+    --background: var(--color-bg);
+    --foreground: var(--color-fg);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-fg);
+    --popover: var(--color-surface);
+    --popover-foreground: var(--color-fg);
+    --primary: var(--color-accent-primary);
+    --primary-foreground: var(--color-neutral-100);
+    --secondary: var(--color-periwinkle-400);
+    --secondary-foreground: var(--color-neutral-900);
+    --muted: var(--color-neutral-300);
+    --muted-foreground: var(--color-fg-muted);
+    --accent: var(--color-accent-primary);
+    --accent-foreground: var(--color-neutral-100);
+    --destructive: var(--color-coral-500);
+    --destructive-foreground: var(--color-neutral-100);
+    --border: var(--color-border);
+    --input: var(--color-border);
+    --ring: var(--color-accent-primary);
   }
 
   :root.dark {
-    --orbs-primary: #606bb6;
-    --orbs-secondary: #a869ab;
+    /* Periwinkle */
+    --color-periwinkle-100: #ebedfc;
+    --color-periwinkle-200: #cad0f6;
+    --color-periwinkle-300: #95a1ed;
+    --color-periwinkle-400: #7a89e9;
+    --color-periwinkle-500: #626eba;
+    --color-periwinkle-600: #49528c;
+    --color-periwinkle-700: #31375d;
 
-    --background: #171717;
-    --foreground: #fafafa;
-    --card: #262626;
-    --card-foreground: #fafafa;
-    --popover: #262626;
-    --popover-foreground: #fafafa;
-    --primary: var(--orbs-primary);
-    --primary-foreground: #fafafa;
-    --secondary: var(--orbs-secondary);
-    --secondary-foreground: #fafafa;
-    --muted: #404040;
-    --muted-foreground: #a3a3a3;
-    --accent: #5e75e8;
-    --accent-foreground: #fafafa;
-    --destructive: #ef4444;
-    --border: rgba(255, 255, 255, 0.1);
-    --input: rgba(255, 255, 255, 0.15);
-    --ring: #737373;
-    --chart-1: #6366f1;
-    --chart-2: #22c55e;
-    --chart-3: #f59e0b;
-    --chart-4: #a855f7;
-    --chart-5: #f43f5e;
-    --sidebar: #262626;
-    --sidebar-foreground: #fafafa;
-    --sidebar-primary: #6366f1;
-    --sidebar-primary-foreground: #fafafa;
-    --sidebar-accent: #404040;
-    --sidebar-accent-foreground: #fafafa;
-    --sidebar-border: rgba(255, 255, 255, 0.1);
-    --sidebar-ring: #737373;
+    /* Pink */
+    --color-pink-100: #f8edf9;
+    --color-pink-200: #eed6ef;
+    --color-pink-300: #e0abe2;
+    --color-pink-400: #dc8ae0;
+    --color-pink-500: #b06eb3;
+    --color-pink-600: #58375a;
+    --color-pink-700: #2c1c2d;
+
+    /* Cyan */
+    --color-cyan-100: #d9fafc;
+    --color-cyan-200: #99f2f6;
+    --color-cyan-300: #67e9f4;
+    --color-cyan-400: #2cedfc;
+    --color-cyan-500: #23beca;
+    --color-cyan-600: #125f65;
+    --color-cyan-700: #082f32;
+
+    /* Lilac */
+    --color-lilac-100: #ece7f9;
+    --color-lilac-200: #d3c6f4;
+    --color-lilac-300: #b99dee;
+    --color-lilac-400: #a17ae9;
+    --color-lilac-500: #8165c7;
+    --color-lilac-600: #403263;
+    --color-lilac-700: #201932;
+
+    /* Indigo */
+    --color-indigo-100: #d9dffc;
+    --color-indigo-200: #99a7f6;
+    --color-indigo-300: #5c6ff4;
+    --color-indigo-400: #3346f2;
+    --color-indigo-500: #1a2379;
+    --color-indigo-600: #0d123d;
+    --color-indigo-700: #0d123d;
+
+    /* Coral */
+    --color-coral-100: #fff2f2;
+    --color-coral-200: #ffd7d8;
+    --color-coral-300: #ffaeaf;
+    --color-coral-400: #ffadae;
+    --color-coral-500: #cc8788;
+    --color-coral-600: #664344;
+    --color-coral-700: #332122;
+
+    /* Semantic aliases (dark theme) */
+    --color-bg: var(--color-neutral-900);
+    --color-surface: var(--color-neutral-700);
+    --color-fg: var(--color-neutral-200);
+    --color-fg-muted: var(--color-neutral-400);
+    --color-border: var(--color-neutral-600);
+    --color-accent-primary: var(--color-indigo-400);
+    --color-accent-primary-hover: var(--color-indigo-300);
+    --color-link: var(--color-periwinkle-300);
+
+    /* shadcn compatibility shims (dark) */
+    --background: var(--color-bg);
+    --foreground: var(--color-fg);
+    --card: var(--color-surface);
+    --card-foreground: var(--color-fg);
+    --popover: var(--color-surface);
+    --popover-foreground: var(--color-fg);
+    --primary: var(--color-accent-primary);
+    --primary-foreground: var(--color-neutral-100);
+    --secondary: var(--color-periwinkle-400);
+    --secondary-foreground: var(--color-neutral-900);
+    --muted: var(--color-neutral-600);
+    --muted-foreground: var(--color-fg-muted);
+    --accent: var(--color-accent-primary);
+    --accent-foreground: var(--color-neutral-100);
+    --destructive: var(--color-coral-500);
+    --destructive-foreground: var(--color-neutral-100);
+    --border: var(--color-border);
+    --input: var(--color-border);
+    --ring: var(--color-accent-primary);
   }
 }
 

@@ -24,7 +24,7 @@ export function BlogCard({ post }: { post: BlogPostFields }) {
           </div>
         </CardHeader>
         <CardContent className="flex flex-col justify-between h-full gap-4">
-          <CardTitle className="leading-6 tracking-normal transition-colors group-hover:text-accent-foreground">
+          <CardTitle className="leading-6 tracking-normal transition-colors group-hover:text-link">
             {post.title}
           </CardTitle>
           <div className="flex items-center gap-2 text-sm text-muted-foreground">
