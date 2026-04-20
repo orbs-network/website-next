@@ -6,7 +6,7 @@
     "dev": "next dev --turbopack",
     "build": "next build",
     "start": "next start",
-    "lint": "next lint",
+    "lint": "eslint .",
     "test": "vitest run",
     "export-content": "contentful space export --config contentful-cli-config.json",
     "generate-types": "cf-content-types-generator src/contentful-types/*.json -o src/app/generated-types -X",
