@@ -4,7 +4,7 @@ import { Header } from './components/layout/header'
 import './globals.css'
 import { ThemeProvider } from 'next-themes'
 
-const montserrat = Montserrat({ subsets: ['latin'] })
+const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '600'] })
 
 export const metadata: Metadata = {
   title: {
