@@ -18,8 +18,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 **Next.js 16 App Router, statically exported.** `next.config.mjs` sets `output: 'export'` and `images.unoptimized: true`, and `reactCompiler: true` enables the React Compiler for automatic memoization. Everything must be buildable into a static site — no server-only runtime features (no route handlers that need a server at request time, no ISR, no middleware that depends on request context). The `src/app/api/` directory is empty and should stay that way unless the export target changes.
 
-**Two component roots, by convention:**
+**Three component roots, by convention:**
 - `src/components/ui/` — shadcn/ui primitives (`components.json` points here; style `new-york`, base color `neutral`, CSS variables). Add shadcn components here via the CLI.
+- `src/components/icons/` — typed SVG icon components (Orbs logo, socials, arrows, theme/locale, product + partner logos). Re-exported via `src/components/icons/index.ts`. Use `currentColor` for monochrome variants so Tailwind `text-*` controls them; color variants may hard-code brand hex. Partner wordmarks are placeholders pending real brand SVGs.
 - `src/app/components/` — app-specific compositions (`layout/`, `blog/`, `theme/`, `typography.tsx`). Not managed by shadcn.
 
 Path alias `@/*` → `./src/*` (see `tsconfig.json`). `@/lib/utils` is the `cn()` helper.

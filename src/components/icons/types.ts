@@ -6,6 +6,8 @@ import type { SVGAttributes } from 'react'
  * `text-2xl`) controls the rendered size. Colors default to `currentColor`
  * inside the SVG paths so Tailwind `text-*` utilities control them on the
  * parent — unless a color variant explicitly hard-codes brand fills.
+ * Wordmark-style components (`OrbsLogo`, partner logos) use wider
+ * aspect-ratio defaults that approximate their intrinsic text dimensions.
  */
 export type IconBaseProps = SVGAttributes<SVGSVGElement>
 
