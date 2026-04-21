@@ -1,6 +1,5 @@
 'use client'
 
-import { Button } from '@/components/ui/button'
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 import { ChevronDownIcon } from 'lucide-react'
 import { useState } from 'react'
@@ -11,14 +10,17 @@ export function LanguageSelector() {
   return (
     <DropdownMenu open={isOpen} onOpenChange={setIsOpen}>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" className="text-xs">
+        <button
+          type="button"
+          className="inline-flex items-center gap-1 text-xs text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        >
           {language}
           <ChevronDownIcon
             className="transition-transform duration-200 size-5"
             style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
           />
           <span className="sr-only">Language Selector</span>
-        </Button>
+        </button>
       </DropdownMenuTrigger>
       <DropdownMenuContent align="end">
         <DropdownMenuItem onClick={() => setLanguage('EN')} className="text-xs">

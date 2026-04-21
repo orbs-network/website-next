@@ -17,7 +17,7 @@ export default async function Home() {
         </div>
         <H1 className="mb-8">Bringing CeFi execution to DeFi</H1>
 
-        <Button asChild size="lg" className="uppercase font-semibold">
+        <Button asChild size="lg">
           <Link href="/blog">View Blog</Link>
         </Button>
       </section>
