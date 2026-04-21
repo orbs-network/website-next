@@ -1,0 +1,16 @@
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat:wght@400;500;600;700;900&display=swap" rel="stylesheet">
+<style>
+  /*
+    Storybook's default preview CSS applies "Nunito Sans" to body and to
+    specific element selectors (h1, h2, button, ...), which beats class
+    inheritance from a decorator wrapper. Force Montserrat across the
+    preview iframe with element selectors + !important so every story
+    previews in the same typography the real app renders.
+  */
+  body, body h1, body h2, body h3, body h4, body h5, body h6,
+  body p, body span, body a, body button, body input, body textarea,
+  body label, body div, body li, body strong, body em {
+    font-family: Montserrat, -apple-system, "Segoe UI", sans-serif !important;
+  }
+</style>
