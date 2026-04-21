@@ -9,6 +9,13 @@ import '../src/app/globals.css'
 const LIGHT_BG = '#f6f6f6'
 const DARK_BG = '#121214'
 
+// Montserrat is loaded in .storybook/preview-head.html via a Google Fonts
+// link tag so the preview iframe can render in the brand typeface across
+// both the story iframe and the autodocs table view. next/font/google is
+// not used here because the resulting className only applies to the
+// decorator's wrapper div, and Storybook's own preview CSS targets body
+// and heading elements directly with higher specificity.
+
 const preview: Preview = {
   parameters: {
     controls: {
