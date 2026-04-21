@@ -3,7 +3,7 @@ import { ArrowRightIcon } from 'lucide-react'
 import Link from 'next/link'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageSelector } from './language-selector'
-import { OrbsLogo } from './orbs-logo'
+import { OrbsLogo } from '@/components/icons'
 import { NavMenu } from './navigation/nav-menu'
 
 export function Header() {

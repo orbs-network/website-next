@@ -1,7 +1,7 @@
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
 import { BlogCard } from './blog/blog-card'
-import { OrbsLogo } from './components/layout/orbs-logo'
+import { OrbsLogo } from '@/components/icons'
 import { Heading1, Heading3 } from './components/typography'
 import { getAllPosts } from './lib/api'
 
