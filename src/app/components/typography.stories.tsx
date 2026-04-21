@@ -3,7 +3,7 @@ import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { Detail, FieldInput, H1, H2, H3, H4, H5, P } from './typography'
 
 const meta = {
-  title: 'Typography/Primitives',
+  title: 'UI/Typography',
   parameters: {
     layout: 'padded',
   },
