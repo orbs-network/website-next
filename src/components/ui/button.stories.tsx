@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { fn } from 'storybook/test'
-import { Mail, ChevronRight, Loader2 } from 'lucide-react'
+import { Download } from 'lucide-react'
 
 import { Button } from './button'
 
@@ -14,13 +14,13 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['default', 'destructive', 'outline', 'secondary', 'ghost', 'link'],
-      description: 'The visual style of the button',
+      options: ['primary', 'secondary'],
+      description: 'Visual style of the button',
     },
     size: {
       control: 'select',
-      options: ['default', 'sm', 'lg', 'icon'],
-      description: 'The size of the button',
+      options: ['sm', 'default', 'lg'],
+      description: 'Size of the button',
     },
     asChild: {
       control: 'boolean',
@@ -30,50 +30,62 @@ const meta = {
       control: 'boolean',
       description: 'Whether the button is disabled',
     },
+    noIcon: {
+      control: 'boolean',
+      description: 'Suppress the trailing icon (primary variant only)',
+    },
   },
   args: {
     onClick: fn(),
-    children: 'Button',
+    children: 'Get in Touch',
   },
 } satisfies Meta<typeof Button>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-// Variants
-export const Default: Story = {
+// Primary variant states
+export const Primary: Story = {
   args: {
-    variant: 'default',
+    variant: 'primary',
   },
 }
 
+export const PrimaryDisabled: Story = {
+  args: {
+    variant: 'primary',
+    disabled: true,
+  },
+}
+
+export const PrimaryNoIcon: Story = {
+  args: {
+    variant: 'primary',
+    noIcon: true,
+  },
+}
+
+export const PrimaryCustomIcon: Story = {
+  args: {
+    variant: 'primary',
+    children: 'Download',
+    icon: <Download className="size-4" />,
+  },
+}
+
+// Secondary variant states
 export const Secondary: Story = {
   args: {
     variant: 'secondary',
+    children: 'Join Community',
   },
 }
 
-export const Destructive: Story = {
+export const SecondaryDisabled: Story = {
   args: {
-    variant: 'destructive',
-  },
-}
-
-export const Outline: Story = {
-  args: {
-    variant: 'outline',
-  },
-}
-
-export const Ghost: Story = {
-  args: {
-    variant: 'ghost',
-  },
-}
-
-export const Link: Story = {
-  args: {
-    variant: 'link',
+    variant: 'secondary',
+    children: 'Join Community',
+    disabled: true,
   },
 }
 
@@ -81,88 +93,87 @@ export const Link: Story = {
 export const Small: Story = {
   args: {
     size: 'sm',
-    children: 'Small Button',
+    children: 'Small',
+  },
+}
+
+export const Default: Story = {
+  args: {
+    size: 'default',
   },
 }
 
 export const Large: Story = {
   args: {
     size: 'lg',
-    children: 'Large Button',
+    children: 'Large',
   },
 }
 
-export const Icon: Story = {
-  args: {
-    size: 'icon',
-    children: <ChevronRight className="h-4 w-4" />,
-    'aria-label': 'Next',
-  },
-}
-
-// With Icons
-export const WithIcon: Story = {
-  args: {
-    children: (
-      <>
-        <Mail className="h-4 w-4" />
-        Login with Email
-      </>
-    ),
-  },
-}
-
-export const IconRight: Story = {
-  args: {
-    children: (
-      <>
-        Continue
-        <ChevronRight className="h-4 w-4" />
-      </>
-    ),
-  },
-}
-
-// States
-export const Disabled: Story = {
-  args: {
-    disabled: true,
-  },
-}
-
-export const Loading: Story = {
-  args: {
-    disabled: true,
-    children: (
-      <>
-        <Loader2 className="h-4 w-4 animate-spin" />
-        Please wait
-      </>
-    ),
-  },
-}
-
-// All Variants Overview
-export const AllVariants: Story = {
+// All combinations
+export const AllStates: Story = {
   parameters: {
     controls: { hideNoControlsWarning: true },
   },
   render: () => (
-    <div className="flex flex-col gap-4">
-      <div className="flex flex-wrap items-center gap-4">
-        <Button variant="default">Default</Button>
-        <Button variant="secondary">Secondary</Button>
-        <Button variant="destructive">Destructive</Button>
-        <Button variant="outline">Outline</Button>
-        <Button variant="ghost">Ghost</Button>
-        <Button variant="link">Link</Button>
+    <div className="flex flex-col gap-8">
+      <div className="flex flex-col gap-3">
+        <p className="text-detail uppercase tracking-wide text-fg-muted">Primary</p>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button variant="primary">Get in Touch</Button>
+          <Button variant="primary" disabled>
+            Get in Touch
+          </Button>
+        </div>
       </div>
+      <div className="flex flex-col gap-3">
+        <p className="text-detail uppercase tracking-wide text-fg-muted">Secondary</p>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button variant="secondary">Join Community</Button>
+          <Button variant="secondary" disabled>
+            Join Community
+          </Button>
+        </div>
+      </div>
+      <div className="flex flex-col gap-3">
+        <p className="text-detail uppercase tracking-wide text-fg-muted">Sizes</p>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button size="sm">Small</Button>
+          <Button size="default">Default</Button>
+          <Button size="lg">Large</Button>
+        </div>
+        <div className="flex flex-wrap items-center gap-4">
+          <Button variant="secondary" size="sm">
+            Small
+          </Button>
+          <Button variant="secondary" size="default">
+            Default
+          </Button>
+          <Button variant="secondary" size="lg">
+            Large
+          </Button>
+        </div>
+      </div>
+    </div>
+  ),
+}
+
+// Dark background rendering
+export const AllStatesDark: Story = {
+  parameters: {
+    controls: { hideNoControlsWarning: true },
+    backgrounds: { default: 'dark' },
+  },
+  render: () => (
+    <div className="dark bg-bg p-8">
       <div className="flex flex-wrap items-center gap-4">
-        <Button size="sm">Small</Button>
-        <Button size="default">Default</Button>
-        <Button size="lg">Large</Button>
-        <Button size="icon">
-          <ChevronRight className="h-4 w-4" />
+        <Button variant="primary">Get in Touch</Button>
+        <Button variant="primary" disabled>
+          Get in Touch
+        </Button>
+        <Button variant="secondary">Join Community</Button>
+        <Button variant="secondary" disabled>
+          Join Community
         </Button>
       </div>
     </div>
