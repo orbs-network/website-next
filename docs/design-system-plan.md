@@ -1,7 +1,7 @@
 # Orbs 2.0 Design System — Implementation Plan
 
-**Status:** Wave 1 — Atomic primitives (in progress)
-**Last updated:** 2026-04-20
+**Status:** Wave 1 — Atomic primitives (1.3 merged; 1.1, 1.2, 1.4, 1.5 rebased, awaiting merge)
+**Last updated:** 2026-04-21
 **Owner:** Sukh + Claude
 
 This document is the source of truth for the Orbs 2.0 design-system rollout. Update the **Progress table** and the **Status** field as PRs land. Do not rewrite the brief once it ships — append revisions at the bottom.
@@ -151,13 +151,13 @@ Sizes are v1 estimates read off the export; tune once real specs are available. 
 
 | # | PR | Branch | Status | PR link |
 |---|---|---|---|---|
-| — | Plan doc | `chore/design-system-plan` | in progress | [#2](https://github.com/orbs-network/website-next/pull/2) |
+| — | Plan doc | `chore/design-system-plan` | **merged** | [#2](https://github.com/orbs-network/website-next/pull/2) |
 | 0 | Design tokens | `feat/design-tokens` | **merged** | [#3](https://github.com/orbs-network/website-next/pull/3) |
-| 1.1 | Typography | `feat/typography` | in progress | — |
-| 1.2 | Buttons & Links | `feat/buttons-and-links` | in progress | — |
-| 1.3 | Icons & Logos | `feat/icons` | in progress | — |
-| 1.4 | Fields | `feat/fields` | in progress | — |
-| 1.5 | Tags & Badges | `feat/tags` | in progress | — |
+| 1.1 | Typography | `feat/typography` | rebased, ready | [#5](https://github.com/orbs-network/website-next/pull/5) |
+| 1.2 | Buttons & Links | `feat/buttons-and-links` | rebased, ready | [#8](https://github.com/orbs-network/website-next/pull/8) |
+| 1.3 | Icons & Logos | `feat/icons` | **merged** | [#9](https://github.com/orbs-network/website-next/pull/9) |
+| 1.4 | Fields | `feat/fields` | rebased, ready | [#6](https://github.com/orbs-network/website-next/pull/6) |
+| 1.5 | Tags & Badges | `feat/tags` | rebased, ready | [#7](https://github.com/orbs-network/website-next/pull/7) |
 | 2.1 | Cards | `feat/cards` | blocked on Wave 1 | — |
 | 2.2 | Text Layouts | `feat/text-layouts` | blocked on Wave 1 | — |
 | 2.3 | Signup Area | `feat/signup-area` | blocked on Wave 1 | — |
@@ -179,3 +179,4 @@ Homepage build. Uses the primitives and compositions above. Separate implementat
 
 - **2026-04-20** — Initial plan.
 - **2026-04-20** — Wave 0 (`feat/design-tokens`, #3) merged after two review rounds; lint CI hotfix (#4) shipped in parallel after Next 16 removed `next lint`. Wave 1 dispatched (1.1–1.5 in parallel worktrees).
+- **2026-04-21** — Wave 1.3 Icons (#9) merged first to carry the `.storybook/preview.tsx` decorator fix (the `.dark` class needed to live on `<html>` for CSS custom properties in `:root.dark` to flip — the prior wrapper-div placement was masking real dark-mode bugs across every Wave 1 story). Remaining Wave 1 PRs (#5, #6, #7, #8) rebased onto updated main; only `feat/typography` needed a manual `page.tsx` resolution (merged new `@/components/icons` `OrbsLogo` import path with the new `H1`/`H3` names). Suggested merge order going forward: #6 → #7 → #5 → #8 to minimise further rebase churn.
