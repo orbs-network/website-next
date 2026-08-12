@@ -20,3 +20,13 @@ export const HOME_PATH = '/'
 export function blogPagePath(pageNumber: number): string {
   return pageNumber <= 1 ? BLOG_INDEX_PATH : `${BLOG_INDEX_PATH}/page/${pageNumber}`
 }
+
+/**
+ * The route pattern, not a concrete URL. Passed to `revalidatePath(path, 'page')`
+ * to invalidate every generated page of the archive at once.
+ *
+ * Publishing a post shifts every later post down, so a single publish changes
+ * all N archive pages — not just the first. Targeting them individually would
+ * mean fetching the page count on every webhook.
+ */
+export const BLOG_PAGE_ROUTE = '/blog/page/[n]'

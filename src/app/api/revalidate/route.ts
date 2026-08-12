@@ -1,6 +1,6 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { BLOG_INDEX_PATH, HOME_PATH, postPath } from '@/app/lib/routes'
+import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, postPath } from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -94,21 +94,26 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ revalidated: ['layout'], topic, reason })
   }
 
-  const paths = [HOME_PATH, BLOG_INDEX_PATH]
-
-  // No shape check on purpose. This path is only ever handed to
-  // revalidatePath(), never to a redirect, so an odd slug is at worst a no-op
+  // No shape check on the slug here, on purpose. It is only ever handed to
+  // revalidatePath(), never to a redirect, so an odd value is at worst a no-op
   // against a path that does not exist. Validating would mean *skipping*
   // revalidation for a post the [slug] route serves happily, which is the
   // worse failure — it would leave real content stale.
-  paths.push(postPath(slug))
+  const paths = [HOME_PATH, BLOG_INDEX_PATH, postPath(slug)]
 
   for (const path of paths) {
     revalidatePath(path)
   }
 
-  console.info(`[revalidate] ${topic} ${entryId} -> ${paths.join(', ')}`)
-  return NextResponse.json({ revalidated: paths, topic })
+  // Publishing shifts every later post down a page, so one publish changes all
+  // N archive pages, not just the first. Passing the route pattern with type
+  // 'page' invalidates every generated instance in a single call, which avoids
+  // fetching the page count on every webhook.
+  revalidatePath(BLOG_PAGE_ROUTE, 'page')
+
+  const revalidated = [...paths, BLOG_PAGE_ROUTE]
+  console.info(`[revalidate] ${topic} ${entryId} -> ${revalidated.join(', ')}`)
+  return NextResponse.json({ revalidated, topic })
 }
 
 /*
