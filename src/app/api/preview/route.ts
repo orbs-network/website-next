@@ -1,9 +1,9 @@
 import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
-import { timingSafeEqual } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { getPostBySlug } from '@/app/lib/api'
 import { postPath } from '@/app/lib/routes'
+import { isValidSlug, secretMatches } from '@/app/lib/secrets'
 
 /**
  * Draft-mode entry point for Contentful's "Open preview" button.
@@ -16,16 +16,6 @@ import { postPath } from '@/app/lib/routes'
  * render on demand against the Preview API instead of serving the cached
  * published version.
  */
-
-function secretMatches(provided: string | null, expected: string): boolean {
-  if (!provided) return false
-
-  const a = Buffer.from(provided)
-  const b = Buffer.from(expected)
-  if (a.length !== b.length) return false
-
-  return timingSafeEqual(a, b)
-}
 
 export async function GET(request: NextRequest) {
   const expected = process.env.CONTENTFUL_PREVIEW_SECRET
@@ -46,10 +36,17 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Missing slug' }, { status: 400 })
   }
 
-  // Resolve the slug against Contentful before enabling draft mode, so a bad
-  // or stale link 404s here rather than redirecting into a broken page with a
-  // draft cookie already set. This also stops the redirect being used as an
-  // open redirect — we only ever send the user to a slug Contentful knows.
+  // Validate the shape before it reaches redirect(). Existence in Contentful is
+  // NOT sufficient protection against an open redirect: the slug field has no
+  // validation in the content model, so an entry slugged `//attacker.tld` would
+  // produce `Location: ///attacker.tld`, which browsers follow off-site.
+  if (!isValidSlug(slug)) {
+    console.warn(`[preview] rejected malformed slug: ${JSON.stringify(slug).slice(0, 120)}`)
+    return NextResponse.json({ message: 'Malformed slug' }, { status: 400 })
+  }
+
+  // Resolve against Contentful before enabling draft mode, so a stale link 404s
+  // here rather than redirecting into a broken page with a draft cookie set.
   const post = await getPostBySlug(slug, true)
   if (!post) {
     return NextResponse.json({ message: `No entry found for slug "${slug}"` }, { status: 404 })

@@ -1,7 +1,7 @@
 import { revalidatePath } from 'next/cache'
-import { timingSafeEqual } from 'node:crypto'
 import { NextRequest, NextResponse } from 'next/server'
 import { BLOG_INDEX_PATH, HOME_PATH, postPath } from '@/app/lib/routes'
+import { isValidSlug, secretMatches } from '@/app/lib/secrets'
 
 /**
  * On-demand revalidation for Contentful.
@@ -27,17 +27,6 @@ type ContentfulWebhookBody = {
   fields?: {
     slug?: Record<string, string | undefined>
   }
-}
-
-/** Constant-time comparison that does not leak length via early return. */
-function secretMatches(provided: string | null, expected: string): boolean {
-  if (!provided) return false
-
-  const a = Buffer.from(provided)
-  const b = Buffer.from(expected)
-  if (a.length !== b.length) return false
-
-  return timingSafeEqual(a, b)
 }
 
 export async function POST(request: NextRequest) {
@@ -86,8 +75,10 @@ export async function POST(request: NextRequest) {
 
   const paths = [HOME_PATH, BLOG_INDEX_PATH]
 
-  if (slug) {
+  if (slug && isValidSlug(slug)) {
     paths.push(postPath(slug))
+  } else if (slug) {
+    console.warn(`[revalidate] ${topic} for ${entryId} carried a malformed slug; refreshing index pages only`)
   } else {
     // A publish with no slug shouldn't happen, but refreshing the indexes is
     // strictly better than doing nothing.
