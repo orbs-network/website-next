@@ -5,6 +5,10 @@ import { OrbsLogo } from '@/components/icons'
 import { H1, H3 } from './components/typography'
 import { getAllPosts } from './lib/api'
 
+// Time-based fallback. On-demand invalidation via the Contentful webhook
+// (#19) is the primary path; this bounds staleness if a webhook is missed.
+export const revalidate = 3600
+
 export default async function Home() {
   const recentPosts = await getAllPosts().then((posts) => posts.slice(0, 3))
 

@@ -8,6 +8,10 @@ export const metadata: Metadata = {
   description: 'Read our latest blog posts',
 }
 
+// Time-based fallback. On-demand invalidation via the Contentful webhook
+// (#19) is the primary path; this bounds staleness if a webhook is missed.
+export const revalidate = 3600
+
 function Heading() {
   return (
     <div className="flex flex-col items-center justify-center pt-10 pb-32">
