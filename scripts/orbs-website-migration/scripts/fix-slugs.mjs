@@ -80,7 +80,7 @@ const toSlug = (x) => slugify(String(x || ''), { lower: true, strict: true })
 function isSafeSlug(value) {
   if (!value || value.length > 256) return false
   if (value === '.' || value === '..') return false
-  return !/[/\\%\x00-\x20\x7F]/.test(value)
+  return !/[/\\?#%\x00-\x20\x7F]/.test(value)
 }
 
 async function main() {

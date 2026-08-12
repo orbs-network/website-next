@@ -47,9 +47,15 @@ export function isValidSlug(slug: string): boolean {
   // Dot segments resolve to the parent/current directory rather than a page.
   if (slug === '.' || slug === '..') return false
 
-  // Rejects, in order: path separators (protocol-relative escape and
-  // traversal), `%` (percent-encoding ambiguity — we encode at the
-  // boundary, so a literal one is always a mistake), and ASCII control
-  // characters plus space. Deliberately ASCII-only, so U+200A survives.
-  return !/[/\\%\x00-\x20\x7F]/.test(slug)
+  // Rejects, in order:
+  //   /  \   path separators — protocol-relative escape and traversal
+  //   ?  #   URL component separators. `redirect(postPath(slug))` would treat
+  //          a slug of `foo?bar` as path `/foo` plus a query string, opening
+  //          the wrong page rather than the entry we just looked up.
+  //   %      percent-encoding ambiguity; we encode at the boundary, so a
+  //          literal one is always a mistake
+  //   \x00-\x20 \x7F  ASCII control characters and space
+  //
+  // Deliberately ASCII-only, so U+200A survives.
+  return !/[/\\?#%\x00-\x20\x7F]/.test(slug)
 }

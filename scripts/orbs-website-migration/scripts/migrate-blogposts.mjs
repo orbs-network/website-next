@@ -86,7 +86,7 @@ function stableAuthorIdFromPath(authorFilePath) {
 function isRoutableSlug(value) {
   if (!value || value.length > 256) return false
   if (value === '.' || value === '..') return false
-  return !/[/\\%\x00-\x20\x7F]/.test(value)
+  return !/[/\\?#%\x00-\x20\x7F]/.test(value)
 }
 
 function toSlug(x) {
