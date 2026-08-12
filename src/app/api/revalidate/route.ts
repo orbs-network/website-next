@@ -61,27 +61,37 @@ export async function POST(request: NextRequest) {
   }
 
   const topic = request.headers.get('x-contentful-topic') ?? 'unknown'
+  const action = topic.split('.').pop() ?? 'unknown'
   const contentType = body.sys?.contentType?.sys?.id
   const entryId = body.sys?.id ?? 'unknown'
+  const slug = body.fields?.slug?.[LOCALE]
 
-  // Anything that isn't a blog post (an author, an asset, a delete payload with
-  // no contentType) can affect an unknown number of pages. Revalidating the
-  // layout is blunt but correct; these are rare compared to post publishes.
-  if (contentType !== 'blogPost') {
+  // Cases where a targeted revalidation cannot be correct, so sweep everything:
+  //
+  //  - Removal (unpublish / delete / archive). Delete sends a DeletedEntry with
+  //    no fields, so there is often no slug to target — and this is precisely
+  //    when stale HTML must not keep being served.
+  //  - Anything that isn't a blogPost. An author or asset change can affect an
+  //    unbounded number of posts.
+  //
+  // A layout sweep is blunt, but these are rare next to routine publishes.
+  const isRemoval = action === 'unpublish' || action === 'delete' || action === 'archive'
+
+  if (isRemoval || contentType !== 'blogPost') {
     revalidatePath(HOME_PATH, 'layout')
-    console.info(`[revalidate] ${topic} ${contentType ?? 'unknown type'} ${entryId} -> revalidated all paths`)
-    return NextResponse.json({ revalidated: ['layout'], topic, contentType: contentType ?? null })
+    const reason = isRemoval ? action : `non-blogPost type "${contentType ?? 'unknown'}"`
+    console.info(`[revalidate] ${topic} ${entryId} (${reason}) -> swept all paths`)
+    return NextResponse.json({ revalidated: ['layout'], topic, reason })
   }
 
   const paths = [HOME_PATH, BLOG_INDEX_PATH]
 
-  // Delete and unpublish payloads carry no fields, so there may be no slug to
-  // target. The index pages still need refreshing either way.
-  const slug = body.fields?.slug?.[LOCALE]
   if (slug) {
     paths.push(postPath(slug))
   } else {
-    console.info(`[revalidate] ${topic} for ${entryId} carried no slug; refreshing index pages only`)
+    // A publish with no slug shouldn't happen, but refreshing the indexes is
+    // strictly better than doing nothing.
+    console.warn(`[revalidate] ${topic} for ${entryId} carried no slug; refreshing index pages only`)
   }
 
   for (const path of paths) {
@@ -91,3 +101,13 @@ export async function POST(request: NextRequest) {
   console.info(`[revalidate] ${topic} ${entryId} -> ${paths.join(', ')}`)
   return NextResponse.json({ revalidated: paths, topic })
 }
+
+/*
+ * Known limitation: renaming a slug.
+ *
+ * The publish payload carries only the new slug, so the old URL keeps serving
+ * cached HTML until the 1h `revalidate` fallback expires. Fixing it properly
+ * means tracking slug history, which is not worth it while renames are rare and
+ * the staleness is bounded. If that changes, the fix is to store the previous
+ * slug per entry ID and revalidate both.
+ */

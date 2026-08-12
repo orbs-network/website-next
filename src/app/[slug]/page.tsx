@@ -113,7 +113,11 @@ export async function generateStaticParams() {
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
   const { slug } = await params
-  const post = await getPostBySlug(slug)
+  // Must match the source the page body reads, or previewing an unpublished or
+  // retitled draft renders draft content under published (or "Post Not Found")
+  // metadata.
+  const { isEnabled: isDraft } = await draftMode()
+  const post = await getPostBySlug(slug, isDraft)
 
   if (!post) {
     return {
