@@ -6,10 +6,19 @@ import { secretMatches } from '@/app/lib/secrets'
 /**
  * On-demand revalidation for Contentful.
  *
- * Configure a webhook in the Contentful space pointing at this route for
- * Entry publish / unpublish / delete, with a custom header:
+ * Configure a webhook in the Contentful space pointing at this route with the
+ * custom header:
  *
  *   x-contentful-webhook-secret: <CONTENTFUL_REVALIDATE_SECRET>
+ *
+ * Subscribe it to ALL of the following, since the handler depends on each:
+ *
+ *   Entry:  publish, unpublish, delete, archive
+ *   Asset:  publish, unpublish, delete, archive
+ *
+ * Entry events cover posts and authors. Asset events matter because a
+ * re-uploaded hero image or changed caption alters pages that no entry event
+ * would touch. Omitting archive leaves archived posts live.
  *
  * Publishing a post refreshes that post plus the pages that list it, rather
  * than forcing a full redeploy. The `revalidate = 3600` on the content routes
@@ -62,31 +71,37 @@ export async function POST(request: NextRequest) {
   //    when stale HTML must not keep being served.
   //  - Anything that isn't a blogPost. An author or asset change can affect an
   //    unbounded number of posts.
+  //  - A blogPost publish carrying no slug. `slug` is optional in the content
+  //    model, so an editor can clear it. The entry's old URL is then
+  //    unreachable from this payload and would otherwise stay cached.
   //
   // A layout sweep is blunt, but these are rare next to routine publishes.
   const isRemoval = action === 'unpublish' || action === 'delete' || action === 'archive'
+  const isBlogPost = contentType === 'blogPost'
 
-  if (isRemoval || contentType !== 'blogPost') {
+  // Narrowing on `!slug` directly (rather than via a derived boolean) is what
+  // lets TypeScript treat `slug` as a string below.
+  if (isRemoval || !isBlogPost || !slug) {
     revalidatePath(HOME_PATH, 'layout')
-    const reason = isRemoval ? action : `non-blogPost type "${contentType ?? 'unknown'}"`
+
+    const reason = isRemoval
+      ? action
+      : !isBlogPost
+        ? `non-blogPost type "${contentType ?? 'unknown'}"`
+        : 'blogPost publish with no slug'
+
     console.info(`[revalidate] ${topic} ${entryId} (${reason}) -> swept all paths`)
     return NextResponse.json({ revalidated: ['layout'], topic, reason })
   }
 
   const paths = [HOME_PATH, BLOG_INDEX_PATH]
 
-  // No shape check here on purpose. This path is only ever handed to
+  // No shape check on purpose. This path is only ever handed to
   // revalidatePath(), never to a redirect, so an odd slug is at worst a no-op
   // against a path that does not exist. Validating would mean *skipping*
   // revalidation for a post the [slug] route serves happily, which is the
   // worse failure — it would leave real content stale.
-  if (slug) {
-    paths.push(postPath(slug))
-  } else {
-    // A publish with no slug shouldn't happen, but refreshing the indexes is
-    // strictly better than doing nothing.
-    console.warn(`[revalidate] ${topic} for ${entryId} carried no slug; refreshing index pages only`)
-  }
+  paths.push(postPath(slug))
 
   for (const path of paths) {
     revalidatePath(path)
