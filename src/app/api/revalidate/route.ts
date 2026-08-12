@@ -11,6 +11,17 @@ import { secretMatches } from '@/app/lib/secrets'
  *
  *   x-contentful-webhook-secret: <CONTENTFUL_REVALIDATE_SECRET>
  *
+ * IMPORTANT — the URL must end with a trailing slash:
+ *
+ *   https://<host>/api/revalidate/          correct
+ *   https://<host>/api/revalidate           308 redirect
+ *
+ * `trailingSlash: true` in next.config.mjs applies to route handlers as well
+ * as pages. A POST to the slashless form returns a 308, and while 308 is
+ * defined to preserve method and body, whether the webhook client follows it
+ * at all is out of our hands. Point it at the canonical form and the question
+ * never arises.
+ *
  * Subscribe it to ALL of the following, since the handler depends on each:
  *
  *   Entry:  publish, unpublish, delete, archive

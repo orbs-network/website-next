@@ -10,7 +10,12 @@ import { isValidSlug, secretMatches } from '@/app/lib/secrets'
  *
  * Set the preview URL on the blogPost content type to:
  *
- *   https://<host>/api/preview?secret=<CONTENTFUL_PREVIEW_SECRET>&slug={entry.fields.slug}
+ *   https://<host>/api/preview/?secret=<CONTENTFUL_PREVIEW_SECRET>&slug={entry.fields.slug}
+ *
+ * Note the trailing slash before the query string. `trailingSlash: true` in
+ * next.config.mjs applies to route handlers, so the slashless form returns a
+ * 308 — which needlessly copies the secret into a Location header that proxies
+ * and access logs will record along the way.
  *
  * Enabling draft mode sets a signed bypass cookie, which makes the target page
  * render on demand against the Preview API instead of serving the cached
