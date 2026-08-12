@@ -7,7 +7,7 @@ import { notFound } from 'next/navigation'
 import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
 import { H4 } from '../components/typography'
-import { getAllPosts, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
+import { getAllPostSlugs, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
 import { BackButton } from './back-button'
 
 // Helper to unwrap paragraph from list item children
@@ -105,13 +105,9 @@ type Props = {
 export const revalidate = 3600
 
 export async function generateStaticParams() {
-  const posts = await getAllPosts()
+  const slugs = await getAllPostSlugs()
 
-  return posts
-    .filter((post) => post.slug)
-    .map((post) => ({
-      slug: post.slug as string,
-    }))
+  return slugs.map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
