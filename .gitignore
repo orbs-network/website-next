@@ -1,7 +1,8 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
 
 # dependencies
-/node_modules
+# NB: unanchored so nested installs (e.g. scripts/*/node_modules) are caught too.
+node_modules/
 /.pnp
 .pnp.js
 .yarn/install-state.gz
@@ -41,3 +42,9 @@ contentful-cli-config.json
 
 *storybook.log
 storybook-static
+
+# migration inputs — copied from the legacy orbs-network/website checkout at
+# run time, never committed. See scripts/orbs-website-migration/README.md.
+scripts/orbs-website-migration/blog/
+scripts/orbs-website-migration/public/
+scripts/orbs-website-migration/.migrate-blogposts.checkpoint.json
