@@ -70,6 +70,25 @@ function stableAuthorIdFromPath(authorFilePath) {
   return `author-${base}-${hash}`
 }
 
+/**
+ * Denylist, not an allowlist. Four live legacy URLs contain characters a tidy
+ * allowlist rejects and all return 200 on production today — two with `&`, two
+ * separated by U+200A hair spaces. `&` is a legal sub-delim in an RFC 3986 path
+ * segment and non-ASCII encodes fine; neither can escape the path.
+ *
+ * Rejects path separators, `%`, and ASCII control characters plus space. The
+ * three legacy `blogUrl` values beginning `blog/` are caught here, and are 404
+ * on production anyway.
+ *
+ * NB: do not use `\s` — in JavaScript it matches U+2000-U+200A and would
+ * reject the two live hair-space slugs.
+ */
+function isRoutableSlug(value) {
+  if (!value || value.length > 256) return false
+  if (value === '.' || value === '..') return false
+  return !/[/\\%\x00-\x20\x7F]/.test(value)
+}
+
 function toSlug(x) {
   return slugify(String(x || ''), { lower: true, strict: true })
 }
@@ -520,7 +539,7 @@ async function main() {
       const entryId = stableBlogEntryIdFromSlug(idSlug)
 
       const legacyUrl = String(fm.blogUrl || fm.slug || '').trim()
-      const slug = legacyUrl && /^[A-Za-z0-9._~-]+$/.test(legacyUrl) ? legacyUrl : idSlug
+      const slug = legacyUrl && isRoutableSlug(legacyUrl) ? legacyUrl : idSlug
 
       if (legacyUrl && slug !== legacyUrl) {
         console.warn(`⚠️  blogUrl is not URL-safe, falling back to slugified form: ${JSON.stringify(legacyUrl)}`)

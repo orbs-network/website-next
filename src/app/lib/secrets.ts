@@ -26,22 +26,30 @@ export function secretMatches(provided: string | null | undefined, expected: str
  * like `//attacker.tld`, which builds the path `///attacker.tld` — browsers
  * resolve that as a protocol-relative external URL.
  *
- * This deliberately checks for redirect safety, NOT for conformance to the
- * `[a-z0-9-]` shape the migration script happens to produce. An editor typing
- * `perpetual-hub-2.0` or `my_post` creates a slug the `[slug]` route serves
- * perfectly well, and rejecting it here would break preview and drop targeted
- * revalidation for that post.
+ * This is a DENYLIST of what breaks routing or redirect safety, not an
+ * allowlist of tidy-looking slugs. An allowlist was tried and was wrong: the
+ * legacy archive contains live URLs that a conservative pattern rejects, and
+ * these all return 200 on production today:
  *
- * The allowlist is the RFC 3986 "unreserved" set (ALPHA / DIGIT / - . _ ~) —
- * precisely the characters that carry no special meaning in a path segment,
- * which rules out `/`, `\`, `:` and `%` without guessing at naming conventions.
+ *   /Orbs-Farming-&-Single-Stake-Goes-Live-on-Pangolin/
+ *   /How-to-Use-the-Orbs-Fossil-Farms-&-Extinction-Pool-on-DinoSwap/
+ *   ...plus two whose titles are separated by U+200A hair spaces
+ *
+ * `&` is a valid sub-delim in an RFC 3986 path segment, and non-ASCII is fine
+ * once percent-encoded. Neither can escape the path, so neither is our problem.
+ *
+ * NB: do not reach for `\s` here. In JavaScript it matches U+2000–U+200A, so
+ * it would reject the two live hair-space slugs above.
  */
-const UNRESERVED_ONLY = /^[A-Za-z0-9._~-]+$/
-
 export function isValidSlug(slug: string): boolean {
   if (slug.length === 0 || slug.length > 256) return false
+
   // Dot segments resolve to the parent/current directory rather than a page.
   if (slug === '.' || slug === '..') return false
 
-  return UNRESERVED_ONLY.test(slug)
+  // Rejects, in order: path separators (protocol-relative escape and
+  // traversal), `%` (percent-encoding ambiguity — we encode at the
+  // boundary, so a literal one is always a mistake), and ASCII control
+  // characters plus space. Deliberately ASCII-only, so U+200A survives.
+  return !/[/\\%\x00-\x20\x7F]/.test(slug)
 }

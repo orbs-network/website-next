@@ -19,7 +19,8 @@
 //   node scripts/fix-slugs.mjs            # dry run, writes nothing
 //   node scripts/fix-slugs.mjs --apply    # perform the updates
 //
-// Requires CONTENTFUL_MANAGEMENT_TOKEN and CONTENTFUL_SPACE_ID.
+// Requires CONTENTFUL_MANAGEMENT_TOKEN, CONTENTFUL_SPACE_ID, and
+// LEGACY_BLOGS_LIST pointing at the legacy repo's content/blog/blogs.md.
 
 import 'dotenv/config'
 import contentful from 'contentful-management'
@@ -43,9 +44,16 @@ if (!CONTENTFUL_MANAGEMENT_TOKEN || !CONTENTFUL_SPACE_ID) {
   throw new Error('Missing CONTENTFUL_MANAGEMENT_TOKEN or CONTENTFUL_SPACE_ID')
 }
 
-const blogsList = LEGACY_BLOGS_LIST || '/home/sukh/dev/website/content/blog/blogs.md'
+if (!LEGACY_BLOGS_LIST) {
+  throw new Error(
+    'Set LEGACY_BLOGS_LIST to the legacy blogs.md, e.g.\n' +
+      '  LEGACY_BLOGS_LIST=/path/to/orbs-network-website/content/blog/blogs.md'
+  )
+}
+
+const blogsList = LEGACY_BLOGS_LIST
 if (!fs.existsSync(blogsList)) {
-  throw new Error(`Legacy blogs.md not found at ${blogsList}. Set LEGACY_BLOGS_LIST.`)
+  throw new Error(`Legacy blogs.md not found at ${blogsList}`)
 }
 
 const sha1 = (x) => crypto.createHash('sha1').update(x).digest('hex')
@@ -59,13 +67,20 @@ function stableBlogEntryIdFromSlug(slug) {
 const toSlug = (x) => slugify(String(x || ''), { lower: true, strict: true })
 
 /**
- * The legacy `blogUrl` is the live path segment, so it is URL-safe by
- * definition. Still sanity-checked: a value containing a slash or whitespace
- * would mean the frontmatter is not what we think it is, and we should stop
- * rather than write it.
+ * Denylist, not an allowlist. Four live legacy URLs contain characters a tidy
+ * allowlist rejects and all return 200 on production today — two with `&`, two
+ * separated by U+200A hair spaces.
+ *
+ * Rejects path separators, `%`, and ASCII control characters plus space. The
+ * three legacy `blogUrl` values beginning `blog/` are caught here, and are 404
+ * on production anyway.
+ *
+ * NB: do not use `\s` — in JavaScript it matches U+2000-U+200A.
  */
 function isSafeSlug(value) {
-  return /^[A-Za-z0-9._~-]+$/.test(value)
+  if (!value || value.length > 256) return false
+  if (value === '.' || value === '..') return false
+  return !/[/\\%\x00-\x20\x7F]/.test(value)
 }
 
 async function main() {
