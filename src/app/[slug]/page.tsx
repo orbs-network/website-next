@@ -53,7 +53,7 @@ const richTextOptions: Options = {
               width={file.details?.image?.width || 800}
               height={file.details?.image?.height || 600}
               className="rounded-[var(--radius)] w-full h-auto"
-              unoptimized
+              sizes="(min-width: 896px) 896px, 100vw"
             />
             {description && (
               <figcaption className="text-center text-sm text-muted-foreground mt-2">{description}</figcaption>
@@ -161,8 +161,9 @@ export default async function BlogPostPage({ params }: Props) {
               src={heroImageUrl}
               alt={post.title}
               fill
+              priority
               className="object-cover rounded-[var(--radius)]"
-              unoptimized
+              sizes="(min-width: 896px) 896px, 100vw"
             />
           </div>
         )}
