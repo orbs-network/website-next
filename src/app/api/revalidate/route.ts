@@ -1,7 +1,7 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import { BLOG_INDEX_PATH, HOME_PATH, postPath } from '@/app/lib/routes'
-import { isValidSlug, secretMatches } from '@/app/lib/secrets'
+import { secretMatches } from '@/app/lib/secrets'
 
 /**
  * On-demand revalidation for Contentful.
@@ -75,10 +75,13 @@ export async function POST(request: NextRequest) {
 
   const paths = [HOME_PATH, BLOG_INDEX_PATH]
 
-  if (slug && isValidSlug(slug)) {
+  // No shape check here on purpose. This path is only ever handed to
+  // revalidatePath(), never to a redirect, so an odd slug is at worst a no-op
+  // against a path that does not exist. Validating would mean *skipping*
+  // revalidation for a post the [slug] route serves happily, which is the
+  // worse failure — it would leave real content stale.
+  if (slug) {
     paths.push(postPath(slug))
-  } else if (slug) {
-    console.warn(`[revalidate] ${topic} for ${entryId} carried a malformed slug; refreshing index pages only`)
   } else {
     // A publish with no slug shouldn't happen, but refreshing the indexes is
     // strictly better than doing nothing.
