@@ -16,6 +16,24 @@ export function postPath(slug: string): string {
   return `/${slug}/`
 }
 
+/**
+ * Same path, percent-encoded — use this anywhere the value becomes a
+ * `Location` header.
+ *
+ * Two live legacy slugs contain U+200A hair spaces, and a `Location` header is
+ * a ByteString: any code point above 255 throws rather than degrading.
+ *
+ *   new Headers({ location: '/an-introduction - a-talk/' })
+ *   -> TypeError: ... character at index 16 has a value of 8202
+ *
+ * So previewing either of those posts would 500. `revalidatePath()` is a
+ * different matter and takes the raw form from `postPath` — it matches against
+ * the pathname Next generated from `generateStaticParams`, not a header.
+ */
+export function postRedirectPath(slug: string): string {
+  return `/${encodeURIComponent(slug)}/`
+}
+
 export const BLOG_INDEX_PATH = '/blog/'
 export const HOME_PATH = '/'
 
