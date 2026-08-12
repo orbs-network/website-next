@@ -505,8 +505,26 @@ async function main() {
       const { data: fm, content } = matter(raw)
 
       const title = String(fm.title || path.basename(mdFile, path.extname(mdFile))).trim()
-      const slug = toSlug(fm.blogUrl || fm.slug || title)
-      const entryId = stableBlogEntryIdFromSlug(slug)
+
+      // Two different values, deliberately.
+      //
+      // `idSlug` is the lowercased form. Entry IDs are immutable in Contentful
+      // and the 320 entries already migrated derived theirs from it, so this
+      // derivation must never change or a re-run duplicates every post.
+      //
+      // `slug` is the PUBLISHED URL and must match the legacy site byte for
+      // byte. Production URLs are case-sensitive and preserve original casing
+      // and punctuation, so lowercasing here produced a different URL for 233
+      // of 457 posts — each of which would 404 at cutover. See #52.
+      const idSlug = toSlug(fm.blogUrl || fm.slug || title)
+      const entryId = stableBlogEntryIdFromSlug(idSlug)
+
+      const legacyUrl = String(fm.blogUrl || fm.slug || '').trim()
+      const slug = legacyUrl && /^[A-Za-z0-9._~-]+$/.test(legacyUrl) ? legacyUrl : idSlug
+
+      if (legacyUrl && slug !== legacyUrl) {
+        console.warn(`⚠️  blogUrl is not URL-safe, falling back to slugified form: ${JSON.stringify(legacyUrl)}`)
+      }
 
       // Create-only mode: if exists, skip early
       if (onlyCreateNew) {
