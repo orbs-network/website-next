@@ -87,6 +87,23 @@ const CDA_MAX_LIMIT = 1000
 /** Posts per page on the blog index. Divides evenly into the 1/2/3-col grid. */
 export const POSTS_PER_PAGE = 12
 
+/**
+ * The single ordering used by every post query.
+ *
+ * `sys.id` breaks ties on `date`. Dates are day-precision and 18 of the current
+ * 320 posts share one with another post, so date alone is not a total order.
+ * That matters in two ways:
+ *
+ *  - Any query paginating on `skip` can return a tie group in a different
+ *    order between consecutive pages, so a post lands on both pages or on
+ *    neither. For `getAllPostSlugs` that means a post never gets prerendered.
+ *  - Two queries using different orderings disagree with each other, so the
+ *    home page's recent posts can contradict page 1 of the blog.
+ *
+ * Anything ordering posts must use this. Do not inline a different one.
+ */
+const POST_ORDER = ['-fields.date', 'sys.id'] as const
+
 export type PostPage = {
   items: BlogPostFields[]
   total: number
@@ -95,22 +112,17 @@ export type PostPage = {
 /**
  * One page of posts, newest first, plus the total count for pagination.
  *
- * Ordering is done by Contentful (`-fields.date`) rather than in JS, so each
- * page is a slice of a globally sorted set. Sorting client-side over a partial
- * result is what previously disguised the fact that only the first 100 entries
- * were being returned at all.
+ * Ordering is done by Contentful rather than in JS, so each page is a slice of
+ * a globally sorted set. Sorting client-side over a partial result is what
+ * previously disguised the fact that only the first 100 entries were being
+ * returned at all.
  */
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
   const client = getClient()
 
   const page = await client.getEntries<TypeBlogPostSkeleton>({
-    // `sys.id` breaks ties on `date`. Dates are day-precision and 18 of the
-    // current 320 posts share one with another post; without a unique
-    // secondary key, Contentful may order a tie group differently between the
-    // request for page N and the request for page N+1, so a post can appear on
-    // both pages or on neither.
     content_type: 'blogPost',
-    order: ['-fields.date', 'sys.id'],
+    order: [...POST_ORDER],
     limit: Math.min(limit, CDA_MAX_LIMIT),
     skip,
   })
@@ -130,7 +142,7 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
 
   const posts = await client.getEntries<TypeBlogPostSkeleton>({
     content_type: 'blogPost',
-    order: ['-fields.date'],
+    order: [...POST_ORDER],
     limit: count,
   })
 
@@ -154,7 +166,7 @@ export async function getAllPostSlugs(): Promise<string[]> {
     const page = await client.getEntries<TypeBlogPostSkeleton>({
       content_type: 'blogPost',
       select: ['fields.slug'],
-      order: ['-fields.date'],
+      order: [...POST_ORDER],
       limit: CDA_MAX_LIMIT,
       skip,
     })
