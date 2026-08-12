@@ -48,3 +48,4 @@ storybook-static
 scripts/orbs-website-migration/blog/
 scripts/orbs-website-migration/public/
 scripts/orbs-website-migration/.migrate-blogposts.checkpoint.json
+.env*

@@ -53,7 +53,7 @@ const richTextOptions: Options = {
               width={file.details?.image?.width || 800}
               height={file.details?.image?.height || 600}
               className="rounded-[var(--radius)] w-full h-auto"
-              unoptimized
+              sizes="(min-width: 896px) 896px, 100vw"
             />
             {description && (
               <figcaption className="text-center text-sm text-muted-foreground mt-2">{description}</figcaption>
@@ -99,6 +99,10 @@ const richTextOptions: Options = {
 type Props = {
   params: Promise<{ slug: string }>
 }
+
+// Time-based fallback. On-demand invalidation via the Contentful webhook
+// (#19) is the primary path; this bounds staleness if a webhook is missed.
+export const revalidate = 3600
 
 export async function generateStaticParams() {
   const posts = await getAllPosts()
@@ -161,8 +165,9 @@ export default async function BlogPostPage({ params }: Props) {
               src={heroImageUrl}
               alt={post.title}
               fill
+              priority
               className="object-cover rounded-[var(--radius)]"
-              unoptimized
+              sizes="(min-width: 896px) 896px, 100vw"
             />
           </div>
         )}
