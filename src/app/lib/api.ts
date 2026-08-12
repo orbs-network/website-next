@@ -62,18 +62,87 @@ function getClient() {
   })
 }
 
+// Contentful's CDA caps a single response at 1000 entries and defaults to 100.
+// Always pass an explicit limit — the default silently truncates.
+const CDA_MAX_LIMIT = 1000
+
+/**
+ * Every blog post, newest first.
+ *
+ * Ordering is done by Contentful (`-fields.date`) rather than in JS so that
+ * each page of a paginated fetch is drawn from a globally sorted set. Sorting
+ * client-side over a partial result is what previously disguised the fact that
+ * only the first 100 entries were being returned at all.
+ */
 export async function getAllPosts(): Promise<BlogPostFields[]> {
+  const client = getClient()
+  const items: BlogPostFields[] = []
+  let skip = 0
+
+  for (;;) {
+    const page = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      order: ['-fields.date'],
+      limit: CDA_MAX_LIMIT,
+      skip,
+    })
+
+    items.push(...page.items.map((post) => post.fields))
+
+    skip += page.items.length
+    if (skip >= page.total || page.items.length === 0) break
+  }
+
+  return items
+}
+
+/**
+ * The N most recent posts. Prefer this over slicing `getAllPosts()` — it asks
+ * Contentful for N rather than pulling the whole archive to discard most of it.
+ */
+export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
   const client = getClient()
 
   const posts = await client.getEntries<TypeBlogPostSkeleton>({
     content_type: 'blogPost',
+    order: ['-fields.date'],
+    limit: count,
   })
 
-  return posts.items
-    .map((post) => post.fields)
-    .sort((a, b) => {
-      return new Date(b.date).getTime() - new Date(a.date).getTime()
+  return posts.items.map((post) => post.fields)
+}
+
+/**
+ * Slugs only, for `generateStaticParams()`.
+ *
+ * Uses `select` so Contentful returns just the slug field instead of every
+ * post's full Rich Text body — the route only needs the slugs to enumerate
+ * paths, and fetching complete documents for that is a large build-time cost
+ * that grows with the archive.
+ */
+export async function getAllPostSlugs(): Promise<string[]> {
+  const client = getClient()
+  const slugs: string[] = []
+  let skip = 0
+
+  for (;;) {
+    const page = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      select: ['fields.slug'],
+      order: ['-fields.date'],
+      limit: CDA_MAX_LIMIT,
+      skip,
     })
+
+    for (const post of page.items) {
+      if (post.fields.slug) slugs.push(post.fields.slug)
+    }
+
+    skip += page.items.length
+    if (skip >= page.total || page.items.length === 0) break
+  }
+
+  return slugs
 }
 
 export async function getPostBySlug(slug: string): Promise<BlogPostFields | null> {
@@ -92,27 +161,3 @@ export async function getPostBySlug(slug: string): Promise<BlogPostFields | null
   return posts.items[0].fields
 }
 
-export async function getPostAndMorePosts(slug: string): Promise<{
-  post: BlogPostFields | null
-  morePosts: BlogPostFields[]
-}> {
-  const client = getClient()
-
-  const posts = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    'fields.slug': slug,
-    limit: 1,
-  })
-
-  if (!posts.items.length) {
-    return { post: null, morePosts: [] }
-  }
-
-  const post = posts.items[0].fields
-
-  // Fetch more posts excluding the current one
-  const allPosts = await getAllPosts()
-  const morePosts = allPosts.filter((p) => p.slug !== slug).slice(0, 3)
-
-  return { post, morePosts }
-}
