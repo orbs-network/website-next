@@ -84,39 +84,41 @@ function getClient(preview = false) {
 // Always pass an explicit limit — the default silently truncates.
 const CDA_MAX_LIMIT = 1000
 
-/**
- * Every blog post, newest first.
- *
- * Ordering is done by Contentful (`-fields.date`) rather than in JS so that
- * each page of a paginated fetch is drawn from a globally sorted set. Sorting
- * client-side over a partial result is what previously disguised the fact that
- * only the first 100 entries were being returned at all.
- */
-export async function getAllPosts(): Promise<BlogPostFields[]> {
-  const client = getClient()
-  const items: BlogPostFields[] = []
-  let skip = 0
+/** Posts per page on the blog index. Divides evenly into the 1/2/3-col grid. */
+export const POSTS_PER_PAGE = 12
 
-  for (;;) {
-    const page = await client.getEntries<TypeBlogPostSkeleton>({
-      content_type: 'blogPost',
-      order: ['-fields.date'],
-      limit: CDA_MAX_LIMIT,
-      skip,
-    })
-
-    items.push(...page.items.map((post) => post.fields))
-
-    skip += page.items.length
-    if (skip >= page.total || page.items.length === 0) break
-  }
-
-  return items
+export type PostPage = {
+  items: BlogPostFields[]
+  total: number
 }
 
 /**
- * The N most recent posts. Prefer this over slicing `getAllPosts()` — it asks
- * Contentful for N rather than pulling the whole archive to discard most of it.
+ * One page of posts, newest first, plus the total count for pagination.
+ *
+ * Ordering is done by Contentful (`-fields.date`) rather than in JS, so each
+ * page is a slice of a globally sorted set. Sorting client-side over a partial
+ * result is what previously disguised the fact that only the first 100 entries
+ * were being returned at all.
+ */
+export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
+  const client = getClient()
+
+  const page = await client.getEntries<TypeBlogPostSkeleton>({
+    content_type: 'blogPost',
+    order: ['-fields.date'],
+    limit: Math.min(limit, CDA_MAX_LIMIT),
+    skip,
+  })
+
+  return {
+    items: page.items.map((post) => post.fields),
+    total: page.total,
+  }
+}
+
+/**
+ * The N most recent posts. Asks Contentful for N rather than fetching a larger
+ * set and discarding most of it.
  */
 export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
   const client = getClient()

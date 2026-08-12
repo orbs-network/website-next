@@ -12,3 +12,11 @@ export function postPath(slug: string): string {
 
 export const BLOG_INDEX_PATH = '/blog'
 export const HOME_PATH = '/'
+
+/**
+ * Page 1 lives at `/blog` rather than `/blog/page/1`, so there is exactly one
+ * URL for it. Emitting both would split ranking signals between duplicates.
+ */
+export function blogPagePath(pageNumber: number): string {
+  return pageNumber <= 1 ? BLOG_INDEX_PATH : `${BLOG_INDEX_PATH}/page/${pageNumber}`
+}
