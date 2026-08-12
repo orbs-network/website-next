@@ -5,7 +5,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 ## Commands
 
 - `npm run dev` — Next.js dev server with Turbopack (http://localhost:3000)
-- `npm run build` — Production build; emits a static site to `out/` (see Static Export below)
+- `npm run build` — Production build (server build to `.next/`, deployed on Vercel)
 - `npm run start` — Serve a production build
 - `npm run lint` — ESLint (`next/core-web-vitals` + `eslint-plugin-storybook`)
 - `npm run storybook` — Storybook on port 6006
@@ -16,7 +16,9 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Architecture
 
-**Next.js 16 App Router, statically exported.** `next.config.mjs` sets `output: 'export'` and `images.unoptimized: true`, and `reactCompiler: true` enables the React Compiler for automatic memoization. Everything must be buildable into a static site — no server-only runtime features (no route handlers that need a server at request time, no ISR, no middleware that depends on request context). The `src/app/api/` directory is empty and should stay that way unless the export target changes.
+**Next.js 16 App Router, deployed on Vercel.** `reactCompiler: true` in `next.config.mjs` enables the React Compiler for automatic memoization. Pages are prerendered at build time via `generateStaticParams()` and served from the CDN; server features (route handlers, ISR, on-demand revalidation, draft mode) are available and in use.
+
+This replaced a static export (`output: 'export'` + `images.unoptimized: true`), which could not run `next/image` and forced a full rebuild of every blog page to publish one post. Rationale in `docs/migration-plan.md` section 2.1. Do not reintroduce `output: 'export'` — Contentful revalidation webhooks, draft-mode preview, and the Resend form handlers all require a server.
 
 **Three component roots, by convention:**
 - `src/components/ui/` — shadcn/ui primitives (`components.json` points here; style `new-york`, base color `neutral`, CSS variables). Add shadcn components here via the CLI.
