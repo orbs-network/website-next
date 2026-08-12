@@ -24,6 +24,20 @@ export async function GET(request: NextRequest) {
     return NextResponse.json({ message: 'Preview is not configured' }, { status: 500 })
   }
 
+  // Contentful's "Open preview" is a top-level navigation, so Sec-Fetch-Dest is
+  // `document`. Anything else — `image`, `script`, `empty` — means the URL was
+  // embedded in a third-party page, which would silently plant the site-wide
+  // draft cookie in a visitor's browser and expose unpublished content to them.
+  //
+  // Fails OPEN when the header is absent so that clients which don't send it
+  // (older browsers, curl, server-side checks) still work. This narrows the
+  // window rather than closing it; the secret remains the real control.
+  const fetchDest = request.headers.get('sec-fetch-dest')
+  if (fetchDest && fetchDest !== 'document') {
+    console.warn(`[preview] rejected non-navigation request (sec-fetch-dest: ${fetchDest})`)
+    return NextResponse.json({ message: 'Preview must be opened as a navigation' }, { status: 403 })
+  }
+
   const { searchParams } = request.nextUrl
   const slug = searchParams.get('slug')
 
