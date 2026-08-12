@@ -48,12 +48,30 @@ export function getAuthorInfo(author: MaybeAuthor): AuthorInfo | null {
 
 const spaceId = process.env.CONTENTFUL_SPACE_ID
 const accessToken = process.env.CONTENTFUL_ACCESS_TOKEN
+const previewAccessToken = process.env.CONTENTFUL_PREVIEW_ACCESS_TOKEN
 
-function getClient() {
+/**
+ * @param preview When true, read through Contentful's Preview API so that
+ *   unpublished drafts are returned. Only ever set from `draftMode()`, which
+ *   requires the signed bypass cookie issued by /api/preview.
+ */
+function getClient(preview = false) {
   if (!spaceId || !accessToken) {
     throw new Error(
       'Contentful environment variables are not set. ' + 'Please set CONTENTFUL_SPACE_ID and CONTENTFUL_ACCESS_TOKEN.'
     )
+  }
+
+  if (preview) {
+    if (!previewAccessToken) {
+      throw new Error('Draft mode is enabled but CONTENTFUL_PREVIEW_ACCESS_TOKEN is not set.')
+    }
+
+    return contentful.createClient({
+      space: spaceId,
+      accessToken: previewAccessToken,
+      host: 'preview.contentful.com',
+    })
   }
 
   return contentful.createClient({
@@ -145,8 +163,12 @@ export async function getAllPostSlugs(): Promise<string[]> {
   return slugs
 }
 
-export async function getPostBySlug(slug: string): Promise<BlogPostFields | null> {
-  const client = getClient()
+/**
+ * @param preview Read through the Preview API so unpublished drafts resolve.
+ *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
+ */
+export async function getPostBySlug(slug: string, preview = false): Promise<BlogPostFields | null> {
+  const client = getClient(preview)
 
   const posts = await client.getEntries<TypeBlogPostSkeleton>({
     content_type: 'blogPost',

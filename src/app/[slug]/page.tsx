@@ -4,6 +4,7 @@ import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
+import { draftMode } from 'next/headers'
 import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
 import { H4 } from '../components/typography'
@@ -128,7 +129,8 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
 export default async function BlogPostPage({ params }: Props) {
   const { slug } = await params
-  const post = await getPostBySlug(slug)
+  const { isEnabled: isDraft } = await draftMode()
+  const post = await getPostBySlug(slug, isDraft)
 
   if (!post) {
     notFound()
