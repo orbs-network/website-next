@@ -104,8 +104,13 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
   const client = getClient()
 
   const page = await client.getEntries<TypeBlogPostSkeleton>({
+    // `sys.id` breaks ties on `date`. Dates are day-precision and 18 of the
+    // current 320 posts share one with another post; without a unique
+    // secondary key, Contentful may order a tie group differently between the
+    // request for page N and the request for page N+1, so a post can appear on
+    // both pages or on neither.
     content_type: 'blogPost',
-    order: ['-fields.date'],
+    order: ['-fields.date', 'sys.id'],
     limit: Math.min(limit, CDA_MAX_LIMIT),
     skip,
   })

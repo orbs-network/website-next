@@ -23,12 +23,26 @@ export async function generateStaticParams() {
   }))
 }
 
-/** Rejects `1`, `0`, `-3`, `2.5`, `abc`, `02` — anything but a plain integer >= 2. */
+/**
+ * Far above any plausible archive (10k pages is 120k posts), but low enough
+ * that `skip` stays a small integer Contentful accepts.
+ *
+ * Without an upper bound, `/blog/page/999999999999999999999` parses to an
+ * imprecise float, multiplies into an invalid `skip`, and Contentful rejects
+ * it — turning a bad URL into a user-triggerable 500 instead of a 404.
+ */
+const MAX_PAGE = 10_000
+
+/** Rejects `1`, `0`, `-3`, `2.5`, `abc`, `02` — anything but a plain integer in [2, MAX_PAGE]. */
 function parsePageNumber(raw: string): number | null {
-  if (!/^[1-9][0-9]*$/.test(raw)) return null
+  // Bound the digit count before Number(), so an over-long string never
+  // becomes Infinity or loses precision.
+  if (!/^[1-9][0-9]{0,5}$/.test(raw)) return null
 
   const parsed = Number(raw)
-  return parsed >= 2 ? parsed : null
+  if (!Number.isSafeInteger(parsed)) return null
+
+  return parsed >= 2 && parsed <= MAX_PAGE ? parsed : null
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
