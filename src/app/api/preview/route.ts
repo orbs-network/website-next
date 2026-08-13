@@ -2,7 +2,7 @@ import { draftMode } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { NextRequest, NextResponse } from 'next/server'
 import { getPostById } from '@/app/lib/api'
-import { postRedirectPath } from '@/app/lib/routes'
+import { encodedPostPath } from '@/app/lib/routes'
 import { isValidSlug, secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -86,5 +86,5 @@ export async function GET(request: NextRequest) {
   const draft = await draftMode()
   draft.enable()
 
-  redirect(postRedirectPath(slug))
+  redirect(encodedPostPath(slug))
 }

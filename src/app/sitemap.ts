@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { getAllPostRefs, POSTS_PER_PAGE } from './lib/api'
-import { HOME_PATH, blogPagePath, postPath } from './lib/routes'
+import { HOME_PATH, blogPagePath, encodedPostPath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 
 /**
@@ -60,7 +60,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   }))
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
-    url: absoluteUrl(postPath(post.slug)),
+    url: absoluteUrl(encodedPostPath(post.slug)),
     lastModified: new Date(post.updatedAt),
     changeFrequency: 'yearly',
     priority: 0.6,

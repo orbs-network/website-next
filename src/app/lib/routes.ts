@@ -17,8 +17,12 @@ export function postPath(slug: string): string {
 }
 
 /**
- * Same path, percent-encoded — use this anywhere the value becomes a
- * `Location` header.
+ * Same path, percent-encoded — use this anywhere the value becomes a URI:
+ * a `Location` header, a sitemap `<loc>`, a canonical link, an RSS `<link>`.
+ *
+ * Two live legacy slugs contain U+200A hair spaces. Emitted raw they are an
+ * IRI, not a URI: strict clients cannot request them without encoding first,
+ * so crawlers may skip or reject those posts.
  *
  * Two live legacy slugs contain U+200A hair spaces, and a `Location` header is
  * a ByteString: any code point above 255 throws rather than degrading.
@@ -30,7 +34,7 @@ export function postPath(slug: string): string {
  * different matter and takes the raw form from `postPath` — it matches against
  * the pathname Next generated from `generateStaticParams`, not a header.
  */
-export function postRedirectPath(slug: string): string {
+export function encodedPostPath(slug: string): string {
   return `/${encodeURIComponent(slug)}/`
 }
 

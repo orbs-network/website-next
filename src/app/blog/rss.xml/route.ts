@@ -1,5 +1,5 @@
 import { getAssetUrl, getAuthorInfo, getPosts, type BlogPostFields } from '@/app/lib/api'
-import { BLOG_INDEX_PATH, postPath } from '@/app/lib/routes'
+import { BLOG_INDEX_PATH, encodedPostPath } from '@/app/lib/routes'
 import { absoluteUrl, siteUrl } from '@/app/lib/site'
 
 /**
@@ -67,8 +67,8 @@ function renderItem(post: BlogPostFields): string {
   // Changing it would make all 451 posts reappear as unread for every existing
   // subscriber — so the guid keeps the legacy spelling while the link points at
   // the canonical URL, avoiding a redirect hop for anyone who clicks through.
-  const canonical = absoluteUrl(postPath(slug))
-  const legacyGuid = `${siteUrl}/${slug}`
+  const canonical = absoluteUrl(encodedPostPath(slug))
+  const legacyGuid = `${siteUrl}/${encodeURIComponent(slug)}`
 
   const parts = [
     '    <item>',
