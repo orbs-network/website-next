@@ -8,6 +8,19 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Majors are migrations, not upgrades — Tailwind 3->4 is a new config
+    # format and engine, TypeScript 7 and ESLint 10 both carry breaking
+    # changes. Dependabot opened five of them within minutes of this config
+    # landing, none backed by an advisory. They belong in a deliberate piece of
+    # work with the test suite to check against, not in a bot's queue where
+    # they sit looking actionable and train everyone to ignore the list.
+    #
+    # Security updates are unaffected: Dependabot raises those regardless of
+    # this filter, including majors.
+    ignore:
+      - dependency-name: '*'
+        update-types:
+          - version-update:semver-major
     groups:
       # Test and story tooling never reaches the runtime bundle, so these can
       # land together without per-package scrutiny.
