@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { absoluteUrl, isProductionDeployment } from './lib/site'
+import { absoluteUrl, shouldAllowIndexing, siteHost } from './lib/site'
 
 export const revalidate = 3600
 
@@ -12,7 +12,7 @@ export const revalidate = 3600
  * own article is a genuinely bad outcome that is slow to undo.
  */
 export default function robots(): MetadataRoute.Robots {
-  if (!isProductionDeployment) {
+  if (!shouldAllowIndexing) {
     return {
       rules: [{ userAgent: '*', disallow: '/' }],
     }
@@ -29,6 +29,8 @@ export default function robots(): MetadataRoute.Robots {
       },
     ],
     sitemap: absoluteUrl('/sitemap.xml'),
-    host: absoluteUrl('/'),
+    // Hostname only — a scheme or trailing path makes the directive invalid
+    // and crawlers that honour Host will ignore it.
+    host: siteHost,
   }
 }
