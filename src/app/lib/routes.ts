@@ -54,3 +54,10 @@ export function blogPagePath(pageNumber: number): string {
  * mean fetching the page count on every webhook.
  */
 export const BLOG_PAGE_ROUTE = '/blog/page/[n]'
+
+/**
+ * Not under trailingSlash — it is a file, not a page route.
+ * Publishing changes the set of URLs, so the webhook has to invalidate it or a
+ * new post stays absent from the sitemap until the 1h ISR window expires.
+ */
+export const SITEMAP_PATH = '/sitemap.xml'

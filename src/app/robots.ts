@@ -1,7 +1,10 @@
 import type { MetadataRoute } from 'next'
 import { absoluteUrl, shouldAllowIndexing, siteHost } from './lib/site'
 
-export const revalidate = 3600
+// Computed per request, not baked at build. robots.txt is a few hundred bytes,
+// and it must reflect the environment actually serving it — a build promoted
+// from preview to production would otherwise keep serving `Disallow: /`.
+export const dynamic = 'force-dynamic'
 
 /**
  * Preview deployments are blocked from indexing entirely.
@@ -12,7 +15,7 @@ export const revalidate = 3600
  * own article is a genuinely bad outcome that is slow to undo.
  */
 export default function robots(): MetadataRoute.Robots {
-  if (!shouldAllowIndexing) {
+  if (!shouldAllowIndexing()) {
     return {
       rules: [{ userAgent: '*', disallow: '/' }],
     }

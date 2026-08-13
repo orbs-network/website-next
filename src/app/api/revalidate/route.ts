@@ -1,6 +1,6 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, postPath, postRedirectPath } from '@/app/lib/routes'
+import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, SITEMAP_PATH, postPath, postRedirectPath } from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -118,7 +118,7 @@ export async function POST(request: NextRequest) {
   // one, and it cannot be settled by testing — 0 of the 320 slugs in the space
   // are non-ASCII, so no such page exists to observe. Sending both costs one
   // no-op call and removes the need to guess. Revisit once #22 lands those two.
-  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, postPath(slug), postRedirectPath(slug)])]
+  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, SITEMAP_PATH, postPath(slug), postRedirectPath(slug)])]
 
   for (const path of paths) {
     revalidatePath(path)
