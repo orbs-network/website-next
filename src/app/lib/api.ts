@@ -149,37 +149,60 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
   return posts.items.map((post) => post.fields)
 }
 
+export type PostRef = {
+  slug: string
+  /** Publish date, from the content model. Drives ordering and display. */
+  date: string
+  /**
+   * Last modification, from Contentful's sys metadata. Distinct from `date`:
+   * editing a published article does not move its publish date, so `date` would
+   * make <lastmod> permanently wrong for every post that is ever corrected.
+   */
+  updatedAt: string
+}
+
 /**
- * Slugs only, for `generateStaticParams()`.
+ * Every post as `{ slug, date }`, newest first.
  *
- * Uses `select` so Contentful returns just the slug field instead of every
- * post's full Rich Text body — the route only needs the slugs to enumerate
- * paths, and fetching complete documents for that is a large build-time cost
- * that grows with the archive.
+ * Uses `select` so Contentful returns two fields rather than each post's full
+ * Rich Text body. Callers here enumerate the archive — `generateStaticParams()`
+ * and the sitemap — and fetching ~460 complete documents for a list of URLs is
+ * a build-time cost that grows with the archive for no benefit.
  */
-export async function getAllPostSlugs(): Promise<string[]> {
+export async function getAllPostRefs(): Promise<PostRef[]> {
   const client = getClient()
-  const slugs: string[] = []
+  const refs: PostRef[] = []
   let skip = 0
 
   for (;;) {
     const page = await client.getEntries<TypeBlogPostSkeleton>({
       content_type: 'blogPost',
-      select: ['fields.slug'],
+      select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
       order: [...POST_ORDER],
       limit: CDA_MAX_LIMIT,
       skip,
     })
 
     for (const post of page.items) {
-      if (post.fields.slug) slugs.push(post.fields.slug)
+      if (post.fields.slug) {
+        refs.push({
+          slug: post.fields.slug,
+          date: post.fields.date,
+          updatedAt: post.sys.updatedAt || post.fields.date,
+        })
+      }
     }
 
     skip += page.items.length
     if (skip >= page.total || page.items.length === 0) break
   }
 
-  return slugs
+  return refs
+}
+
+/** Slugs only, for `generateStaticParams()`. */
+export async function getAllPostSlugs(): Promise<string[]> {
+  return (await getAllPostRefs()).map((ref) => ref.slug)
 }
 
 /**
