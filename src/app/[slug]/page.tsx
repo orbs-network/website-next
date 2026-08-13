@@ -9,7 +9,7 @@ import type { ReactNode } from 'react'
 import { Author } from '../components/blog/author'
 import { H4 } from '../components/typography'
 import { getAllPostSlugs, getAssetUrl, getAuthorInfo, getPostBySlug } from '../lib/api'
-import { postPath } from '../lib/routes'
+import { encodedPostPath } from '../lib/routes'
 import { absoluteUrl } from '../lib/site'
 import { BackButton } from './back-button'
 
@@ -134,7 +134,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // Absolute, matching the sitemap. A relative canonical resolves against
       // the request host, so a post served from a Vercel alias would
       // self-canonicalize that hostname and compete with the real domain.
-      canonical: absoluteUrl(postPath(slug)),
+      canonical: absoluteUrl(encodedPostPath(slug)),
     },
   }
 }
