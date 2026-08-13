@@ -2,6 +2,7 @@ import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogIndex, getTotalPages } from '../../blog-index'
 import { blogPagePath } from '../../../lib/routes'
+import { absoluteUrl } from '../../../lib/site'
 
 type Props = {
   params: Promise<{ n: string }>
@@ -60,7 +61,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // Self-canonical, deliberately. Canonicalising pages 2+ back to /blog
       // would mark them duplicates and drop everything but the newest 12 posts
       // from the index.
-      canonical: blogPagePath(pageNumber),
+      canonical: absoluteUrl(blogPagePath(pageNumber)),
     },
   }
 }

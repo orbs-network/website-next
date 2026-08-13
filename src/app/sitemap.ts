@@ -34,13 +34,16 @@ export const dynamic = 'force-dynamic'
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPostRefs()
 
-  const newestPostDate = posts.length > 0 ? new Date(posts[0].date) : new Date()
+  // Newest MODIFICATION across the archive, not newest publish date — the
+  // listing pages change whenever any post on them changes.
+  const lastArchiveChange =
+    posts.length > 0 ? new Date(Math.max(...posts.map((p) => new Date(p.updatedAt).getTime()))) : new Date()
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE))
 
   const home: MetadataRoute.Sitemap = [
     {
       url: absoluteUrl(HOME_PATH),
-      lastModified: newestPostDate,
+      lastModified: lastArchiveChange,
       changeFrequency: 'weekly',
       priority: 1,
     },
@@ -50,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // is exactly one URL per page of results and no self-duplicate.
   const blogPages: MetadataRoute.Sitemap = Array.from({ length: totalPages }, (_, index) => ({
     url: absoluteUrl(blogPagePath(index + 1)),
-    lastModified: newestPostDate,
+    lastModified: lastArchiveChange,
     changeFrequency: 'weekly' as const,
     // Later pages are older content and matter less than the first.
     priority: index === 0 ? 0.8 : 0.4,
@@ -58,7 +61,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   const postEntries: MetadataRoute.Sitemap = posts.map((post) => ({
     url: absoluteUrl(postPath(post.slug)),
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.updatedAt),
     changeFrequency: 'yearly',
     priority: 0.6,
   }))

@@ -151,7 +151,14 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
 
 export type PostRef = {
   slug: string
+  /** Publish date, from the content model. Drives ordering and display. */
   date: string
+  /**
+   * Last modification, from Contentful's sys metadata. Distinct from `date`:
+   * editing a published article does not move its publish date, so `date` would
+   * make <lastmod> permanently wrong for every post that is ever corrected.
+   */
+  updatedAt: string
 }
 
 /**
@@ -170,7 +177,7 @@ export async function getAllPostRefs(): Promise<PostRef[]> {
   for (;;) {
     const page = await client.getEntries<TypeBlogPostSkeleton>({
       content_type: 'blogPost',
-      select: ['fields.slug', 'fields.date'],
+      select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
       order: [...POST_ORDER],
       limit: CDA_MAX_LIMIT,
       skip,
@@ -178,7 +185,11 @@ export async function getAllPostRefs(): Promise<PostRef[]> {
 
     for (const post of page.items) {
       if (post.fields.slug) {
-        refs.push({ slug: post.fields.slug, date: post.fields.date })
+        refs.push({
+          slug: post.fields.slug,
+          date: post.fields.date,
+          updatedAt: post.sys.updatedAt || post.fields.date,
+        })
       }
     }
 
