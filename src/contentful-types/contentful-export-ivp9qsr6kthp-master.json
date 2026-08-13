@@ -9,6 +9,76 @@
             "id": "ivp9qsr6kthp"
           }
         },
+        "id": "author",
+        "type": "ContentType",
+        "createdAt": "2024-08-13T12:55:47.151Z",
+        "updatedAt": "2025-12-17T13:46:00.503Z",
+        "environment": {
+          "sys": {
+            "id": "master",
+            "type": "Link",
+            "linkType": "Environment"
+          }
+        },
+        "publishedVersion": 3,
+        "publishedAt": "2025-12-17T13:46:00.503Z",
+        "firstPublishedAt": "2024-08-13T12:55:47.485Z",
+        "publishedCounter": 2,
+        "version": 4
+      },
+      "displayField": "name",
+      "name": "Author",
+      "description": "",
+      "fields": [
+        {
+          "id": "name",
+          "name": "Name",
+          "type": "Symbol",
+          "localized": false,
+          "required": true,
+          "validations": [],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "profilePicture",
+          "name": "Profile Picture",
+          "type": "Link",
+          "localized": false,
+          "required": false,
+          "validations": [],
+          "disabled": false,
+          "omitted": false,
+          "linkType": "Asset"
+        },
+        {
+          "id": "profileUrl",
+          "name": "Profile Url",
+          "type": "Symbol",
+          "localized": false,
+          "required": false,
+          "validations": [
+            {
+              "regexp": {
+                "pattern": "^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$",
+                "flags": null
+              }
+            }
+          ],
+          "disabled": false,
+          "omitted": false
+        }
+      ]
+    },
+    {
+      "sys": {
+        "space": {
+          "sys": {
+            "type": "Link",
+            "linkType": "Space",
+            "id": "ivp9qsr6kthp"
+          }
+        },
         "id": "blogPost",
         "type": "ContentType",
         "createdAt": "2024-08-13T10:32:07.824Z",
@@ -23,30 +93,8 @@
         "publishedVersion": 23,
         "publishedAt": "2025-12-17T17:16:52.964Z",
         "firstPublishedAt": "2024-08-13T10:32:08.110Z",
-        "createdBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
-        "updatedBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
         "publishedCounter": 12,
-        "version": 24,
-        "publishedBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
-        "urn": "crn:contentful:::content:spaces/ivp9qsr6kthp/environments/master/content_types/blogPost"
+        "version": 24
       },
       "displayField": "title",
       "name": "Blog Post",
@@ -72,8 +120,7 @@
           "type": "Link",
           "localized": true,
           "required": false,
-          "validations": [
-          ],
+          "validations": [],
           "disabled": false,
           "omitted": false,
           "linkType": "Asset"
@@ -120,8 +167,7 @@
               "message": "Only heading 1, heading 2, heading 3, heading 4, heading 5, heading 6, ordered list, unordered list, horizontal rule, quote, block entry, asset, table, link to asset, inline entry, link to entry, and link to Url nodes are allowed"
             },
             {
-              "nodes": {
-              }
+              "nodes": {}
             }
           ],
           "disabled": false,
@@ -133,8 +179,7 @@
           "type": "Date",
           "localized": false,
           "required": true,
-          "validations": [
-          ],
+          "validations": [],
           "disabled": false,
           "omitted": false
         },
@@ -144,8 +189,7 @@
           "type": "Symbol",
           "localized": true,
           "required": false,
-          "validations": [
-          ],
+          "validations": [],
           "disabled": false,
           "omitted": false
         },
@@ -155,8 +199,7 @@
           "type": "Symbol",
           "localized": true,
           "required": false,
-          "validations": [
-          ],
+          "validations": [],
           "disabled": false,
           "omitted": false
         },
@@ -188,10 +231,10 @@
             "id": "ivp9qsr6kthp"
           }
         },
-        "id": "author",
+        "id": "mediaMention",
         "type": "ContentType",
-        "createdAt": "2024-08-13T12:55:47.151Z",
-        "updatedAt": "2025-12-17T13:46:00.503Z",
+        "createdAt": "2026-08-13T15:38:08.368Z",
+        "updatedAt": "2026-08-13T15:38:08.819Z",
         "environment": {
           "sys": {
             "id": "master",
@@ -199,127 +242,142 @@
             "linkType": "Environment"
           }
         },
-        "publishedVersion": 3,
-        "publishedAt": "2025-12-17T13:46:00.503Z",
-        "firstPublishedAt": "2024-08-13T12:55:47.485Z",
-        "createdBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
-        "updatedBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
-        "publishedCounter": 2,
-        "version": 4,
-        "publishedBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
-          }
-        },
-        "urn": "crn:contentful:::content:spaces/ivp9qsr6kthp/environments/master/content_types/author"
+        "publishedVersion": 1,
+        "publishedAt": "2026-08-13T15:38:08.819Z",
+        "firstPublishedAt": "2026-08-13T15:38:08.819Z",
+        "publishedCounter": 1,
+        "version": 2
       },
-      "displayField": "name",
-      "name": "Author",
-      "description": "",
+      "displayField": "headline",
+      "name": "Media Mention",
+      "description": "External press coverage of Orbs. Displayed as a card on /news that links out to the publisher; it has no page of its own.",
       "fields": [
         {
-          "id": "name",
-          "name": "Name",
-          "type": "Symbol",
+          "id": "headline",
+          "name": "Headline",
+          "type": "Text",
           "localized": false,
           "required": true,
           "validations": [
+            {
+              "size": {
+                "max": 500
+              }
+            }
           ],
           "disabled": false,
           "omitted": false
         },
         {
-          "id": "profilePicture",
-          "name": "Profile Picture",
+          "id": "url",
+          "name": "Article URL",
+          "type": "Symbol",
+          "localized": false,
+          "required": true,
+          "validations": [
+            {
+              "unique": true
+            },
+            {
+              "regexp": {
+                "pattern": "^https?://"
+              }
+            }
+          ],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "date",
+          "name": "Published date",
+          "type": "Date",
+          "localized": false,
+          "required": true,
+          "validations": [],
+          "disabled": false,
+          "omitted": false
+        },
+        {
+          "id": "thumbnail",
+          "name": "Thumbnail",
           "type": "Link",
           "localized": false,
           "required": false,
           "validations": [
+            {
+              "linkMimetypeGroup": [
+                "image"
+              ]
+            }
           ],
           "disabled": false,
           "omitted": false,
           "linkType": "Asset"
         },
         {
-          "id": "profileUrl",
-          "name": "Profile Url",
-          "type": "Symbol",
+          "id": "publisherLogo",
+          "name": "Publisher logo",
+          "type": "Link",
           "localized": false,
           "required": false,
           "validations": [
             {
-              "regexp": {
-                "pattern": "^(ftp|http|https):\\/\\/(\\w+:{0,1}\\w*@)?(\\S+)(:[0-9]+)?(\\/|\\/([\\w#!:.?+=&%@!\\-/]))?$",
-                "flags": null
-              }
+              "linkMimetypeGroup": [
+                "image"
+              ]
             }
           ],
           "disabled": false,
-          "omitted": false
+          "omitted": false,
+          "linkType": "Asset"
         }
       ]
     }
   ],
-  "tags": [
-  ],
+  "tags": [],
   "locales": [
     {
-      "name": "English (United States)",
       "code": "en-US",
-      "fallbackCode": null,
+      "name": "English (United States)",
       "default": true,
+      "optional": false,
+      "fallbackCode": null,
       "contentManagementApi": true,
       "contentDeliveryApi": true,
-      "optional": false,
       "sys": {
-        "type": "Locale",
         "id": "7qY6ePr2I4L1vq1UdHZ1Mj",
+        "type": "Locale",
         "version": 1,
         "space": {
           "sys": {
             "type": "Link",
-            "linkType": "Space",
-            "id": "ivp9qsr6kthp"
+            "id": "ivp9qsr6kthp",
+            "linkType": "Space"
           }
         },
         "environment": {
           "sys": {
             "type": "Link",
             "linkType": "Environment",
-            "id": "master",
-            "uuid": "f6ed5213-36a0-401b-8c63-d545b5047dcf"
-          }
-        },
-        "createdBy": {
-          "sys": {
-            "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
+            "id": "master"
           }
         },
         "createdAt": "2024-08-13T10:30:15Z",
+        "updatedAt": "2024-08-13T10:30:15Z",
+        "createdBy": {
+          "sys": {
+            "type": "Link",
+            "id": "5bHXDVvLe9RLNIAgj4XV9v",
+            "linkType": "User"
+          }
+        },
         "updatedBy": {
           "sys": {
             "type": "Link",
-            "linkType": "User",
-            "id": "5bHXDVvLe9RLNIAgj4XV9v"
+            "id": "5bHXDVvLe9RLNIAgj4XV9v",
+            "linkType": "User"
           }
-        },
-        "updatedAt": "2024-08-13T10:30:15Z"
+        }
       }
     }
   ]
