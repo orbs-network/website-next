@@ -33,6 +33,7 @@ const {
 
   // Checkpoint file for resume
   MIGRATION_CHECKPOINT_FILE = '.migrate-blogposts.checkpoint.json',
+  MIGRATION_FAILURES_FILE = '.migrate-blogposts.failures.json',
   RESUME_FROM_CHECKPOINT = 'false',
   PUBLISH_AFTER_UPSERT = 'true',
 } = process.env
@@ -396,9 +397,12 @@ async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
   const fileName = path.basename(absPath)
   const contentType = guessContentType(absPath)
 
-  const upload = await env.createUpload({ file: fs.createReadStream(absPath) })
+  const upload = await withRetry(
+    () => env.createUpload({ file: fs.createReadStream(absPath) }),
+    `upload blob ${fileName}`
+  )
 
-  let asset = await env.createAssetWithId(assetId, {
+  let asset = await createOrGetAsset(env, assetId, {
     fields: {
       title: L(titleOverride || fileName),
       file: {
@@ -411,9 +415,27 @@ async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
     },
   })
 
-  asset = await asset.processForAllLocales()
-  asset = await asset.publish()
+  asset = await withRetry(() => asset.processForAllLocales(), `process ${fileName}`)
+  asset = await withRetry(() => asset.publish(), `publish asset ${fileName}`)
   return asset
+}
+
+/**
+ * Create, or adopt what a previous attempt already created.
+ *
+ * uploadAssetWithId is multi-step (createUpload -> create -> process ->
+ * publish), so retrying the whole thing is not idempotent: a 429 after the
+ * create succeeds replays the create, gets a 409, and the caller drops the
+ * image. Retrying per step and treating 409 as "mine, already made" keeps it
+ * recoverable.
+ */
+async function createOrGetAsset(env, assetId, data) {
+  try {
+    return await withRetry(() => env.createAssetWithId(assetId, data), `create asset ${assetId}`)
+  } catch (error) {
+    if (!isConflict(error)) throw error
+    return await withRetry(() => env.getAsset(assetId), `adopt asset ${assetId}`)
+  }
 }
 
 async function resolveAuthorEntryId(authorFrontmatterValue) {
@@ -616,10 +638,10 @@ async function main() {
         if (!isNotFound(e)) throw e
       }
 
-      const a = await withRetry(
-        () => uploadAssetWithId(env, absPath, titleOverride, assetId),
-        `upload ${path.basename(absPath)}`
-      )
+      // No outer withRetry — uploadAssetWithId retries each step itself, and
+      // wrapping the whole multi-step flow would replay a create that already
+      // succeeded.
+      const a = await uploadAssetWithId(env, absPath, titleOverride, assetId)
       assetIdByHash.set(hash, a.sys.id)
       return a.sys.id
     } catch (e) {
@@ -839,8 +861,19 @@ async function main() {
 
       if (existing) {
         existing.fields = { ...existing.fields, ...fields }
+        const wasPublished = Boolean(existing.sys.publishedVersion)
         const updated = await withRetry(() => existing.update(), `update ${slug}`)
-        if (shouldPublish) await withRetry(() => updated.publish(), `publish ${slug}`)
+
+        if (shouldPublish) {
+          await withRetry(() => updated.publish(), `publish ${slug}`)
+        } else if (embargoed && wasPublished) {
+          // update() does not retract a live version. Without this an
+          // embargoed post that a previous run already published stays
+          // publicly visible, which is the exact failure the embargo check
+          // exists to prevent.
+          await withRetry(() => updated.unpublish(), `unpublish embargoed ${slug}`)
+          console.log(`  retracted live version of embargoed post: ${slug}`)
+        }
         console.log(
           `Updated${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [left unpublished — embargoed until ${fm.publish_at}]` : ''}`
         )
@@ -855,13 +888,11 @@ async function main() {
         )
       }
     } catch (err) {
-      writeCheckpoint(MIGRATION_CHECKPOINT_FILE, {
-        index: i,
-        relPath: rel,
-        total: selected.length,
-        failedAt: new Date().toISOString(),
-        error: { message: err?.message || String(err), name: err?.name },
-      })
+      // Deliberately NOT written to the checkpoint. The next iteration
+      // overwrites it at the top of the loop, so recording a failure there
+      // meant RESUME_FROM_CHECKPOINT resumed from the last post processed
+      // rather than the first that failed — silently skipping the posts that
+      // needed attention. Failures go to their own file instead.
 
       // Collect and continue. Aborting the whole run on one bad post is what
       // left the archive in a partial state twice before — 47 of 448, then
@@ -873,13 +904,21 @@ async function main() {
   }
 
   if (failures.length === 0) {
+    try {
+      if (fs.existsSync(MIGRATION_FAILURES_FILE)) fs.unlinkSync(MIGRATION_FAILURES_FILE)
+    } catch {
+      // ignore
+    }
     clearCheckpoint(MIGRATION_CHECKPOINT_FILE)
     console.log(`\nDone. ${selected.length - startIndex} processed, 0 failures. Checkpoint cleared.`)
     return
   }
 
-  // Checkpoint deliberately left in place so a re-run can pick up context.
+  // Failures get their own file so a re-run can target exactly these posts:
+  //   jq -r '.[].rel' .migrate-blogposts.failures.json
+  writeCheckpoint(MIGRATION_FAILURES_FILE, failures)
   console.log(`\nDone with failures: ${failures.length} of ${selected.length - startIndex}`)
+  console.log(`Failed posts written to ${MIGRATION_FAILURES_FILE}`)
   for (const f of failures) {
     console.log(`  ${f.rel}`)
     console.log(`    ${f.message.slice(0, 240)}`)
