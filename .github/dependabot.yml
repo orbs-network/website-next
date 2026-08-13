@@ -1,0 +1,57 @@
+version: 2
+
+updates:
+  # The app itself. Weekly, grouped so a routine patch sweep is one PR rather
+  # than twenty.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Test and story tooling never reaches the runtime bundle, so these can
+      # land together without per-package scrutiny.
+      dev-tooling:
+        patterns:
+          - '@storybook/*'
+          - 'storybook'
+          - '@chromatic-com/*'
+          - 'eslint-plugin-storybook'
+          - 'vitest'
+          - '@vitest/*'
+          - 'vite'
+          - 'playwright'
+        update-types:
+          - minor
+          - patch
+      # Anything that ships. Kept separate so it gets read properly.
+      runtime:
+        patterns:
+          - 'next'
+          - 'react'
+          - 'react-dom'
+          - 'contentful'
+          - '@contentful/*'
+          - 'sharp'
+        update-types:
+          - minor
+          - patch
+
+# scripts/orbs-website-migration is deliberately absent from `updates`.
+#
+# That directory is a one-off local tool for moving the legacy blog into
+# Contentful. It never deploys, never runs in CI, and is deleted once the
+# migration completes (see docs/migration-plan.md, Phase 1). There is no value
+# in Dependabot opening upgrade PRs against it.
+#
+# NB — this does NOT silence its security alerts, and it is worth being precise
+# about why. Dependabot has two independent features:
+#
+#   * alerts  — built from the repo's dependency graph, which indexes EVERY
+#               manifest and lockfile. Not configurable from this file.
+#   * updates — the PRs, configured here.
+#
+# So the 44 alerts that directory contributes will persist until either its
+# package-lock.json stops being committed or the directory is removed at
+# cutover. Removing the lockfile would cost reproducibility on a script that
+# writes to production Contentful, so it stays for now.
