@@ -1,0 +1,49 @@
+version: 2
+
+updates:
+  # The app itself. Weekly, grouped so a routine patch sweep is one PR rather
+  # than twenty.
+  - package-ecosystem: npm
+    directory: /
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+    groups:
+      # Test and story tooling never reaches the runtime bundle, so these can
+      # land together without per-package scrutiny.
+      dev-tooling:
+        patterns:
+          - '@storybook/*'
+          - 'storybook'
+          - '@chromatic-com/*'
+          - 'eslint-plugin-storybook'
+          - 'vitest'
+          - '@vitest/*'
+          - 'vite'
+          - 'playwright'
+        update-types:
+          - minor
+          - patch
+      # Anything that ships. Kept separate so it gets read properly.
+      runtime:
+        patterns:
+          - 'next'
+          - 'react'
+          - 'react-dom'
+          - 'contentful'
+          - '@contentful/*'
+          - 'sharp'
+        update-types:
+          - minor
+          - patch
+
+# Deliberately NOT scanned: scripts/orbs-website-migration
+#
+# That directory is a one-off local tool for moving the legacy blog into
+# Contentful. It never deploys, never runs in CI, and is deleted once the
+# migration completes (see docs/migration-plan.md, Phase 1). It was generating
+# 44 of the repo's 166 open alerts — noise that buries real findings in the app
+# itself, which is how a genuine advisory gets missed.
+#
+# Omitting a directory from `updates` is what excludes it; there is no
+# "ignore path" directive.
