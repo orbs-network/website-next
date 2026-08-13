@@ -100,13 +100,30 @@ const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
  * limit; the question is only whether it survives one.
  */
 async function withRetry(fn, label, attempts = 5) {
+  return retryWhile(fn, label, attempts, isTransient)
+}
+
+/**
+ * Retry for MUTATIONS. Only a 429 is safe to replay.
+ *
+ * Contentful writes are version-based. A 5xx is ambiguous — the mutation may
+ * have applied before the response failed — and replaying it on the same
+ * (now stale) SDK object returns a VersionMismatch 409, recording a failure for
+ * a post that actually succeeded. A 429 is an outright rejection, so nothing
+ * was applied and replaying is safe.
+ */
+async function withRetryWrite(fn, label, attempts = 5) {
+  return retryWhile(fn, label, attempts, (e) => statusOf(e) === 429)
+}
+
+async function retryWhile(fn, label, attempts, shouldRetry) {
   let lastError
   for (let attempt = 1; attempt <= attempts; attempt++) {
     try {
       return await fn()
     } catch (error) {
       lastError = error
-      if (!isTransient(error) || attempt === attempts) throw error
+      if (!shouldRetry(error) || attempt === attempts) throw error
 
       const wait = Math.min(30000, 1000 * 2 ** (attempt - 1))
       console.warn(`  retry ${attempt}/${attempts - 1} after ${wait}ms (${label}): ${statusOf(error)}`)
@@ -397,7 +414,7 @@ async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
   const fileName = path.basename(absPath)
   const contentType = guessContentType(absPath)
 
-  const upload = await withRetry(
+  const upload = await withRetryWrite(
     () => env.createUpload({ file: fs.createReadStream(absPath) }),
     `upload blob ${fileName}`
   )
@@ -439,11 +456,11 @@ async function ensureAssetReady(asset, label) {
   const hasFile = () => Boolean(asset.fields?.file?.[CONTENTFUL_LOCALE]?.url)
 
   if (!hasFile()) {
-    asset = await withRetry(() => asset.processForAllLocales(), `process ${label}`)
+    asset = await withRetryWrite(() => asset.processForAllLocales(), `process ${label}`)
   }
 
   if (!asset.sys.publishedVersion) {
-    asset = await withRetry(() => asset.publish(), `publish ${label}`)
+    asset = await withRetryWrite(() => asset.publish(), `publish ${label}`)
   }
 
   return asset
@@ -451,7 +468,7 @@ async function ensureAssetReady(asset, label) {
 
 async function createOrGetAsset(env, assetId, data) {
   try {
-    return await withRetry(() => env.createAssetWithId(assetId, data), `create asset ${assetId}`)
+    return await withRetryWrite(() => env.createAssetWithId(assetId, data), `create asset ${assetId}`)
   } catch (error) {
     if (!isConflict(error)) throw error
     const adopted = await withRetry(() => env.getAsset(assetId), `adopt asset ${assetId}`)
@@ -854,11 +871,11 @@ async function main() {
 
       if (onlyCreateNew) {
         try {
-          const created = await withRetry(
+          const created = await withRetryWrite(
             () => env.createEntryWithId(BLOG_CT, entryId, { fields }),
             `create ${slug}`
           )
-          if (shouldPublish) await withRetry(() => created.publish(), `publish ${slug}`)
+          if (shouldPublish) await withRetryWrite(() => created.publish(), `publish ${slug}`)
           console.log(
             `Created${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [DRAFT — embargoed until ${fm.publish_at}]` : ''}`
           )
@@ -884,27 +901,27 @@ async function main() {
       if (existing) {
         existing.fields = { ...existing.fields, ...fields }
         const wasPublished = Boolean(existing.sys.publishedVersion)
-        const updated = await withRetry(() => existing.update(), `update ${slug}`)
+        const updated = await withRetryWrite(() => existing.update(), `update ${slug}`)
 
         if (shouldPublish) {
-          await withRetry(() => updated.publish(), `publish ${slug}`)
+          await withRetryWrite(() => updated.publish(), `publish ${slug}`)
         } else if (embargoed && wasPublished) {
           // update() does not retract a live version. Without this an
           // embargoed post that a previous run already published stays
           // publicly visible, which is the exact failure the embargo check
           // exists to prevent.
-          await withRetry(() => updated.unpublish(), `unpublish embargoed ${slug}`)
+          await withRetryWrite(() => updated.unpublish(), `unpublish embargoed ${slug}`)
           console.log(`  retracted live version of embargoed post: ${slug}`)
         }
         console.log(
           `Updated${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [left unpublished — embargoed until ${fm.publish_at}]` : ''}`
         )
       } else {
-        const created = await withRetry(
+        const created = await withRetryWrite(
           () => env.createEntryWithId(BLOG_CT, entryId, { fields }),
           `create ${slug}`
         )
-        if (shouldPublish) await withRetry(() => created.publish(), `publish ${slug}`)
+        if (shouldPublish) await withRetryWrite(() => created.publish(), `publish ${slug}`)
         console.log(
           `Created${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [DRAFT — embargoed until ${fm.publish_at}]` : ''}`
         )
@@ -942,8 +959,12 @@ async function main() {
     return
   }
 
-  // Failures get their own file so a re-run can target exactly these posts:
+  // The loop reached the end, so the checkpoint has nothing left to resume —
+  // it points at the last post processed. Leaving it would make a
+  // RESUME_FROM_CHECKPOINT re-run start at the tail and skip the earlier
+  // failures entirely. The failures file is the record for those:
   //   jq -r '.[].rel' .migrate-blogposts.failures.json
+  clearCheckpoint(MIGRATION_CHECKPOINT_FILE)
   writeCheckpoint(MIGRATION_FAILURES_FILE, failures)
   console.log(`\nDone with failures: ${failures.length} of ${selected.length - startIndex}`)
   console.log(`Failed posts written to ${MIGRATION_FAILURES_FILE}`)
