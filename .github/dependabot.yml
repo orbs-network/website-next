@@ -8,6 +8,40 @@ updates:
     schedule:
       interval: weekly
     open-pull-requests-limit: 5
+    # Majors of the TEST AND STORY TOOLING only.
+    #
+    # Dependabot opened five major PRs within minutes of this config landing —
+    # tailwindcss 3->4, typescript 5->7, eslint 9->10, vite 7->8,
+    # cf-content-types-generator 2->3 — none backed by an advisory. Those are
+    # migrations, not upgrades: Tailwind 4 is a new config format and engine.
+    # They belong in deliberate work with the test suite to check against, not
+    # sitting open looking actionable, which is how a list stops being read.
+    #
+    # Scoped by name rather than `dependency-name: '*'` ON PURPOSE. GitHub
+    # applies `ignore` to security updates as well as version updates, so a
+    # wildcard would suppress the only automated fix for any advisory that is
+    # remediated in a major — precisely the case where you most want the PR.
+    # Naming the packages keeps next, react, contentful and everything else
+    # that ships on the default path.
+    ignore:
+      - dependency-name: 'tailwindcss'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'eslint'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vite'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'cf-content-types-generator'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'storybook'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@storybook/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'vitest'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@vitest/*'
+        update-types: ['version-update:semver-major']
     groups:
       # Test and story tooling never reaches the runtime bundle, so these can
       # land together without per-package scrutiny.
