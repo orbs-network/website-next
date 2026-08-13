@@ -183,6 +183,25 @@ export async function getAllPostSlugs(): Promise<string[]> {
 }
 
 /**
+ * Look a post up by its Contentful entry ID.
+ *
+ * Used by the preview route. An entry ID is opaque and ASCII, so it survives a
+ * query string untouched — unlike a slug, where the two legacy `&` slugs would
+ * be truncated at the ampersand (`slug=Orbs-Farming-&-Single...` parses as
+ * `slug=Orbs-Farming-`) and the two U+200A slugs need encoding.
+ */
+export async function getPostById(entryId: string, preview = false): Promise<BlogPostFields | null> {
+  const client = getClient(preview)
+
+  try {
+    const entry = await client.getEntry<TypeBlogPostSkeleton>(entryId)
+    return entry.fields
+  } catch {
+    return null
+  }
+}
+
+/**
  * @param preview Read through the Preview API so unpublished drafts resolve.
  *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
  */

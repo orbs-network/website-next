@@ -1,6 +1,6 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, postPath } from '@/app/lib/routes'
+import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, postPath, postRedirectPath } from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -10,6 +10,17 @@ import { secretMatches } from '@/app/lib/secrets'
  * custom header:
  *
  *   x-contentful-webhook-secret: <CONTENTFUL_REVALIDATE_SECRET>
+ *
+ * IMPORTANT — the URL must end with a trailing slash:
+ *
+ *   https://<host>/api/revalidate/          correct
+ *   https://<host>/api/revalidate           308 redirect
+ *
+ * `trailingSlash: true` in next.config.mjs applies to route handlers as well
+ * as pages. A POST to the slashless form returns a 308, and while 308 is
+ * defined to preserve method and body, whether the webhook client follows it
+ * at all is out of our hands. Point it at the canonical form and the question
+ * never arises.
  *
  * Subscribe it to ALL of the following, since the handler depends on each:
  *
@@ -94,12 +105,20 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ revalidated: ['layout'], topic, reason })
   }
 
-  // No shape check on the slug here, on purpose. It is only ever handed to
-  // revalidatePath(), never to a redirect, so an odd value is at worst a no-op
-  // against a path that does not exist. Validating would mean *skipping*
-  // revalidation for a post the [slug] route serves happily, which is the
-  // worse failure — it would leave real content stale.
-  const paths = [HOME_PATH, BLOG_INDEX_PATH, postPath(slug)]
+  // The slug is deliberately NOT shape-checked here. It only ever reaches
+  // revalidatePath(), never a redirect, so an odd value is at worst a no-op
+  // against a path that does not exist. Rejecting it would mean *skipping*
+  // revalidation for a post the [slug] route serves happily — the worse
+  // failure, since that leaves real content stale.
+  //
+  // Both spellings of the post path are passed. For an ASCII slug they are
+  // identical and the Set collapses them; they diverge only for the two legacy
+  // slugs containing U+200A hair spaces. For those it is genuinely unclear
+  // whether Next keys its cache tag off the raw pathname or the percent-encoded
+  // one, and it cannot be settled by testing — 0 of the 320 slugs in the space
+  // are non-ASCII, so no such page exists to observe. Sending both costs one
+  // no-op call and removes the need to guess. Revisit once #22 lands those two.
+  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, postPath(slug), postRedirectPath(slug)])]
 
   for (const path of paths) {
     revalidatePath(path)
