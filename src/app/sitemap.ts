@@ -3,9 +3,20 @@ import { getAllPostRefs, POSTS_PER_PAGE } from './lib/api'
 import { HOME_PATH, blogPagePath, postPath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 
-// Matches the content routes. Publishing also triggers on-demand revalidation
-// through the Contentful webhook, which sweeps the layout and takes this with it.
-export const revalidate = 3600
+/**
+ * Computed per request, matching robots.ts.
+ *
+ * Under ISR this was prerendered, so absoluteUrl() ran at build time and the
+ * origin was frozen in — a build served with a different SITE_URL kept emitting
+ * the build-time host in every <loc> while robots.txt correctly switched. Two
+ * SEO files disagreeing about the canonical domain is worse than either being
+ * stale.
+ *
+ * The cost is one Contentful query per request. A sitemap is fetched by
+ * crawlers a handful of times a day, so that is not a hot path — and it is one
+ * `select`-narrowed query returning slug and date, not the full archive.
+ */
+export const dynamic = 'force-dynamic'
 
 /**
  * Covers what exists today: the home page, the paginated blog index, and every
