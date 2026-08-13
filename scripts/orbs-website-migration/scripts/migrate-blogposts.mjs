@@ -476,6 +476,29 @@ async function createOrGetAsset(env, assetId, data) {
   }
 }
 
+/**
+ * Bring an existing entry's published state in line with its embargo, without
+ * touching its content.
+ */
+async function reconcilePublishState(entry, fm, slug) {
+  const embargoed = isEmbargoed(fm)
+  const isPublished = Boolean(entry.sys.publishedVersion)
+
+  if (embargoed && isPublished) {
+    await withRetryWrite(() => entry.unpublish(), `unpublish embargoed ${slug}`)
+    console.log(`Retracted (embargoed until ${fm.publish_at}): ${slug}`)
+    return
+  }
+
+  if (!embargoed && !isPublished && publishAfterUpsert) {
+    await withRetryWrite(() => entry.publish(), `publish ${slug}`)
+    console.log(`Published (was left as a draft): ${slug}`)
+    return
+  }
+
+  console.log(`Skipped (exists): ${slug}`)
+}
+
 async function resolveAuthorEntryId(authorFrontmatterValue) {
   const authorPath = Array.isArray(authorFrontmatterValue)
     ? authorFrontmatterValue[0]
@@ -745,12 +768,25 @@ async function main() {
 
       // Create-only mode: if exists, skip early
       if (onlyCreateNew) {
+        let existingEntry = null
         try {
-          await env.getEntry(entryId)
-          console.log(`Skipped (exists): ${slug}`)
+          existingEntry = await withRetry(() => env.getEntry(entryId), `get ${slug}`)
+        } catch (error) {
+          if (!isNotFound(error)) throw error
+        }
+
+        if (existingEntry) {
+          // Skip the content update — that is what create-only means — but
+          // still reconcile publish state. Two cases this catches that a bare
+          // skip does not:
+          //
+          //  - An embargoed post a previous run published. Leaving it live is
+          //    the exact incident the embargo check exists to prevent, and the
+          //    backlog workflow runs in this mode.
+          //  - A post whose create succeeded but whose publish then failed,
+          //    stranding it as a draft that no later create-only run revisits.
+          await reconcilePublishState(existingEntry, fm, slug)
           continue
-        } catch {
-          // proceed
         }
       }
 
