@@ -12,7 +12,11 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          # Matches the Vercel project's runtime (24.x). Testing on a
+          # different major than production ships on is a gap — and several
+          # dev dependencies now declare "node": ">=22", so Node 20 would warn
+          # here and fail outright under engine-strict.
+          node-version: '24'
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
