@@ -33,6 +33,7 @@ const {
 
   // Checkpoint file for resume
   MIGRATION_CHECKPOINT_FILE = '.migrate-blogposts.checkpoint.json',
+  MIGRATION_FAILURES_FILE = '.migrate-blogposts.failures.json',
   RESUME_FROM_CHECKPOINT = 'false',
   PUBLISH_AFTER_UPSERT = 'true',
 } = process.env
@@ -68,6 +69,89 @@ function stableAuthorIdFromPath(authorFilePath) {
   }).slice(0, 40)
   const hash = sha1(authorFilePath).slice(0, 12)
   return `author-${base}-${hash}`
+}
+
+/** Contentful surfaces its HTTP status on the error; shapes vary by SDK path. */
+function statusOf(error) {
+  if (typeof error?.status === 'number') return error.status
+  try {
+    return JSON.parse(error?.message || '{}')?.status ?? null
+  } catch {
+    return null
+  }
+}
+
+const isNotFound = (e) => e?.name === 'NotFound' || statusOf(e) === 404
+const isConflict = (e) => statusOf(e) === 409
+const isTransient = (e) => {
+  const s = statusOf(e)
+  return s === 429 || (typeof s === 'number' && s >= 500)
+}
+
+const sleep = (ms) => new Promise((r) => setTimeout(r, ms))
+
+/**
+ * Retry on rate limits and server errors.
+ *
+ * The whole reason this exists: the previous version treated any getEntry()
+ * failure as "does not exist" and tried to create, which turned a transient 429
+ * into a fatal 409 and killed the run — twice, at post 47 and post 319. A
+ * sequential pass over 450+ posts with inline image uploads will hit a rate
+ * limit; the question is only whether it survives one.
+ */
+async function withRetry(fn, label, attempts = 5) {
+  return retryWhile(fn, label, attempts, isTransient)
+}
+
+/**
+ * Retry for MUTATIONS. Only a 429 is safe to replay.
+ *
+ * Contentful writes are version-based. A 5xx is ambiguous — the mutation may
+ * have applied before the response failed — and replaying it on the same
+ * (now stale) SDK object returns a VersionMismatch 409, recording a failure for
+ * a post that actually succeeded. A 429 is an outright rejection, so nothing
+ * was applied and replaying is safe.
+ */
+async function withRetryWrite(fn, label, attempts = 5) {
+  return retryWhile(fn, label, attempts, (e) => statusOf(e) === 429)
+}
+
+async function retryWhile(fn, label, attempts, shouldRetry) {
+  let lastError
+  for (let attempt = 1; attempt <= attempts; attempt++) {
+    try {
+      return await fn()
+    } catch (error) {
+      lastError = error
+      if (!shouldRetry(error) || attempt === attempts) throw error
+
+      const wait = Math.min(30000, 1000 * 2 ** (attempt - 1))
+      console.warn(`  retry ${attempt}/${attempts - 1} after ${wait}ms (${label}): ${statusOf(error)}`)
+      await sleep(wait)
+    }
+  }
+  throw lastError
+}
+
+/**
+ * The legacy site embargoes posts with a `publish_at` in the future — the
+ * Cuttlebelle build simply does not emit them until that time. Contentful has
+ * no equivalent, so an embargoed post must be created as a DRAFT and published
+ * by hand (or by editorial flow) on the day.
+ *
+ * Publishing it immediately would put an unreleased announcement on the live
+ * site. That happened once during the migration on 2026-08-13 with the OIP-9
+ * DAO post, caught only because the entry was verified against orbs.com, which
+ * was still 404ing for it.
+ */
+function isEmbargoed(fm) {
+  const raw = fm.publish_at || fm.publishAt
+  if (!raw) return false
+
+  const at = new Date(raw)
+  if (Number.isNaN(at.getTime())) return false
+
+  return at.getTime() > Date.now()
 }
 
 /**
@@ -176,8 +260,19 @@ function stripDividerAndAboutOrbs(md) {
   const headingStart = m.index
   const before = md.slice(0, headingStart)
 
+  // `[\s\S]*?` here was catastrophic. Posts contain several line-separator
+  // divs, and with `$` anchoring to end-of-string the engine matched the FIRST
+  // separator and ran lazily to the LAST `</div>` — so everything after the
+  // first separator was discarded. Orbs-V5-Update kept 411 of 7508 characters.
+  // 35 posts were truncated this way, 7 of them losing over half their body.
+  //
+  // Every one of the 310 separators in the archive is whitespace-only inside,
+  // so `>\s*</div>` matches them all and cannot span. The `\s*` around `=` and
+  // inside the quotes covers the four markup variants actually present,
+  // including `<div class = 'line-separator '>`, which the old pattern missed
+  // entirely.
   const divSepTail =
-    /(?:\n\s*\n)?\s*<div[^>]*class=['"]line-separator['"][^>]*>[\s\S]*?<\/div>\s*$/i
+    /(?:\n\s*\n)?\s*<div[^>]*class\s*=\s*['"]\s*line-separator\s*['"][^>]*>\s*<\/div>\s*$/i
   const hrTagTail = /(?:\n\s*\n)?\s*<hr\b[^>]*>\s*$/i
   const mdHrTail = /(?:\n\s*\n)?\s*(?:---|\*\*\*|___)\s*$/i
 
@@ -296,26 +391,112 @@ function fitShortDescription(input, max = 256) {
   return hard + '...'
 }
 
-async function uploadAsset(env, absPath, titleOverride) {
+/**
+ * Content-addressed asset ID.
+ *
+ * Contentful IDs allow [a-zA-Z0-9._-] up to 64 chars. Deriving the ID from the
+ * file's sha1 makes uploads idempotent: re-running the migration finds the
+ * existing asset instead of creating another copy. Previously the dedup map was
+ * in-memory only, so every run re-uploaded every image and orphaned the last
+ * run's — 1160 assets currently exist for 458 posts.
+ */
+function stableAssetIdFromHash(hash) {
+  return `img-${hash.slice(0, 40)}`
+}
+
+/**
+ * Upload with a chosen ID.
+ *
+ * createAssetFromFiles() allocates a random ID, so it cannot be used here. The
+ * two-step upload -> createAssetWithId flow is the only way to control it.
+ */
+async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
   const fileName = path.basename(absPath)
   const contentType = guessContentType(absPath)
 
-  let asset = await env.createAssetFromFiles({
+  const upload = await withRetryWrite(
+    () => env.createUpload({ file: fs.createReadStream(absPath) }),
+    `upload blob ${fileName}`
+  )
+
+  let asset = await createOrGetAsset(env, assetId, {
     fields: {
       title: L(titleOverride || fileName),
       file: {
         [CONTENTFUL_LOCALE]: {
           contentType,
           fileName,
-          file: fs.createReadStream(absPath),
+          uploadFrom: { sys: { type: 'Link', linkType: 'Upload', id: upload.sys.id } },
         },
       },
     },
   })
 
-  asset = await asset.processForAllLocales()
-  asset = await asset.publish()
+  return await ensureAssetReady(asset, fileName)
+}
+
+/**
+ * Create, or adopt what a previous attempt already created.
+ *
+ * uploadAssetWithId is multi-step (createUpload -> create -> process ->
+ * publish), so retrying the whole thing is not idempotent: a 429 after the
+ * create succeeds replays the create, gets a 409, and the caller drops the
+ * image. Retrying per step and treating 409 as "mine, already made" keeps it
+ * recoverable.
+ */
+/**
+ * Bring an existing asset to a usable state.
+ *
+ * getAsset() succeeds for an asset that was created but never processed or
+ * published — the state an interrupted run leaves behind. Linking a blog entry
+ * to one of those either fails the entry's publish validation or ships a broken
+ * image, so adopt-and-finalise rather than adopt-and-hope.
+ */
+async function ensureAssetReady(asset, label) {
+  const hasFile = () => Boolean(asset.fields?.file?.[CONTENTFUL_LOCALE]?.url)
+
+  if (!hasFile()) {
+    asset = await withRetryWrite(() => asset.processForAllLocales(), `process ${label}`)
+  }
+
+  if (!asset.sys.publishedVersion) {
+    asset = await withRetryWrite(() => asset.publish(), `publish ${label}`)
+  }
+
   return asset
+}
+
+async function createOrGetAsset(env, assetId, data) {
+  try {
+    return await withRetryWrite(() => env.createAssetWithId(assetId, data), `create asset ${assetId}`)
+  } catch (error) {
+    if (!isConflict(error)) throw error
+    const adopted = await withRetry(() => env.getAsset(assetId), `adopt asset ${assetId}`)
+    return await ensureAssetReady(adopted, assetId)
+  }
+}
+
+/**
+ * Bring an existing entry's published state in line with its embargo, without
+ * touching its content.
+ */
+async function reconcilePublishState(entry, fm, slug) {
+  const embargoed = isEmbargoed(fm)
+  const isPublished = Boolean(entry.sys.publishedVersion)
+
+  if (embargoed && isPublished) {
+    await withRetryWrite(() => entry.unpublish(), `unpublish embargoed ${slug}`)
+    console.log(`Retracted (embargoed until ${fm.publish_at}): ${slug}`)
+    return
+  }
+
+  if (!embargoed && !isPublished && publishAfterUpsert) {
+    await withRetryWrite(() => entry.publish(), `publish ${slug}`)
+    console.log(`Published (was left as a draft): ${slug}`)
+    return
+  }
+
+  console.log(`Skipped (exists): ${slug}`)
 }
 
 async function resolveAuthorEntryId(authorFrontmatterValue) {
@@ -379,6 +560,14 @@ function hasMeaningfulInline(inlineNodes) {
  *  - lift block nodes out of inline-only containers
  *  - if a heading/paragraph becomes empty after lifting, drop it
  */
+const NEEDS_CHILD = /^(table-cell|table-header-cell|list-item|blockquote)$/
+
+const emptyParagraph = () => ({
+  nodeType: 'paragraph',
+  data: {},
+  content: [{ nodeType: 'text', value: '', marks: [], data: {} }],
+})
+
 function sanitizeRichTextDoc(doc) {
   function sanitizeInlineContainer(node) {
     const liftedBlocks = []
@@ -430,6 +619,19 @@ function sanitizeRichTextDoc(doc) {
     if (Array.isArray(node.content)) {
       const next = []
       for (const c of node.content) next.push(...sanitizeNode(c))
+
+      // Containers that Contentful requires to be non-empty. A blank table cell
+      // holds an empty paragraph; sanitizeInlineContainer drops that paragraph
+      // as "no meaningful inline", leaving a childless cell and a 422:
+      //   name: size, min: 1, path: fields.content.en-US...table-cell
+      // Re-seed an empty paragraph so the shape stays valid.
+      //
+      // Masked until now: the divider-regex bug truncated posts before their
+      // tables, so no table ever reached validation.
+      if (next.length === 0 && NEEDS_CHILD.test(node.nodeType || '')) {
+        next.push(emptyParagraph())
+      }
+
       return [{ ...node, content: next }]
     }
 
@@ -476,13 +678,32 @@ async function main() {
 
   // Dedupe assets by hash (within this run)
   const assetIdByHash = new Map()
+  const failures = []
 
   async function getAssetId(absPath, titleOverride) {
     try {
       const buf = await fsp.readFile(absPath)
       const hash = sha1(buf)
+
+      // In-run cache first — saves a round trip for images repeated in a post.
       if (assetIdByHash.has(hash)) return assetIdByHash.get(hash)
-      const a = await uploadAsset(env, absPath, titleOverride)
+
+      const assetId = stableAssetIdFromHash(hash)
+
+      // Across runs: if this exact file was uploaded before, reuse it.
+      try {
+        const found = await withRetry(() => env.getAsset(assetId), `asset ${assetId}`)
+        await ensureAssetReady(found, assetId)
+        assetIdByHash.set(hash, assetId)
+        return assetId
+      } catch (e) {
+        if (!isNotFound(e)) throw e
+      }
+
+      // No outer withRetry — uploadAssetWithId retries each step itself, and
+      // wrapping the whole multi-step flow would replay a create that already
+      // succeeded.
+      const a = await uploadAssetWithId(env, absPath, titleOverride, assetId)
       assetIdByHash.set(hash, a.sys.id)
       return a.sys.id
     } catch (e) {
@@ -547,12 +768,25 @@ async function main() {
 
       // Create-only mode: if exists, skip early
       if (onlyCreateNew) {
+        let existingEntry = null
         try {
-          await env.getEntry(entryId)
-          console.log(`Skipped (exists): ${slug}`)
+          existingEntry = await withRetry(() => env.getEntry(entryId), `get ${slug}`)
+        } catch (error) {
+          if (!isNotFound(error)) throw error
+        }
+
+        if (existingEntry) {
+          // Skip the content update — that is what create-only means — but
+          // still reconcile publish state. Two cases this catches that a bare
+          // skip does not:
+          //
+          //  - An embargoed post a previous run published. Leaving it live is
+          //    the exact incident the embargo check exists to prevent, and the
+          //    backlog workflow runs in this mode.
+          //  - A post whose create succeeded but whose publish then failed,
+          //    stranding it as a draft that no later create-only run revisits.
+          await reconcilePublishState(existingEntry, fm, slug)
           continue
-        } catch {
-          // proceed
         }
       }
 
@@ -563,7 +797,22 @@ async function main() {
       const isoDate = new Date(fm.date).toISOString()
 
       const authorEntryId = await resolveAuthorEntryId(fm.author)
-      await env.getEntry(authorEntryId)
+      try {
+        await withRetry(() => env.getEntry(authorEntryId), `author ${authorEntryId}`)
+      } catch (error) {
+        if (isNotFound(error)) {
+          // stableAuthorIdFromPath() hashes the author file's RELATIVE PATH, so
+          // this ID depends on the cwd and AUTHORS_DIR. Run from anywhere other
+          // than scripts/orbs-website-migration with AUTHORS_DIR=authors and
+          // every author misses, failing every post for a reason that reads as
+          // a content problem.
+          throw new Error(
+            `Author "${authorEntryId}" not found for ${rel}. ` +
+              `Check cwd and AUTHORS_DIR — author IDs hash the relative path (cwd=${process.cwd()}, AUTHORS_DIR=${AUTHORS_DIR}).`
+          )
+        }
+        throw error
+      }
 
       // HERO IMAGE (optional)
       const heroSrc = fm.image || PLACEHOLDER_HERO
@@ -653,38 +902,113 @@ async function main() {
       }
       if (heroAssetId) fields.heroImage = L(linkAsset(heroAssetId))
 
+      const embargoed = isEmbargoed(fm)
+      const shouldPublish = publishAfterUpsert && !embargoed
+
       if (onlyCreateNew) {
-        const created = await env.createEntryWithId(BLOG_CT, entryId, { fields })
-        if (publishAfterUpsert) await created.publish()
-        console.log(`Created${publishAfterUpsert ? ' + published' : ''}: ${slug}`)
+        try {
+          const created = await withRetryWrite(
+            () => env.createEntryWithId(BLOG_CT, entryId, { fields }),
+            `create ${slug}`
+          )
+          if (shouldPublish) await withRetryWrite(() => created.publish(), `publish ${slug}`)
+          console.log(
+            `Created${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [DRAFT — embargoed until ${fm.publish_at}]` : ''}`
+          )
+        } catch (error) {
+          // A 409 here means the entry appeared between the existence check and
+          // now. That is success, not failure.
+          if (!isConflict(error)) throw error
+          console.log(`Skipped (raced, exists): ${slug}`)
+        }
         continue
       }
 
-      // Upsert
+      // Upsert. Only a genuine 404 means "create it" — anything else must
+      // propagate, or a transient failure silently becomes a duplicate-create
+      // attempt and then a fatal 409.
+      let existing = null
       try {
-        const existing = await env.getEntry(entryId)
+        existing = await withRetry(() => env.getEntry(entryId), `get ${slug}`)
+      } catch (error) {
+        if (!isNotFound(error)) throw error
+      }
+
+      if (existing) {
         existing.fields = { ...existing.fields, ...fields }
-        const updated = await existing.update()
-        if (publishAfterUpsert) await updated.publish()
-        console.log(`Updated${publishAfterUpsert ? ' + published' : ''}: ${slug}`)
-      } catch {
-        const created = await env.createEntryWithId(BLOG_CT, entryId, { fields })
-        if (publishAfterUpsert) await created.publish()
-        console.log(`Created${publishAfterUpsert ? ' + published' : ''}: ${slug}`)      }
+        const wasPublished = Boolean(existing.sys.publishedVersion)
+        const updated = await withRetryWrite(() => existing.update(), `update ${slug}`)
+
+        if (shouldPublish) {
+          await withRetryWrite(() => updated.publish(), `publish ${slug}`)
+        } else if (embargoed && wasPublished) {
+          // update() does not retract a live version. Without this an
+          // embargoed post that a previous run already published stays
+          // publicly visible, which is the exact failure the embargo check
+          // exists to prevent.
+          await withRetryWrite(() => updated.unpublish(), `unpublish embargoed ${slug}`)
+          console.log(`  retracted live version of embargoed post: ${slug}`)
+        }
+        console.log(
+          `Updated${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [left unpublished — embargoed until ${fm.publish_at}]` : ''}`
+        )
+      } else {
+        const created = await withRetryWrite(
+          () => env.createEntryWithId(BLOG_CT, entryId, { fields }),
+          `create ${slug}`
+        )
+        if (shouldPublish) await withRetryWrite(() => created.publish(), `publish ${slug}`)
+        console.log(
+          `Created${shouldPublish ? ' + published' : ''}: ${slug}${embargoed ? `  [DRAFT — embargoed until ${fm.publish_at}]` : ''}`
+        )
+      }
     } catch (err) {
-      writeCheckpoint(MIGRATION_CHECKPOINT_FILE, {
-        index: i,
-        relPath: rel,
-        total: selected.length,
-        failedAt: new Date().toISOString(),
-        error: { message: err?.message || String(err), name: err?.name },
-      })
-      throw err
+      // Deliberately NOT written to the checkpoint. The next iteration
+      // overwrites it at the top of the loop, so recording a failure there
+      // meant RESUME_FROM_CHECKPOINT resumed from the last post processed
+      // rather than the first that failed — silently skipping the posts that
+      // needed attention. Failures go to their own file instead.
+
+      // Collect and continue. Aborting the whole run on one bad post is what
+      // left the archive in a partial state twice before — 47 of 448, then
+      // 319 of 448 — and each restart re-uploads assets for everything it
+      // redoes. A single unmigratable post should not cost the other 400.
+      failures.push({ rel, message: err?.message || String(err) })
+
+      // Written on every failure, not once at the end. The checkpoint has
+      // already advanced past this post, so if the run is interrupted later
+      // (Ctrl-C, token expiry, reboot) an in-memory-only list would vanish and
+      // RESUME_FROM_CHECKPOINT would skip this post permanently.
+      writeCheckpoint(MIGRATION_FAILURES_FILE, failures)
+      console.error(`  FAILED ${rel}: ${(err?.message || String(err)).slice(0, 200)}`)
     }
   }
 
+  if (failures.length === 0) {
+    try {
+      if (fs.existsSync(MIGRATION_FAILURES_FILE)) fs.unlinkSync(MIGRATION_FAILURES_FILE)
+    } catch {
+      // ignore
+    }
+    clearCheckpoint(MIGRATION_CHECKPOINT_FILE)
+    console.log(`\nDone. ${selected.length - startIndex} processed, 0 failures. Checkpoint cleared.`)
+    return
+  }
+
+  // The loop reached the end, so the checkpoint has nothing left to resume —
+  // it points at the last post processed. Leaving it would make a
+  // RESUME_FROM_CHECKPOINT re-run start at the tail and skip the earlier
+  // failures entirely. The failures file is the record for those:
+  //   jq -r '.[].rel' .migrate-blogposts.failures.json
   clearCheckpoint(MIGRATION_CHECKPOINT_FILE)
-  console.log('Done. Checkpoint cleared.')
+  writeCheckpoint(MIGRATION_FAILURES_FILE, failures)
+  console.log(`\nDone with failures: ${failures.length} of ${selected.length - startIndex}`)
+  console.log(`Failed posts written to ${MIGRATION_FAILURES_FILE}`)
+  for (const f of failures) {
+    console.log(`  ${f.rel}`)
+    console.log(`    ${f.message.slice(0, 240)}`)
+  }
+  process.exitCode = 1
 }
 
 main().catch((e) => {
