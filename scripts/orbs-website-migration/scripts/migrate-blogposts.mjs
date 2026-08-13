@@ -415,9 +415,7 @@ async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
     },
   })
 
-  asset = await withRetry(() => asset.processForAllLocales(), `process ${fileName}`)
-  asset = await withRetry(() => asset.publish(), `publish asset ${fileName}`)
-  return asset
+  return await ensureAssetReady(asset, fileName)
 }
 
 /**
@@ -429,12 +427,35 @@ async function uploadAssetWithId(env, absPath, titleOverride, assetId) {
  * image. Retrying per step and treating 409 as "mine, already made" keeps it
  * recoverable.
  */
+/**
+ * Bring an existing asset to a usable state.
+ *
+ * getAsset() succeeds for an asset that was created but never processed or
+ * published — the state an interrupted run leaves behind. Linking a blog entry
+ * to one of those either fails the entry's publish validation or ships a broken
+ * image, so adopt-and-finalise rather than adopt-and-hope.
+ */
+async function ensureAssetReady(asset, label) {
+  const hasFile = () => Boolean(asset.fields?.file?.[CONTENTFUL_LOCALE]?.url)
+
+  if (!hasFile()) {
+    asset = await withRetry(() => asset.processForAllLocales(), `process ${label}`)
+  }
+
+  if (!asset.sys.publishedVersion) {
+    asset = await withRetry(() => asset.publish(), `publish ${label}`)
+  }
+
+  return asset
+}
+
 async function createOrGetAsset(env, assetId, data) {
   try {
     return await withRetry(() => env.createAssetWithId(assetId, data), `create asset ${assetId}`)
   } catch (error) {
     if (!isConflict(error)) throw error
-    return await withRetry(() => env.getAsset(assetId), `adopt asset ${assetId}`)
+    const adopted = await withRetry(() => env.getAsset(assetId), `adopt asset ${assetId}`)
+    return await ensureAssetReady(adopted, assetId)
   }
 }
 
@@ -631,7 +652,8 @@ async function main() {
 
       // Across runs: if this exact file was uploaded before, reuse it.
       try {
-        await withRetry(() => env.getAsset(assetId), `asset ${assetId}`)
+        const found = await withRetry(() => env.getAsset(assetId), `asset ${assetId}`)
+        await ensureAssetReady(found, assetId)
         assetIdByHash.set(hash, assetId)
         return assetId
       } catch (e) {
@@ -899,6 +921,12 @@ async function main() {
       // 319 of 448 — and each restart re-uploads assets for everything it
       // redoes. A single unmigratable post should not cost the other 400.
       failures.push({ rel, message: err?.message || String(err) })
+
+      // Written on every failure, not once at the end. The checkpoint has
+      // already advanced past this post, so if the run is interrupted later
+      // (Ctrl-C, token expiry, reboot) an in-memory-only list would vanish and
+      // RESUME_FROM_CHECKPOINT would skip this post permanently.
+      writeCheckpoint(MIGRATION_FAILURES_FILE, failures)
       console.error(`  FAILED ${rel}: ${(err?.message || String(err)).slice(0, 200)}`)
     }
   }
