@@ -1,10 +1,17 @@
 import Link from 'next/link'
-import { blogPagePath } from '../lib/routes'
 import { cn } from '@/lib/utils'
 
 type Props = {
   currentPage: number
   totalPages: number
+  /**
+   * Builds the href for a page number. Passed in rather than imported so the
+   * same component serves /blog and /news — two copies of this logic would
+   * drift, and the ellipsis rules are the fiddly part.
+   */
+  pathFor: (pageNumber: number) => string
+  /** Distinguishes the two navs for screen readers. */
+  label?: string
 }
 
 /**
@@ -31,16 +38,16 @@ function pageItems(currentPage: number, totalPages: number): (number | 'gap')[] 
   return items
 }
 
-export function Pagination({ currentPage, totalPages }: Props) {
+export function Pagination({ currentPage, totalPages, pathFor, label = 'Pagination' }: Props) {
   if (totalPages <= 1) return null
 
   const items = pageItems(currentPage, totalPages)
   const linkClass = 'px-3 py-2 rounded-[var(--radius)] text-sm transition-colors hover:bg-accent'
 
   return (
-    <nav className="flex items-center justify-center gap-1 mt-12" aria-label="Blog pagination">
+    <nav className="flex items-center justify-center gap-1 mt-12" aria-label={label}>
       {currentPage > 1 && (
-        <Link href={blogPagePath(currentPage - 1)} className={linkClass} rel="prev">
+        <Link href={pathFor(currentPage - 1)} className={linkClass} rel="prev">
           Previous
         </Link>
       )}
@@ -53,7 +60,7 @@ export function Pagination({ currentPage, totalPages }: Props) {
         ) : (
           <Link
             key={item}
-            href={blogPagePath(item)}
+            href={pathFor(item)}
             className={cn(linkClass, item === currentPage && 'bg-accent font-semibold')}
             aria-label={`Page ${item}`}
             aria-current={item === currentPage ? 'page' : undefined}
@@ -64,7 +71,7 @@ export function Pagination({ currentPage, totalPages }: Props) {
       )}
 
       {currentPage < totalPages && (
-        <Link href={blogPagePath(currentPage + 1)} className={linkClass} rel="next">
+        <Link href={pathFor(currentPage + 1)} className={linkClass} rel="next">
           Next
         </Link>
       )}
