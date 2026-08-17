@@ -1,5 +1,5 @@
 import type { MetadataRoute } from 'next'
-import { getAllPostRefs, getMediaMentions, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
+import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
 import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 
@@ -32,11 +32,11 @@ export const dynamic = 'force-dynamic'
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPostRefs()
-  // Newest mention too, not just the count — the news pages' <lastmod> must
-  // reflect media changes. Reusing the blog's timestamp would tell crawlers
-  // /news is unchanged whenever a mention is published after the last post,
-  // which is already the case in the current space.
-  const { items: newestMedia, total: mediaTotal } = await getMediaMentions({ skip: 0, limit: 1 })
+  // Modification time, not newest article date. The news pages change when an
+  // older mention is edited or a backdated one is added, neither of which moves
+  // the newest `fields.date` — matching how the blog entries below use
+  // sys.updatedAt.
+  const { total: mediaTotal, lastModified: lastMediaChange } = await getMediaSummary()
 
   // Newest MODIFICATION across the archive, not newest publish date — the
   // listing pages change whenever any post on them changes.
@@ -72,13 +72,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Media mention pages. The mentions themselves are NOT listed: each links
   // out to a publisher and has no URL of ours to index.
-  const lastMediaChange = newestMedia.length > 0 ? new Date(newestMedia[0].date) : lastArchiveChange
-
   const newsPages: MetadataRoute.Sitemap = Array.from(
     { length: Math.max(1, Math.ceil(mediaTotal / MEDIA_PER_PAGE)) },
     (_, index) => ({
       url: absoluteUrl(newsPagePath(index + 1)),
-      lastModified: lastMediaChange,
+      lastModified: lastMediaChange ?? lastArchiveChange,
       changeFrequency: 'weekly' as const,
       priority: index === 0 ? 0.7 : 0.3,
     })

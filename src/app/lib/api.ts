@@ -183,6 +183,32 @@ export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}
   }
 }
 
+/**
+ * Newest modification across all mentions, plus the total.
+ *
+ * Ordered by `sys.updatedAt`, NOT `fields.date`. An editor republishing an
+ * older mention or backfilling a dated article changes the /news pages without
+ * moving the newest article date — the blog sitemap already uses modification
+ * time for the same reason.
+ */
+export async function getMediaSummary(): Promise<{ total: number; lastModified: Date | null }> {
+  const client = getClient()
+
+  const page = await client.getEntries<TypeMediaMentionSkeleton>({
+    content_type: 'mediaMention',
+    order: ['-sys.updatedAt'],
+    select: ['sys.updatedAt'],
+    limit: 1,
+  })
+
+  const newest = page.items[0]?.sys.updatedAt
+
+  return {
+    total: page.total,
+    lastModified: newest ? new Date(newest) : null,
+  }
+}
+
 export type PostRef = {
   slug: string
   /** Publish date, from the content model. Drives ordering and display. */
