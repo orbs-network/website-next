@@ -238,6 +238,49 @@ function guessContentType(filePath) {
   return 'image/jpeg'
 }
 
+/**
+ * Resolve a legacy image path, repairing the two known defects.
+ *
+ * Both of these reference files that DO exist — the paths are simply wrong,
+ * and skipping them leaves a card with a blank hero area:
+ *
+ *   '/assets/img/news/posts/ democratizing-...webp'
+ *      a space after `posts/`; trimming the value's ends does not catch it
+ *
+ *   '/assets/img/news/posts/How-Orbs-is-Positively-Impacting/bg.png'
+ *      points into a directory that does not exist; the real file is the
+ *      sibling `How-Orbs-is-Positively-Impacting.png`
+ *
+ * @returns absolute path, or null if nothing matches.
+ */
+function resolveLegacyImage(root, rawPath) {
+  const raw = String(rawPath || '').trim()
+  if (!raw) return null
+
+  const candidates = [raw]
+
+  // Spaces around path separators.
+  const despaced = raw.replace(/\s*\/\s*/g, '/')
+  if (despaced !== raw) candidates.push(despaced)
+
+  // `dir/file.ext` where `dir.ext` is the real file.
+  const match = despaced.match(/^(.*)\/([^/]+)\/[^/]+(\.[a-z0-9]+)$/i)
+  if (match) {
+    candidates.push(`${match[1]}/${match[2]}${match[3]}`)
+    // The sibling may not share the referenced extension.
+    for (const ext of ['.png', '.jpg', '.jpeg', '.webp']) {
+      candidates.push(`${match[1]}/${match[2]}${ext}`)
+    }
+  }
+
+  for (const candidate of candidates) {
+    const abs = path.resolve(root, '.' + candidate)
+    if (fs.existsSync(abs)) return abs
+  }
+
+  return null
+}
+
 async function main() {
   const files = (await fsp.readdir(LEGACY_NEWS_DIR)).filter((f) => f.endsWith('.md')).sort()
 
@@ -392,12 +435,12 @@ async function main() {
     try {
       const entryId = entryIdForUrl(item.url)
 
-      const thumbAbs = path.resolve(LEGACY_ASSET_ROOT, '.' + item.image)
-      const logoAbs = path.resolve(LEGACY_ASSET_ROOT, '.' + item.logo)
+      const thumbAbs = resolveLegacyImage(LEGACY_ASSET_ROOT, item.image)
+      const logoAbs = resolveLegacyImage(LEGACY_ASSET_ROOT, item.logo)
 
       const [thumbId, logoId] = [
-        fs.existsSync(thumbAbs) ? await uploadAsset(thumbAbs, `media-${path.basename(thumbAbs)}`) : null,
-        fs.existsSync(logoAbs) ? await uploadAsset(logoAbs, `logo-${path.basename(logoAbs)}`) : null,
+        thumbAbs ? await uploadAsset(thumbAbs, `media-${path.basename(thumbAbs)}`) : null,
+        logoAbs ? await uploadAsset(logoAbs, `logo-${path.basename(logoAbs)}`) : null,
       ]
 
       if (!thumbId) problems.missingAsset.push(`${item.file} thumbnail`)

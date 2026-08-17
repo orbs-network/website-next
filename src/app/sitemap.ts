@@ -32,7 +32,11 @@ export const dynamic = 'force-dynamic'
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPostRefs()
-  const { total: mediaTotal } = await getMediaMentions({ skip: 0, limit: 1 })
+  // Newest mention too, not just the count — the news pages' <lastmod> must
+  // reflect media changes. Reusing the blog's timestamp would tell crawlers
+  // /news is unchanged whenever a mention is published after the last post,
+  // which is already the case in the current space.
+  const { items: newestMedia, total: mediaTotal } = await getMediaMentions({ skip: 0, limit: 1 })
 
   // Newest MODIFICATION across the archive, not newest publish date — the
   // listing pages change whenever any post on them changes.
@@ -68,11 +72,13 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
 
   // Media mention pages. The mentions themselves are NOT listed: each links
   // out to a publisher and has no URL of ours to index.
+  const lastMediaChange = newestMedia.length > 0 ? new Date(newestMedia[0].date) : lastArchiveChange
+
   const newsPages: MetadataRoute.Sitemap = Array.from(
     { length: Math.max(1, Math.ceil(mediaTotal / MEDIA_PER_PAGE)) },
     (_, index) => ({
       url: absoluteUrl(newsPagePath(index + 1)),
-      lastModified: lastArchiveChange,
+      lastModified: lastMediaChange,
       changeFrequency: 'weekly' as const,
       priority: index === 0 ? 0.7 : 0.3,
     })
