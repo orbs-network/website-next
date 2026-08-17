@@ -1,6 +1,14 @@
 import { revalidatePath } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
-import { BLOG_INDEX_PATH, BLOG_PAGE_ROUTE, HOME_PATH, postPath, encodedPostPath } from '@/app/lib/routes'
+import {
+  BLOG_INDEX_PATH,
+  BLOG_PAGE_ROUTE,
+  HOME_PATH,
+  NEWS_INDEX_PATH,
+  NEWS_PAGE_ROUTE,
+  postPath,
+  encodedPostPath,
+} from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -89,6 +97,17 @@ export async function POST(request: NextRequest) {
   // A layout sweep is blunt, but these are rare next to routine publishes.
   const isRemoval = action === 'unpublish' || action === 'delete' || action === 'archive'
   const isBlogPost = contentType === 'blogPost'
+
+  // A media mention has no page of its own — it only ever appears in the /news
+  // listing — so publishing one refreshes the listing rather than any detail
+  // route. Handled before the layout sweep so a routine comms publish does not
+  // invalidate the entire site.
+  if (!isRemoval && contentType === 'mediaMention') {
+    revalidatePath(NEWS_INDEX_PATH)
+    revalidatePath(NEWS_PAGE_ROUTE, 'page')
+    console.info(`[revalidate] ${topic} ${entryId} (mediaMention) -> ${NEWS_INDEX_PATH}, ${NEWS_PAGE_ROUTE}`)
+    return NextResponse.json({ revalidated: [NEWS_INDEX_PATH, NEWS_PAGE_ROUTE], topic })
+  }
 
   // Narrowing on `!slug` directly (rather than via a derived boolean) is what
   // lets TypeScript treat `slug` as a string below.

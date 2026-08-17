@@ -1,8 +1,9 @@
 import { notFound } from 'next/navigation'
 import { H1 } from '../components/typography'
 import { getPosts, POSTS_PER_PAGE } from '../lib/api'
+import { blogPagePath } from '../lib/routes'
 import { BlogCard } from './blog-card'
-import { Pagination } from './pagination'
+import { Pagination } from '../components/pagination'
 
 function Heading() {
   return (
@@ -49,7 +50,7 @@ export async function BlogIndex({ currentPage }: { currentPage: number }) {
           <BlogCard key={post.slug} post={post} />
         ))}
       </div>
-      <Pagination currentPage={currentPage} totalPages={totalPages} />
+      <Pagination currentPage={currentPage} totalPages={totalPages} pathFor={blogPagePath} label="Blog pagination" />
     </div>
   )
 }

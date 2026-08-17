@@ -66,3 +66,17 @@ export const BLOG_PAGE_ROUTE = '/blog/page/[n]'
  * robots.txt advertises it and one definition beats two string literals.
  */
 export const SITEMAP_PATH = '/sitemap.xml'
+
+/**
+ * Press coverage. `/news` is the legacy URL and is linked from the navbar and
+ * footer as "Media" — it must not move.
+ */
+export const NEWS_INDEX_PATH = '/news/'
+
+/** Page 1 lives at /news/, mirroring blogPagePath. */
+export function newsPagePath(pageNumber: number): string {
+  return pageNumber <= 1 ? NEWS_INDEX_PATH : `${NEWS_INDEX_PATH}page/${pageNumber}/`
+}
+
+/** Route pattern for revalidatePath(path, 'page'). */
+export const NEWS_PAGE_ROUTE = '/news/page/[n]'

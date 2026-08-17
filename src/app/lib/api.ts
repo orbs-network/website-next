@@ -1,6 +1,6 @@
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
-import { TypeBlogPostSkeleton, TypeAuthorSkeleton } from '../generated-types'
+import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -147,6 +147,40 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
   })
 
   return posts.items.map((post) => post.fields)
+}
+
+/** Media mentions per page. Matches the blog's 12 for a consistent grid. */
+export const MEDIA_PER_PAGE = 12
+
+type MediaMention = Entry<TypeMediaMentionSkeleton, undefined, string>
+export type MediaMentionFields = MediaMention['fields']
+
+export type MediaPage = {
+  items: MediaMentionFields[]
+  total: number
+}
+
+/**
+ * One page of press mentions, newest first.
+ *
+ * Ordered by `-fields.date` with `sys.id` as tiebreaker, for the same reason
+ * the blog does: offset pagination over a non-total order puts an item on two
+ * pages or on neither.
+ */
+export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}): Promise<MediaPage> {
+  const client = getClient()
+
+  const page = await client.getEntries<TypeMediaMentionSkeleton>({
+    content_type: 'mediaMention',
+    order: ['-fields.date', 'sys.id'],
+    limit: Math.min(limit, CDA_MAX_LIMIT),
+    skip,
+  })
+
+  return {
+    items: page.items.map((item) => item.fields),
+    total: page.total,
+  }
 }
 
 export type PostRef = {

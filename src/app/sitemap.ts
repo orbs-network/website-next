@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
-import { getAllPostRefs, POSTS_PER_PAGE } from './lib/api'
-import { HOME_PATH, blogPagePath, encodedPostPath } from './lib/routes'
+import { getAllPostRefs, getMediaMentions, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
+import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 
 /**
@@ -24,7 +24,6 @@ export const dynamic = 'force-dynamic'
  *
  * Not yet included, because the routes do not exist:
  *  - marketing pages (Phase 3)
- *  - media mentions (#25)
  *  - hreflang alternates for JP/KO (Phase 2)
  *
  * All paths come from `lib/routes` so they carry the trailing slash that
@@ -33,6 +32,7 @@ export const dynamic = 'force-dynamic'
  */
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPostRefs()
+  const { total: mediaTotal } = await getMediaMentions({ skip: 0, limit: 1 })
 
   // Newest MODIFICATION across the archive, not newest publish date — the
   // listing pages change whenever any post on them changes.
@@ -66,5 +66,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.6,
   }))
 
-  return [...home, ...blogPages, ...postEntries]
+  // Media mention pages. The mentions themselves are NOT listed: each links
+  // out to a publisher and has no URL of ours to index.
+  const newsPages: MetadataRoute.Sitemap = Array.from(
+    { length: Math.max(1, Math.ceil(mediaTotal / MEDIA_PER_PAGE)) },
+    (_, index) => ({
+      url: absoluteUrl(newsPagePath(index + 1)),
+      lastModified: lastArchiveChange,
+      changeFrequency: 'weekly' as const,
+      priority: index === 0 ? 0.7 : 0.3,
+    })
+  )
+
+  return [...home, ...blogPages, ...newsPages, ...postEntries]
 }
