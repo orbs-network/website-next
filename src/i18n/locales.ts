@@ -45,25 +45,6 @@ export const LOCALE_HTML_LANG: Record<Locale, string> = {
   ko: 'ko',
 }
 
-/**
- * The language the chrome (nav labels, header CTA) actually renders in.
- *
- * Usually the locale itself. Japanese is the exception: every label in the
- * legacy site's `jp/_shared/navbar/menu-links` is ASCII, so `ja.json` mirrors
- * English rather than inventing copy that site has never shown. The chrome on
- * `/jp/` is therefore English text inside a `lang="ja"` document, and saying so
- * matters — a screen reader told the text is Japanese applies Japanese
- * pronunciation rules to English words.
- *
- * Consumers use this to mark those regions with an explicit `lang`. When Phase 3
- * supplies real Japanese chrome, this becomes `ja` and the markup follows.
- */
-export const LOCALE_CHROME_LANG: Record<Locale, Locale> = {
-  en: 'en',
-  ja: 'en',
-  ko: 'ko',
-}
-
 /** Labels shown in the language selector. Deliberately not translated. */
 export const LOCALE_LABELS: Record<Locale, string> = {
   en: 'EN',

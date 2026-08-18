@@ -1,6 +1,7 @@
 import { ChevronDownIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
 import { type Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 import { NavButton } from './nav-button'
 import { NavDropdown } from './nav-dropdown'
 
@@ -25,33 +26,33 @@ export async function NavMenu({ locale }: { locale: Locale }) {
     <div className="relative">
       <ul className="flex items-center gap-4">
         <li className="group relative">
-          <NavButton href="/products">
+          <NavButton href="/products" lang={textLang(t('products'), locale)}>
             {t('products')} <NavIcon />
           </NavButton>
           <NavDropdown>
             <ul>
               <li>
-                <NavButton href="/products/1">{t('liquidityHub')}</NavButton>
+                <NavButton href="/products/1" lang={textLang(t('liquidityHub'), locale)}>{t('liquidityHub')}</NavButton>
               </li>
               <li>
-                <NavButton href="/products/2">{t('perpetualHub')}</NavButton>
+                <NavButton href="/products/2" lang={textLang(t('perpetualHub'), locale)}>{t('perpetualHub')}</NavButton>
               </li>
               <li>
-                <NavButton href="/products/3">
+                <NavButton href="/products/3" lang={textLang('dTWAP', locale)}>
                   <span>
                     <span className="lowercase">d</span>TWAP
                   </span>
                 </NavButton>
               </li>
               <li>
-                <NavButton href="/products/3">
+                <NavButton href="/products/3" lang={textLang('dTWAP', locale)}>
                   <span>
                     <span className="lowercase">d</span>LIMIT
                   </span>
                 </NavButton>
               </li>
               <li>
-                <NavButton href="/products/3">
+                <NavButton href="/products/3" lang={textLang('dTWAP', locale)}>
                   <span>
                     <span className="lowercase">d</span>SLTP
                   </span>
@@ -61,50 +62,50 @@ export async function NavMenu({ locale }: { locale: Locale }) {
           </NavDropdown>
         </li>
         <li className="group relative">
-          <NavButton href="/resources">
+          <NavButton href="/resources" lang={textLang(t('resources'), locale)}>
             {t('resources')} <NavIcon />
           </NavButton>
           <NavDropdown>
             <ul>
               <li>
-                <NavButton href="/resources/1">{t('tetra')}</NavButton>
+                <NavButton href="/resources/1" lang={textLang(t('tetra'), locale)}>{t('tetra')}</NavButton>
               </li>
               <li>
-                <NavButton href="/resources/2">{t('stakingCalculator')}</NavButton>
+                <NavButton href="/resources/2" lang={textLang(t('stakingCalculator'), locale)}>{t('stakingCalculator')}</NavButton>
               </li>
               <li>
-                <NavButton href="/resources/3">{t('faqSupport')}</NavButton>
+                <NavButton href="/resources/3" lang={textLang(t('faqSupport'), locale)}>{t('faqSupport')}</NavButton>
               </li>
               <li>
-                <NavButton href="/resources/3">{t('brandingKit')}</NavButton>
+                <NavButton href="/resources/3" lang={textLang(t('brandingKit'), locale)}>{t('brandingKit')}</NavButton>
               </li>
             </ul>
           </NavDropdown>
         </li>
         <li className="group relative">
-          <NavButton href="/developers">
+          <NavButton href="/developers" lang={textLang(t('developers'), locale)}>
             {t('developers')} <NavIcon />
           </NavButton>
           <NavDropdown>
             <ul>
               <li>
-                <NavButton href="/developers/1">{t('documentation')}</NavButton>
+                <NavButton href="/developers/1" lang={textLang(t('documentation'), locale)}>{t('documentation')}</NavButton>
               </li>
               <li>
-                <NavButton href="/developers/2">{t('apiReference')}</NavButton>
+                <NavButton href="/developers/2" lang={textLang(t('apiReference'), locale)}>{t('apiReference')}</NavButton>
               </li>
               <li>
-                <NavButton href="/developers/3">{t('github')}</NavButton>
+                <NavButton href="/developers/3" lang={textLang(t('github'), locale)}>{t('github')}</NavButton>
               </li>
             </ul>
           </NavDropdown>
         </li>
         <li>
-          <NavButton href="/blog">{t('blog')}</NavButton>
+          <NavButton href="/blog" lang={textLang(t('blog'), locale)}>{t('blog')}</NavButton>
         </li>
         <li>
           {/* "Media" matches the legacy navbar and footer label for /news. */}
-          <NavButton href="/news">{t('media')}</NavButton>
+          <NavButton href="/news" lang={textLang(t('media'), locale)}>{t('media')}</NavButton>
         </li>
       </ul>
     </div>
