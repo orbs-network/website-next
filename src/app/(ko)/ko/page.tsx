@@ -1,16 +1,13 @@
 import type { Metadata } from 'next'
 import { HomeHero } from '@/app/components/home-hero'
-import { localeAlternates } from '@/i18n/availability'
+import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import { HOME_PATH } from '@/app/lib/routes'
 
 export const metadata: Metadata = {
   alternates: localeAlternates(HOME_PATH, 'ko'),
-  // Not indexable while the body is the shared English placeholder. Declaring
-  // this an alternate of `/` would tell Google two near-identical English pages
-  // are translations of each other, which gets the whole hreflang set ignored.
-  // Phase 3 gives it real copy and removes this. Costs nothing meanwhile: DNS
-  // has not cut over (#39), so the legacy site is still the one being crawled.
-  robots: { index: false, follow: true },
+  // Derived from the availability map, so Phase 3 flipping this page to
+  // `translated` removes the noindex automatically. See placeholderRobots.
+  robots: placeholderRobots(HOME_PATH, 'ko'),
 }
 
 /**

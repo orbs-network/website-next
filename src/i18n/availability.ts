@@ -83,6 +83,35 @@ export function isPlaceholder(pathname: string, locale: Locale): boolean {
 }
 
 /**
+ * `robots` metadata for a localised page.
+ *
+ * Placeholder pages are `noindex, follow`. Two opposing risks meet here and both
+ * are real:
+ *
+ *  - Indexed as they are, `/jp/` and `/ko/` are English near-duplicates of `/`.
+ *    Google collapses them, and any hreflang set naming them is discarded.
+ *  - Left `noindex` past the DNS cutover (#39), the migration would actively
+ *    deindex two legacy entry-point URLs that have been indexed for years.
+ *
+ * So `noindex` is right until the pages have real copy and wrong the moment they
+ * do. It is derived from the SAME map entry that drives hreflang and the
+ * sitemap rather than hand-written on each page: flipping `placeholder` to
+ * `translated` in Phase 3 updates all three at once, with no second place to
+ * remember.
+ *
+ * The residual risk is a scheduling one, not a code one — cutting over before
+ * Phase 3 finishes. That belongs on the pre-cutover URL audit (#38).
+ */
+export function placeholderRobots(pathname: string, locale: Locale) {
+  if (!isPlaceholder(pathname, locale)) {
+    return undefined
+  }
+
+  // `follow` so link equity still flows through to whatever the page links to.
+  return { index: false, follow: true }
+}
+
+/**
  * Blog posts live at the root (`/Some-Post/`), so "is this a post?" cannot be
  * answered from the path shape alone — anything not in the availability map and
  * not a known section could be one. Both cases resolve the same way, though: no
