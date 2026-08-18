@@ -37,6 +37,9 @@ export async function Header({ locale }: { locale: Locale }) {
           <Link
             href={localePath(locale, '/')}
             aria-label={t('homeLink')}
+            // `homeLink` comes from the same catalog as the nav and CTA, so it
+            // is English on /jp/ too and needs the same annotation.
+            lang={fallbackLang}
             className="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             <OrbsLogo />
