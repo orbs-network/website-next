@@ -1,3 +1,9 @@
+import createNextIntlPlugin from 'next-intl/plugin'
+
+// Points at the request config rather than the default `./i18n/request.ts`,
+// because this project keeps source under `src/`.
+const withNextIntl = createNextIntlPlugin('./src/i18n/request.ts')
+
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   // Production serves post URLs with a trailing slash (`/Some-Post/`), and
@@ -22,4 +28,4 @@ const nextConfig = {
   reactCompiler: true,
 }
 
-export default nextConfig
+export default withNextIntl(nextConfig)

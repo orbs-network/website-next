@@ -2,6 +2,8 @@ import type { MetadataRoute } from 'next'
 import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
 import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
+import { localesFor } from '@/i18n/availability'
+import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 
 /**
  * Computed per request, matching robots.ts.
@@ -23,8 +25,12 @@ export const dynamic = 'force-dynamic'
  * published post.
  *
  * Not yet included, because the routes do not exist:
- *  - marketing pages (Phase 3)
- *  - hreflang alternates for JP/KO (Phase 2)
+ *  - marketing pages, and their JP/KO variants (Phase 3)
+ *
+ * hreflang is not declared here. Each localised page carries its own
+ * `<link rel="alternate">` set via `localeAlternates`, which is equivalent for
+ * crawlers and keeps one source of truth — the availability map — rather than
+ * restating the relationships in a second place that can drift.
  *
  * All paths come from `lib/routes` so they carry the trailing slash that
  * `trailingSlash: true` makes canonical. Emitting the slashless form here would
@@ -44,14 +50,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     posts.length > 0 ? new Date(Math.max(...posts.map((p) => new Date(p.updatedAt).getTime()))) : new Date()
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE))
 
-  const home: MetadataRoute.Sitemap = [
-    {
-      url: absoluteUrl(HOME_PATH),
-      lastModified: lastArchiveChange,
-      changeFrequency: 'weekly',
-      priority: 1,
-    },
-  ]
+  // The home page in each locale it is actually built in. Localised marketing
+  // pages arrive in Phase 3; until then `/jp/` and `/ko/` are the only two.
+  const home: MetadataRoute.Sitemap = localesFor(HOME_PATH).map((locale) => ({
+    url: absoluteUrl(localePath(locale, HOME_PATH)),
+    lastModified: lastArchiveChange,
+    changeFrequency: 'weekly' as const,
+    // English is the entry point and the x-default target; the translations are
+    // secondary.
+    priority: locale === DEFAULT_LOCALE ? 1 : 0.9,
+  }))
 
   // Page 1 is /blog/, not /blog/page/1/ — blogPagePath enforces that, so there
   // is exactly one URL per page of results and no self-duplicate.

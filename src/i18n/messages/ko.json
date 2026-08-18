@@ -1,0 +1,26 @@
+{
+  "_note": "Korean values are lifted from the legacy site's ko/_shared/navbar/menu-links/**/*.md rather than newly translated. Keys left in English are ones the legacy Korean navbar also shows in English: the Resources and Developers menus are untranslated there, and the Products/Resources/Developers group headings have no legacy counterpart at all (the legacy menu groups are Overview/Protocols/Resources/Community). Those resolve when #30 replaces this placeholder nav with the real structure.",
+  "nav": {
+    "products": "Products",
+    "resources": "Resources",
+    "developers": "Developers",
+    "blog": "블로그",
+    "media": "미디어",
+    "liquidityHub": "유동성 허브",
+    "perpetualHub": "선물 유동성 허브",
+    "tetra": "Tetra",
+    "stakingCalculator": "Staking Calculator",
+    "faqSupport": "FAQ",
+    "brandingKit": "브랜드 로고",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "github": "GitHub"
+  },
+  "header": {
+    "getInTouch": "문의하기",
+    "homeLink": "Orbs 홈"
+  },
+  "languageSelector": {
+    "label": "언어 변경"
+  }
+}

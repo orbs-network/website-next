@@ -1,0 +1,25 @@
+{
+  "nav": {
+    "products": "Products",
+    "resources": "Resources",
+    "developers": "Developers",
+    "blog": "Blog",
+    "media": "Media",
+    "liquidityHub": "Liquidity Hub",
+    "perpetualHub": "Perpetual Hub",
+    "tetra": "Tetra",
+    "stakingCalculator": "Staking Calculator",
+    "faqSupport": "FAQ & Support",
+    "brandingKit": "Branding Kit",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "github": "GitHub"
+  },
+  "header": {
+    "getInTouch": "Get in Touch",
+    "homeLink": "Orbs home"
+  },
+  "languageSelector": {
+    "label": "Change language"
+  }
+}

@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { NewsIndex, getTotalNewsPages } from '../../news-index'
-import { newsPagePath } from '../../../lib/routes'
-import { absoluteUrl } from '../../../lib/site'
+import { newsPagePath } from '@/app/lib/routes'
+import { absoluteUrl } from '@/app/lib/site'
 
 type Props = {
   params: Promise<{ n: string }>

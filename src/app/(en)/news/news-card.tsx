@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { getAssetUrl, type MediaMentionFields } from '../lib/api'
+import { getAssetUrl, type MediaMentionFields } from '@/app/lib/api'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 
 /**

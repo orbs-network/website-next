@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { NewsIndex } from './news-index'
-import { newsPagePath } from '../lib/routes'
-import { absoluteUrl } from '../lib/site'
+import { newsPagePath } from '@/app/lib/routes'
+import { absoluteUrl } from '@/app/lib/site'
 
 // Time-based fallback. On-demand invalidation via the Contentful webhook is
 // the primary path; this bounds staleness if a webhook is missed.

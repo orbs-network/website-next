@@ -1,0 +1,26 @@
+{
+  "_note": "Japanese chrome is deliberately mostly English. The legacy site's jp/_shared/navbar menu links are English there too — every label in jp/_shared/navbar/menu-links/**/*.md is ASCII. The only genuinely translated Japanese chrome on the legacy site is the GDPR banner, the subscribe form, and the footer logo blurb, none of which exist in this codebase yet. Translating the nav here would invent copy the Japanese site has never shown, so these keys mirror English until real copy is supplied.",
+  "nav": {
+    "products": "Products",
+    "resources": "Resources",
+    "developers": "Developers",
+    "blog": "Blog",
+    "media": "Media",
+    "liquidityHub": "Liquidity Hub",
+    "perpetualHub": "Perpetual Hub",
+    "tetra": "Tetra",
+    "stakingCalculator": "Staking Calculator",
+    "faqSupport": "FAQ & Support",
+    "brandingKit": "Branding Kit",
+    "documentation": "Documentation",
+    "apiReference": "API Reference",
+    "github": "GitHub"
+  },
+  "header": {
+    "getInTouch": "Get in Touch",
+    "homeLink": "Orbs home"
+  },
+  "languageSelector": {
+    "label": "言語を変更"
+  }
+}

@@ -1,8 +1,8 @@
 import { notFound } from 'next/navigation'
-import { H1 } from '../components/typography'
-import { Pagination } from '../components/pagination'
-import { getMediaMentions, MEDIA_PER_PAGE } from '../lib/api'
-import { newsPagePath } from '../lib/routes'
+import { H1 } from '@/app/components/typography'
+import { Pagination } from '@/app/components/pagination'
+import { getMediaMentions, MEDIA_PER_PAGE } from '@/app/lib/api'
+import { newsPagePath } from '@/app/lib/routes'
 import { MediaCard } from './news-card'
 
 /** Copy lifted from the legacy content/news/hero. */

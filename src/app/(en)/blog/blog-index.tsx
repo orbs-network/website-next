@@ -1,9 +1,9 @@
 import { notFound } from 'next/navigation'
-import { H1 } from '../components/typography'
-import { getPosts, POSTS_PER_PAGE } from '../lib/api'
-import { blogPagePath } from '../lib/routes'
+import { H1 } from '@/app/components/typography'
+import { getPosts, POSTS_PER_PAGE } from '@/app/lib/api'
+import { blogPagePath } from '@/app/lib/routes'
 import { BlogCard } from './blog-card'
-import { Pagination } from '../components/pagination'
+import { Pagination } from '@/app/components/pagination'
 
 function Heading() {
   return (

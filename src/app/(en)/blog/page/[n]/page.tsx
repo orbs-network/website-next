@@ -1,8 +1,8 @@
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogIndex, getTotalPages } from '../../blog-index'
-import { blogPagePath } from '../../../lib/routes'
-import { absoluteUrl } from '../../../lib/site'
+import { blogPagePath } from '@/app/lib/routes'
+import { absoluteUrl } from '@/app/lib/site'
 
 type Props = {
   params: Promise<{ n: string }>
