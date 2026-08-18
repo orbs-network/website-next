@@ -1,6 +1,7 @@
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
 import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
+import { isReservedRootSlug } from './routes'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -244,13 +245,26 @@ export async function getAllPostRefs(): Promise<PostRef[]> {
     })
 
     for (const post of page.items) {
-      if (post.fields.slug) {
-        refs.push({
-          slug: post.fields.slug,
-          date: post.fields.date,
-          updatedAt: post.sys.updatedAt || post.fields.date,
-        })
+      if (!post.fields.slug) continue
+
+      // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
+      // static segments beat `[slug]`. Emitting it anyway would prerender a URL
+      // that renders something else and list it in the sitemap as the post.
+      // Dropped rather than published broken, and logged so it is fixable —
+      // silence here would look exactly like the post never existing.
+      if (isReservedRootSlug(post.fields.slug)) {
+        console.warn(
+          `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
+            'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
+        )
+        continue
       }
+
+      refs.push({
+        slug: post.fields.slug,
+        date: post.fields.date,
+        updatedAt: post.sys.updatedAt || post.fields.date,
+      })
     }
 
     skip += page.items.length

@@ -1,3 +1,5 @@
+import { LOCALE_SEGMENTS } from '@/i18n/locales'
+
 /**
  * Single source of truth for content URL shapes.
  *
@@ -14,6 +16,41 @@
  */
 export function postPath(slug: string): string {
   return `/${slug}/`
+}
+
+/**
+ * Root segments that belong to the app, not to the archive.
+ *
+ * Posts are served from the root, so a post slugged `blog`, `jp` or `ko`
+ * collides with a real route. Next resolves static segments ahead of `[slug]`,
+ * so the app wins silently: the post never renders, but `generateStaticParams`
+ * and the sitemap still advertise its URL. The result is a sitemap entry
+ * pointing at a page that is not the post it claims to be.
+ *
+ * Slugs come from Contentful and editors can type anything, so this cannot be
+ * prevented upstream — only detected where the archive is enumerated.
+ *
+ * Locale segments are read from the i18n config rather than repeated here, so
+ * adding a locale cannot forget to reserve it.
+ */
+export const RESERVED_ROOT_SEGMENTS: ReadonlySet<string> = new Set([
+  ...Object.values(LOCALE_SEGMENTS).filter((segment) => segment !== ''),
+  'blog',
+  'news',
+  'api',
+  // Metadata routes and Next's own namespace.
+  'sitemap.xml',
+  'robots.txt',
+  'favicon.ico',
+  '_next',
+])
+
+/**
+ * Matched case-sensitively, because Next's routing is: a post slugged `JP` does
+ * NOT collide with `/jp/`, and must not be dropped as if it did.
+ */
+export function isReservedRootSlug(slug: string): boolean {
+  return RESERVED_ROOT_SEGMENTS.has(slug)
 }
 
 /**
