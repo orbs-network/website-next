@@ -5,6 +5,15 @@ import { useTheme } from 'next-themes'
 
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu'
 
+/**
+ * `lang="en"` on the trigger and the menu: this component's strings are
+ * hardcoded English in every locale, so on `/jp/` and `/ko/` they are English
+ * text inside a `lang="ja"`/`lang="ko"` document and a screen reader would
+ * pronounce them with the wrong rules.
+ *
+ * It is set here rather than by the header because the menu content renders in
+ * a portal, outside any wrapper the header could put around it.
+ */
 export function ThemeToggle() {
   const { setTheme } = useTheme()
   return (
@@ -13,6 +22,7 @@ export function ThemeToggle() {
         <button
           type="button"
           aria-label="Toggle theme"
+          lang="en"
           className="relative inline-flex size-9 items-center justify-center text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
@@ -20,7 +30,7 @@ export function ThemeToggle() {
           <span className="sr-only">Toggle theme</span>
         </button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+      <DropdownMenuContent align="end" lang="en">
         <DropdownMenuItem onClick={() => setTheme('light')} className="text-xs">
           <Sun className="size-4" /> Light
         </DropdownMenuItem>

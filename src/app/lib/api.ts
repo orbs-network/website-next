@@ -1,6 +1,7 @@
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
 import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
+import { isReservedRootSlug } from './routes'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -117,6 +118,29 @@ export type PostPage = {
  * previously disguised the fact that only the first 100 entries were being
  * returned at all.
  */
+/**
+ * Drops posts whose slug collides with a site route.
+ *
+ * Applied to the listing queries as well as the archive enumeration: a card or
+ * feed item for a colliding post links to `/jp/` or `/blog/` rather than the
+ * article, so surfacing it publishes a broken link even though the post is
+ * excluded from prerendering.
+ *
+ * A filtered page returns fewer items than `total` claims. That is accepted —
+ * this should never fire, and one short page beats a link that goes somewhere
+ * else entirely.
+ */
+function withoutReservedSlugs(posts: BlogPostFields[]): BlogPostFields[] {
+  return posts.filter((post) => {
+    if (!post.slug || !isReservedRootSlug(post.slug)) return true
+
+    console.warn(
+      `[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`
+    )
+    return false
+  })
+}
+
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
   const client = getClient()
 
@@ -128,7 +152,7 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
   })
 
   return {
-    items: page.items.map((post) => post.fields),
+    items: withoutReservedSlugs(page.items.map((post) => post.fields)),
     total: page.total,
   }
 }
@@ -146,7 +170,7 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
     limit: count,
   })
 
-  return posts.items.map((post) => post.fields)
+  return withoutReservedSlugs(posts.items.map((post) => post.fields))
 }
 
 /** Media mentions per page. Matches the blog's 12 for a consistent grid. */
@@ -244,13 +268,26 @@ export async function getAllPostRefs(): Promise<PostRef[]> {
     })
 
     for (const post of page.items) {
-      if (post.fields.slug) {
-        refs.push({
-          slug: post.fields.slug,
-          date: post.fields.date,
-          updatedAt: post.sys.updatedAt || post.fields.date,
-        })
+      if (!post.fields.slug) continue
+
+      // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
+      // static segments beat `[slug]`. Emitting it anyway would prerender a URL
+      // that renders something else and list it in the sitemap as the post.
+      // Dropped rather than published broken, and logged so it is fixable —
+      // silence here would look exactly like the post never existing.
+      if (isReservedRootSlug(post.fields.slug)) {
+        console.warn(
+          `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
+            'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
+        )
+        continue
       }
+
+      refs.push({
+        slug: post.fields.slug,
+        date: post.fields.date,
+        updatedAt: post.sys.updatedAt || post.fields.date,
+      })
     }
 
     skip += page.items.length

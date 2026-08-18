@@ -1,8 +1,8 @@
-import { BlogPostFields } from '../lib/api'
+import { BlogPostFields } from '@/app/lib/api'
 import Link from 'next/link'
 import Image from 'next/image'
-import { Author } from '../components/blog/author'
-import { getAssetUrl, getAuthorInfo } from '../lib/api'
+import { Author } from '@/app/components/blog/author'
+import { getAssetUrl, getAuthorInfo } from '@/app/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
 
 export function BlogCard({ post }: { post: BlogPostFields }) {

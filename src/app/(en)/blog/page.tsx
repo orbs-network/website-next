@@ -1,7 +1,7 @@
 import { Metadata } from 'next'
 import { BlogIndex, getTotalPages } from './blog-index'
-import { blogPagePath } from '../lib/routes'
-import { absoluteUrl } from '../lib/site'
+import { blogPagePath } from '@/app/lib/routes'
+import { absoluteUrl } from '@/app/lib/site'
 
 // Time-based fallback. On-demand invalidation via the Contentful webhook
 // (#19) is the primary path; this bounds staleness if a webhook is missed.

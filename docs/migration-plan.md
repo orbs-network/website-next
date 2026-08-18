@@ -231,8 +231,11 @@ Independent of the migration, these are wrong today:
 - **`unoptimized: true`** in `next.config.mjs` disables all image optimization.
 - **Nav points at placeholders.** `src/app/components/layout/navigation/nav-menu.tsx`
   links to `/products/1`, `/resources/2`, `/developers/3` — no routes exist.
-- **Language selector is inert.** `src/app/components/layout/language-selector.tsx`
-  is client-side state only, no routing or content behind it.
+- ~~**Language selector is inert.**~~ Fixed in Phase 2a (#70) — it navigates now,
+  and `/jp/` and `/ko/` exist. Note the locale is a **literal route segment**
+  (`app/(jp)/jp`), not next-intl's `[locale]`: `app/[locale]` collides with the
+  root `app/[slug]` that serves the 456 posts and Next refuses to build. Full
+  reasoning in `src/i18n/locales.ts`.
 - **No sitemap, no robots, no RSS.** The old site serves a feed at
   `/blog/rss.xml`; that URL must not move.
 - **`BASE_PATH` / `src/app/config.ts`** exists only for GitHub Pages and appears
