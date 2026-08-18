@@ -5,6 +5,12 @@ import { HOME_PATH } from '@/app/lib/routes'
 
 export const metadata: Metadata = {
   alternates: localeAlternates(HOME_PATH, 'ja'),
+  // Not indexable while the body is the shared English placeholder. Declaring
+  // this an alternate of `/` would tell Google two near-identical English pages
+  // are translations of each other, which gets the whole hreflang set ignored.
+  // Phase 3 gives it real copy and removes this. Costs nothing meanwhile: DNS
+  // has not cut over (#39), so the legacy site is still the one being crawled.
+  robots: { index: false, follow: true },
 }
 
 /**

@@ -2,22 +2,42 @@ import { absoluteUrl } from '@/app/lib/site'
 import { DEFAULT_LOCALE, LOCALES, localePath, type Locale } from './locales'
 
 /**
- * Which locales each page is actually built in.
+ * Whether a locale's version of a page is a real translation or a stand-in.
  *
- * Keys are locale-independent paths (what `splitLocale` returns), values are the
- * locales that have a real page at that path.
+ *  - `translated` — the page has genuine copy in that language. Safe to
+ *    advertise to search engines as an alternate and to list in the sitemap.
+ *  - `placeholder` — the route exists and is reachable, but the body is English
+ *    awaiting Phase 3. Reachable, but NOT indexable and NOT an hreflang
+ *    alternate.
  *
- * This is not derived from the legacy content tree on purpose. The legacy site
- * has directories like `jp/dtwap` whose copy is byte-for-byte English — a page
- * that "exists" but is not translated. Deriving availability from directory
- * presence would offer a Japanese link that leads to English text. This map
- * records what we have actually built, so it grows as Phase 3 lands pages.
+ * The distinction exists because "the page exists" and "the page is a
+ * translation" are different questions, and conflating them produces a specific
+ * SEO failure: declaring hreflang between two URLs that serve the same English
+ * text tells Google they are translations of each other. Google checks, finds
+ * near-duplicates, and responds by ignoring the hreflang set or collapsing one
+ * URL into the other — the opposite of what the annotation was for.
+ *
+ * That failure is easy to walk into here, because the legacy site is full of it:
+ * `jp/dtwap` exists as a directory but its copy is byte-for-byte the English
+ * page. Directory presence is not evidence of translation, so this map records
+ * what we have actually built and in what state.
+ */
+type LocaleStatus = 'translated' | 'placeholder'
+
+/**
+ * Keys are locale-independent paths (what `splitLocale` returns).
  *
  * A path absent from this map is English-only, which is the safe default: the
  * selector will not offer a locale we cannot serve.
+ *
+ * `/jp/` and `/ko/` are `placeholder` because both currently render the shared
+ * English `HomeHero`. Phase 3 (#31, #32) builds the real home pages and flips
+ * them to `translated`. Note they are marked noindex until then — that costs
+ * nothing today because DNS has not cut over (#39), so the legacy site is still
+ * the one being crawled.
  */
-const AVAILABILITY: Record<string, readonly Locale[]> = {
-  '/': ['en', 'ja', 'ko'],
+const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
+  '/': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
 }
 
 /**
@@ -31,8 +51,35 @@ const AVAILABILITY: Record<string, readonly Locale[]> = {
  */
 const SELECTOR_HIDDEN_PREFIXES = ['/blog', '/news'] as const
 
+/** Every locale the page is reachable in, translated or not. Drives the selector. */
 export function localesFor(pathname: string): readonly Locale[] {
-  return AVAILABILITY[normalize(pathname)] ?? [DEFAULT_LOCALE]
+  const entry = AVAILABILITY[normalize(pathname)]
+
+  if (!entry) {
+    return [DEFAULT_LOCALE]
+  }
+
+  return LOCALES.filter((locale) => entry[locale] !== undefined)
+}
+
+/**
+ * Only the locales whose copy is genuinely translated. Drives hreflang and the
+ * sitemap — the two places where claiming a translation that is not one is
+ * actively harmful.
+ */
+export function translatedLocalesFor(pathname: string): readonly Locale[] {
+  const entry = AVAILABILITY[normalize(pathname)]
+
+  if (!entry) {
+    return [DEFAULT_LOCALE]
+  }
+
+  return LOCALES.filter((locale) => entry[locale] === 'translated')
+}
+
+/** Whether this locale's version of the page is still an English stand-in. */
+export function isPlaceholder(pathname: string, locale: Locale): boolean {
+  return AVAILABILITY[normalize(pathname)]?.[locale] === 'placeholder'
 }
 
 /**
@@ -54,9 +101,10 @@ export function shouldShowSelector(pathname: string): boolean {
 /**
  * Where the selector should send you for a given locale.
  *
- * Falls back to the English URL when the page has no variant in that locale,
- * rather than minting a localised URL that serves English. One page, one URL —
- * no duplicate content for search engines to reconcile.
+ * Uses reachability, not translation status: a placeholder page is still a real
+ * page a reader asked for. Falls back to the English URL when the page does not
+ * exist in that locale at all, rather than minting a localised URL that serves
+ * English. One page, one URL — no duplicate for search engines to reconcile.
  */
 export function localeHref(pathname: string, target: Locale): string {
   const path = normalize(pathname)
@@ -66,28 +114,30 @@ export function localeHref(pathname: string, target: Locale): string {
 }
 
 /**
- * `alternates` metadata for a page: a self-referential canonical plus hreflang
- * entries for every locale the page genuinely exists in.
+ * `alternates` metadata for a page: a self-referential canonical, plus hreflang
+ * entries for the locales the page is genuinely translated into.
  *
- * Only locales in the availability map are listed. Advertising an hreflang for a
- * page that serves English would tell search engines the two URLs are
- * translations of each other when they are the same text.
+ * When nothing else is translated the `languages` map is omitted rather than
+ * emitted with a single self-referential entry, which says nothing and invites
+ * the reader to think the relationship was considered and found empty.
  */
 export function localeAlternates(pathname: string, locale: Locale) {
   const path = withTrailingSlash(normalize(pathname))
-  const available = localesFor(path)
+  const translated = translatedLocalesFor(path)
+  const canonical = absoluteUrl(localePath(locale, path))
+
+  if (translated.length < 2) {
+    return { canonical }
+  }
 
   const languages = Object.fromEntries(
-    LOCALES.filter((candidate) => available.includes(candidate)).map((candidate) => [
-      // The hreflang value is a BCP 47 tag, so Japanese is `ja` even though its
-      // URL segment is the legacy `/jp/`.
-      candidate,
-      absoluteUrl(localePath(candidate, path)),
-    ])
+    // The hreflang value is a BCP 47 tag, so Japanese is `ja` even though its
+    // URL segment is the legacy `/jp/`.
+    translated.map((candidate) => [candidate, absoluteUrl(localePath(candidate, path))])
   )
 
   return {
-    canonical: absoluteUrl(localePath(locale, path)),
+    canonical,
     languages: {
       ...languages,
       // Tells search engines which URL to serve when no listed language matches

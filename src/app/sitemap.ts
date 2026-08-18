@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
 import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
-import { localesFor } from '@/i18n/availability'
+import { translatedLocalesFor } from '@/i18n/availability'
 import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 
 /**
@@ -50,9 +50,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     posts.length > 0 ? new Date(Math.max(...posts.map((p) => new Date(p.updatedAt).getTime()))) : new Date()
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE))
 
-  // The home page in each locale it is actually built in. Localised marketing
-  // pages arrive in Phase 3; until then `/jp/` and `/ko/` are the only two.
-  const home: MetadataRoute.Sitemap = localesFor(HOME_PATH).map((locale) => ({
+  // Only locales whose copy is genuinely translated. `/jp/` and `/ko/` exist and
+  // are reachable, but they currently render the English placeholder and are
+  // marked noindex, so listing them would advertise URLs we are simultaneously
+  // asking crawlers to ignore. Phase 3 gives them real copy and they appear.
+  const home: MetadataRoute.Sitemap = translatedLocalesFor(HOME_PATH).map((locale) => ({
     url: absoluteUrl(localePath(locale, HOME_PATH)),
     lastModified: lastArchiveChange,
     changeFrequency: 'weekly' as const,
