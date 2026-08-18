@@ -88,6 +88,10 @@ export function NavMenu() {
         <li>
           <NavButton href="/blog">Blog</NavButton>
         </li>
+        <li>
+          {/* "Media" matches the legacy navbar and footer label for /news. */}
+          <NavButton href="/news">Media</NavButton>
+        </li>
       </ul>
     </div>
   )
