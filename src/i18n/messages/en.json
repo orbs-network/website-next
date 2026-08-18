@@ -21,5 +21,55 @@
   },
   "languageSelector": {
     "label": "Change language"
+  },
+  "pages": {
+    "dtwap": {
+      "hero": {
+        "headline": "TIME-WEIGHTED AVERAGE\nPRICE PROTOCOL FOR\nDECENTRALIZED EXCHANGES",
+        "intro": "Extend existing on-chain DEX/AMMs with a decentralized on-chain protocol for executing advanced time-spread algorithmic trades. Reduce large orders’ impact on the market.",
+        "cta": "GET STARTED"
+      },
+      "benefits": {
+        "title": "The two benefits of TWAP",
+        "intro": "**TWAP (Time-Weighted Average Price)** is an algorithmic trading strategy that divides an order into multiple smaller trades that are executed at regular intervals over a specified period of time.",
+        "items": {
+          "priceImpact": {
+            "title": "Price Impact Reduction",
+            "body": "When a trade is relatively large or involves a low-liquidity pair, price impact will be high and cause significant losses to traders.\n\nTWAP eliminates price impact by spreading the trade over several minutes. This gives arbitrageurs a time window to close price discrepancies and bring the reserves back to the fair market spot price."
+          },
+          "dca": {
+            "title": "Automation of Dollar-Cost Averaging (DCA)",
+            "body": "DCA is an investing strategy that purchases an asset on a recurring long-term schedule (ie. on every Monday). \n\nThe goal behind DCA is to average out abnormal market conditions and lessen the impact of short-term volatility on the overall purchase. A TWAP strategy can fully automate the DCA process."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Recent and Ongoing Integrations to DEX/AMMs",
+        "integrateTitle": "Integrate your DEX",
+        "integrateCta": "README"
+      },
+      "explanation": {
+        "title": "User-friendly and flexible UI",
+        "slides": {
+          "limit": "Users can set a limit on the price at which trades will be executed or choose to execute at the best market price.",
+          "duration": "Users can control the total duration of the order, the number of smaller trades and how frequently they are executed.",
+          "manage": "Users can see their current orders, what part of every order was already fulfilled and manage order execution, pause or cancel."
+        }
+      },
+      "code": {
+        "title": "Easy integration into every DEX frontend based on React",
+        "reactTab": "React Component",
+        "stylesTab": "Fully Customizable UI",
+        "reactBody": "No need to modify your DEX smart contracts. Integration is frontend-only and relies on existing contracts of the dTWAP protocol.",
+        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel."
+      },
+      "schema": {
+        "title": "Decentralized Execution of TWAP Orders",
+        "body": "**Makers** - The first entity in the dTWAP protocol are DEX traders that submit new orders to the dTWAP EVM contract. They set all order parameters such as limit price and expiration. The dTWAP contract enforces these requirements in a trustless manner.\n\n**Takers** - Incentivized third-party participants that monitor all live orders and submit bids on the best path to execute their next segment. The dTWAP contract selects the best bid and guarantees that the path that provides the best price to makers is the one executed.\n\nOrbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019. All Orbs Network validators are takers and participate as honest bidders in the protocol, guaranteeing that orders are executed 24/7 with high redundancy and best price.",
+        "whitePaper": "read the white paper",
+        "audit": "PeckShield Security Audit",
+        "faq": "FAQ"
+      }
+    }
   }
 }

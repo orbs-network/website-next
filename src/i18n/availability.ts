@@ -38,6 +38,11 @@ type LocaleStatus = 'translated' | 'placeholder'
  */
 const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   '/': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
+  // Korean is a real translation of every string on the page. Japanese is not:
+  // the legacy `jp/dtwap` content is byte-for-byte the English page, so its
+  // catalog mirrors English and the route is preserved without claiming to be a
+  // translation. Measured, not assumed — see #27 for the coverage table.
+  '/dtwap': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**
