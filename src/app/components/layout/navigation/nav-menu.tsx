@@ -1,5 +1,6 @@
 import { ChevronDownIcon } from 'lucide-react'
-import { useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
+import { type Locale } from '@/i18n/locales'
 import { NavButton } from './nav-button'
 import { NavDropdown } from './nav-dropdown'
 
@@ -13,12 +14,12 @@ function NavIcon() {
  * Resources, Community. The labels are wired to the message catalog now so that
  * work is a matter of swapping hrefs and adding keys, not retrofitting i18n.
  *
- * `useTranslations` rather than `getTranslations`: this is a shared component
- * with no locale of its own, so it reads the locale from the provider that its
- * root layout established.
+ * The locale is a prop for the same reason as in the header: next-intl's hooks
+ * resolve against `getRequestConfig`, which cannot know the locale without a
+ * `[locale]` segment or middleware, so they silently returned English here.
  */
-export function NavMenu() {
-  const t = useTranslations('nav')
+export async function NavMenu({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: 'nav' })
 
   return (
     <div className="relative">

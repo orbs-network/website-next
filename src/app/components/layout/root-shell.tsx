@@ -62,7 +62,7 @@ export async function RootShell({ locale, children }: { locale: Locale; children
         */}
         <NextIntlClientProvider locale={locale} messages={{ languageSelector: messages.languageSelector }}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <Header />
+            <Header locale={locale} />
             <main>{children}</main>
           </ThemeProvider>
         </NextIntlClientProvider>

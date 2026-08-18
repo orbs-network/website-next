@@ -1,17 +1,27 @@
 import { Button } from '@/components/ui/button'
 import { OrbsLogo } from '@/components/icons'
 import { localePath, type Locale } from '@/i18n/locales'
-import { useLocale, useTranslations } from 'next-intl'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageSelector } from './language-selector'
 import { NavMenu } from './navigation/nav-menu'
 
-export function Header() {
-  const t = useTranslations('header')
-  // From the provider the root layout established, so the logo returns you to
-  // the home page of the site you are reading rather than the English one.
-  const locale = useLocale() as Locale
+/**
+ * The locale arrives as a prop rather than from a next-intl hook.
+ *
+ * `useLocale()` and `useTranslations()` resolve against `getRequestConfig`, and
+ * with no `[locale]` segment and no middleware there is nothing there to resolve
+ * against — every request looks like the default locale, so the header rendered
+ * English on `/jp/` and `/ko/` and pointed the logo at the English home page.
+ *
+ * `getTranslations({locale})` takes the locale explicitly, and the root layout
+ * knows it statically from its own position in the route tree. Passing it down
+ * keeps that fact where it is actually known instead of inferring it from the
+ * request, which would also force these pages out of static prerendering.
+ */
+export async function Header({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: 'header' })
 
   return (
     <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
@@ -25,7 +35,7 @@ export function Header() {
             <OrbsLogo />
           </Link>
 
-          <NavMenu />
+          <NavMenu locale={locale} />
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
