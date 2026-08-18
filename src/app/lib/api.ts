@@ -118,6 +118,29 @@ export type PostPage = {
  * previously disguised the fact that only the first 100 entries were being
  * returned at all.
  */
+/**
+ * Drops posts whose slug collides with a site route.
+ *
+ * Applied to the listing queries as well as the archive enumeration: a card or
+ * feed item for a colliding post links to `/jp/` or `/blog/` rather than the
+ * article, so surfacing it publishes a broken link even though the post is
+ * excluded from prerendering.
+ *
+ * A filtered page returns fewer items than `total` claims. That is accepted —
+ * this should never fire, and one short page beats a link that goes somewhere
+ * else entirely.
+ */
+function withoutReservedSlugs(posts: BlogPostFields[]): BlogPostFields[] {
+  return posts.filter((post) => {
+    if (!post.slug || !isReservedRootSlug(post.slug)) return true
+
+    console.warn(
+      `[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`
+    )
+    return false
+  })
+}
+
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
   const client = getClient()
 
@@ -129,7 +152,7 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
   })
 
   return {
-    items: page.items.map((post) => post.fields),
+    items: withoutReservedSlugs(page.items.map((post) => post.fields)),
     total: page.total,
   }
 }
@@ -147,7 +170,7 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
     limit: count,
   })
 
-  return posts.items.map((post) => post.fields)
+  return withoutReservedSlugs(posts.items.map((post) => post.fields))
 }
 
 /** Media mentions per page. Matches the blog's 12 for a consistent grid. */
