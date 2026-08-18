@@ -17,7 +17,11 @@ import { H1 } from './typography'
  */
 export function HomeHero() {
   return (
-    <section className="text-center mb-20">
+    // `lang="en"` because this copy is English in every locale. Without it the
+    // Japanese and Korean home pages declare English text as Japanese/Korean at
+    // the document level, and a screen reader pronounces it accordingly. Phase 3
+    // replaces this with real per-locale copy and the attribute goes with it.
+    <section className="text-center mb-20" lang="en">
       <div className="mb-6 flex justify-center items-center">
         <OrbsLogo className="w-48 h-auto" />
       </div>

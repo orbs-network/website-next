@@ -1,6 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { OrbsLogo } from '@/components/icons'
-import { localePath, type Locale } from '@/i18n/locales'
+import { LOCALE_CHROME_LANG, LOCALE_HTML_LANG, localePath, type Locale } from '@/i18n/locales'
 import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { ThemeToggle } from '../theme/theme-toggle'
@@ -23,6 +23,13 @@ import { NavMenu } from './navigation/nav-menu'
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'header' })
 
+  // On /jp/ the chrome catalog is English (see LOCALE_CHROME_LANG), so the nav
+  // and the CTA are English text inside a `lang="ja"` document. Marking them
+  // stops a screen reader applying Japanese pronunciation to English words.
+  // `undefined` when the chrome matches the document, so no redundant attribute.
+  const chromeLang = LOCALE_CHROME_LANG[locale]
+  const fallbackLang = chromeLang === locale ? undefined : LOCALE_HTML_LANG[chromeLang]
+
   return (
     <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
       <div className="container mx-auto px-5">
@@ -35,12 +42,18 @@ export async function Header({ locale }: { locale: Locale }) {
             <OrbsLogo />
           </Link>
 
-          <NavMenu locale={locale} />
+          <div lang={fallbackLang}>
+            <NavMenu locale={locale} />
+          </div>
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
+            {/* The selector's own label IS translated in every locale, so it
+                stays outside the fallback wrapper. */}
             <LanguageSelector />
-            <Button size="sm">{t('getInTouch')}</Button>
+            <Button size="sm" lang={fallbackLang}>
+              {t('getInTouch')}
+            </Button>
           </div>
         </div>
       </div>
