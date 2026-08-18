@@ -29,6 +29,14 @@ const LOCALE_SCRIPT: Record<Locale, RegExp | null> = {
  * for the two to drift apart. Strings that are Latin *because they are proper
  * nouns* — "GitHub", "Tetra", "dTWAP" — are marked English, which is what they
  * are.
+ *
+ * Known limit: this is per string, not per run of characters, so a mixed one
+ * such as the Korean `homeLink` ("Orbs 홈") counts as Korean and the "Orbs" in
+ * it is left unmarked. Tagging that precisely would mean splitting every label
+ * into per-script `<span lang>` runs — a lot of markup, and it buys only the
+ * pronunciation of a brand name that is the same word in both languages. Not
+ * worth it. Prefer catalog values that are wholly one language or the other; a
+ * mixed value is a hint the copy needs a second look.
  */
 export function textLang(value: string, locale: Locale): 'en' | undefined {
   const script = LOCALE_SCRIPT[locale]
