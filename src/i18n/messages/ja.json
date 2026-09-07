@@ -25,6 +25,10 @@
   },
   "pages": {
     "dtwap": {
+      "meta": {
+        "title": "dTWAP",
+        "description": "A decentralized on-chain protocol that extends DEX/AMMs with time-weighted average price orders, reducing the market impact of large trades."
+      },
       "hero": {
         "headline": "TIME-WEIGHTED AVERAGE\nPRICE PROTOCOL FOR\nDECENTRALIZED EXCHANGES",
         "intro": "Extend existing on-chain DEX/AMMs with a decentralized on-chain protocol for executing advanced time-spread algorithmic trades. Reduce large orders’ impact on the market.",

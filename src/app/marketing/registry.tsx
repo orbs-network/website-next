@@ -13,6 +13,21 @@ import { DtwapPage } from './dtwap'
  */
 type MarketingPageRenderer = (locale: Locale) => React.ReactNode
 
+export type MarketingPageEntry = {
+  render: MarketingPageRenderer
+  /**
+   * Catalog namespace holding this page's copy, including its `meta.title` and
+   * `meta.description`.
+   *
+   * Metadata lives in the catalog rather than on the route so that all three
+   * locales get it from one place. When it was hardcoded on the English route,
+   * `/jp/dtwap/` and `/ko/dtwap/` inherited the root layout's generic `Orbs`
+   * title and "Bringing CeFi execution to DeFi" description — wrong on any
+   * indexable translated page, and invisible unless you read the built HTML.
+   */
+  namespace: string
+}
+
 /**
  * Which page renders at each marketing path.
  *
@@ -31,18 +46,18 @@ type MarketingPageRenderer = (locale: Locale) => React.ReactNode
  * reserved-slug guard reads that list, and the two disagreeing would mean a
  * route that exists but is not reserved.
  */
-const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageRenderer> = {
-  '/dtwap': (locale) => <DtwapPage locale={locale} />,
+const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
+  '/dtwap': { render: (locale) => <DtwapPage locale={locale} />, namespace: 'pages.dtwap' },
 }
 
 /**
- * Resolve a locale-independent path to its renderer, or `undefined`.
+ * Resolve a locale-independent path to its registry entry, or `undefined`.
  *
  * Accepts the path with or without a trailing slash: it is rebuilt from a
  * catch-all's segments, which never carry one, while `AVAILABILITY` keys and
  * `MARKETING_PAGE_PATHS` are written without one.
  */
-export function findMarketingPage(pathname: string): MarketingPageRenderer | undefined {
+export function findMarketingPage(pathname: string): MarketingPageEntry | undefined {
   const normalized = pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
 
   return MARKETING_PAGES[normalized as MarketingPagePath]
