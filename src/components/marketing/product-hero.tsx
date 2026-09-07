@@ -51,9 +51,25 @@ export function ProductHero({
               <Link href={ctaHref}>{ctaLabel}</Link>
             </Button>
 
-            {repo && <IconLink href={repo} label="GitHub repository" icon={<GithubIcon className="size-5" />} />}
+            {/*
+              The icons are hidden because `IconLink` labels the anchor itself.
+              Every social icon component sets its own `role="img"` and
+              `aria-label`, which would otherwise be a second accessible name
+              inside one link.
+            */}
+            {repo && (
+              <IconLink
+                href={repo}
+                label="GitHub repository"
+                icon={<GithubIcon className="size-5" aria-hidden focusable="false" />}
+              />
+            )}
             {telegram && (
-              <IconLink href={telegram} label="Telegram support group" icon={<TelegramIcon className="size-5" />} />
+              <IconLink
+                href={telegram}
+                label="Telegram support group"
+                icon={<TelegramIcon className="size-5" aria-hidden focusable="false" />}
+              />
             )}
           </div>
         </div>
