@@ -52,7 +52,13 @@ export function ProductHero({
 }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
-      <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'max-w-3xl')}>
+      {/*
+        `mx-auto` is load-bearing, not decoration: `max-w-3xl` alone constrains
+        the width but leaves the column pinned to the left of the container,
+        which reads as a hero that lost its image rather than one designed
+        without it.
+      */}
+      <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
         <div lang={lang}>
           <h1 className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl">
             {headline}
