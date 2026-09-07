@@ -43,6 +43,12 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // catalog mirrors English and the route is preserved without claiming to be a
   // translation. Measured, not assumed — see #27 for the coverage table.
   '/dtwap': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // Same split as dTWAP, and measured the same way: the legacy `ko/dlimit`
+  // content is a real translation down to the card bodies and the schema prose,
+  // while `jp/dlimit` is byte-for-byte the English page. Its catalog therefore
+  // mirrors English and the route is preserved without claiming to be a
+  // translation.
+  '/dlimit': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**
