@@ -45,7 +45,16 @@ export async function Footer({ locale }: { locale: Locale }) {
       <div className="container mx-auto px-5 py-12">
         <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_1fr]">
           <section>
-            <Link href={localePath(locale, '/')} aria-label={t('homeLink')} className="inline-flex">
+            <Link
+              href={localePath(locale, '/')}
+              aria-label={t('homeLink')}
+              // Same per-string rule as the header logo: `homeLink` is the
+              // English "Orbs home" in Japanese but "Orbs 홈" in Korean, so only
+              // one of them needs marking. Without it the Japanese document's
+              // `lang` applies Japanese pronunciation to an English name.
+              lang={textLang(t('homeLink'), locale)}
+              className="inline-flex"
+            >
               <OrbsLogo className="h-8 w-auto" />
             </Link>
 
