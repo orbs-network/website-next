@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Slot } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
@@ -6,6 +7,17 @@ type BaseProps = {
   href?: string
   active?: boolean
   className?: string
+  /**
+   * Render the child element with these styles instead of an `<a>`, the same
+   * `asChild` contract `Button` uses.
+   *
+   * Exists for internal links. Passing `href` renders a plain anchor, which is
+   * a full document load — fine for the external links that make up the
+   * Resources column, wrong for in-site navigation. `asChild` lets the caller
+   * supply a `next/link` and keep client-side routing and prefetching without
+   * this primitive having to know about the router.
+   */
+  asChild?: boolean
   children: React.ReactNode
 }
 
@@ -16,8 +28,28 @@ export type FooterLinkProps = AnchorProps | ButtonNativeProps
 
 function renderFooterLink(
   classes: string,
-  { href, active, children, ref, ...rest }: FooterLinkProps & { ref: React.Ref<HTMLAnchorElement | HTMLButtonElement> }
+  {
+    href,
+    active,
+    asChild,
+    children,
+    ref,
+    ...rest
+  }: FooterLinkProps & { ref: React.Ref<HTMLAnchorElement | HTMLButtonElement> }
 ) {
+  if (asChild) {
+    return (
+      <Slot
+        ref={ref as React.Ref<HTMLAnchorElement>}
+        aria-current={active ? 'page' : undefined}
+        className={classes}
+        {...(rest as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+      >
+        {children}
+      </Slot>
+    )
+  }
+
   if (href !== undefined) {
     return (
       <a

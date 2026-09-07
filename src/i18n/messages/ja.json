@@ -1,5 +1,5 @@
 {
-  "_note": "Japanese chrome is deliberately mostly English. The legacy site's jp/_shared/navbar menu links are English there too — every label in jp/_shared/navbar/menu-links/**/*.md is ASCII. The only genuinely translated Japanese chrome on the legacy site is the GDPR banner, the subscribe form, and the footer logo blurb, none of which exist in this codebase yet. Translating the nav here would invent copy the Japanese site has never shown, so these keys mirror English until real copy is supplied.",
+  "_note": "Japanese chrome is deliberately mostly English. The legacy site's jp/_shared/navbar menu links are English there too — every label in jp/_shared/navbar/menu-links/**/*.md is ASCII. The only genuinely translated Japanese chrome on the legacy site is the GDPR banner, the subscribe form, and the footer logo blurb; of those only \"footer.blurb\" exists here so far, and it carries the real legacy copy from jp/_shared/footer/logo-section.md rather than a new translation. Every other footer label is English because the legacy Japanese footer shows it in English. \"footer.links.accessibility\" is empty on purpose: that footer links Terms of Use and Privacy Policy only, and an empty label is how this codebase expresses an omitted link (see ArchitectureSection). Translating the nav here would invent copy the Japanese site has never shown, so these keys mirror English until real copy is supplied.",
   "nav": {
     "products": "Products",
     "resources": "Resources",
@@ -19,6 +19,52 @@
   "header": {
     "getInTouch": "Get in Touch",
     "homeLink": "Orbs home"
+  },
+  "footer": {
+    "homeLink": "Orbs home",
+    "blurb": "Orbsは、スケーラビリティや、低料金、仮想チェーン間の分離といった機能と共に、開発者エクスペリエンスや、オンラインIDE、使い慣れた言語でのスマートコントラクトを提供します。それにより、開発者が求めるパフォーマンスや、コスト、セキュリティ、使いやすさを組み合わせた最高のブロックチェーンを実現しました。",
+    "columns": {
+      "overview": "Overview",
+      "poweredBy": "Powered by Orbs",
+      "resources": "Resources",
+      "community": "Community"
+    },
+    "links": {
+      "whatIsOrbs": "What is Orbs: Layer 3",
+      "proofOfStake": "Proof of Stake",
+      "executionServices": "Execution Services",
+      "whitePapers": "White Papers",
+      "faq": "FAQ",
+      "liquidityHub": "Liquidity Hub",
+      "perpetualHub": "Perpetual Hub",
+      "dtwap": "dTWAP Protocol",
+      "dlimit": "dLIMIT Protocol",
+      "dsltp": "dSLTP Protocol",
+      "notifications": "Notification Protocol",
+      "tonAccess": "TON Access",
+      "tonVote": "TON Vote",
+      "tetra": "Tetra",
+      "stakingCalculator": "Staking Calculator",
+      "networkStatus": "Network Status",
+      "defiOrg": "DeFi.org",
+      "developers": "Developers",
+      "blog": "Blog",
+      "ecosystem": "Orbs Ecosystem",
+      "media": "Media",
+      "brandAssets": "Brand Assets",
+      "contact": "Contact",
+      "termsOfUse": "利用規約",
+      "privacyPolicy": "プライバシーポリシー",
+      "accessibility": ""
+    },
+    "socials": {
+      "github": "GitHub",
+      "x": "X",
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "youtube": "YouTube",
+      "snapshot": "Snapshot"
+    }
   },
   "languageSelector": {
     "label": "言語を変更"

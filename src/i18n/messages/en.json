@@ -19,6 +19,52 @@
     "getInTouch": "Get in Touch",
     "homeLink": "Orbs home"
   },
+  "footer": {
+    "homeLink": "Orbs home",
+    "blurb": "Orbs is a “Layer-3” public blockchain infrastructure project powered by PoS, pioneering on-chain innovation since 2017.\n\nOrbs is set up as a separate execution layer between L1/L2 solutions and the application layer, as part of a tiered blockchain stack, enhancing the capabilities of smart contracts and powering protocols such as dLIMIT, dTWAP and Liquidity Hub.",
+    "columns": {
+      "overview": "Overview",
+      "poweredBy": "Powered by Orbs",
+      "resources": "Resources",
+      "community": "Community"
+    },
+    "links": {
+      "whatIsOrbs": "What is Orbs: Layer 3",
+      "proofOfStake": "Proof of Stake",
+      "executionServices": "Execution Services",
+      "whitePapers": "White Papers",
+      "faq": "FAQ",
+      "liquidityHub": "Liquidity Hub",
+      "perpetualHub": "Perpetual Hub",
+      "dtwap": "dTWAP Protocol",
+      "dlimit": "dLIMIT Protocol",
+      "dsltp": "dSLTP Protocol",
+      "notifications": "Notification Protocol",
+      "tonAccess": "TON Access",
+      "tonVote": "TON Vote",
+      "tetra": "Tetra",
+      "stakingCalculator": "Staking Calculator",
+      "networkStatus": "Network Status",
+      "defiOrg": "DeFi.org",
+      "developers": "Developers",
+      "blog": "Blog",
+      "ecosystem": "Orbs Ecosystem",
+      "media": "Media",
+      "brandAssets": "Brand Assets",
+      "contact": "Contact",
+      "termsOfUse": "Terms of Use",
+      "privacyPolicy": "Privacy Policy",
+      "accessibility": "Accessibility Declaration"
+    },
+    "socials": {
+      "github": "GitHub",
+      "x": "X",
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "youtube": "YouTube",
+      "snapshot": "Snapshot"
+    }
+  },
   "languageSelector": {
     "label": "Change language"
   },

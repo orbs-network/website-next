@@ -1,5 +1,5 @@
 {
-  "_note": "Korean values are lifted from the legacy site's ko/_shared/navbar/menu-links/**/*.md rather than newly translated. Keys left in English are ones the legacy Korean navbar also shows in English: the Resources and Developers menus are untranslated there, and the Products/Resources/Developers group headings have no legacy counterpart at all (the legacy menu groups are Overview/Protocols/Resources/Community). Those resolve when #30 replaces this placeholder nav with the real structure.",
+  "_note": "Korean values are lifted from the legacy site's ko/_shared/**/*.md rather than newly translated. Keys left in English are ones the legacy Korean site also shows in English: the Resources and Developers menus are untranslated there, in both the navbar and the footer, and \"footer.links.accessibility\" keeps the legacy footer's own English \"Accessibility declaration\". The Products/Resources/Developers group headings have no legacy counterpart at all (the legacy menu groups are Overview/Protocols/Resources/Community). Those resolve when #30 replaces this placeholder nav with the real structure. \"footer.blurb\" is the legacy ko/_shared/footer/logo-section.md copy with its inline dLIMIT/dTWAP/Liquidity Hub links dropped — Prose renders paragraphs and bold, not links, and all three targets sit in the adjacent Powered by Orbs column.",
   "nav": {
     "products": "Products",
     "resources": "Resources",
@@ -19,6 +19,52 @@
   "header": {
     "getInTouch": "문의하기",
     "homeLink": "Orbs 홈"
+  },
+  "footer": {
+    "homeLink": "Orbs 홈",
+    "blurb": "오브스는 2017년 설립되어 온체인 혁신을 이루어갑니다. 오브스 네트워크는 지분증명(PoS)에 의해 운영되는 “레이어-3” 공개형 블록체인 인프라 프로젝트입니다.\n\n오브스는 단계적으로 구성된 블록체인 스택의 일부로서 L1/L2 솔루션과 애플리케이션 레이어 사이에 추가적으로 실행을 담당하는 레이어를 구성하고 있으며, dLIMIT, dTWAP, 유동성 허브와 같이 스마트 컨트랙트의 기능을 훨씬 향상시키는 서비스들을 제공하고 있습니다.",
+    "columns": {
+      "overview": "Overview",
+      "poweredBy": "Powered by Orbs",
+      "resources": "Resources",
+      "community": "Community"
+    },
+    "links": {
+      "whatIsOrbs": "오브스: 레이어 3",
+      "proofOfStake": "지분증명(PoS V3)",
+      "executionServices": "블록체인 서비스",
+      "whitePapers": "백서 및 개발문서",
+      "faq": "FAQ",
+      "liquidityHub": "유동성 허브",
+      "perpetualHub": "선물 유동성 허브",
+      "dtwap": "dTWAP 프로토콜",
+      "dlimit": "dLIMIT 프로토콜",
+      "dsltp": "dSLTP 프로토콜",
+      "notifications": "DeFi 알림 프로토콜",
+      "tonAccess": "TON 액세스",
+      "tonVote": "TON Vote",
+      "tetra": "Tetra",
+      "stakingCalculator": "Staking Calculator",
+      "networkStatus": "Network Status",
+      "defiOrg": "DeFi.org",
+      "developers": "Developers",
+      "blog": "블로그",
+      "ecosystem": "오브스 생태계",
+      "media": "미디어",
+      "brandAssets": "브랜드 로고",
+      "contact": "문의하기",
+      "termsOfUse": "이용 약관",
+      "privacyPolicy": "개인정보정책",
+      "accessibility": "Accessibility declaration"
+    },
+    "socials": {
+      "github": "GitHub",
+      "x": "X",
+      "telegram": "Telegram",
+      "discord": "Discord",
+      "youtube": "YouTube",
+      "snapshot": "Snapshot"
+    }
   },
   "languageSelector": {
     "label": "언어 변경"

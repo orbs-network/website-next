@@ -5,6 +5,7 @@ import '../../globals.css'
 import { getMessages } from 'next-intl/server'
 import { ThemeProvider } from 'next-themes'
 import { LOCALE_HTML_LANG, type Locale } from '@/i18n/locales'
+import { Footer } from './footer/footer'
 import { Header } from './header'
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '600', '700', '900'] })
@@ -64,6 +65,7 @@ export async function RootShell({ locale, children }: { locale: Locale; children
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
             <Header locale={locale} />
             <main>{children}</main>
+            <Footer locale={locale} />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
