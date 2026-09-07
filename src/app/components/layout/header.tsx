@@ -36,7 +36,12 @@ export async function Header({ locale }: { locale: Locale }) {
             lang={textLang(t('homeLink'), locale)}
             className="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
-            <OrbsLogo />
+            {/*
+              `OrbsLogo` names itself "Orbs". Inside a link that already has an
+              `aria-label` that is a second piece of content in one link, so the
+              glyph is hidden and the link keeps one accessible name.
+            */}
+            <OrbsLogo aria-hidden focusable="false" />
           </Link>
 
           <NavMenu locale={locale} />
