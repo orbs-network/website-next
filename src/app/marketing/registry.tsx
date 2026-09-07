@@ -1,3 +1,4 @@
+import { localesFor } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { DtwapPage } from './dtwap'
@@ -61,6 +62,34 @@ export function findMarketingPage(pathname: string): MarketingPageEntry | undefi
   const normalized = pathname !== '/' && pathname.endsWith('/') ? pathname.slice(0, -1) : pathname
 
   return MARKETING_PAGES[normalized as MarketingPagePath]
+}
+
+/**
+ * The same lookup, but only if the page exists in this locale.
+ *
+ * `generateStaticParams` already omits locales a page is not available in, but
+ * that only decides what gets prerendered — `dynamicParams` defaults to true,
+ * so a direct request to `/jp/<english-only-page>/` still reaches the route. A
+ * bare registry lookup succeeds there and renders the English page inside a
+ * `lang="ja"` document, indexable, with no locale fallback: precisely what the
+ * availability map exists to prevent.
+ *
+ * It does not bite today, because `/dtwap` is available in all three locales.
+ * It bites the first time a page is English-only — which is the documented
+ * default for any path with no `AVAILABILITY` entry, so it would arrive
+ * silently.
+ *
+ * Both the renderer and `marketingMetadata` go through this, so a page cannot
+ * 404 while still emitting metadata, or vice versa.
+ */
+export function findLocaleMarketingPage(pathname: string, locale: Locale): MarketingPageEntry | undefined {
+  const entry = findMarketingPage(pathname)
+
+  if (!entry || !localesFor(pathname).includes(locale)) {
+    return undefined
+  }
+
+  return entry
 }
 
 export { MARKETING_PAGE_PATHS }

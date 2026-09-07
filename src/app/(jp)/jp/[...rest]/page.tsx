@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
-import { findMarketingPage } from '@/app/marketing/registry'
+import { findLocaleMarketingPage } from '@/app/marketing/registry'
 import { localesFor } from '@/i18n/availability'
 import { marketingMetadata } from '@/app/marketing/metadata'
 import { MARKETING_PAGE_PATHS } from '@/content/pages'
@@ -43,7 +43,7 @@ export async function generateMetadata({
 
 export default async function LocaleMarketingPage({ params }: { params: Promise<{ rest?: string[] }> }) {
   const path = pathFor((await params).rest)
-  const entry = findMarketingPage(path)
+  const entry = findLocaleMarketingPage(path, LOCALE)
 
   if (!entry) {
     notFound()

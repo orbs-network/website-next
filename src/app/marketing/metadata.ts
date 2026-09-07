@@ -2,7 +2,7 @@ import type { Metadata } from 'next'
 import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
-import { findMarketingPage } from './registry'
+import { findLocaleMarketingPage } from './registry'
 
 /**
  * Metadata for a marketing page, in one locale.
@@ -22,10 +22,10 @@ import { findMarketingPage } from './registry'
  * stays a catalog-only change.
  */
 export async function marketingMetadata(path: string, locale: Locale): Promise<Metadata> {
-  const entry = findMarketingPage(path)
+  const entry = findLocaleMarketingPage(path, locale)
 
-  // Not a marketing path — the catch-all is about to render a 404, which
-  // supplies its own title.
+  // Not a marketing path in this locale — the route is about to render a 404,
+  // which supplies its own title.
   if (!entry) {
     return {}
   }
