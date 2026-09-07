@@ -1,6 +1,7 @@
 import { localesFor } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
+import { DlimitPage } from './dlimit'
 import { DtwapPage } from './dtwap'
 
 /**
@@ -49,6 +50,7 @@ export type MarketingPageEntry = {
  */
 const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/dtwap': { render: (locale) => <DtwapPage locale={locale} />, namespace: 'pages.dtwap' },
+  '/dlimit': { render: (locale) => <DlimitPage locale={locale} />, namespace: 'pages.dlimit' },
 }
 
 /**

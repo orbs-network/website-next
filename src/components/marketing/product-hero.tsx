@@ -5,14 +5,30 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 /**
+ * Either both or neither.
+ *
+ * A hero image with no `alt` is an unlabelled image; an `alt` with no image is
+ * a caller that thinks it set one. Expressing the pair as a union makes both
+ * mistakes a type error rather than something to catch in review.
+ */
+type HeroImage = { image: string; imageAlt: string } | { image?: undefined; imageAlt?: undefined }
+
+/**
  * Opening block of a product page: headline, standfirst, primary call to
- * action, source links, and a hero illustration.
+ * action, source links, and an optional hero illustration.
  *
  * The headline arrives with the author's line breaks intact (the legacy content
  * wrote it as three separate markdown H1 lines), so it renders
  * `whitespace-pre-line` rather than collapsing them. Those breaks are a
  * typographic decision about how the phrase splits, and they differ per
  * language — Korean breaks it into three quite different lines.
+ *
+ * The image is optional because not every product has one. dLIMIT's hero asset
+ * is referenced by the legacy page but has never existed — `/assets/img/dlimit/
+ * hero.svg` is a 404 on production — so that page ships without one rather than
+ * borrowing dTWAP's illustration and implying an asset that was never designed.
+ * Without an image the text runs to a single centred column instead of leaving
+ * a half-width hole where the illustration would be.
  */
 export function ProductHero({
   headline,
@@ -24,13 +40,11 @@ export function ProductHero({
   repo,
   telegram,
   lang,
-}: {
+}: HeroImage & {
   headline: string
   intro: string
   ctaLabel: string
   ctaHref: string
-  image: string
-  imageAlt: string
   repo?: string
   telegram?: string
   /** Set when this copy is English inside a non-English document. */
@@ -38,7 +52,7 @@ export function ProductHero({
 }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
-      <div className="grid gap-12 lg:grid-cols-[3fr_2fr] lg:items-center">
+      <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'max-w-3xl')}>
         <div lang={lang}>
           <h1 className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl">
             {headline}
@@ -74,14 +88,24 @@ export function ProductHero({
           </div>
         </div>
 
-        <div className="relative aspect-[4/3] w-full">
-          {/*
-            `priority` because this is the largest element above the fold on
-            every product page — it is the LCP candidate, and lazy-loading it
-            would delay the metric it defines.
-          */}
-          <Image src={image} alt={imageAlt} fill priority sizes="(min-width: 1024px) 50vw, 100vw" className="object-contain" />
-        </div>
+        {image && (
+          <div className="relative aspect-[4/3] w-full">
+            {/*
+              `priority` because this is the largest element above the fold on
+              every product page — it is the LCP candidate, and lazy-loading it
+              would delay the metric it defines. With no image the headline
+              becomes the LCP element and needs no equivalent hint.
+            */}
+            <Image
+              src={image}
+              alt={imageAlt}
+              fill
+              priority
+              sizes="(min-width: 1024px) 50vw, 100vw"
+              className="object-contain"
+            />
+          </div>
+        )}
       </div>
     </section>
   )

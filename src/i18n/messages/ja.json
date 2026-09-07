@@ -121,6 +121,62 @@
         "audit": "PeckShield Security Audit",
         "faq": ""
       }
+    },
+    "dlimit": {
+      "meta": {
+        "title": "dLIMIT",
+        "description": "A decentralized on-chain protocol for price-efficient and reliable execution of limit orders for DEX/AMMs. The optimal limit order solution for DEXs over existing alternatives."
+      },
+      "hero": {
+        "headline": "LIMIT ORDERS PROTOCOL FOR\nDECENTRALIZED EXCHANGES",
+        "intro": "A decentralized on-chain protocol for price-efficient and reliable execution of limit orders for DEX/AMMs. The optimal limit order solution for DEXs over existing alternatives.",
+        "cta": "GET STARTED"
+      },
+      "benefits": {
+        "title": "A limit order enables users to buy or sell tokens at a specified price or better.",
+        "intro": "Decentralized limit orders are not trivial to implement using smart contracts. Flawed implementation of limit orders in DeFi can hurt users by executing the order at a price much worse than they intended, or the order not being executed at all.\n\nThe dLIMIT smart contract for DEXs ensures that limit orders are executed at an optimal price and at fair fees, in a decentralized and reliable manner.",
+        "items": {
+          "bestPrice": {
+            "title": "Best price",
+            "body": "In the dLIMIT smart contract orders are filled using an English Auction bidding war, ensuring that execution price is as close as possible to the limit price set by the user."
+          },
+          "reliable": {
+            "title": "Reliable",
+            "body": "The Orbs network PoS mechanism ensures the proper operation of its validator nodes, guaranteeing dLIMIT runs 24/7 with high redundancy and reliability."
+          },
+          "decentralized": {
+            "title": "Decentralized",
+            "body": "dLIMIT incentivizes anyone to become a taker, alongside the Orbs networks validators, and submit bids."
+          },
+          "userProtection": {
+            "title": "User Protection",
+            "body": "All Orbs Network validators participate as honest bidders in the protocol, ensuring that the actual fill price is as close as possible to the limit price specified by the user."
+          },
+          "trackRecord": {
+            "title": "Proven track record",
+            "body": "dLIMIT is based on the dTWAP protocol which has been in production since early 2023, executing millions of dollars in trading volume across multiple chains & DEXs."
+          }
+        }
+      },
+      "integrations": {
+        "title": "Recent and Ongoing Integrations to DEX/AMMs",
+        "integrateTitle": "Integrate your DEX",
+        "integrateCta": "README"
+      },
+      "code": {
+        "title": "Easy integration into every DEX frontend based on React",
+        "reactTab": "React Component",
+        "reactBody": "No need to modify your DEX smart contracts. Integration is frontend-only and relies on existing contracts of the dLIMIT protocol.",
+        "stylesTab": "Fully Customizable UI",
+        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel."
+      },
+      "schema": {
+        "title": "Decentralized Execution of Limit Orders",
+        "body": "dLIMIT is based on the dTWAP protocol where the individual order size equals the total trade size. The protocol defines two main actors:\n\n**Makers** - The first entity in the dLIMIT protocol are DEX traders that submit new orders to the dLIMIT EVM contract. They set all order parameters including the limit price. The dLIMIT contract enforces these requirements in a trustless manner.\n\n**Takers** - Incentivized third-party participants that monitor all live orders and submit bids on the best path to execute their next segment. The dLIMIT contract selects the best bid and guarantees that the path that provides the best price to makers is the one executed.\n\nOrbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019. All Orbs Network validators are takers and participate as honest bidders in the protocol, guaranteeing that orders are executed 24/7 with high redundancy and best price.",
+        "whitePaper": "read the white paper",
+        "audit": "PeckShield Security Audit",
+        "faq": ""
+      }
     }
   }
 }
