@@ -55,7 +55,13 @@ export async function Footer({ locale }: { locale: Locale }) {
               lang={textLang(t('homeLink'), locale)}
               className="inline-flex"
             >
-              <OrbsLogo className="h-8 w-auto" />
+              {/*
+                `OrbsLogo` names itself "Orbs". Inside a link that already has
+                an `aria-label`, that is a second piece of content in one link —
+                the same redundancy the social icons avoid, so it is hidden the
+                same way and the link keeps one accessible name.
+              */}
+              <OrbsLogo className="h-8 w-auto" aria-hidden focusable="false" />
             </Link>
 
             {/*
