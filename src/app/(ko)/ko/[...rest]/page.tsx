@@ -1,21 +1,53 @@
+import type { Metadata } from 'next'
 import { notFound } from 'next/navigation'
+import { findLocaleMarketingPage } from '@/app/marketing/registry'
+import { localesFor } from '@/i18n/availability'
+import { marketingMetadata } from '@/app/marketing/metadata'
+import { MARKETING_PAGE_PATHS } from '@/content/pages'
+
+const LOCALE = 'ko' as const
 
 /**
- * 404 catch-all for unmatched paths under this locale.
+ * Korean marketing pages, plus the 404 for everything else under this locale.
  *
- * Without it, a URL like `/jp/dtwap/` matches no route at all, and with three
- * root layouts there is no shared ancestor for Next to render a global
- * `not-found` into — so it falls through to a bare 7 KB error shell with no
- * header, nav or styling. Routing here instead puts the 404 inside this
- * locale's root layout, so it gets the right `lang` and the site chrome.
+ * One route resolves every Korean page through the shared registry, so adding a
+ * translation is catalog entries and one `AVAILABILITY` line — no file here
+ * changes. See `src/app/marketing/registry.ts` for why this is not a file per
+ * page.
  *
- * This matters during the migration specifically: the legacy site serves
- * Korean marketing URLs that Phase 3 has not rebuilt yet, so they are all
- * currently unmatched.
+ * It doubles as the locale's 404 boundary. Without it an unmatched URL under
+ * `/ko/` matches no route at all, and with three root layouts there is
+ * no shared ancestor for Next to render a global `not-found` into — so it falls
+ * through to a bare error shell with no header or styling.
  *
- * Static and dynamic routes both take precedence over a catch-all, so the pages
- * Phase 3 adds will shadow this automatically.
+ * Static and dynamic routes both take precedence over a catch-all, so this can
+ * never shadow a real route.
  */
-export default function LocaleCatchAll() {
-  notFound()
+export function generateStaticParams() {
+  return MARKETING_PAGE_PATHS.filter((path) => localesFor(path).includes(LOCALE)).map((path) => ({
+    rest: path.split('/').filter(Boolean),
+  }))
+}
+
+function pathFor(rest: string[] | undefined): string {
+  return `/${(rest ?? []).join('/')}`
+}
+
+export async function generateMetadata({
+  params,
+}: {
+  params: Promise<{ rest?: string[] }>
+}): Promise<Metadata> {
+  return marketingMetadata(pathFor((await params).rest), LOCALE)
+}
+
+export default async function LocaleMarketingPage({ params }: { params: Promise<{ rest?: string[] }> }) {
+  const path = pathFor((await params).rest)
+  const entry = findLocaleMarketingPage(path, LOCALE)
+
+  if (!entry) {
+    notFound()
+  }
+
+  return entry.render(LOCALE)
 }

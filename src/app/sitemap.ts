@@ -3,6 +3,7 @@ import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from 
 import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 import { translatedLocalesFor } from '@/i18n/availability'
+import { MARKETING_PAGE_PATHS } from '@/content/pages'
 import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 
 /**
@@ -24,8 +25,8 @@ export const dynamic = 'force-dynamic'
  * Covers what exists today: the home page, the paginated blog index, and every
  * published post.
  *
- * Not yet included, because the routes do not exist:
- *  - marketing pages, and their JP/KO variants (Phase 3)
+ * Marketing pages come from MARKETING_PAGE_PATHS, so a page added in Phase 3
+ * appears here automatically — in each locale it is genuinely translated into.
  *
  * hreflang is not declared here. Each localised page carries its own
  * `<link rel="alternate">` set via `localeAlternates`, which is equivalent for
@@ -63,6 +64,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: locale === DEFAULT_LOCALE ? 1 : 0.9,
   }))
 
+  // Marketing pages, in each locale whose copy is genuinely translated. A
+  // locale still rendering the English placeholder is `noindex`, so listing it
+  // would advertise a URL we are simultaneously asking crawlers to ignore.
+  const marketingPages: MetadataRoute.Sitemap = MARKETING_PAGE_PATHS.flatMap((path) =>
+    translatedLocalesFor(path).map((locale) => ({
+      url: absoluteUrl(localePath(locale, `${path}/`)),
+      lastModified: lastArchiveChange,
+      changeFrequency: 'monthly' as const,
+      // Product pages are the commercial point of the site, so they rank above
+      // the blog archive but below the home page.
+      priority: 0.9,
+    }))
+  )
+
   // Page 1 is /blog/, not /blog/page/1/ — blogPagePath enforces that, so there
   // is exactly one URL per page of results and no self-duplicate.
   const blogPages: MetadataRoute.Sitemap = Array.from({ length: totalPages }, (_, index) => ({
@@ -92,5 +107,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   )
 
-  return [...home, ...blogPages, ...newsPages, ...postEntries]
+  return [...home, ...marketingPages, ...blogPages, ...newsPages, ...postEntries]
 }

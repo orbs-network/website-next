@@ -1,3 +1,4 @@
+import { MARKETING_PAGE_PATHS } from '@/content/pages'
 import { LOCALE_SEGMENTS } from '@/i18n/locales'
 
 /**
@@ -30,11 +31,16 @@ export function postPath(slug: string): string {
  * Slugs come from Contentful and editors can type anything, so this cannot be
  * prevented upstream — only detected where the archive is enumerated.
  *
- * Locale segments are read from the i18n config rather than repeated here, so
- * adding a locale cannot forget to reserve it.
+ * Locale segments and marketing page paths are both derived rather than
+ * restated, so adding a locale or a page cannot forget to reserve it. Marketing
+ * pages are the growing half: every page Phase 3 adds is another root segment a
+ * post could collide with.
  */
 export const RESERVED_ROOT_SEGMENTS: ReadonlySet<string> = new Set([
   ...Object.values(LOCALE_SEGMENTS).filter((segment) => segment !== ''),
+  // First segment only — `/white-papers/dTWAP` reserves `white-papers`, which
+  // is what a root-level post slug would actually collide with.
+  ...MARKETING_PAGE_PATHS.map((path) => path.split('/')[1]),
   'blog',
   'news',
   'api',
