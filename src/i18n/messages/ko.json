@@ -18,7 +18,8 @@
   },
   "header": {
     "getInTouch": "문의하기",
-    "homeLink": "Orbs 홈"
+    "homeLink": "Orbs 홈",
+    "scrollToTop": "맨 위로"
   },
   "footer": {
     "homeLink": "Orbs 홈",

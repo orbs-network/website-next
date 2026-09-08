@@ -5,8 +5,11 @@ import '../../globals.css'
 import { getMessages } from 'next-intl/server'
 import { ThemeProvider } from 'next-themes'
 import { LOCALE_HTML_LANG, type Locale } from '@/i18n/locales'
+import { getTranslations } from 'next-intl/server'
+import { textLang } from '@/i18n/script'
 import { Footer } from './footer/footer'
 import { Header } from './header'
+import { ScrollToTop } from './scroll-to-top'
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '600', '700', '900'] })
 
@@ -45,6 +48,11 @@ export async function RootShell({ locale, children }: { locale: Locale; children
   // Explicit locale: with no `[locale]` segment and no middleware, next-intl
   // cannot infer it. See src/i18n/request.ts.
   const messages = await getMessages({ locale })
+  // Resolved here rather than inside `ScrollToTop`, which is a client
+  // component: reading it there would mean shipping the whole namespace in the
+  // RSC payload of every page for one string.
+  const t = await getTranslations({ locale, namespace: 'header' })
+  const scrollToTopLabel = t('scrollToTop')
 
   return (
     <html lang={LOCALE_HTML_LANG[locale]} suppressHydrationWarning>
@@ -66,6 +74,7 @@ export async function RootShell({ locale, children }: { locale: Locale; children
             <Header locale={locale} />
             <main>{children}</main>
             <Footer locale={locale} />
+            <ScrollToTop label={scrollToTopLabel} lang={textLang(scrollToTopLabel, locale)} />
           </ThemeProvider>
         </NextIntlClientProvider>
       </body>
