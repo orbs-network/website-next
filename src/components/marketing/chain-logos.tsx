@@ -10,10 +10,11 @@ export type Chain = {
 /**
  * The chains a protocol runs on, as a row of marks.
  *
- * Each logo carries its chain's NAME as alt text rather than an empty string.
- * The names appear nowhere else in this section, so an empty alt would leave a
- * screen reader with "eight images" and no way to know which chains are
- * supported — which is the entire content of the section.
+ * The logos are DECORATIVE. Each one sits beside the chain's name as visible
+ * text, so alt text would have a screen reader announce "Ethereum, Ethereum"
+ * for every chain in the list. (An earlier version of this component named the
+ * images, on the reasoning that the names appeared nowhere else — they do, in
+ * the span right next to them.)
  *
  * The list lives in code rather than in a catalog because chain names are
  * proper nouns: "Ethereum" is "Ethereum" in every locale.
@@ -35,7 +36,7 @@ export function ChainLogos({
       <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
         {chains.map((chain) => (
           <li key={chain.name} className="flex items-center gap-3">
-            <Image src={chain.logo} alt={chain.name} width={32} height={32} className="size-8 rounded-full" />
+            <Image src={chain.logo} alt="" width={32} height={32} className="size-8 rounded-full" />
             <span className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang="en">
               {chain.name}
             </span>

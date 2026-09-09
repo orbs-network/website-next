@@ -16,17 +16,16 @@ const CHAINS = [
 ]
 
 /**
- * Each logo carries its chain's name. The names appear nowhere else in this
- * section, so an empty alt would leave a screen reader with "two images" and no
- * way to know which chains are supported — which is the whole content.
+ * The chain name is announced once, by the visible text. The logo beside it is
+ * decorative — naming it too would give "Ethereum, Ethereum" for every chain.
  */
-export const LogosAreNamed: Story = {
+export const NamesAreAnnouncedOnce: Story = {
   args: { title: 'Chains', chains: CHAINS },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getByRole('img', { name: 'Ethereum' })).toBeInTheDocument()
-    await expect(canvas.getByRole('img', { name: 'Base' })).toBeInTheDocument()
+    await expect(canvas.getByText('Ethereum')).toBeInTheDocument()
+    await expect(canvas.queryAllByRole('img')).toHaveLength(0)
     await expect(canvas.getAllByRole('listitem')).toHaveLength(2)
   },
 }
