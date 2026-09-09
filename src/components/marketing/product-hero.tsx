@@ -50,6 +50,7 @@ export function ProductHero({
   repo,
   telegram,
   lang,
+  headlineLang,
 }: HeroImage &
   HeroCta & {
     headline: string
@@ -58,6 +59,15 @@ export function ProductHero({
     telegram?: string
     /** Set when this copy is English inside a non-English document. */
     lang?: string
+    /**
+     * Set when the HEADLINE's language differs from the rest of the hero.
+     *
+     * Orbs Agentic's headline is the product name, English in the Korean
+     * catalog, while the intro and call to action beneath it are Korean.
+     * Deriving one language for the whole block from the headline marked all of
+     * that Korean copy English.
+     */
+    headlineLang?: string
   }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
@@ -69,7 +79,10 @@ export function ProductHero({
       */}
       <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
         <div lang={lang}>
-          <h1 className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl">
+          <h1
+            lang={headlineLang}
+            className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl"
+          >
             {headline}
           </h1>
 

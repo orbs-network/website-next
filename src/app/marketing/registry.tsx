@@ -1,6 +1,7 @@
 import { localesFor } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
+import { AgenticPage } from './agentic'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
@@ -55,6 +56,7 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/dtwap': { render: (locale) => <DtwapPage locale={locale} />, namespace: 'pages.dtwap' },
   '/dlimit': { render: (locale) => <DlimitPage locale={locale} />, namespace: 'pages.dlimit' },
   '/dsltp': { render: (locale) => <DsltpPage locale={locale} />, namespace: 'pages.dsltp' },
+  '/agentic': { render: (locale) => <AgenticPage locale={locale} />, namespace: 'pages.agentic' },
   '/liquidity-hub': {
     render: (locale) => <LiquidityHubPage locale={locale} />,
     namespace: 'pages.liquidityHub',

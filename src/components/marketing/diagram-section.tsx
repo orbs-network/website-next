@@ -21,6 +21,7 @@ export function DiagramSection({
   width,
   height,
   lang,
+  titleLang,
 }: {
   title?: string
   image: string
@@ -46,10 +47,22 @@ export function DiagramSection({
   imageAlt: string
   /** Set when this copy is English inside a non-English document. */
   lang?: string
+  /**
+   * Set when the HEADING's language differs from the rest of the section.
+   *
+   * Several legacy section labels stay English in the Korean catalog — "Tool",
+   * "Chains", "Orbs Agentic Architecture" — while the copy under them is
+   * translated. One section-level `lang` cannot describe both.
+   */
+  titleLang?: string
 }) {
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
-      {title && <H2 className="mb-12 text-balance text-center">{title}</H2>}
+      {title && (
+        <H2 className="mb-12 text-balance text-center" lang={titleLang}>
+          {title}
+        </H2>
+      )}
 
       <Image
         src={image}

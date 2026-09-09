@@ -377,6 +377,95 @@
         "body": "All on-chain parts are trustless since contracts verify all actions. However, users may be concerned that Liquidity Hub backend is able to manipulate trades in some way. This concern is mitigated by using the Orbs Network's decentralized L3 technology.\n\nAs part of Liquidity Hub, Orbs Guardians will run software utilizing ORBS-VM, which acts as a decentralized backend that is required for Liquidity Hub to run optimally and in a fully decentralized manner.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019.\n\nThe Liquidity Hub is a beta version that is still under active development.",
         "terms": "Terms of use"
       }
+    },
+    "agentic": {
+      "meta": {
+        "title": "Orbs Agentic",
+        "description": "The execution layer between AI agents and DeFi protocols. Orbs handles execution, routing and cosigned-oracle verification, so every agent trade is independently verified on-chain."
+      },
+      "hero": {
+        "headline": "Orbs Agentic",
+        "intro": "The execution layer between AI agents and DeFi protocols.\n\nWhen an agent needs to swap, place a limit order, or run a TWAP strategy, it calls an Orbs Agentic tool. The Orbs Network handles execution, routing, and cosigned-oracle verification — so every trade is independently verified on-chain.\n\nNot a wallet. Not a custodial layer. Not AI trading. The verification layer that lets agents execute DeFi safely.",
+        "cta": "Get started"
+      },
+      "breaks": {
+        "intro": "The bottleneck holding back autonomous DeFi isn't reasoning. It's trust, safety, and execution.",
+        "items": {
+          "safety": {
+            "title": "Safety",
+            "body": "Every trade is cosigned by an independent oracle before execution — agents can't go rogue."
+          },
+          "quality": {
+            "title": "Execution quality",
+            "body": "Smart routing across DEXs with slippage protection, the same engine behind $2.2B+ in executed volume since 2022."
+          },
+          "reliability": {
+            "title": "Reliability",
+            "body": "Handles retries, partial fills, native balance approvals, and RPC failures so the agent doesn't have to."
+          }
+        }
+      },
+      "tools": {
+        "title": "Tool",
+        "intro": "A single execution tool with flexible, composable parameters. The agent defines the order configuration, and Orbs handles the execution flow.",
+        "items": {
+          "autoswap": {
+            "title": "AUTOSWAP",
+            "body": "Agent-driven token swaps with smart routing and slippage protection. The default for most trades."
+          },
+          "autolimit": {
+            "title": "AUTOLIMIT",
+            "body": "Limit orders with on-chain execution guarantees. Set a price, walk away."
+          },
+          "secureswap": {
+            "title": "SECURESWAP",
+            "body": "Additional cosigned oracle verification for higher-stakes trades. Extra checks before anything moves."
+          },
+          "twap": {
+            "title": "TWAP",
+            "body": "Spread large trades over time to minimize price impact. Configurable duration and slicing."
+          }
+        }
+      },
+      "chains": {
+        "title": "Chains"
+      },
+      "oracle": {
+        "title": "Cosigned oracle verification",
+        "statement": "Every execution is independently verified. No single agent, wallet, or operator can push a trade through without oracle cosignature.",
+        "steps": {
+          "decide": "Agent decides what to do based on its policy and market inputs.",
+          "submit": "Agent submits execution parameters via an Orbs Agentic tool.",
+          "price": "Orbs cosigned oracle provides signed input and output token prices. Smart contracts verify execution parameters and enforce slippage and price conditions to protect the user (agent).",
+          "cosign": "If the checks pass, the oracle cosigns the execution. The transaction is then verified and enforced on-chain by the smart contracts."
+        }
+      },
+      "architecture": {
+        "title": "Orbs Agentic Architecture",
+        "alt": "An agent calling an Orbs Agentic tool, with the Orbs Network handling routing and cosigned-oracle verification before the trade settles on-chain."
+      },
+      "poweredBy": {
+        "title": "Powered by Orbs Network",
+        "body": "Not a new protocol. The same battle-tested L3 infrastructure that has executed $2.2B+ in DeFi volume across limit orders, TWAP, and DCA strategies since 2022.\n\nLive integrations with PancakeSwap, SushiSwap, THENA, QuickSwap, SpookySwap, and more. Dozens of independent validators. Over 1B ORBS staked. Running on mainnet since 2019."
+      },
+      "getStarted": {
+        "title": "Get Started. Start building in 5 minutes.",
+        "items": {
+          "docs": {
+            "title": "Read the Docs",
+            "body": "Understand the tools and integration patterns."
+          },
+          "api": {
+            "title": "Get your API Key",
+            "body": "Access the execution layer in minutes."
+          },
+          "call": {
+            "title": "Make your first call",
+            "body": "autoswap, autolimit, or TWAP — one line of code."
+          }
+        }
+      },
+      "disclaimer": "Orbs Agentic is a beta product under active development. All underlying digital assets, blockchain networks, and DeFi platforms are subject to ongoing development and various risks. Use at your own risk."
     }
   }
 }
