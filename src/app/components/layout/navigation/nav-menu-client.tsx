@@ -85,7 +85,18 @@ export function NavMenuClient({
       <NavigationMenuList className="gap-1">
         {groups.map((group) => (
           <NavigationMenuItem key={group.key}>
-            <NavigationMenuTrigger className="uppercase text-xs tracking-widest" lang={group.lang}>
+            {/*
+              The shadcn trigger ships a filled pill — `hover:bg-accent`,
+              `data-[state=open]:bg-accent/50` — which renders as a loud blue
+              block on the open group. The designs have plain text triggers, so
+              the background is neutralised and the open/hover state is carried
+              by the accent text colour instead, matching the rest of the
+              chrome.
+            */}
+            <NavigationMenuTrigger
+              className="uppercase text-xs tracking-widest bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent hover:text-accent-primary focus:text-accent-primary data-[state=open]:text-accent-primary"
+              lang={group.lang}
+            >
               {group.label}
             </NavigationMenuTrigger>
 
@@ -157,7 +168,10 @@ function NavRow({ link }: { link: ResolvedNavLink }) {
     <MenuItemW
       asChild
       lang={link.lang}
-      icon={Glyph ? <Glyph className="size-4" /> : undefined}
+      // `size-5`, not `size-4`: the marks sit at opposite corners of a 24-unit
+      // box with a lot of empty space between them, so at 16px they read as
+      // specks rather than as the paired triangles the design shows.
+      icon={Glyph ? <Glyph className="size-5" /> : undefined}
       className="-mx-2 w-full rounded-sm px-2 py-2.5 hover:bg-accent hover:no-underline"
     >
       {link.external ? (
