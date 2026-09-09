@@ -58,7 +58,16 @@ export function FeatureGrid({
                 // words, so an alt would be read twice.
                 <Image src={feature.icon} alt="" width={48} height={48} className="mb-4 size-12" />
               )}
-              <H3 weight="medium">{feature.title}</H3>
+              {/*
+                `h3` under a section heading, `h2` without one. With no section
+                title these cards ARE the top level of their section, and
+                rendering them as `h3` straight after the page `h1` skips a
+                level — readers navigating by heading hit a gap. `asChild` keeps
+                the `h3` styling either way, so only the outline changes.
+              */}
+              <H3 asChild weight="medium">
+                {title ? <h3>{feature.title}</h3> : <h2>{feature.title}</h2>}
+              </H3>
             </CardHeader>
             <CardContent>
               <Prose text={feature.body} />
