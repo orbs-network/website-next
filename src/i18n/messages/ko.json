@@ -378,6 +378,95 @@
         "body": "컨트랙트가 모든 동작을 검증하기 때문에 모든 온체인 부분들은 신뢰담보가 필요하지 않습니다. 하지만 사용자들은 유동성 허브가 어떤 식으로든 뒤에서 거래를 조작할 수 있다고 걱정할지도 모릅니다. 탈중앙을 기반으로 한 오브스 네트워크의 L3 기술로 이런 걱정은 더이상 하지 않아도 됩니다.\n\n유동성 허브가 작동하는 바탕에는, 오브스 가디언들이 ORBS-VM을 사용한 소프트웨어를 실행시키고 있으며, 이는 유동성 허브가 완전히 탈중앙화된 방식으로 최적화된 동작을 수행하는데 필요한 탈중앙 백엔드로서 역할하고 있습니다.\n\n오브스 네트워크는 수십대의 개별적인 밸리데이터들을 보유하고 있으며 1억달러가치 이상이 지분증명(PoS) 합의방식에 의해 운영되고 있습니다. 오브스 네트워크는 2019년부터 메인넷이 운영되고 있습니다.\n\n유동성 허브는 여전히 개발이 진행중인 베터버전입니다.",
         "terms": "이용 약관"
       }
+    },
+    "agentic": {
+      "meta": {
+        "title": "Orbs Agentic",
+        "description": "AI 에이전트와 DeFi 프로토콜 사이의 실행 레이어. Orbs가 실행, 라우팅, 공동 서명 오라클 검증을 처리하므로 모든 에이전트 거래는 온체인에서 독립적으로 검증됩니다."
+      },
+      "hero": {
+        "headline": "Orbs Agentic",
+        "intro": "AI 에이전트와 DeFi 프로토콜 사이의 실행 레이어.\n\n에이전트가 스왑을 하거나, 지정가 주문을 넣거나, TWAP 전략을 실행해야 할 때 오브스 에이전틱(Orbs Agentic) 툴을 호출합니다. Orbs Network가 실행, 라우팅, 공동 서명 오라클 검증을 처리하므로 모든 거래는 온체인에서 독립적으로 검증됩니다.",
+        "cta": "시작하기"
+      },
+      "breaks": {
+        "intro": "자율형 DeFi의 발전을 가로막는 병목 현상은 추론 능력이 아니라 신뢰, 안전성, 그리고 실행력의 문제입니다.",
+        "items": {
+          "safety": {
+            "title": "Safety",
+            "body": "Every trade is cosigned by an independent oracle before execution — agents can't go rogue."
+          },
+          "quality": {
+            "title": "Execution quality",
+            "body": "Smart routing across DEXs with slippage protection, the same engine behind $2.2B+ in executed volume since 2022."
+          },
+          "reliability": {
+            "title": "Reliability",
+            "body": "Handles retries, partial fills, native balance approvals, and RPC failures so the agent doesn't have to."
+          }
+        }
+      },
+      "tools": {
+        "title": "Tool",
+        "intro": "유연하고 조합 가능한 파라미터를 갖춘 단일 실행 도구입니다. 에이전트가 주문 구성을 정의하면 Orbs가 실행 흐름을 처리합니다.",
+        "items": {
+          "autoswap": {
+            "title": "AUTOSWAP",
+            "body": "에이전트 주도형 토큰 스왑으로, 스마트 라우팅과 슬리피지 보호를 제공합니다. 대부분의 거래에 적합한 기본 옵션입니다."
+          },
+          "autolimit": {
+            "title": "AUTOLIMIT",
+            "body": "온체인 실행 보장된 지정가 주문입니다. 가격을 설정해두면 나머지는 맡겨두세요."
+          },
+          "secureswap": {
+            "title": "SECURESWAP",
+            "body": "더 중요한 규모의 거래를 위한 추가 공동 서명 오라클 검증입니다. 실제 실행 전에 한 단계 더 점검합니다."
+          },
+          "twap": {
+            "title": "TWAP",
+            "body": "대규모 거래를 시간에 따라 분산해 가격 영향을 최소화합니다. 기간과 분할 방식은 직접 설정할 수 있습니다."
+          }
+        }
+      },
+      "chains": {
+        "title": "Chains"
+      },
+      "oracle": {
+        "title": "Cosigned oracle verification",
+        "statement": "중요한 것은 단지 거래가 실행될 수 있느냐가 아닙니다. 안전하게 실행될 수 있느냐입니다.",
+        "steps": {
+          "decide": "에이전트가 자신의 정책과 시장 입력값을 바탕으로 무엇을 할지 결정합니다.",
+          "submit": "에이전트가 Orbs Agentic 툴을 통해 실행 파라미터를 제출합니다.",
+          "price": "Orbs 공동 서명 오라클이 서명된 입력 및 출력 토큰 가격을 제공합니다. 스마트 컨트랙트는 실행 파라미터를 검증하고 슬리피지 및 가격 조건을 강제해 사용자(에이전트)를 보호합니다.",
+          "cosign": "검사를 통과하면 오라클이 실행에 공동 서명합니다. 이후 트랜잭션은 스마트 컨트랙트에 의해 온체인에서 검증되고 집행됩니다."
+        }
+      },
+      "architecture": {
+        "title": "Orbs Agentic Architecture",
+        "alt": "An agent calling an Orbs Agentic tool, with the Orbs Network handling routing and cosigned-oracle verification before the trade settles on-chain."
+      },
+      "poweredBy": {
+        "title": "Powered by Orbs Network",
+        "body": "Not a new protocol. The same battle-tested L3 infrastructure that has executed $2.2B+ in DeFi volume across limit orders, TWAP, and DCA strategies since 2022.\n\nLive integrations with PancakeSwap, SushiSwap, THENA, QuickSwap, SpookySwap, and more. Dozens of independent validators. Over 1B ORBS staked. Running on mainnet since 2019."
+      },
+      "getStarted": {
+        "title": "Get Started. Start building in 5 minutes.",
+        "items": {
+          "docs": {
+            "title": "Read the Docs",
+            "body": "Understand the tools and integration patterns."
+          },
+          "api": {
+            "title": "Get your API Key",
+            "body": "Access the execution layer in minutes."
+          },
+          "call": {
+            "title": "Make your first call",
+            "body": "autoswap, autolimit, or TWAP — one line of code."
+          }
+        }
+      },
+      "disclaimer": "Orbs Agentic is a beta product under active development. All underlying digital assets, blockchain networks, and DeFi platforms are subject to ongoing development and various risks. Use at your own risk."
     }
   }
 }

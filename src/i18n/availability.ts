@@ -62,6 +62,9 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // copy, so Japanese is reachable and `placeholder`. Korean is a real
   // translation down to the card bodies and the column lists.
   '/liquidity-hub': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // No `content/jp/agentic`, so Japanese is not offered. Korean is a real
+  // translation, including the four verification steps.
+  '/agentic': { en: 'translated', ko: 'translated' },
 }
 
 /**
