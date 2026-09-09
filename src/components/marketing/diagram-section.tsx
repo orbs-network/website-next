@@ -1,0 +1,46 @@
+import Image from 'next/image'
+import { H2 } from '@/app/components/typography'
+
+/**
+ * A full-width diagram, optionally under a heading.
+ *
+ * Distinct from `ArchitectureSection`, which pairs a diagram with prose and a
+ * row of links. The dSLTP page has two sections that are a picture and nothing
+ * else — one titled ("Recent and Ongoing Integrations"), one not — and
+ * expressing those through `ArchitectureSection` would mean making its body and
+ * links optional too, leaving a component whose every prop is optional and
+ * whose shape no longer says anything.
+ *
+ * The title is optional because the legacy content genuinely omits it on one of
+ * the two: `section-2/index.md` carries an empty `title:` field.
+ */
+export function DiagramSection({
+  title,
+  image,
+  imageAlt,
+  lang,
+}: {
+  title?: string
+  image: string
+  /**
+   * Required, and required to be meaningful.
+   *
+   * These sections are ONLY an image — unlike `ArchitectureSection`, there is
+   * no prose beside them restating the content, so an empty alt here would
+   * leave nothing at all for a screen reader. That is the case where a diagram
+   * stops being decorative.
+   */
+  imageAlt: string
+  /** Set when this copy is English inside a non-English document. */
+  lang?: string
+}) {
+  return (
+    <section className="container mx-auto px-5 py-20" lang={lang}>
+      {title && <H2 className="mb-12 text-balance text-center">{title}</H2>}
+
+      <div className="relative mx-auto aspect-[16/9] w-full max-w-4xl">
+        <Image src={image} alt={imageAlt} fill sizes="(min-width: 1024px) 896px, 100vw" className="object-contain" />
+      </div>
+    </section>
+  )
+}

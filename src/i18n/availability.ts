@@ -49,6 +49,12 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // mirrors English and the route is preserved without claiming to be a
   // translation.
   '/dlimit': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // No `ja` key at all, which is different from the two above. dTWAP and dLIMIT
+  // have Japanese DIRECTORIES holding English copy, so they are reachable and
+  // marked `placeholder`. `content/jp/dsltp` does not exist in the legacy repo:
+  // this page has never had a Japanese version, so Japanese is not offered and
+  // `/jp/dsltp/` is not generated. Korean is a full translation.
+  '/dsltp': { en: 'translated', ko: 'translated' },
 }
 
 /**

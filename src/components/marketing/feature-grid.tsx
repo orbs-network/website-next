@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { H2, H3 } from '@/app/components/typography'
 import { Prose } from './prose'
@@ -6,6 +7,14 @@ export type Feature = {
   id: string
   title: string
   body: string
+  /**
+   * Optional card illustration.
+   *
+   * dTWAP and dLIMIT do not set one: their legacy cards borrow
+   * `assets/img/ton-vote/tools/*.svg` from an unrelated page, which is filler
+   * rather than design. dSLTP's are drawn for it, so they render.
+   */
+  icon?: string
 }
 
 /**
@@ -38,6 +47,11 @@ export function FeatureGrid({
         {features.map((feature) => (
           <Card key={feature.id} className="h-full">
             <CardHeader>
+              {feature.icon && (
+                // Decorative: the heading beneath states the same thing in
+                // words, so an alt would be read twice.
+                <Image src={feature.icon} alt="" width={48} height={48} className="mb-4 size-12" />
+              )}
               <H3 weight="medium">{feature.title}</H3>
             </CardHeader>
             <CardContent>

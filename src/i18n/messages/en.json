@@ -193,6 +193,51 @@
         "audit": "PeckShield Security Audit",
         "faq": "FAQ"
       }
+    },
+    "dsltp": {
+      "meta": {
+        "title": "dSLTP",
+        "description": "A decentralized stop-loss and take-profit protocol for DEXs, enabling automated risk management directly on chain — without bots, scripts, or centralized off-chain infrastructure."
+      },
+      "hero": {
+        "headline": "Stop-Loss & Take-Profit\nProtocol for AMM",
+        "intro": "dSLTP is a decentralized stop-loss and take-profit protocol for DEXs, enabling automated risk management directly on chain. Built on Orbs Layer 3, dSLTP is designed to execute orders reliably and transparently, without relying on bots, scripts, or centralized off chain infrastructure.",
+        "cta": "Learn more"
+      },
+      "benefits": {
+        "title": "dSLTP is optimized for fast and seamless integration.",
+        "intro": "Its lightweight protocol can be easily integrated into any EVM-compatible DEX, delivering fully automated risk management and profit-taking functionality without the need for external infrastructure or manual upkeep.\n\nExecution is handled on-chain via Orbs Layer 3, ensuring reliability, transparency, and 24/7 availability.",
+        "items": {
+          "stopLoss": {
+            "title": "Risk Management with Stop-Loss Orders",
+            "body": "Protect positions by automatically exiting when the price drops below a trigger level"
+          },
+          "takeProfit": {
+            "title": "Profit Capture with Take-Profit Orders",
+            "body": "Lock in gains by selling at a predefined target price without needing to monitor the market"
+          },
+          "onchain": {
+            "title": "Fully Onchain, Bot-Free Execution",
+            "body": "Decentralized order monitoring and execution powered by Orbs Layer 3"
+          }
+        }
+      },
+      "graph": {
+        "alt": "A candlestick price chart with a take-profit level marked above the entry price and a stop-loss level below it."
+      },
+      "integrations": {
+        "title": "Recent and Ongoing Integrations",
+        "alt": "dSLTP at the centre of an orbital diagram, with QuickSwap and Thena orbiting it."
+      },
+      "poweredBy": {
+        "title": "Powered by Orbs Network",
+        "body": "Through its novel Layer 3 technology, the Orbs Network enhances the capabilities of smart contract platforms, providing essential services to DEXs across DeFi.\n\nTools utilizing Orbs L3 technology include Liquidity Hub for aggregated liquidity and lower price impact, as well as Advanced Trading Orders, such as decentralized limit and TWAP orders, for efficient execution. The release of Perpetual Hub establishes Orbs' technology as a key DeFi infrastructure for DEXs in spot and futures markets.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus, with over $100 million staked. It has been running on the mainnet since 2019.\n\nReady to integrate? Bring dSLTP to your protocol, frontend, or chain. Contact us to get started or explore the docs below.",
+        "contact": "Contact the Team",
+        "faq": "FAQ",
+        "support": "Support Group",
+        "github": "GitHub",
+        "audits": "Audits"
+      }
     }
   }
 }
