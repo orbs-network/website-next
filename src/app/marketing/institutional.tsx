@@ -83,7 +83,6 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         // Every one of these pages now exists, so these links resolve today.
         features={INSTITUTIONAL_PRODUCTS.map((product) => ({
           id: product.id,
-          icon: product.icon,
           href: resolveLocaleLink({ href: product.href }, locale).href,
           title: t(`products.items.${product.id}.title`),
           body: t(`products.items.${product.id}.body`),

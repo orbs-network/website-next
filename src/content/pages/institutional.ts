@@ -18,12 +18,24 @@ export const INSTITUTIONAL_STATS = ['volume', 'chains', 'venues'] as const
  *
  * All four now exist, which they did not when this migration started — so
  * unlike most cross-links in Phase 3 these resolve today.
+ *
+ * NO ICONS, deliberately. The legacy assets (`product-dlimit.svg` and friends)
+ * are landscape WORDMARKS — 109x20, a coloured glyph followed by the product
+ * name — and they fail here twice over: squeezed into a square icon slot they
+ * are stretched, and their lettering is `#F6F6F6` on a white card, so the name
+ * simply vanishes in the light theme. They would also duplicate the card title,
+ * which already says "dLIMIT".
+ *
+ * The glyphs in `icons/products` are the right marks for this, but
+ * `FeatureGrid` takes an image path rather than a component. Rather than widen
+ * that API for one page, the cards run on their titles; pairing them with the
+ * real glyphs is a small follow-up worth doing deliberately.
  */
 export const INSTITUTIONAL_PRODUCTS = [
-  { id: 'liquidityHub', href: '/liquidity-hub', icon: '/marketing/institutional/product-liquidity-hub.svg' },
-  { id: 'dtwap', href: '/dtwap', icon: '/marketing/institutional/product-dtwap.svg' },
-  { id: 'dlimit', href: '/dlimit', icon: '/marketing/institutional/product-dlimit.svg' },
-  { id: 'dsltp', href: '/dsltp', icon: '/marketing/institutional/product-dsltp.svg' },
+  { id: 'liquidityHub', href: '/liquidity-hub' },
+  { id: 'dtwap', href: '/dtwap' },
+  { id: 'dlimit', href: '/dlimit' },
+  { id: 'dsltp', href: '/dsltp' },
 ] as const
 
 /**
