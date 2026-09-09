@@ -32,7 +32,17 @@ type OrbsLogoProps = HTMLAttributes<HTMLSpanElement> & {
  * `aria-hidden` on the lockup itself.
  */
 export function OrbsLogo({ variant = 'color', className, ...rest }: OrbsLogoProps) {
-  const classes = ['inline-flex items-center gap-2 font-bold uppercase leading-none tracking-wider', className]
+  const classes = [
+    'inline-flex items-center gap-2 font-bold uppercase leading-none tracking-wider',
+    // The wordmark is HTML text, so unlike the mark it does not take a fill
+    // from the variant — it inherits whatever colour surrounds it. Without
+    // this, `variant="white"` produced a white mark beside a wordmark in the
+    // ambient text colour: half a logo, and unreadable on the dark backgrounds
+    // that variant exists for. `color` and `dark` both want the inherited
+    // colour, so only `white` overrides.
+    variant === 'white' ? 'text-white' : undefined,
+    className,
+  ]
     .filter(Boolean)
     .join(' ')
 

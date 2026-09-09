@@ -53,8 +53,8 @@ export const OnlyTheColourVariantDefinesAGradient: Story = {
 
     await expect(svg?.querySelectorAll('linearGradient')).toHaveLength(1)
     await expect(svg?.querySelector('linearGradient')?.id).toBe('orbs-mark-color')
-    // One definition for all 38 segments, not one each as the export had it.
-    await expect(svg?.querySelectorAll('path').length).toBeGreaterThan(30)
+    // One definition for all 34 segments, not one each as the export had it.
+    await expect(svg?.querySelectorAll('path')).toHaveLength(34)
   },
 }
 
@@ -65,6 +65,28 @@ export const WhiteVariantHasNoGradient: Story = {
 
     await expect(svg?.querySelectorAll('linearGradient')).toHaveLength(0)
     await expect(svg?.querySelector('path')).toHaveAttribute('fill', '#ffffff')
+  },
+}
+
+/**
+ * The wordmark is HTML text and takes no fill from the variant, so the white
+ * lockup has to colour it explicitly — otherwise it is a white mark beside a
+ * wordmark in the ambient colour, which is half a logo.
+ */
+export const WhiteVariantColoursTheWordmarkToo: Story = {
+  args: { variant: 'white' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByText('Orbs').closest('span')?.parentElement).toHaveClass('text-white')
+  },
+}
+
+/** Only the mark segments ship: the export's clipped wordmark paths are dropped. */
+export const OnlyVisibleSegmentsAreSerialised: Story = {
+  args: {},
+  play: async ({ canvasElement }) => {
+    const svg = canvasElement.querySelector('svg')
+    await expect(svg?.querySelectorAll('path')).toHaveLength(34)
   },
 }
 
