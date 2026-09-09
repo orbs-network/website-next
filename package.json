@@ -12,7 +12,8 @@
     "generate-types": "cf-content-types-generator src/contentful-types/*.json -o src/app/generated-types -X",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "visual-review": "node scripts/visual-review.mjs"
+    "visual-review": "node scripts/visual-review.mjs",
+    "optimize-images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.6",

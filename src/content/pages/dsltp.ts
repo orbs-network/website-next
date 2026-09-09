@@ -35,10 +35,10 @@ export const DSLTP_BENEFITS = [
  * Intrinsic dimensions travel with the path because `DiagramSection` sizes from
  * the real ratio rather than assuming one; these are 2.73:1, not 16:9.
  */
-export const DSLTP_GRAPH_IMAGE = { src: '/marketing/dsltp/graph.png', width: 2666, height: 978 } as const
+export const DSLTP_GRAPH_IMAGE = { src: '/marketing/dsltp/graph.png', width: 1800, height: 660 } as const
 
 /** Section 3: "Recent and Ongoing Integrations", a map rather than a logo grid. */
-export const DSLTP_MAP_IMAGE = { src: '/marketing/dsltp/map.png', width: 2666, height: 978 } as const
+export const DSLTP_MAP_IMAGE = { src: '/marketing/dsltp/map.png', width: 1800, height: 660 } as const
 
 /**
  * The closing "Powered by Orbs Network" links, in legacy order.
