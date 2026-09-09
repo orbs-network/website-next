@@ -136,6 +136,23 @@ function stop(child) {
   }
 }
 
+/**
+ * Navigate and let the page settle.
+ *
+ * Deliberately NOT `waitUntil: 'networkidle'`. Playwright discourages it, and
+ * it timed out here in practice: an open dropdown holds a transition, and a
+ * page that never reaches a quiet network — a poll, a font, a late image —
+ * hangs the whole run. `load` plus an explicit wait for the header is a
+ * condition this app actually reaches.
+ */
+async function load(page, url) {
+  await page.goto(url, { waitUntil: 'load' })
+  await page.locator('header, nav').first().waitFor({ state: 'visible' })
+  // Fonts and the theme class settle a frame or two after load; without this
+  // the first shot of a run can catch unstyled text.
+  await page.waitForTimeout(300)
+}
+
 /** `/ko/dtwap/` -> `ko-dtwap`, `/` -> `home`. */
 function slug(route) {
   const trimmed = route.replace(/^\/|\/$/g, '')
@@ -158,7 +175,7 @@ async function capture(port, outDir, { routes, shots }) {
         const page = await context.newPage()
 
         for (const route of routes) {
-          await page.goto(`http://127.0.0.1:${port}${route}`, { waitUntil: 'networkidle' })
+          await load(page, `http://127.0.0.1:${port}${route}`)
           const file = join(outDir, `${slug(route)}__${viewport.name}__${theme}.png`)
           await page.screenshot({ path: file, fullPage: true })
           process.stdout.write(`  ${file}\n`)
@@ -169,7 +186,7 @@ async function capture(port, outDir, { routes, shots }) {
         if (viewport.name === 'desktop') {
           for (const name of shots) {
             const shot = SHOTS[name]
-            await page.goto(`http://127.0.0.1:${port}${shot.route}`, { waitUntil: 'networkidle' })
+            await load(page, `http://127.0.0.1:${port}${shot.route}`)
 
             const trigger = page.getByRole('button', { name: new RegExp(shot.open) })
             if ((await trigger.count()) === 0) {
