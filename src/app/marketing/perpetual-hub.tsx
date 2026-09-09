@@ -10,6 +10,7 @@ import {
   PERPETUAL_HUB_LINKS,
   PERPETUAL_HUB_PARTNERS_IMAGE,
 } from '@/content/pages/perpetual-hub'
+import { resolveLocaleLink } from '@/content/shared/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
@@ -29,13 +30,20 @@ import { textLang } from '@/i18n/script'
 export async function PerpetualHubPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.perpetualHub' })
 
+  // Korean sends both the hero button and the one-pager to a Naver article
+  // rather than to the English announcement post, so destinations resolve per
+  // locale rather than being shared.
+  const cta = resolveLocaleLink(PERPETUAL_HUB_HERO.cta, locale)
+  const contact = resolveLocaleLink(PERPETUAL_HUB_LINKS.contact, locale)
+  const onePager = resolveLocaleLink(PERPETUAL_HUB_LINKS.onePager, locale)
+
   return (
     <>
       <ProductHero
         headline={t('hero.headline')}
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
-        ctaHref={PERPETUAL_HUB_HERO.ctaHref}
+        ctaHref={cta.href}
         image={PERPETUAL_HUB_HERO.image.src}
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
@@ -59,6 +67,8 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
         title={t('integrate.title')}
         body={t('integrate.body')}
         image={PERPETUAL_HUB_DIAGRAM.src}
+        imageWidth={PERPETUAL_HUB_DIAGRAM.width}
+        imageHeight={PERPETUAL_HUB_DIAGRAM.height}
         imageAlt={t('integrate.alt')}
         lang={textLang(t('integrate.body'), locale)}
         titleLang={textLang(t('integrate.title'), locale)}
@@ -68,6 +78,8 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
         title={t('partners.title')}
         body={t('partners.body')}
         image={PERPETUAL_HUB_PARTNERS_IMAGE.src}
+        imageWidth={PERPETUAL_HUB_PARTNERS_IMAGE.width}
+        imageHeight={PERPETUAL_HUB_PARTNERS_IMAGE.height}
         imageAlt={t('partners.alt')}
         lang={textLang(t('partners.body'), locale)}
         titleLang={textLang(t('partners.title'), locale)}
@@ -77,8 +89,8 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
         title={t('poweredBy.title')}
         body={t('poweredBy.body')}
         links={[
-          { label: t('poweredBy.contact'), href: PERPETUAL_HUB_LINKS.contact },
-          { label: t('poweredBy.onePager'), href: PERPETUAL_HUB_LINKS.onePager },
+          { label: t('poweredBy.contact'), href: contact.href },
+          { label: t('poweredBy.onePager'), href: onePager.href },
         ]}
         // Body, not title: "Powered by Orbs Network" stays English in the
         // Korean catalog, so deriving the section language from it would mark

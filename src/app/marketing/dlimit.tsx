@@ -81,7 +81,9 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
       <ArchitectureSection
         title={t('schema.title')}
         body={t('schema.body')}
-        image={DLIMIT_SCHEMA_IMAGE}
+        image={DLIMIT_SCHEMA_IMAGE.src}
+        imageWidth={DLIMIT_SCHEMA_IMAGE.width}
+        imageHeight={DLIMIT_SCHEMA_IMAGE.height}
         // Conveys the maker/taker flow the prose below sets out in full.
         imageAlt=""
         links={[

@@ -94,7 +94,9 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
       <ArchitectureSection
         title={t('schema.title')}
         body={t('schema.body')}
-        image={DTWAP_SCHEMA_IMAGE}
+        image={DTWAP_SCHEMA_IMAGE.src}
+        imageWidth={DTWAP_SCHEMA_IMAGE.width}
+        imageHeight={DTWAP_SCHEMA_IMAGE.height}
         // Conveys the maker/taker flow that the prose below sets out in full.
         imageAlt=""
         links={[

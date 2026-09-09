@@ -15,8 +15,16 @@ export const PERPETUAL_HUB_HERO = {
   /**
    * Links to the announcement post rather than an in-page anchor, as dSLTP's
    * does. The post is real and already prerendered from Contentful.
+   *
+   * Korean goes somewhere else entirely: the legacy Korean page points this
+   * button at a Naver article, not at a translation of the English post — the
+   * same situation as the Korean footer's "Blog" link, which goes to a Korean
+   * Medium publication rather than to `/blog`.
    */
-  ctaHref: '/Perpetual-Hub-by-Orbs',
+  cta: {
+    href: '/Perpetual-Hub-by-Orbs',
+    byLocale: { ko: 'https://blog.naver.com/orbskorea/223514811254' },
+  },
 } as const
 
 /** The three modular-stack cards, in legacy order. */
@@ -50,6 +58,18 @@ export const PERPETUAL_HUB_PARTNERS_IMAGE = {
  * reasoning applied to the dLIMIT white-paper link in #89.
  */
 export const PERPETUAL_HUB_LINKS = {
-  contact: '/contact/',
-  onePager: '/Perpetual-Hub-by-Orbs/',
+  /**
+   * Internal, so it resolves through `localeHref` and will become
+   * `/ko/contact/` the moment #32 builds `/contact` and registers it in the
+   * availability map. The legacy Korean page hardcodes
+   * `https://www.orbs.com/ko/contact`; deriving it means one fewer absolute URL
+   * to unpick after cutover, and it cannot drift from where the page actually
+   * lives.
+   */
+  contact: { href: '/contact' },
+  /** Korean points at the Naver article, as the hero button does. */
+  onePager: {
+    href: '/Perpetual-Hub-by-Orbs',
+    byLocale: { ko: 'https://blog.naver.com/orbskorea/223514811254' },
+  },
 } as const

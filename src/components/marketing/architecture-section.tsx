@@ -15,7 +15,21 @@ export type ArchitectureLink = {
  * an `alt` with no image is a caller that thinks it set one. Same shape as
  * `ProductHero`, for the same reason.
  */
-type SectionImage = { image: string; imageAlt: string } | { image?: undefined; imageAlt?: undefined }
+type SectionImage =
+  | {
+      image: string
+      imageAlt: string
+      /**
+       * The asset's INTRINSIC dimensions.
+       *
+       * Required alongside the image, for the reason `DiagramSection` documents:
+       * a fixed `aspect-[16/9]` frame left visible dead space around every
+       * diagram that was not 16:9, and none of them are.
+       */
+      imageWidth: number
+      imageHeight: number
+    }
+  | { image?: undefined; imageAlt?: undefined; imageWidth?: undefined; imageHeight?: undefined }
 
 /**
  * How the protocol works: prose and the deeper reading, optionally with a
@@ -36,6 +50,8 @@ export function ArchitectureSection({
   body,
   image,
   imageAlt,
+  imageWidth,
+  imageHeight,
   links,
   lang,
   titleLang,
@@ -70,9 +86,14 @@ export function ArchitectureSection({
       </H2>
 
       {image && (
-        <div className="relative mx-auto mt-12 aspect-[16/9] w-full max-w-4xl">
-          <Image src={image} alt={imageAlt} fill sizes="(min-width: 1024px) 896px, 100vw" className="object-contain" />
-        </div>
+        <Image
+          src={image}
+          alt={imageAlt}
+          width={imageWidth}
+          height={imageHeight}
+          sizes="(min-width: 1024px) 896px, 100vw"
+          className="mx-auto mt-12 h-auto w-full max-w-4xl"
+        />
       )}
 
       <Prose text={body} className="mx-auto mt-12 max-w-3xl" />
