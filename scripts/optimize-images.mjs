@@ -80,7 +80,13 @@ async function optimize(path) {
 
   const output =
     ext === '.png'
-      ? pipeline.png({ compressionLevel: 9, effort: 10, palette: true })
+      ? // No `palette` hint. It would let sharp quantise to indexed colour,
+        // which is lossy — and measuring it against the legacy originals, it
+        // bought exactly zero bytes on this imagery: 733 KB either way across
+        // the four largest assets. A flag that makes a lossless step
+        // conditionally lossy in exchange for nothing is not worth the
+        // sentence needed to explain it.
+        pipeline.png({ compressionLevel: 9, effort: 10 })
       : ext === '.webp'
         ? pipeline.webp({ quality: 82, effort: 6 })
         : pipeline.jpeg({ quality: 82, mozjpeg: true })
