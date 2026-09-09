@@ -1,121 +1,86 @@
-import { ChevronDownIcon } from 'lucide-react'
 import { getTranslations } from 'next-intl/server'
-import { type Locale } from '@/i18n/locales'
+import { NAV_GROUPS, NAV_TOP_LEVEL_LINKS, type NavLinkSpec } from '@/content/shared/navigation'
 import { localeHref } from '@/i18n/availability'
+import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { NavButton } from './nav-button'
-import { NavDropdown } from './nav-dropdown'
+import { NavMenuClient, type ResolvedNavLink } from './nav-menu-client'
 
-function NavIcon() {
-  return <ChevronDownIcon className="size-5 group-hover:rotate-180 transition-transform duration-200" />
+/**
+ * Where a menu link points in this locale, and whether that leaves the site.
+ *
+ * Absolute hrefs pass through untouched; only internal paths reach
+ * `localeHref`, which resolves the locale prefix from the availability map and
+ * appends the trailing slash. Same rule as the footer's resolver, minus the
+ * per-locale override — no menu entry needs one today.
+ */
+function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; external: boolean } {
+  if (!spec.href.startsWith('/')) {
+    return { href: spec.href, external: true }
+  }
+
+  return { href: localeHref(spec.href, locale), external: false }
 }
 
 /**
- * Every href goes through `localeHref`, so a link resolves to this locale's
- * version of the page when one exists and to the English URL when it does not.
- * That keeps `/blog` and `/news` pointing at the English archive — there is no
- * Japanese or Korean blog — while the marketing pages Phase 3 adds start
- * prefixing themselves as soon as they appear in the availability map, with no
- * change needed here.
+ * The header menu, resolved for one locale.
  *
- * The link targets here are still placeholders (`/products/1`, `/resources/2`)
- * and are replaced in #30 with the legacy menu structure — Overview, Protocols,
- * Resources, Community. The labels are wired to the message catalog now so that
- * work is a matter of swapping hrefs and adding keys, not retrofitting i18n.
+ * Every `t()` call happens here and the rendering half is a client component,
+ * because Radix's `NavigationMenu` needs state. Resolving labels there instead
+ * would put the whole `nav` namespace in the RSC payload of all 456
+ * prerendered pages — the constraint already documented on
+ * `NextIntlClientProvider` in `RootShell`.
  *
- * The locale is a prop for the same reason as in the header: next-intl's hooks
- * resolve against `getRequestConfig`, which cannot know the locale without a
- * `[locale]` segment or middleware, so they silently returned English here.
+ * The structure comes from the dropdown designs, not the legacy navbar. The old
+ * menu is Overview / Resources / Community with ~29 links; the designs are
+ * Products / Resources / Developers with a much shorter list each, so the
+ * legacy menu is deliberately not ported wholesale — see `navigation.ts`.
+ *
+ * NOTE: the designs put an arrow beside each panel's title, implying the group
+ * name links to a landing page (`/products`, `/resources`, `/developers`). No
+ * such pages exist or appear anywhere in the migration plan, so the title
+ * renders as the dropdown trigger only and no arrow-link is invented. Raised
+ * on #30 for a decision.
+ *
+ * The locale is a prop for the same reason as in `Header`: with no `[locale]`
+ * segment and no middleware, next-intl's hooks cannot resolve it from the
+ * request.
  */
 export async function NavMenu({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'nav' })
 
-  return (
-    <div className="relative">
-      <ul className="flex items-center gap-4">
-        <li className="group relative">
-          <NavButton href={localeHref('/products', locale)} lang={textLang(t('products'), locale)}>
-            {t('products')} <NavIcon />
-          </NavButton>
-          <NavDropdown>
-            <ul>
-              <li>
-                <NavButton href={localeHref('/products/1', locale)} lang={textLang(t('liquidityHub'), locale)}>{t('liquidityHub')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/products/2', locale)} lang={textLang(t('perpetualHub'), locale)}>{t('perpetualHub')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/products/3', locale)} lang={textLang('dTWAP', locale)}>
-                  <span>
-                    <span className="lowercase">d</span>TWAP
-                  </span>
-                </NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/products/3', locale)} lang={textLang('dTWAP', locale)}>
-                  <span>
-                    <span className="lowercase">d</span>LIMIT
-                  </span>
-                </NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/products/3', locale)} lang={textLang('dTWAP', locale)}>
-                  <span>
-                    <span className="lowercase">d</span>SLTP
-                  </span>
-                </NavButton>
-              </li>
-            </ul>
-          </NavDropdown>
-        </li>
-        <li className="group relative">
-          <NavButton href={localeHref('/resources', locale)} lang={textLang(t('resources'), locale)}>
-            {t('resources')} <NavIcon />
-          </NavButton>
-          <NavDropdown>
-            <ul>
-              <li>
-                <NavButton href={localeHref('/resources/1', locale)} lang={textLang(t('tetra'), locale)}>{t('tetra')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/resources/2', locale)} lang={textLang(t('stakingCalculator'), locale)}>{t('stakingCalculator')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/resources/3', locale)} lang={textLang(t('faqSupport'), locale)}>{t('faqSupport')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/resources/3', locale)} lang={textLang(t('brandingKit'), locale)}>{t('brandingKit')}</NavButton>
-              </li>
-            </ul>
-          </NavDropdown>
-        </li>
-        <li className="group relative">
-          <NavButton href={localeHref('/developers', locale)} lang={textLang(t('developers'), locale)}>
-            {t('developers')} <NavIcon />
-          </NavButton>
-          <NavDropdown>
-            <ul>
-              <li>
-                <NavButton href={localeHref('/developers/1', locale)} lang={textLang(t('documentation'), locale)}>{t('documentation')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/developers/2', locale)} lang={textLang(t('apiReference'), locale)}>{t('apiReference')}</NavButton>
-              </li>
-              <li>
-                <NavButton href={localeHref('/developers/3', locale)} lang={textLang(t('github'), locale)}>{t('github')}</NavButton>
-              </li>
-            </ul>
-          </NavDropdown>
-        </li>
-        <li>
-          <NavButton href={localeHref('/blog', locale)} lang={textLang(t('blog'), locale)}>{t('blog')}</NavButton>
-        </li>
-        <li>
-          {/* "Media" matches the legacy navbar and footer label for /news. */}
-          <NavButton href={localeHref('/news', locale)} lang={textLang(t('media'), locale)}>{t('media')}</NavButton>
-        </li>
-      </ul>
-    </div>
-  )
+  const resolveLink = (spec: NavLinkSpec): ResolvedNavLink => {
+    const label = t(`links.${spec.key}`)
+    const { href, external } = resolveNavHref(spec, locale)
+
+    return {
+      key: spec.key,
+      href,
+      external,
+      label,
+      lang: textLang(label, locale),
+      icon: spec.icon,
+    }
+  }
+
+  const groups = NAV_GROUPS.map((group) => {
+    const groupLabel = t(`groups.${group.key}`)
+
+    return {
+      key: group.key,
+      label: groupLabel,
+      lang: textLang(groupLabel, locale),
+      sections: group.sections.map((section) => {
+        const sectionLabel = section.key ? t(`sections.${section.key}`) : undefined
+
+        return {
+          key: section.key,
+          label: sectionLabel,
+          labelLang: sectionLabel ? textLang(sectionLabel, locale) : undefined,
+          links: section.links.map(resolveLink),
+        }
+      }),
+    }
+  })
+
+  return <NavMenuClient groups={groups} topLevel={NAV_TOP_LEVEL_LINKS.map(resolveLink)} />
 }

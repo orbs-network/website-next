@@ -1,10 +1,15 @@
 import type { HTMLAttributes } from 'react'
+import { DTwapGlyph } from './glyphs'
 
 type DTwapProps = HTMLAttributes<HTMLSpanElement>
 
 /**
- * dTWAP product lockup — fast-forward double arrow + label. Uses
- * `currentColor` so the glyph inherits the parent `text-*` color.
+ * dTWAP product lockup — fast-forward double arrow + label. The glyph uses
+ * `currentColor`, so it inherits the parent `text-*` color.
+ *
+ * The mark itself lives in `./glyphs` so the menu rows can use it without the
+ * wordmark. It is `aria-hidden` there, because the label beside it already
+ * names the product.
  */
 export function DTwap({ className, ...rest }: DTwapProps) {
   const classes = ['inline-flex items-center gap-2 text-h5 uppercase tracking-wider', className]
@@ -12,17 +17,7 @@ export function DTwap({ className, ...rest }: DTwapProps) {
     .join(' ')
   return (
     <span className={classes} {...rest}>
-      <svg
-        viewBox="0 0 24 24"
-        width="1em"
-        height="1em"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="dTWAP glyph"
-      >
-        <path fill="currentColor" d="M1 5 L1 19 L11 12 Z" />
-        <path fill="currentColor" d="M12 5 L12 19 L22 12 Z" />
-      </svg>
+      <DTwapGlyph />
       <span>
         d<strong>TWAP</strong>
       </span>

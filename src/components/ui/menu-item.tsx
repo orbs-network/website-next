@@ -1,4 +1,5 @@
 import * as React from 'react'
+import { Slot, Slottable } from '@radix-ui/react-slot'
 
 import { cn } from '@/lib/utils'
 
@@ -6,6 +7,16 @@ type BaseProps = {
   href?: string
   active?: boolean
   className?: string
+  /**
+   * Render the child element with these styles instead of an `<a>`, the same
+   * `asChild` contract `Button` and `FooterLink` use.
+   *
+   * Exists for internal links: a plain `href` anchor is a full document load,
+   * which is wrong for in-site navigation. `asChild` lets the caller pass a
+   * `next/link` and keep client-side routing without this primitive having to
+   * know about the router.
+   */
+  asChild?: boolean
   children: React.ReactNode
 }
 
@@ -23,13 +34,26 @@ export type MenuItemProps = AnchorProps | ButtonNativeProps
  * Renders as an `<a>` when `href` is provided, otherwise a `<button>`.
  */
 export const MenuItem = React.forwardRef<HTMLAnchorElement | HTMLButtonElement, MenuItemProps>(
-  ({ href, active = false, className, children, ...props }, ref) => {
+  ({ href, active = false, asChild = false, className, children, ...props }, ref) => {
     const classes = cn(
       'inline-flex items-center uppercase text-detail tracking-wide transition-colors',
       'hover:underline hover:text-accent-primary underline-offset-4',
       active ? 'underline font-bold text-accent-primary' : 'font-medium text-fg',
       className
     )
+
+    if (asChild) {
+      return (
+        <Slot
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          aria-current={active ? 'page' : undefined}
+          className={classes}
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+        >
+          {children}
+        </Slot>
+      )
+    }
 
     if (href !== undefined) {
       return (
@@ -76,7 +100,7 @@ export type MenuItemWProps = MenuItemWAnchorProps | MenuItemWButtonProps
  * - Active: underline + `text-accent-primary`
  */
 export const MenuItemW = React.forwardRef<HTMLAnchorElement | HTMLButtonElement, MenuItemWProps>(
-  ({ href, active = false, icon, className, children, ...props }, ref) => {
+  ({ href, active = false, asChild = false, icon, className, children, ...props }, ref) => {
     const classes = cn(
       'inline-flex items-center gap-2 font-medium text-field transition-colors underline-offset-4',
       'hover:underline hover:text-accent-primary',
@@ -90,6 +114,27 @@ export const MenuItemW = React.forwardRef<HTMLAnchorElement | HTMLButtonElement,
         <span>{children}</span>
       </>
     )
+
+    if (asChild) {
+      return (
+        <Slot
+          ref={ref as React.Ref<HTMLAnchorElement>}
+          aria-current={active ? 'page' : undefined}
+          className={classes}
+          {...(props as React.AnchorHTMLAttributes<HTMLAnchorElement>)}
+        >
+          {/*
+            `Slottable` marks which child is the element to render as — the
+            caller's `next/link`. The icon is a sibling here and ends up INSIDE
+            that element, which is what lets an icon row still be a real link.
+            Passing a fragment to `Slot` instead would throw: it needs exactly
+            one element to clone.
+          */}
+          {icon ? <span className="inline-flex shrink-0 items-center">{icon}</span> : null}
+          <Slottable>{children}</Slottable>
+        </Slot>
+      )
+    }
 
     if (href !== undefined) {
       return (

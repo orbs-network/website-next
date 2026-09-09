@@ -1,19 +1,32 @@
 {
   "nav": {
-    "products": "Products",
-    "resources": "Resources",
-    "developers": "Developers",
-    "blog": "Blog",
-    "media": "Media",
-    "liquidityHub": "Liquidity Hub",
-    "perpetualHub": "Perpetual Hub",
-    "tetra": "Tetra",
-    "stakingCalculator": "Staking Calculator",
-    "faqSupport": "FAQ & Support",
-    "brandingKit": "Branding Kit",
-    "documentation": "Documentation",
-    "apiReference": "API Reference",
-    "github": "GitHub"
+    "groups": {
+      "products": "Products",
+      "resources": "Resources",
+      "developers": "Developers"
+    },
+    "sections": {
+      "infrastructure": "Infrastructure",
+      "advancedTrading": "Advanced Trading Tools",
+      "tools": "Tools"
+    },
+    "links": {
+      "liquidityHub": "Liquidity Hub",
+      "perpetualHub": "Perpetual Hub",
+      "dlimit": "dLIMIT Protocol",
+      "dtwap": "dTWAP Protocol",
+      "dsltp": "dSLTP Protocol",
+      "blog": "Blog",
+      "whitePapers": "Whitepapers",
+      "faq": "FAQ",
+      "tetraWallet": "Tetra Wallet",
+      "stakingCalculator": "Staking Calculator",
+      "developerDocs": "Developer Docs",
+      "notifications": "Notification Protocol",
+      "tonVote": "TON Vote",
+      "tonAccess": "TON Access",
+      "media": "Media"
+    }
   },
   "header": {
     "getInTouch": "Get in Touch",
