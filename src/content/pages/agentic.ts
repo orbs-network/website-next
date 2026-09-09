@@ -1,4 +1,4 @@
-import type { Chain } from '@/components/marketing/chain-logos'
+import type { LogoRowItem } from '@/components/marketing/logo-row'
 
 /**
  * Structural data for the Orbs Agentic page. Copy lives under `pages.agentic`.
@@ -41,15 +41,15 @@ export const AGENTIC_TOOLS = ['autoswap', 'autolimit', 'secureswap', 'twap'] as 
  * code here for the same reason: chain names are proper nouns that do not
  * translate.
  */
-export const AGENTIC_CHAINS: readonly Chain[] = [
-  { name: 'Ethereum', logo: '/marketing/agentic/chains/ethereum.png' },
-  { name: 'BSC', logo: '/marketing/agentic/chains/bnb.png' },
-  { name: 'Polygon', logo: '/marketing/agentic/chains/polygon.png' },
-  { name: 'Avalanche', logo: '/marketing/agentic/chains/avalanche.png' },
-  { name: 'Arbitrum', logo: '/marketing/agentic/chains/arbitrum.jpg' },
-  { name: 'Base', logo: '/marketing/agentic/chains/base.png' },
-  { name: 'Linea', logo: '/marketing/agentic/chains/linea.png' },
-  { name: 'Sonic', logo: '/marketing/agentic/chains/sonic.png' },
+export const AGENTIC_CHAINS: readonly LogoRowItem[] = [
+  { name: 'Ethereum', logo: { src: '/marketing/agentic/chains/ethereum.png', width: 250, height: 250 } },
+  { name: 'BSC', logo: { src: '/marketing/agentic/chains/bnb.png', width: 2000, height: 2000 } },
+  { name: 'Polygon', logo: { src: '/marketing/agentic/chains/polygon.png', width: 250, height: 241 } },
+  { name: 'Avalanche', logo: { src: '/marketing/agentic/chains/avalanche.png', width: 250, height: 250 } },
+  { name: 'Arbitrum', logo: { src: '/marketing/agentic/chains/arbitrum.jpg', width: 250, height: 250 } },
+  { name: 'Base', logo: { src: '/marketing/agentic/chains/base.png', width: 200, height: 200 } },
+  { name: 'Linea', logo: { src: '/marketing/agentic/chains/linea.png', width: 250, height: 250 } },
+  { name: 'Sonic', logo: { src: '/marketing/agentic/chains/sonic.png', width: 250, height: 250 } },
 ]
 
 /** The four verification steps. Order is the content — see `NumberedSteps`. */

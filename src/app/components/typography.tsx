@@ -19,7 +19,25 @@ H1.displayName = 'H1'
 export const H2 = React.forwardRef<HTMLHeadingElement, PolymorphicProps<'h2'>>(
   ({ asChild = false, className, ...props }, ref) => {
     const Comp = asChild ? Slot : 'h2'
-    return <Comp ref={ref} className={cn('text-h2 text-fg font-normal', className)} {...props} />
+    return (
+      <Comp
+        ref={ref}
+        /*
+          `hyphens-auto break-words` because `text-h2` is a fixed 56px with no
+          responsive step: a single long word overflows a phone. "Works with
+          existing security infrastructure" pushed the institutional page's
+          document to 401px inside a 390px viewport, so the whole page scrolled
+          sideways — the same defect class as #96, from a different cause.
+
+          Hyphenation rather than a smaller size, because changing the scale is
+          a design-system decision. The real fix is a responsive type scale;
+          `ProductHero` already hand-rolls one for its `h1`, which is the
+          clearest sign the scale is missing something.
+        */
+        className={cn('text-h2 text-fg font-normal hyphens-auto break-words', className)}
+        {...props}
+      />
+    )
   }
 )
 H2.displayName = 'H2'

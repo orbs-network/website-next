@@ -3,6 +3,7 @@ import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { AgenticPage } from './agentic'
 import { AiSkillsPage } from './ai-skills'
+import { InstitutionalPage } from './institutional'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
@@ -63,6 +64,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/ai/skills/spot-advanced-swap-orders': {
     render: (locale) => <SpotOrdersPage locale={locale} />,
     namespace: 'pages.spotOrders',
+  },
+  '/institutional': {
+    render: (locale) => <InstitutionalPage locale={locale} />,
+    namespace: 'pages.institutional',
   },
   '/liquidity-hub': {
     render: (locale) => <LiquidityHubPage locale={locale} />,

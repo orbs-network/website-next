@@ -60,6 +60,7 @@ export function FeatureGrid({
   features,
   lang,
   titleLang,
+  eyebrow,
 }: {
   /**
    * Optional: Liquidity Hub's two coloured boxes continue the sentence above
@@ -79,10 +80,21 @@ export function FeatureGrid({
    * translated. One section-level `lang` cannot describe both.
    */
   titleLang?: string
+  /**
+   * A short bracketed label above the heading — "[KEY FEATURES & BENEFITS]".
+   *
+   * A `<p>`, not a heading: it labels the section for the eye but is not a
+   * level in the outline, and making it one would sit between the page `h1`
+   * and this section's `h2`.
+   */
+  eyebrow?: string
 }) {
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
       <div className="mx-auto max-w-3xl text-center">
+        {eyebrow && (
+          <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
+        )}
         {title && (
           <H2 className="text-balance" lang={titleLang}>
             {title}

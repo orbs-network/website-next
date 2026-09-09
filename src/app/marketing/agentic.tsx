@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { ArchitectureSection } from '@/components/marketing/architecture-section'
-import { ChainLogos } from '@/components/marketing/chain-logos'
+import { LogoRow } from '@/components/marketing/logo-row'
 import { DiagramSection } from '@/components/marketing/diagram-section'
 import { Disclaimer } from '@/components/marketing/disclaimer'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
@@ -29,8 +29,8 @@ import { textLang } from '@/i18n/script'
  *  - `NumberedSteps` for the verification flow. Those four steps only mean
  *    anything in order, so they are an `<ol>`; a feature grid would present a
  *    process as a set of unrelated facts.
- *  - `ChainLogos` for the supported chains, where each mark carries its chain's
- *    name because the names appear nowhere else in that section.
+ *  - `LogoRow` for the supported chains — since generalised, because the
+ *    institutional page needs the same shape for venues and signers.
  *
  * No Japanese: `content/jp/agentic` does not exist. Korean is a real
  * translation.
@@ -80,10 +80,10 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         titleLang={textLang(t('tools.title'), locale)}
       />
 
-      <ChainLogos
+      <LogoRow
         title={t('chains.title')}
-        chains={AGENTIC_CHAINS}
-        lang={textLang(t('chains.title'), locale)}
+        items={AGENTIC_CHAINS}
+        titleLang={textLang(t('chains.title'), locale)}
       />
 
       <NumberedSteps

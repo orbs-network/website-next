@@ -55,6 +55,7 @@ export function ArchitectureSection({
   links,
   lang,
   titleLang,
+  eyebrow,
 }: SectionImage & {
   /**
    * Optional: Liquidity Hub's closing paragraph and diagram continue the
@@ -80,11 +81,25 @@ export function ArchitectureSection({
    * Deriving one value from the title marked the Korean copy English.
    */
   titleLang?: string
+  /**
+   * A short bracketed label above the heading — "[PROOF OF WORK]".
+   *
+   * Rendered as a `<p>` rather than a heading: it labels the section for the
+   * eye but is not a level in the document outline, and making it one would
+   * put "[PRODUCTS]" between the page `h1` and the real `h2`.
+   */
+  eyebrow?: string
 }) {
   const visibleLinks = (links ?? []).filter((link) => link.label.trim() !== '')
 
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
+      {eyebrow && (
+        <p className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted">
+          {eyebrow}
+        </p>
+      )}
+
       {title && (
         <H2 className="text-balance text-center" lang={titleLang}>
           {title}
