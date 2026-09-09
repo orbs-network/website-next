@@ -14,6 +14,6 @@
  * entry here is also a slug that a post must not use — see
  * `RESERVED_ROOT_SEGMENTS`.
  */
-export const MARKETING_PAGE_PATHS = ['/dtwap', '/dlimit', '/dsltp', '/perpetual-hub', '/liquidity-hub', '/agentic'] as const
+export const MARKETING_PAGE_PATHS = ['/dtwap', '/dlimit', '/dsltp', '/perpetual-hub', '/liquidity-hub', '/agentic', '/ai/skills', '/ai/skills/spot-advanced-swap-orders'] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

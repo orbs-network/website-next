@@ -89,7 +89,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
       <NumberedSteps
         title={t('oracle.title')}
         statement={t('oracle.statement')}
-        steps={AGENTIC_ORACLE_STEPS.map((id) => t(`oracle.steps.${id}`))}
+        steps={AGENTIC_ORACLE_STEPS.map((id) => ({ body: t(`oracle.steps.${id}`) }))}
         lang={textLang(t('oracle.statement'), locale)}
       />
 

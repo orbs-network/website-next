@@ -13,6 +13,11 @@ import { Prose } from './prose'
  * claim about the whole flow rather than a step in it, so it sits outside the
  * list.
  */
+export type Step = {
+  title?: string
+  body: string
+}
+
 export function NumberedSteps({
   title,
   statement,
@@ -21,7 +26,13 @@ export function NumberedSteps({
 }: {
   title: string
   statement?: string
-  steps: readonly string[]
+  /**
+   * Steps may be a bare sentence or a titled one. Orbs Agentic's verification
+   * flow is four plain sentences; the AI skill's "How It Works" gives each step
+   * a name ("Define Intent", "Sign & Submit") that is worth keeping distinct
+   * from its explanation.
+   */
+  steps: readonly Step[]
   /** Set when this copy is English inside a non-English document. */
   lang?: string
 }) {
@@ -38,14 +49,17 @@ export function NumberedSteps({
 
         <ol className="mt-12 space-y-6">
           {steps.map((step, index) => (
-            <li key={step} className="flex gap-4">
+            <li key={step.body} className="flex gap-4">
               <span
                 aria-hidden
                 className="mt-1 flex size-7 shrink-0 items-center justify-center rounded-full border border-border text-detail font-medium"
               >
                 {index + 1}
               </span>
-              <span className="text-muted-foreground leading-relaxed">{step}</span>
+              <span className="leading-relaxed">
+                {step.title && <span className="font-medium text-fg">{step.title}. </span>}
+                <span className="text-muted-foreground">{step.body}</span>
+              </span>
             </li>
           ))}
         </ol>

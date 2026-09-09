@@ -65,6 +65,11 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // No `content/jp/agentic`, so Japanese is not offered. Korean is a real
   // translation, including the four verification steps.
   '/agentic': { en: 'translated', ko: 'translated' },
+  // `/ai` itself is NOT a page — the legacy site 404s on it. The section's
+  // entry point is this index, and one skill sits under it. Korean is a real
+  // translation of both.
+  '/ai/skills': { en: 'translated', ko: 'translated' },
+  '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ko: 'translated' },
 }
 
 /**
