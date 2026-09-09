@@ -49,3 +49,6 @@ scripts/orbs-website-migration/blog/
 scripts/orbs-website-migration/public/
 scripts/orbs-website-migration/.migrate-blogposts.checkpoint.json
 .env*
+
+# Visual-review screenshots (scripts/visual-review.mjs). Regenerated on demand.
+.visual/
