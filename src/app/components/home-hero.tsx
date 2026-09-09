@@ -23,7 +23,11 @@ export function HomeHero() {
     // replaces this with real per-locale copy and the attribute goes with it.
     <section className="text-center mb-20" lang="en">
       <div className="mb-6 flex justify-center items-center">
-        <OrbsLogo className="w-48 h-auto" />
+        {/*
+          Standalone, so it keeps its accessible name — the lockup's visible
+          wordmark supplies it, no `role="img"` needed.
+        */}
+        <OrbsLogo className="text-5xl" />
       </div>
       <H1 className="mb-8">Bringing CeFi execution to DeFi</H1>
 

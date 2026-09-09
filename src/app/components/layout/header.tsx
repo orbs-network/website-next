@@ -37,11 +37,12 @@ export async function Header({ locale }: { locale: Locale }) {
             className="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
           >
             {/*
-              `OrbsLogo` names itself "Orbs". Inside a link that already has an
-              `aria-label` that is a second piece of content in one link, so the
-              glyph is hidden and the link keeps one accessible name.
+              The lockup contains the word "Orbs", which inside a link that
+              already carries an `aria-label` would be a second piece of content
+              in one link — so it is hidden and the link keeps one accessible
+              name. Sized by font size: the lockup scales its mark from `em`.
             */}
-            <OrbsLogo aria-hidden focusable="false" />
+            <OrbsLogo className="text-xl" aria-hidden />
           </Link>
 
           <NavMenu locale={locale} />
