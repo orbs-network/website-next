@@ -33,7 +33,18 @@ type OrbsLogoProps = HTMLAttributes<HTMLSpanElement> & {
  */
 export function OrbsLogo({ variant = 'color', className, ...rest }: OrbsLogoProps) {
   const classes = [
-    'inline-flex items-center gap-2 font-bold uppercase leading-none tracking-wider',
+    // Weight and gap are both taken from the legacy lockup rather than guessed.
+    //
+    // The legacy `.logo` declares no `font-weight`, so its wordmark inherits the
+    // normal 400 of a `<p>` — this was `font-bold`, which is why it read heavy
+    // beside the mark.
+    //
+    // Its gap is `15px` at a `17px` font, i.e. ~0.88em. `gap-2` here was a fixed
+    // 8px — both too tight AND unable to scale, since the lockup is sized by
+    // font size. `0.6em` sits deliberately between the two: looser than this
+    // was, tighter than the legacy, and it now tracks the type size so the
+    // header and the hero stay in proportion.
+    'inline-flex items-center gap-[0.6em] font-normal uppercase leading-none tracking-wider',
     // The wordmark is HTML text, so unlike the mark it does not take a fill
     // from the variant — it inherits whatever colour surrounds it. Without
     // this, `variant="white"` produced a white mark beside a wordmark in the
