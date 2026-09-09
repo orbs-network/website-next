@@ -172,7 +172,16 @@ function NavRow({ link }: { link: ResolvedNavLink }) {
       // box with a lot of empty space between them, so at 16px they read as
       // specks rather than as the paired triangles the design shows.
       icon={Glyph ? <Glyph className="size-5" /> : undefined}
-      className="-mx-2 w-full rounded-sm px-2 py-2.5 hover:bg-accent hover:no-underline"
+      // `MenuItemW` defaults to `text-field` (20px), which is the design
+      // system's FORM-FIELD size and reads as oversized in a menu — measured
+      // against the mockup, its rows are ~13-14px. The scale steps 14 -> 18 ->
+      // 20 with nothing between, so `h5` (14px) is the closest fit. Its
+      // `tracking-wider` is meant for uppercase headings and is reset here,
+      // since these rows are title-case.
+      //
+      // Overridden at the call site rather than changed on `MenuItemW`, whose
+      // default is a design-system decision rather than this PR's to make.
+      className="-mx-2 w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:bg-accent hover:no-underline"
     >
       {link.external ? (
         <a href={link.href} target="_blank" rel="noopener noreferrer">
