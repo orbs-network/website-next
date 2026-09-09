@@ -1,5 +1,6 @@
 import Image from 'next/image'
 import { H2 } from '@/app/components/typography'
+import { cn } from '@/lib/utils'
 
 export type LogoRowItem = {
   /** Brand or chain name. Not translated — a proper noun. */
@@ -9,6 +10,19 @@ export type LogoRowItem = {
    * venues it is integrated by as text, with no logos in the legacy content.
    */
   logo?: string
+  /**
+   * Invert the mark in the light theme.
+   *
+   * The institutional signer wordmarks are monochrome `fill="white"` SVGs —
+   * invisible on a light background, which is what they were on until this was
+   * caught in review. Inverting turns them black in light mode and leaves them
+   * white in dark, which is what a light variant of a monochrome wordmark would
+   * be anyway.
+   *
+   * Opt-in per item, NOT applied to the row: chain logos are full-colour brand
+   * marks and inverting those would be actively wrong.
+   */
+  invertOnLight?: boolean
 }
 
 /**
@@ -56,7 +70,13 @@ export function LogoRow({
         {items.map((item) => (
           <li key={item.name} className="flex items-center gap-3">
             {item.logo && (
-              <Image src={item.logo} alt="" width={32} height={32} className="size-8 rounded-full object-contain" />
+              <Image
+                src={item.logo}
+                alt=""
+                width={32}
+                height={32}
+                className={cn('size-8 rounded-full object-contain', item.invertOnLight && 'invert dark:invert-0')}
+              />
             )}
             <span className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang="en">
               {item.name}

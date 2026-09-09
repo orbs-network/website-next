@@ -48,3 +48,19 @@ export const LogosAreOptional: Story = {
     await expect(canvasElement.querySelectorAll('img')).toHaveLength(0)
   },
 }
+
+/**
+ * Monochrome white wordmarks are inverted in the light theme — without it they
+ * are white on a near-white background. Opt-in, because full-colour brand marks
+ * must not be inverted.
+ */
+export const WhiteMarksInvertInLightTheme: Story = {
+  args: {
+    title: 'Works with existing security infrastructure',
+    items: [{ name: 'Ledger', logo: '/marketing/institutional/infra-ledger.svg', invertOnLight: true }],
+  },
+  play: async ({ canvasElement }) => {
+    await expect(canvasElement.querySelector('img')).toHaveClass('invert')
+    await expect(canvasElement.querySelector('img')).toHaveClass('dark:invert-0')
+  },
+}

@@ -35,13 +35,20 @@ export const INSTITUTIONAL_VENUES: readonly LogoRowItem[] = [
   { name: 'Thena' },
 ]
 
-/** Signers and custody platforms the stack works with. */
+/**
+ * Signers and custody platforms the stack works with.
+ *
+ * Every one of these marks is a monochrome `fill="white"` SVG, so they are
+ * inverted in the light theme — without that they are white on a near-white
+ * background and simply do not appear. Real light-theme assets from the brand
+ * owners would be better; this is correct rather than merely visible.
+ */
 export const INSTITUTIONAL_SIGNERS: readonly LogoRowItem[] = [
-  { name: 'Ledger', logo: '/marketing/institutional/infra-ledger.svg' },
-  { name: 'Safe', logo: '/marketing/institutional/infra-safe.svg' },
-  { name: 'Fireblocks', logo: '/marketing/institutional/infra-fireblocks.svg' },
-  { name: 'copper.co', logo: '/marketing/institutional/infra-copper.svg' },
-  { name: 'BitGo', logo: '/marketing/institutional/infra-bitgo.svg' },
+  { name: 'Ledger', logo: '/marketing/institutional/infra-ledger.svg', invertOnLight: true },
+  { name: 'Safe', logo: '/marketing/institutional/infra-safe.svg', invertOnLight: true },
+  { name: 'Fireblocks', logo: '/marketing/institutional/infra-fireblocks.svg', invertOnLight: true },
+  { name: 'copper.co', logo: '/marketing/institutional/infra-copper.svg', invertOnLight: true },
+  { name: 'BitGo', logo: '/marketing/institutional/infra-bitgo.svg', invertOnLight: true },
 ]
 
 /**
