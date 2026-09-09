@@ -466,6 +466,101 @@
         }
       },
       "disclaimer": "Orbs Agentic is a beta product under active development. All underlying digital assets, blockchain networks, and DeFi platforms are subject to ongoing development and various risks. Use at your own risk."
+    },
+    "aiSkills": {
+      "meta": {
+        "title": "AI Skills",
+        "description": "DeFi trading tools for AI coding agents like Claude Code, Cursor and Windsurf. Install a skill and let your agent place on-chain orders for you."
+      },
+      "title": "AI Skills",
+      "intro": "DeFi trading tools for AI coding agents like Claude Code, Cursor, and Windsurf. Install a skill and let your agent place on-chain orders for you.",
+      "chainsLabel": "Chains",
+      "orderTypesLabel": "Order types",
+      "items": {
+        "spotOrders": {
+          "description": "Gasless limit, stop-loss, take-profit, and TWAP orders across EVM chains. Non-custodial, oracle-protected execution using immutable, audited contracts."
+        }
+      }
+    },
+    "spotOrders": {
+      "meta": {
+        "title": "Spot Advanced Swap Orders",
+        "description": "Install this AI skill in any AI coding agent. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit and TWAP orders on-chain, powered by Orbs L3."
+      },
+      "hero": {
+        "headline": "GASLESS ADVANCED\nSWAP ORDERS FOR\nAI AGENTS & HUMANS",
+        "intro": "Install this AI skill in any AI coding agent like Claude Code, Cursor, or Codex. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit, and TWAP orders on-chain — powered by Orbs L3.",
+        "cta": "Get Started"
+      },
+      "quickstart": {
+        "title": "Quick Start",
+        "intro": "Install this AI skill in any AI coding agent like Claude Code, Cursor, or Codex in seconds.",
+        "items": {
+          "human": {
+            "title": "For Humans",
+            "body": "Paste this prompt into any AI coding agent."
+          },
+          "agent": {
+            "title": "For AI Agents / LLMs",
+            "body": "Point your agent to the skill spec."
+          }
+        }
+      },
+      "features": {
+        "title": "AI Agent Order Types",
+        "items": {
+          "market": {
+            "title": "Market Orders",
+            "body": "Instant gasless swaps at best available price with oracle protection."
+          },
+          "limit": {
+            "title": "Limit Orders",
+            "body": "Set a target price — the order executes automatically when the market reaches it."
+          },
+          "stopLoss": {
+            "title": "Stop-Loss",
+            "body": "Protect your position with automatic sell triggers below a price threshold."
+          },
+          "takeProfit": {
+            "title": "Take-Profit",
+            "body": "Lock in gains by auto-selling when price rises above your target."
+          },
+          "twap": {
+            "title": "TWAP / Chunked",
+            "body": "Split large orders into time-weighted chunks with oracle protection on every fill."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "How It Works",
+        "steps": {
+          "intent": {
+            "title": "Define Intent",
+            "body": "User or agent specifies: chain, tokens, amount, order type, and optional price constraints."
+          },
+          "approve": {
+            "title": "Wrap & Approve",
+            "body": "If needed, wrap native tokens and approve the contract to spend your tokens. The skill provides the calldata."
+          },
+          "prepare": {
+            "title": "Prepare Order",
+            "body": "The skill generates approval calldata, EIP-712 typed data, and relay-ready submit payloads."
+          },
+          "sign": {
+            "title": "Sign & Submit",
+            "body": "User signs with their wallet (EIP-712). The signed order is submitted to the decentralized relay."
+          },
+          "execute": {
+            "title": "Oracle-Protected Execution",
+            "body": "Orbs L3 network executes with best-price routing and oracle protection on every chunk."
+          }
+        }
+      },
+      "chains": {
+        "title": "Supported Chains",
+        "nameHeader": "Chain",
+        "idHeader": "Chain ID"
+      }
     }
   }
 }

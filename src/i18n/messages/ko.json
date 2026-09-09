@@ -467,6 +467,101 @@
         }
       },
       "disclaimer": "Orbs Agentic은 현재 활발히 개발 중인 베타 제품입니다. 관련된 모든 디지털 자산, 블록체인 네트워크, DeFi 플랫폼은 지속적으로 변화하며 다양한 위험을 수반합니다. 사용에 따른 책임은 사용자에게 있습니다."
+    },
+    "aiSkills": {
+      "meta": {
+        "title": "AI Skills",
+        "description": "Claude Code, Cursor, Windsurf 같은 AI 코딩 에이전트용 DeFi 트레이딩 도구입니다. 스킬을 설치하고 에이전트가 대신 온체인 주문을 넣도록 할 수 있습니다."
+      },
+      "title": "AI 스킬",
+      "intro": "Claude Code, Cursor, Windsurf 같은 AI 코딩 에이전트용 DeFi 트레이딩 도구입니다. 스킬을 설치하고 에이전트가 대신 온체인 주문을 넣도록 할 수 있습니다.",
+      "chainsLabel": "지원체인",
+      "orderTypesLabel": "주문 유형",
+      "items": {
+        "spotOrders": {
+          "description": "EVM 체인 전반에서 가스비가 들지않는 지정가, 손절, 익절, TWAP 주문을 지원합니다. 변경 불가능하고 감사된 컨트랙트를 사용하는 비수탁형 오라클 보호 실행 방식입니다."
+        }
+      }
+    },
+    "spotOrders": {
+      "meta": {
+        "title": "Spot Advanced Swap Orders",
+        "description": "Claude Code, Cursor, Windsurf 같은 어떤 AI 코딩 에이전트에도 설치할 수 있습니다. Orbs L3 기반으로 지정가, 손절, 익절, TWAP 주문을 비수탁형 오라클 보호 방식으로 온체인에서 실행합니다."
+      },
+      "hero": {
+        "headline": "AI 에이전트와 사람을 위한\n가스리스 고급\n디파이 거래 주문",
+        "intro": "Claude Code, Cursor, Windsurf 같은 어떤 AI 코딩 에이전트에도 이 AI 스킬을 설치할 수 있습니다. Orbs L3 기반으로, 지정가 주문, 손절, 익절, TWAP 주문을 온체인에서 비수탁형이며 오라클 보호가 적용된 방식으로 실행합니다.",
+        "cta": "시작하기"
+      },
+      "quickstart": {
+        "title": "빠른 시작 가이드",
+        "intro": "Claude Code, Cursor, Windsurf 같은 어떤 AI 코딩 에이전트에도 이 AI 스킬을 몇 초 만에 설치할 수 있습니다.",
+        "items": {
+          "human": {
+            "title": "사람용",
+            "body": "이 프롬프트를 원하는 AI 코딩 에이전트에 붙여 넣으세요."
+          },
+          "agent": {
+            "title": "AI 에이전트 / LLM용",
+            "body": "에이전트가 이 스킬 명세를 참조하도록 하세요."
+          }
+        }
+      },
+      "features": {
+        "title": "AI 에이전트 주문 유형",
+        "items": {
+          "market": {
+            "title": "시장가 주문",
+            "body": "오라클 보호와 함께 현재 가능한 최적 가격으로 즉시 가스리스 스왑을 실행합니다."
+          },
+          "limit": {
+            "title": "지정가 주문",
+            "body": "목표 가격을 설정하면 시장 가격이 그 지점에 도달했을 때 주문이 자동으로 실행됩니다."
+          },
+          "stopLoss": {
+            "title": "Stop-Loss",
+            "body": "가격이 설정한 임계값 아래로 내려가면 자동 매도 트리거로 포지션을 보호합니다."
+          },
+          "takeProfit": {
+            "title": "Take-Profit",
+            "body": "가격이 목표치를 넘어서면 자동으로 매도해 수익을 확정합니다."
+          },
+          "twap": {
+            "title": "TWAP / 분할 실행",
+            "body": "대규모 주문을 시간 가중 분할로 나누어 각 체결마다 오라클 보호를 적용합니다."
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "작동 방식",
+        "steps": {
+          "intent": {
+            "title": "의도 정의",
+            "body": "사용자 또는 에이전트가 체인, 토큰, 수량, 주문 유형, 선택적 가격 조건을 지정합니다."
+          },
+          "approve": {
+            "title": "래핑 및 승인",
+            "body": "필요한 경우 네이티브 토큰을 래핑하고 컨트랙트가 토큰을 사용할 수 있도록 승인합니다. 이 스킬이 calldata를 제공합니다."
+          },
+          "prepare": {
+            "title": "주문 준비",
+            "body": "이 스킬이 승인용 calldata, EIP-712 타입 데이터, 릴레이 제출용 payload를 생성합니다."
+          },
+          "sign": {
+            "title": "서명 및 제출",
+            "body": "사용자가 지갑으로 서명합니다(EIP-712). 서명된 주문은 탈중앙 릴레이로 제출됩니다."
+          },
+          "execute": {
+            "title": "오라클 보호 실행",
+            "body": "Orbs L3 네트워크가 각 분할 주문마다 최적 가격 라우팅과 오라클 보호를 적용해 실행합니다."
+          }
+        }
+      },
+      "chains": {
+        "title": "지원 체인",
+        "nameHeader": "체인",
+        "idHeader": "체인 ID"
+      }
     }
   }
 }

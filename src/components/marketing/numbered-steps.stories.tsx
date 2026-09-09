@@ -10,7 +10,11 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const STEPS = ['Agent decides what to do.', 'Agent submits execution parameters.', 'The oracle cosigns.']
+const STEPS = [
+  { body: 'Agent decides what to do.' },
+  { body: 'Agent submits execution parameters.' },
+  { body: 'The oracle cosigns.' },
+]
 
 /**
  * An ordered list, because the order IS the content — this is a process, not a
@@ -46,5 +50,18 @@ export const StatementSitsOutsideTheList: Story = {
 
     await expect(canvas.getByText(/independently verified/)).toBeInTheDocument()
     await expect(canvasElement.querySelector('ol')?.textContent).not.toContain('independently verified')
+  },
+}
+
+/** Titled steps keep the name distinct from the explanation. */
+export const StepsCanBeTitled: Story = {
+  args: {
+    title: 'How It Works',
+    steps: [{ title: 'Define Intent', body: 'Specify chain, tokens and amount.' }],
+  },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getByText(/Define Intent/)).toBeInTheDocument()
+    await expect(canvas.getByText(/Specify chain, tokens and amount\./)).toBeInTheDocument()
   },
 }

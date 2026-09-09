@@ -2,10 +2,12 @@ import { localesFor } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { AgenticPage } from './agentic'
+import { AiSkillsPage } from './ai-skills'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
 import { PerpetualHubPage } from './perpetual-hub'
+import { SpotOrdersPage } from './spot-orders'
 import { DtwapPage } from './dtwap'
 
 /**
@@ -57,6 +59,11 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/dlimit': { render: (locale) => <DlimitPage locale={locale} />, namespace: 'pages.dlimit' },
   '/dsltp': { render: (locale) => <DsltpPage locale={locale} />, namespace: 'pages.dsltp' },
   '/agentic': { render: (locale) => <AgenticPage locale={locale} />, namespace: 'pages.agentic' },
+  '/ai/skills': { render: (locale) => <AiSkillsPage locale={locale} />, namespace: 'pages.aiSkills' },
+  '/ai/skills/spot-advanced-swap-orders': {
+    render: (locale) => <SpotOrdersPage locale={locale} />,
+    namespace: 'pages.spotOrders',
+  },
   '/liquidity-hub': {
     render: (locale) => <LiquidityHubPage locale={locale} />,
     namespace: 'pages.liquidityHub',
