@@ -24,8 +24,11 @@ import type { NavLinkSpec } from '@/content/shared/navigation'
  * Icon components cannot cross the server/client boundary, so the server passes
  * the icon's KEY and the map lives here. Named rather than resolved by string
  * at render, so a typo in the data file is a build error.
+ *
+ * Exported because the mobile panel renders the same rows and must show the
+ * same marks; a second copy of this map is a second thing to update.
  */
-const GLYPHS: Record<NonNullable<NavLinkSpec['icon']>, React.ComponentType<{ className?: string }>> = {
+export const GLYPHS: Record<NonNullable<NavLinkSpec['icon']>, React.ComponentType<{ className?: string }>> = {
   liquidityHub: LiquidityHubGlyph,
   perpetualHub: PerpetualHubGlyph,
   dlimit: DLimitGlyph,

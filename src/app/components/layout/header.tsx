@@ -6,7 +6,9 @@ import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { ThemeToggle } from '../theme/theme-toggle'
 import { LanguageSelector } from './language-selector'
-import { NavMenu } from './navigation/nav-menu'
+import { MobileNav } from './navigation/mobile-nav'
+import { NavMenuClient } from './navigation/nav-menu-client'
+import { resolveNavigation } from './navigation/nav-menu'
 
 /**
  * The locale arrives as a prop rather than from a next-intl hook.
@@ -23,6 +25,10 @@ import { NavMenu } from './navigation/nav-menu'
  */
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'header' })
+  const nav = await getTranslations({ locale, namespace: 'nav' })
+  // Resolved once and handed to both navs, so the desktop bar and the mobile
+  // panel cannot list different things.
+  const { groups, topLevel } = await resolveNavigation(locale)
 
   return (
     <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
@@ -45,14 +51,32 @@ export async function Header({ locale }: { locale: Locale }) {
             <OrbsLogo className="text-xl" aria-hidden />
           </Link>
 
-          <NavMenu locale={locale} />
+          {/*
+            The dropdown bar needs roughly 900px before it starts pushing the
+            header wider than the viewport, so it is hidden below `lg` and the
+            panel takes over. Without this the document laid out at 880px inside
+            a 390px viewport and every page scrolled sideways (#96).
+          */}
+          <div className="hidden lg:block">
+            <NavMenuClient groups={groups} topLevel={topLevel} />
+          </div>
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <LanguageSelector />
-            <Button size="sm" lang={textLang(t('getInTouch'), locale)}>
+            <Button size="sm" className="hidden sm:inline-flex" lang={textLang(t('getInTouch'), locale)}>
               {t('getInTouch')}
             </Button>
+
+            {/* Counterpart to the dropdown bar's `hidden lg:block` above. */}
+            <div className="lg:hidden">
+              <MobileNav
+                groups={groups}
+                topLevel={topLevel}
+                label={nav('menuLabel')}
+                title={nav('menuTitle')}
+              />
+            </div>
           </div>
         </div>
       </div>
