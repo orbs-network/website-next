@@ -2,9 +2,11 @@
 /**
  * Resize and recompress raster imagery under `public/`.
  *
- * Idempotent and safe to re-run: an image already within the cap and already
- * efficiently encoded comes out byte-identical in size, so a second pass is a
- * no-op. Run it after importing new assets from the legacy repo.
+ * Safe to re-run. That takes care for LOSSY formats: decoding and re-encoding a
+ * JPEG always loses a little and always comes out slightly smaller, so a naive
+ * "write it if it shrank" rule would degrade the same asset a bit more on every
+ * run while looking like a win. Lossy sources already within the size cap are
+ * therefore skipped outright — see `optimize`.
  *
  *   node scripts/optimize-images.mjs            # optimise in place
  *   node scripts/optimize-images.mjs --dry-run  # report only
@@ -48,19 +50,33 @@ async function* walk(dir) {
   }
 }
 
+/** JPEG and WebP lose information every time they are encoded. PNG does not. */
+const LOSSY = new Set(['.jpg', '.jpeg', '.webp'])
+
 /**
  * Re-encode at the same format, resizing only if the source is over the cap.
  *
  * `withoutEnlargement` matters: several assets are already small, and scaling
  * those UP to the cap would add bytes and blur to fix nothing.
+ *
+ * A lossy source that is already within the cap is SKIPPED rather than
+ * re-encoded. There is nothing to gain — it is already the size it will be
+ * displayed at — and re-encoding it would shave a few bytes off by throwing
+ * away image data, then do it again on the next run. PNG has no such problem:
+ * it is lossless, so re-encoding converges and a second pass is a genuine
+ * no-op.
  */
 async function optimize(path) {
   const before = (await stat(path)).size
   const image = sharp(path, { limitInputPixels: false })
   const meta = await image.metadata()
+  const ext = extname(path).toLowerCase()
+
+  if (LOSSY.has(ext) && (meta.width ?? 0) <= MAX_WIDTH) {
+    return { before, after: before, width: meta.width, height: meta.height, buffer: null }
+  }
 
   const pipeline = image.resize({ width: MAX_WIDTH, withoutEnlargement: true })
-  const ext = extname(path).toLowerCase()
 
   const output =
     ext === '.png'
@@ -90,7 +106,7 @@ async function main() {
     totalBefore += before
     // Never write a result that is bigger than what we started with — some
     // assets are already optimal, and re-encoding those is a pure loss.
-    const keep = after < before
+    const keep = buffer !== null && after < before
     totalAfter += keep ? after : before
 
     if (keep) {
