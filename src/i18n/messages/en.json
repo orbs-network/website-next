@@ -283,6 +283,100 @@
         "onePager": "Read the one pager"
       },
       "disclaimer": "The Perpetual Hub Ultra software will leverage the power of the decentralized Orbs Network, with its Guardians and proof-of-stake ecosystem, to allow platforms, market participants and other third parties to provide and operate this suite of decentralized services. Orbs will not be engaging in trading, hedging or serving as a liquidator. The Perpetual Hub is a beta version that is still under active development and all underlying digital assets, blockchain networks and DEX platforms are also subject to ongoing development and to various risks, and as such, Perpetual Hub or the underlying platforms:\n\n(a) may contain bugs, errors, and defects,\n\n(b) may function improperly or be subject to periods of downtime and unavailability,\n\n(c) may result in total or partial loss of funds.\n\nAny use of any platform, application and/or services described here is at your own risk and you are solely responsible for all transaction decisions."
+    },
+    "liquidityHub": {
+      "meta": {
+        "title": "Liquidity Hub",
+        "description": "A decentralized optimization layer above AMMs that mitigates fragmented liquidity in DeFi, letting DEXs tap external liquidity sources to provide better prices on swaps."
+      },
+      "hero": {
+        "headline": "Aggregated liquidity for\ndecentralized exchanges",
+        "intro": "Liquidity Hub is a decentralized optimization layer that operates above Automated Market Makers (AMMs). This layer mitigates the problem of fragmented liquidity in DeFi, enabling DEXs to tap into external liquidity sources in order to provide better prices on swaps."
+      },
+      "sources": {
+        "intro": "Instead of the typical swap that searches for the best route within a specific DEX's limited liquidity pools, integrating the Liquidity Hub software protocol allows DEXs to enhance this process by utilizing additional liquidity sources that come from:",
+        "items": {
+          "solverAuctions": {
+            "title": "On-chain solver auctions",
+            "body": "Third-party solvers who compete to fill swaps using on-chain liquidity like AMM pools or their own private inventory."
+          },
+          "apiOrders": {
+            "title": "Decentralized Orders via API",
+            "body": "Decentralized limit orders, accessible using API. Enables institutional/professional traders, such as market makers, to submit bids and compete to fill swaps."
+          }
+        }
+      },
+      "fallback": {
+        "body": "Utilizing the Liquidity Hub software allows DEXs to attempt to execute trades without going through the AMM and experiencing AMM price impact. If Liquidity Hub is unable to execute the trade at a better price than the AMM, the trade will fallback to the AMM contract and execute as usual.",
+        "alt": "A swap routed through Liquidity Hub, comparing solver and API order sources against the AMM and falling back to the AMM contract when it cannot beat that price."
+      },
+      "benefits": {
+        "title": "Integrate now with a user-friendly and flexible UI",
+        "items": {
+          "lpCannibalization": {
+            "title": "Avoiding LP cannibalization",
+            "body": "Existing DEX LPs generate the same revenue with Liquidity Hub enabled as they would have without it."
+          },
+          "mevProtection": {
+            "title": "MEV protection",
+            "body": "Arbitrage loss to MEV can be significant. Since Liquidity Hub matches orders without block producers, it removes MEV losses completely."
+          },
+          "composable": {
+            "title": "Fully composable solution for Solvers",
+            "body": "Liquidity Hub supports UniSwapX and other similar protocols solver API, enabling anyone to participate in the bidding process right out of the box."
+          },
+          "ceFiMarketMakers": {
+            "title": "Fully supports CeFi market makers",
+            "body": "Liquidity Hub protocol will allow DEXs to include a standard CEX book API allowing traditional MMs to participate in DeFi."
+          },
+          "gasless": {
+            "title": "Gasless transactions",
+            "body": "Liquidity Hub trades are **gasless** for users (although solvers may price gas into their fees)."
+          },
+          "sameFlow": {
+            "title": "Same flow as a regular swap",
+            "body": "No change in the DEX UI or swap flow for users."
+          }
+        }
+      },
+      "audiences": {
+        "title": "New DEX Standard",
+        "intro": "Integrating the Liquidity Hub protocol brings the benefit of aggregated liquidity to any DEX-AMM in DeFi, benefitting the users, the DEX itself, and Solvers participating in the protocol:",
+        "items": {
+          "users": {
+            "title": "Users",
+            "list": "Better execution price\nAMM fallback\nTrustless system\nGasless trades"
+          },
+          "dex": {
+            "title": "DEX",
+            "list": "Additional fee revenue\nIncreased volume\nCompetitive prices\nNo LP cannibalization"
+          },
+          "solvers": {
+            "title": "Solvers",
+            "list": "Simple integration\nNo MEV bidding\nCherry picking orders\nHigh frequency book"
+          }
+        }
+      },
+      "partners": {
+        "title": "Partners",
+        "items": {
+          "quickswap": {
+            "subtitle": "Trade on QuickSwap with Liquidity Hub for:",
+            "list": "Best execution prices\nZero gas swaps\nMEV protection",
+            "cta": "Trade now"
+          },
+          "thena": {
+            "subtitle": "Trade on Thena with Liquidity Hub for:",
+            "list": "Best execution prices\nZero gas swaps\nMEV protection",
+            "cta": "Trade now"
+          }
+        }
+      },
+      "decentralization": {
+        "title": "Mitigating Centralization risks using Orbs L3",
+        "body": "All on-chain parts are trustless since contracts verify all actions. However, users may be concerned that Liquidity Hub backend is able to manipulate trades in some way. This concern is mitigated by using the Orbs Network's decentralized L3 technology.\n\nAs part of Liquidity Hub, Orbs Guardians will run software utilizing ORBS-VM, which acts as a decentralized backend that is required for Liquidity Hub to run optimally and in a fully decentralized manner.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019.\n\nThe Liquidity Hub is a beta version that is still under active development.",
+        "terms": "Terms of use"
+      }
     }
   }
 }

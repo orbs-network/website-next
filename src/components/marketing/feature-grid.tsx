@@ -1,4 +1,5 @@
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { H2, H3 } from '@/app/components/typography'
 import { Prose } from './prose'
@@ -30,7 +31,12 @@ export function FeatureGrid({
   features,
   lang,
 }: {
-  title: string
+  /**
+   * Optional: Liquidity Hub's two coloured boxes continue the sentence above
+   * them rather than opening a section of their own, so there is no heading to
+   * write. An empty string would render an empty `h2`.
+   */
+  title?: string
   intro?: string
   features: readonly Feature[]
   /** Set when this copy is English inside a non-English document. */
@@ -39,8 +45,8 @@ export function FeatureGrid({
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
       <div className="mx-auto max-w-3xl text-center">
-        <H2 className="text-balance">{title}</H2>
-        {intro && <Prose text={intro} className="mt-6 [&_p]:text-lg" />}
+        {title && <H2 className="text-balance">{title}</H2>}
+        {intro && <Prose text={intro} className={cn('[&_p]:text-lg', title && 'mt-6')} />}
       </div>
 
       <div className="mt-16 grid gap-8 md:grid-cols-2">
