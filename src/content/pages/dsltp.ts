@@ -29,11 +29,16 @@ export const DSLTP_BENEFITS = [
   { id: 'onchain', icon: '/marketing/dsltp/card-3.svg' },
 ] as const
 
-/** Section 2: a diagram with no heading — the legacy `title:` field is empty. */
-export const DSLTP_GRAPH_IMAGE = '/marketing/dsltp/graph.png'
+/**
+ * Section 2: a diagram with no heading — the legacy `title:` field is empty.
+ *
+ * Intrinsic dimensions travel with the path because `DiagramSection` sizes from
+ * the real ratio rather than assuming one; these are 2.73:1, not 16:9.
+ */
+export const DSLTP_GRAPH_IMAGE = { src: '/marketing/dsltp/graph.png', width: 2666, height: 978 } as const
 
 /** Section 3: "Recent and Ongoing Integrations", a map rather than a logo grid. */
-export const DSLTP_MAP_IMAGE = '/marketing/dsltp/map.png'
+export const DSLTP_MAP_IMAGE = { src: '/marketing/dsltp/map.png', width: 2666, height: 978 } as const
 
 /**
  * The closing "Powered by Orbs Network" links, in legacy order.

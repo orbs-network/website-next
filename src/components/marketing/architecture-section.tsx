@@ -38,18 +38,31 @@ export function ArchitectureSection({
   imageAlt,
   links,
   lang,
+  titleLang,
 }: SectionImage & {
   title: string
   body: string
   links: readonly ArchitectureLink[]
   /** Set when this copy is English inside a non-English document. */
   lang?: string
+  /**
+   * Set when the HEADING's language differs from the rest of the section.
+   *
+   * A section-level `lang` alone assumes every string in it shares a language,
+   * and dSLTP's closing block is the case that breaks: "Powered by Orbs
+   * Network" is English in the Korean catalog too — the legacy page leaves it
+   * that way — while the prose and button labels beneath it are Korean.
+   * Deriving one value from the title marked the Korean copy English.
+   */
+  titleLang?: string
 }) {
   const visibleLinks = links.filter((link) => link.label.trim() !== '')
 
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center">{title}</H2>
+      <H2 className="text-balance text-center" lang={titleLang}>
+        {title}
+      </H2>
 
       {image && (
         <div className="relative mx-auto mt-12 aspect-[16/9] w-full max-w-4xl">

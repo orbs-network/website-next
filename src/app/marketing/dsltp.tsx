@@ -62,14 +62,18 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         `title:` — so it renders as the diagram alone.
       */}
       <DiagramSection
-        image={DSLTP_GRAPH_IMAGE}
+        image={DSLTP_GRAPH_IMAGE.src}
+        width={DSLTP_GRAPH_IMAGE.width}
+        height={DSLTP_GRAPH_IMAGE.height}
         imageAlt={t('graph.alt')}
         lang={textLang(t('graph.alt'), locale)}
       />
 
       <DiagramSection
         title={t('integrations.title')}
-        image={DSLTP_MAP_IMAGE}
+        image={DSLTP_MAP_IMAGE.src}
+        width={DSLTP_MAP_IMAGE.width}
+        height={DSLTP_MAP_IMAGE.height}
         imageAlt={t('integrations.alt')}
         lang={textLang(t('integrations.title'), locale)}
       />
@@ -88,7 +92,13 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
           { label: t('poweredBy.github'), href: DSLTP_LINKS.github },
           { label: t('poweredBy.audits'), href: DSLTP_LINKS.audits },
         ]}
-        lang={textLang(t('poweredBy.title'), locale)}
+        // Derived from the BODY, not the title. "Powered by Orbs Network" is
+        // English in the Korean catalog too — the legacy page leaves it that
+        // way — so deriving the section language from the title marked the
+        // whole block English, and the Korean prose and button labels beneath
+        // it inherited that. The heading carries its own override instead.
+        lang={textLang(t('poweredBy.body'), locale)}
+        titleLang={textLang(t('poweredBy.title'), locale)}
       />
     </>
   )
