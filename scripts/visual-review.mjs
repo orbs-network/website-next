@@ -46,9 +46,13 @@ const THEMES = ['light', 'dark']
  * "run arbitrary steps" it is a test framework, and there is already one.
  */
 const SHOTS = {
-  'nav-products': { route: '/', open: 'Products' },
-  'nav-resources': { route: '/', open: 'Resources' },
-  'nav-developers': { route: '/', open: 'Developers' },
+  'nav-products': { route: '/', open: 'Products', viewport: 'desktop' },
+  'nav-resources': { route: '/', open: 'Resources', viewport: 'desktop' },
+  'nav-developers': { route: '/', open: 'Developers', viewport: 'desktop' },
+  // The mobile panel only exists below `lg`, so it has to be shot at the mobile
+  // viewport — the desktop-only rule this list started with would have skipped
+  // the one nav that most needed looking at (#96).
+  'nav-mobile': { route: '/', open: 'Open menu', viewport: 'mobile' },
 }
 
 function parseArgs(argv) {
@@ -181,10 +185,11 @@ async function capture(port, outDir, { routes, shots }) {
           process.stdout.write(`  ${file}\n`)
         }
 
-        // Interaction states are desktop-only: the dropdowns they open are not
-        // rendered at mobile widths, so capturing them there is an empty panel.
-        if (viewport.name === 'desktop') {
-          for (const name of shots) {
+        // Each shot names the viewport its control exists at: the dropdown bar
+        // is hidden below `lg` and the mobile panel above it, so shooting every
+        // shot at every width would capture a screenful of nothing half the time.
+        {
+          for (const name of shots.filter((n) => SHOTS[n].viewport === viewport.name)) {
             const shot = SHOTS[name]
             await load(page, `http://127.0.0.1:${port}${shot.route}`)
 

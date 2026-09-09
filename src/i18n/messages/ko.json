@@ -27,7 +27,10 @@
       "tonVote": "TON Vote",
       "tonAccess": "TON 액세스",
       "media": "미디어"
-    }
+    },
+    "menuLabel": "메뉴 열기",
+    "menuTitle": "메뉴",
+    "menuClose": "닫기"
   },
   "header": {
     "getInTouch": "문의하기",

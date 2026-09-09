@@ -3,7 +3,7 @@ import { NAV_GROUPS, NAV_TOP_LEVEL_LINKS, type NavLinkSpec } from '@/content/sha
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { NavMenuClient, type ResolvedNavLink } from './nav-menu-client'
+import type { ResolvedNavLink } from './nav-menu-client'
 
 /**
  * Where a menu link points in this locale, and whether that leaves the site.
@@ -22,7 +22,12 @@ function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; exte
 }
 
 /**
- * The header menu, resolved for one locale.
+ * The header menu's copy and destinations, resolved for one locale.
+ *
+ * Returns data rather than markup because two components render it — the
+ * desktop dropdown bar and the mobile panel (#96). Resolving once in `Header`
+ * and passing the result to both is what stops them drifting: a link added to
+ * `NAV_GROUPS` appears in both or in neither.
  *
  * Every `t()` call happens here and the rendering half is a client component,
  * because Radix's `NavigationMenu` needs state. Resolving labels there instead
@@ -49,7 +54,7 @@ function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; exte
  * segment and no middleware, next-intl's hooks cannot resolve it from the
  * request.
  */
-export async function NavMenu({ locale }: { locale: Locale }) {
+export async function resolveNavigation(locale: Locale) {
   const t = await getTranslations({ locale, namespace: 'nav' })
 
   const resolveLink = (spec: NavLinkSpec): ResolvedNavLink => {
@@ -86,5 +91,5 @@ export async function NavMenu({ locale }: { locale: Locale }) {
     }
   })
 
-  return <NavMenuClient groups={groups} topLevel={NAV_TOP_LEVEL_LINKS.map(resolveLink)} />
+  return { groups, topLevel: NAV_TOP_LEVEL_LINKS.map(resolveLink) }
 }

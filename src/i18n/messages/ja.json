@@ -27,7 +27,10 @@
       "tonVote": "TON Vote",
       "tonAccess": "TON Access",
       "media": "Media"
-    }
+    },
+    "menuLabel": "Open menu",
+    "menuTitle": "Menu",
+    "menuClose": "Close"
   },
   "header": {
     "getInTouch": "Get in Touch",
