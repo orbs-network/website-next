@@ -6,10 +6,18 @@ export type LogoRowItem = {
   /** Brand or chain name. Not translated — a proper noun. */
   name: string
   /**
-   * Optional mark. Some rows are names only: the institutional page lists the
-   * venues it is integrated by as text, with no logos in the legacy content.
+   * Optional mark, with its INTRINSIC dimensions.
+   *
+   * The dimensions are required alongside the source because these are not all
+   * square. Chain marks are round (250x250); the institutional wordmarks are
+   * wide (Fireblocks is 227x35, Blackhole 1249x107). A fixed 32x32 box with
+   * `object-contain` squeezed the wide ones to roughly five pixels tall — the
+   * mark was technically present and completely illegible.
+   *
+   * Rendered at a fixed HEIGHT with automatic width, so every mark reads at the
+   * same optical weight whatever its proportions.
    */
-  logo?: string
+  logo?: { src: string; width: number; height: number }
   /**
    * Invert the mark in the light theme.
    *
@@ -71,11 +79,11 @@ export function LogoRow({
           <li key={item.name} className="flex items-center gap-3">
             {item.logo && (
               <Image
-                src={item.logo}
+                src={item.logo.src}
                 alt=""
-                width={32}
-                height={32}
-                className={cn('size-8 rounded-full object-contain', item.invertOnLight && 'invert dark:invert-0')}
+                width={item.logo.width}
+                height={item.logo.height}
+                className={cn('h-8 w-auto object-contain', item.invertOnLight && 'invert dark:invert-0')}
               />
             )}
             <span className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang="en">

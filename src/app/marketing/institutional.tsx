@@ -1,11 +1,14 @@
 import { getTranslations } from 'next-intl/server'
 import { ArchitectureSection } from '@/components/marketing/architecture-section'
+import { BenefitColumns } from '@/components/marketing/benefit-columns'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { ProductHero } from '@/components/marketing/product-hero'
 import { StatsRow } from '@/components/marketing/stats-row'
 import {
+  INSTITUTIONAL_FEATURES,
   INSTITUTIONAL_LINKS,
+  INSTITUTIONAL_PATHS,
   INSTITUTIONAL_PRODUCTS,
   INSTITUTIONAL_SIGNERS,
   INSTITUTIONAL_STATS,
@@ -40,6 +43,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.institutional' })
 
   const contact = resolveLocaleLink(INSTITUTIONAL_LINKS.contact, locale)
+  const github = resolveLocaleLink(INSTITUTIONAL_LINKS.github, locale)
 
   return (
     <>
@@ -93,6 +97,49 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
       />
 
       <LogoRow title={t('signers.title')} sub={t('signers.sub')} items={INSTITUTIONAL_SIGNERS} />
+
+      <ArchitectureSection title={t('policyEngine.title')} body={t('policyEngine.body')} />
+
+      <FeatureGrid
+        title={t('integrationPaths.title')}
+        features={INSTITUTIONAL_PATHS.map((id) => ({
+          id,
+          title: t(`integrationPaths.items.${id}.title`),
+          body: t(`integrationPaths.items.${id}.body`),
+        }))}
+      />
+
+      <FeatureGrid
+        eyebrow={t('features.eyebrow')}
+        title={t('features.title')}
+        features={INSTITUTIONAL_FEATURES.map((id) => ({
+          id,
+          title: t(`features.items.${id}.title`),
+          body: t(`features.items.${id}.body`),
+        }))}
+      />
+
+      {/*
+        Two audiences, each a short list of who they are — the same shape as
+        Liquidity Hub's "New DEX Standard", so the same component.
+      */}
+      <BenefitColumns
+        title={t('whoFor.title')}
+        columns={INSTITUTIONAL_PATHS.map((id) => ({
+          id,
+          title: t(`whoFor.items.${id}.title`),
+          items: t(`whoFor.items.${id}.list`).split('\n').filter(Boolean),
+        }))}
+      />
+
+      <ArchitectureSection
+        title={t('talkToTeam.title')}
+        body={t('talkToTeam.body')}
+        links={[
+          { label: t('talkToTeam.contact'), href: contact.href },
+          { label: t('talkToTeam.github'), href: github.href },
+        ]}
+      />
     </>
   )
 }

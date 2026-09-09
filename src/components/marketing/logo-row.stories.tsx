@@ -11,8 +11,8 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const ITEMS = [
-  { name: 'Ethereum', logo: '/marketing/agentic/chains/ethereum.png' },
-  { name: 'Base', logo: '/marketing/agentic/chains/base.png' },
+  { name: 'Ethereum', logo: { src: '/marketing/agentic/chains/ethereum.png', width: 250, height: 250 } },
+  { name: 'Base', logo: { src: '/marketing/agentic/chains/base.png', width: 200, height: 200 } },
 ]
 
 /**
@@ -57,7 +57,7 @@ export const LogosAreOptional: Story = {
 export const WhiteMarksInvertInLightTheme: Story = {
   args: {
     title: 'Works with existing security infrastructure',
-    items: [{ name: 'Ledger', logo: '/marketing/institutional/infra-ledger.svg', invertOnLight: true }],
+    items: [{ name: 'Ledger', logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 }, invertOnLight: true }],
   },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('img')).toHaveClass('invert')

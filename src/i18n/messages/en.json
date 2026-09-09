@@ -632,6 +632,80 @@
       "signers": {
         "title": "Works with existing security infrastructure",
         "sub": "In-house MPC, or any EIP-712-compatible signer."
+      },
+      "policyEngine": {
+        "title": "Your policy engine. Your approval workflows. Your signers.",
+        "body": "Orbs integrates and executes."
+      },
+      "integrationPaths": {
+        "title": "Two integration paths:",
+        "items": {
+          "institutional": {
+            "title": "Institutional users",
+            "body": "API access for trading desks, OTC desks, treasuries, asset managers, and institutional execution teams."
+          },
+          "partners": {
+            "title": "Infrastructure & access partners",
+            "body": "Embed Orbs execution inside the platform your client already uses, with co-branded or fully white-labeled options."
+          }
+        }
+      },
+      "features": {
+        "eyebrow": "[Key features & benefits]",
+        "title": "Institutional-grade, by default.",
+        "items": {
+          "nonCustodial": {
+            "title": "Non-custodial by design",
+            "body": "Assets never leave the client's wallet. Orders sign from the wallet and settle back to it — no handoff to Orbs or any venue."
+          },
+          "gasless": {
+            "title": "Gasless across every product",
+            "body": "End users pay nothing for gas. Orbs absorbs chain-level costs and abstracts the complexity behind every transaction."
+          },
+          "mev": {
+            "title": "MEV protection",
+            "body": "Trades route through a private RFQ layer that prices off-chain and settles on-chain. No mempool exposure. No sandwich attacks."
+          },
+          "permissionless": {
+            "title": "Permissionless integration",
+            "body": "Open SDKs, public smart contracts, audited docs. Integrate without partnership agreements, gatekeepers, or revenue shares."
+          },
+          "robust": {
+            "title": "Robust infrastructure",
+            "body": "Live since 2017. $2.5B+ processed across 30+ venues on 10+ chains. Battle-tested on every critical execution path."
+          },
+          "whiteLabel": {
+            "title": "White-label ready",
+            "body": "Embed Orbs execution under your own brand. Custom UI, themed widgets, full UX control — your platform, our pipes."
+          },
+          "reporting": {
+            "title": "Reporting & audit trails",
+            "body": "Every order leaves a deterministic on-chain trail. Compliance-ready exports cover trades, slippage, fills, and routing decisions."
+          },
+          "audited": {
+            "title": "Audited, immutable, ownerless contracts",
+            "body": "No admin keys. No upgrade paths. No kill switches. Audited by leading firms — the code is the contract."
+          }
+        }
+      },
+      "whoFor": {
+        "title": "Who is it for?",
+        "items": {
+          "institutional": {
+            "title": "Institutional users",
+            "list": "Trading desks\nOTC desks\nTreasuries — DAOs, protocols, corporates\nAsset managers\nPayment & fintech rails"
+          },
+          "partners": {
+            "title": "Infrastructure & access partners",
+            "list": "Wallets & MPC providers\nCustodians\nExchanges\nPrime brokers"
+          }
+        }
+      },
+      "talkToTeam": {
+        "title": "Talk to the team",
+        "body": "Talk to us about integration or view more information on GitHub.",
+        "contact": "Talk to the team",
+        "github": "View on GitHub"
       }
     }
   }
