@@ -35,11 +35,15 @@ function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; exte
  * Products / Resources / Developers with a much shorter list each, so the
  * legacy menu is deliberately not ported wholesale — see `navigation.ts`.
  *
- * NOTE: the designs put an arrow beside each panel's title, implying the group
- * name links to a landing page (`/products`, `/resources`, `/developers`). No
- * such pages exist or appear anywhere in the migration plan, so the title
- * renders as the dropdown trigger only and no arrow-link is invented. Raised
- * on #30 for a decision.
+ * There is no panel title and no arrow, which is a DECISION rather than an
+ * omission. The designs show "Products →" heading each panel, implying the
+ * group name links to a landing page — but `/products`, `/resources` and
+ * `/developers` do not exist and appear nowhere in the migration plan. Asked
+ * on #30; answer was to drop the arrow rather than scope three new pages.
+ *
+ * So the group name lives on the dropdown trigger only. Repeating it as static
+ * text directly beneath that trigger would say the same word twice and link
+ * nowhere; it earns its place back the day those landing pages exist.
  *
  * The locale is a prop for the same reason as in `Header`: with no `[locale]`
  * segment and no middleware, next-intl's hooks cannot resolve it from the
