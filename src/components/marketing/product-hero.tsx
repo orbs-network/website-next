@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { Prose } from './prose'
 import { GithubIcon, TelegramIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
@@ -64,7 +65,14 @@ export function ProductHero({
             {headline}
           </h1>
 
-          <p className="mt-6 max-w-xl text-lg text-muted-foreground leading-relaxed">{intro}</p>
+          {/*
+            Through `Prose`, not a bare `<p>`. Perpetual Hub's intro is two
+            authored paragraphs; in a single `<p>` the blank line between them
+            collapses to a space and they render as one block. Every other
+            product page's intro is a single paragraph, so this changes nothing
+            for them.
+          */}
+          <Prose text={intro} className="mt-6 max-w-xl [&_p]:text-lg" />
 
           <div className="mt-10 flex flex-wrap items-center gap-4">
             <Button asChild size="lg">

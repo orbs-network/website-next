@@ -55,6 +55,9 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // this page has never had a Japanese version, so Japanese is not offered and
   // `/jp/dsltp/` is not generated. Korean is a full translation.
   '/dsltp': { en: 'translated', ko: 'translated' },
+  // Same shape as dSLTP: no `content/jp/perpetual-hub` in the legacy repo, so
+  // Japanese is not offered rather than being served English under a `ja` tag.
+  '/perpetual-hub': { en: 'translated', ko: 'translated' },
 }
 
 /**

@@ -3,6 +3,7 @@ import type { Locale } from '@/i18n/locales'
 import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
+import { PerpetualHubPage } from './perpetual-hub'
 import { DtwapPage } from './dtwap'
 
 /**
@@ -53,6 +54,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/dtwap': { render: (locale) => <DtwapPage locale={locale} />, namespace: 'pages.dtwap' },
   '/dlimit': { render: (locale) => <DlimitPage locale={locale} />, namespace: 'pages.dlimit' },
   '/dsltp': { render: (locale) => <DsltpPage locale={locale} />, namespace: 'pages.dsltp' },
+  '/perpetual-hub': {
+    render: (locale) => <PerpetualHubPage locale={locale} />,
+    namespace: 'pages.perpetualHub',
+  },
 }
 
 /**

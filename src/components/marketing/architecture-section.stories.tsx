@@ -14,6 +14,8 @@ const BASE = {
   title: 'Decentralized Execution of TWAP Orders',
   body: '**Makers** are DEX traders submitting orders.\n\n**Takers** are incentivized third parties.',
   image: '/marketing/dtwap/schema.png',
+  imageWidth: 2235,
+  imageHeight: 1328,
   imageAlt: '',
 }
 
