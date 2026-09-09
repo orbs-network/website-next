@@ -1,4 +1,4 @@
-import type { Chain } from '@/components/marketing/chain-logos'
+import type { LogoRowItem } from '@/components/marketing/logo-row'
 
 /**
  * Structural data for the Orbs Agentic page. Copy lives under `pages.agentic`.
@@ -41,7 +41,7 @@ export const AGENTIC_TOOLS = ['autoswap', 'autolimit', 'secureswap', 'twap'] as 
  * code here for the same reason: chain names are proper nouns that do not
  * translate.
  */
-export const AGENTIC_CHAINS: readonly Chain[] = [
+export const AGENTIC_CHAINS: readonly LogoRowItem[] = [
   { name: 'Ethereum', logo: '/marketing/agentic/chains/ethereum.png' },
   { name: 'BSC', logo: '/marketing/agentic/chains/bnb.png' },
   { name: 'Polygon', logo: '/marketing/agentic/chains/polygon.png' },

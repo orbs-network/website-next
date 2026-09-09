@@ -1,16 +1,16 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
-import { ChainLogos } from './chain-logos'
+import { LogoRow } from './logo-row'
 
 const meta = {
-  title: 'Marketing/ChainLogos',
-  component: ChainLogos,
-} satisfies Meta<typeof ChainLogos>
+  title: 'Marketing/LogoRow',
+  component: LogoRow,
+} satisfies Meta<typeof LogoRow>
 
 export default meta
 type Story = StoryObj<typeof meta>
 
-const CHAINS = [
+const ITEMS = [
   { name: 'Ethereum', logo: '/marketing/agentic/chains/ethereum.png' },
   { name: 'Base', logo: '/marketing/agentic/chains/base.png' },
 ]
@@ -20,7 +20,7 @@ const CHAINS = [
  * decorative — naming it too would give "Ethereum, Ethereum" for every chain.
  */
 export const NamesAreAnnouncedOnce: Story = {
-  args: { title: 'Chains', chains: CHAINS },
+  args: { title: 'Chains', items: ITEMS },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -32,8 +32,19 @@ export const NamesAreAnnouncedOnce: Story = {
 
 /** Chain names are proper nouns, so they are marked English in any document. */
 export const NamesAreMarkedEnglish: Story = {
-  args: { title: 'Chains', chains: CHAINS },
+  args: { title: 'Chains', items: ITEMS },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('span[lang="en"]')).toBeTruthy()
+  },
+}
+
+/** Some rows are names only — the institutional venues carry no logos. */
+export const LogosAreOptional: Story = {
+  args: { title: 'Integrated by leading venues', items: [{ name: 'PancakeSwap' }, { name: 'SushiSwap' }] },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByText('PancakeSwap')).toBeInTheDocument()
+    await expect(canvasElement.querySelectorAll('img')).toHaveLength(0)
   },
 }

@@ -561,6 +561,78 @@
         "nameHeader": "Chain",
         "idHeader": "Chain ID"
       }
+    },
+    "institutional": {
+      "meta": {
+        "title": "Orbs Institutional",
+        "description": "$2.5B+ processed. Spot products live since 2023. 30+ venues integrated. The execution layer behind leading decentralized trading venues — now available to trading desks, wallets, custodians, and institutional platforms."
+      },
+      "hero": {
+        "eyebrow": "[Orbs Institutional]",
+        "headline": "Institutional grade swap infrastructure for on-chain execution",
+        "intro": "$2.5B+ processed. Spot products live since 2023. 30+ venues integrated. The execution layer behind leading decentralized trading venues — now available to trading desks, wallets, custodians, and institutional platforms.",
+        "cta": "Talk to the team"
+      },
+      "stats": {
+        "items": {
+          "volume": {
+            "value": "$2.5B+",
+            "label": "Cumulative volume"
+          },
+          "chains": {
+            "value": "10+",
+            "label": "Chains live"
+          },
+          "venues": {
+            "value": "30+",
+            "label": "Venue integrations"
+          }
+        }
+      },
+      "proofOfWork": {
+        "eyebrow": "[Proof of work]",
+        "title": "Forged in DeFi. Packaged for institutions",
+        "body": "Since 2017, Orbs has been building on-chain infrastructure and have become the standard powering spot swap execution products across decentralized trading venues."
+      },
+      "trackRecord": {
+        "eyebrow": "[Track record]",
+        "title": "Proven on-chain",
+        "body": "Execution infrastructure, packaged for institutional workflows."
+      },
+      "venues": {
+        "title": "Integrated by leading venues, including:"
+      },
+      "products": {
+        "title": "Best price. Better execution. One stack.",
+        "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
+        "items": {
+          "liquidityHub": {
+            "title": "Liquidity Hub",
+            "body": "Aggregates DEX liquidity and professional market makers through an RFQ layer for best on-chain pricing."
+          },
+          "dtwap": {
+            "title": "dTWAP",
+            "body": "Splits large orders over time to reduce market impact and improve execution quality. Decentralized. Non-custodial. Fully on-chain."
+          },
+          "dlimit": {
+            "title": "dLIMIT",
+            "body": "Executes only when the target price is available. No manual monitoring. No off-chain custody. No desk-side intervention."
+          },
+          "dsltp": {
+            "title": "dSLTP",
+            "body": "Automated position protection with on-chain triggers."
+          }
+        }
+      },
+      "selfCustody": {
+        "eyebrow": "[Self-custody, always]",
+        "title": "Built for the institutional stack",
+        "body": "Assets never leave the client's wallet. Orders are signed from the wallet and settle back to the wallet. No custody handoff. No counterparty exposure to Orbs or any trading venue."
+      },
+      "signers": {
+        "title": "Works with existing security infrastructure",
+        "sub": "In-house MPC, or any EIP-712-compatible signer."
+      }
     }
   }
 }

@@ -51,6 +51,7 @@ export function ProductHero({
   telegram,
   lang,
   headlineLang,
+  eyebrow,
 }: HeroImage &
   HeroCta & {
     headline: string
@@ -68,6 +69,8 @@ export function ProductHero({
      * that Korean copy English.
      */
     headlineLang?: string
+    /** A short bracketed label above the headline — "[ORBS INSTITUTIONAL]". */
+    eyebrow?: string
   }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
@@ -79,6 +82,10 @@ export function ProductHero({
       */}
       <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
         <div lang={lang}>
+          {eyebrow && (
+            <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
+          )}
+
           <h1
             lang={headlineLang}
             className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl"
