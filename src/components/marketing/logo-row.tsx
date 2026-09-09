@@ -83,7 +83,21 @@ export function LogoRow({
                 alt=""
                 width={item.logo.width}
                 height={item.logo.height}
-                className={cn('h-8 w-auto object-contain', item.invertOnLight && 'invert dark:invert-0')}
+                /*
+                  Without this every mark is requested at its intrinsic size —
+                  next/image treats `width` as the rendered width, so a 2000px
+                  chain icon and a 1249px wordmark were being fetched at up to
+                  3840px to be displayed 32px high.
+                */
+                sizes="10rem"
+                className={cn(
+                  // Fixed height, automatic width — but CAPPED. Blackhole is
+                  // 1249x107, which at 32px high is 373px wide: on a 390px
+                  // viewport that one mark plus its name pushed the document
+                  // past the viewport and the whole page scrolled sideways.
+                  'h-8 w-auto max-w-[10rem] object-contain',
+                  item.invertOnLight && 'invert dark:invert-0'
+                )}
               />
             )}
             <span className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang="en">
