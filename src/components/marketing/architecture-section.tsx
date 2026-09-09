@@ -56,7 +56,11 @@ export function ArchitectureSection({
   lang,
   titleLang,
 }: SectionImage & {
-  title: string
+  /**
+   * Optional: Liquidity Hub's closing paragraph and diagram continue the
+   * section above them rather than starting a new one.
+   */
+  title?: string
   body: string
   /**
    * Optional: two of Perpetual Hub's sections are a heading, prose and a
@@ -81,9 +85,11 @@ export function ArchitectureSection({
 
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center" lang={titleLang}>
-        {title}
-      </H2>
+      {title && (
+        <H2 className="text-balance text-center" lang={titleLang}>
+          {title}
+        </H2>
+      )}
 
       {image && (
         <Image

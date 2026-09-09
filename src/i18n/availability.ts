@@ -58,6 +58,10 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // Same shape as dSLTP: no `content/jp/perpetual-hub` in the legacy repo, so
   // Japanese is not offered rather than being served English under a `ja` tag.
   '/perpetual-hub': { en: 'translated', ko: 'translated' },
+  // Back to the dTWAP shape: `jp/liquidity-hub` exists but holds the English
+  // copy, so Japanese is reachable and `placeholder`. Korean is a real
+  // translation down to the card bodies and the column lists.
+  '/liquidity-hub': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**

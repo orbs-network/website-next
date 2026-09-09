@@ -15,6 +15,15 @@ import Link from 'next/link'
 type HeroImage = { image: string; imageAlt: string } | { image?: undefined; imageAlt?: undefined }
 
 /**
+ * Both or neither, like the image.
+ *
+ * Liquidity Hub's legacy header declares no button at all — it opens straight
+ * into the explanation. A label with no destination, or a destination with no
+ * label, is a caller half-way through a change.
+ */
+type HeroCta = { ctaLabel: string; ctaHref: string } | { ctaLabel?: undefined; ctaHref?: undefined }
+
+/**
  * Opening block of a product page: headline, standfirst, primary call to
  * action, source links, and an optional hero illustration.
  *
@@ -41,16 +50,15 @@ export function ProductHero({
   repo,
   telegram,
   lang,
-}: HeroImage & {
-  headline: string
-  intro: string
-  ctaLabel: string
-  ctaHref: string
-  repo?: string
-  telegram?: string
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
-}) {
+}: HeroImage &
+  HeroCta & {
+    headline: string
+    intro: string
+    repo?: string
+    telegram?: string
+    /** Set when this copy is English inside a non-English document. */
+    lang?: string
+  }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
       {/*
@@ -74,10 +82,12 @@ export function ProductHero({
           */}
           <Prose text={intro} className="mt-6 max-w-xl [&_p]:text-lg" />
 
-          <div className="mt-10 flex flex-wrap items-center gap-4">
-            <Button asChild size="lg">
-              <Link href={ctaHref}>{ctaLabel}</Link>
-            </Button>
+          <div className="mt-10 flex flex-wrap items-center gap-4 empty:mt-0">
+            {ctaLabel && (
+              <Button asChild size="lg">
+                <Link href={ctaHref}>{ctaLabel}</Link>
+              </Button>
+            )}
 
             {/*
               The icons are hidden because `IconLink` labels the anchor itself.

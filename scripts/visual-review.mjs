@@ -157,6 +157,41 @@ async function load(page, url) {
   await page.waitForTimeout(300)
 }
 
+/**
+ * Scroll the whole page, then return to the top.
+ *
+ * `next/image` lazy-loads by default, and a `fullPage` screenshot does NOT
+ * trigger that: it captures the whole document, but images that never entered
+ * the viewport have never started loading, so they photograph as blank space.
+ *
+ * This was found the hard way — Liquidity Hub's second partner logo and
+ * screenshot were missing from a review shot while being perfectly fine in the
+ * page. Every full-page capture before this silently under-reported whatever
+ * sat far enough down, which is precisely the kind of thing visual review is
+ * supposed to catch.
+ */
+async function loadLazyImages(page) {
+  await page.evaluate(async () => {
+    const step = window.innerHeight
+    const height = document.body.scrollHeight
+
+    for (let y = 0; y < height; y += step) {
+      window.scrollTo(0, y)
+      await new Promise((resolve) => setTimeout(resolve, 120))
+    }
+
+    window.scrollTo(0, 0)
+  })
+
+  // Decoding continues after the scroll returns; wait for every image to
+  // report complete rather than guessing at a delay.
+  await page
+    .waitForFunction(() => Array.from(document.images).every((image) => image.complete), null, { timeout: 15_000 })
+    .catch(() => {
+      process.stdout.write('  (warning: some images did not finish loading)\n')
+    })
+}
+
 /** `/ko/dtwap/` -> `ko-dtwap`, `/` -> `home`. */
 function slug(route) {
   const trimmed = route.replace(/^\/|\/$/g, '')
@@ -180,6 +215,7 @@ async function capture(port, outDir, { routes, shots }) {
 
         for (const route of routes) {
           await load(page, `http://127.0.0.1:${port}${route}`)
+          await loadLazyImages(page)
           const file = join(outDir, `${slug(route)}__${viewport.name}__${theme}.png`)
           await page.screenshot({ path: file, fullPage: true })
           process.stdout.write(`  ${file}\n`)
