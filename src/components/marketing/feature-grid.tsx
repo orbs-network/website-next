@@ -59,6 +59,7 @@ export function FeatureGrid({
   intro,
   features,
   lang,
+  titleLang,
 }: {
   /**
    * Optional: Liquidity Hub's two coloured boxes continue the sentence above
@@ -70,11 +71,23 @@ export function FeatureGrid({
   features: readonly Feature[]
   /** Set when this copy is English inside a non-English document. */
   lang?: string
+  /**
+   * Set when the HEADING's language differs from the rest of the section.
+   *
+   * Several legacy section labels stay English in the Korean catalog — "Tool",
+   * "Chains", "Orbs Agentic Architecture" — while the copy under them is
+   * translated. One section-level `lang` cannot describe both.
+   */
+  titleLang?: string
 }) {
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
       <div className="mx-auto max-w-3xl text-center">
-        {title && <H2 className="text-balance">{title}</H2>}
+        {title && (
+          <H2 className="text-balance" lang={titleLang}>
+            {title}
+          </H2>
+        )}
         {intro && <Prose text={intro} className={cn('[&_p]:text-lg', title && 'mt-6')} />}
       </div>
 

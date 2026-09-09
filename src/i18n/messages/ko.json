@@ -393,16 +393,16 @@
         "intro": "자율형 DeFi의 발전을 가로막는 병목 현상은 추론 능력이 아니라 신뢰, 안전성, 그리고 실행력의 문제입니다.",
         "items": {
           "safety": {
-            "title": "Safety",
-            "body": "Every trade is cosigned by an independent oracle before execution — agents can't go rogue."
+            "title": "안전성",
+            "body": "모든 거래는 실행 전에 독립적인 오라클이 공동 서명합니다. 에이전트가 임의로 위험한 실행을 할 수 없습니다."
           },
           "quality": {
-            "title": "Execution quality",
-            "body": "Smart routing across DEXs with slippage protection, the same engine behind $2.2B+ in executed volume since 2022."
+            "title": "실행 품질",
+            "body": "DEX 전반에 걸친 스마트 라우팅과 슬리피지 보호를 제공합니다. 2022년 이후 22억불 이상의 실행 거래량을 뒷받침해온 동일한 엔진입니다."
           },
           "reliability": {
-            "title": "Reliability",
-            "body": "Handles retries, partial fills, native balance approvals, and RPC failures so the agent doesn't have to."
+            "title": "신뢰성",
+            "body": "에이전트가 직접 처리하지 않아도 되도록 재시도, 부분 체결, 네이티브 잔액 승인, RPC 실패를 처리합니다."
           }
         }
       },
@@ -432,7 +432,7 @@
         "title": "Chains"
       },
       "oracle": {
-        "title": "Cosigned oracle verification",
+        "title": "공동 서명 오라클 검증",
         "statement": "중요한 것은 단지 거래가 실행될 수 있느냐가 아닙니다. 안전하게 실행될 수 있느냐입니다.",
         "steps": {
           "decide": "에이전트가 자신의 정책과 시장 입력값을 바탕으로 무엇을 할지 결정합니다.",
@@ -443,30 +443,30 @@
       },
       "architecture": {
         "title": "Orbs Agentic Architecture",
-        "alt": "An agent calling an Orbs Agentic tool, with the Orbs Network handling routing and cosigned-oracle verification before the trade settles on-chain."
+        "alt": "에이전트가 Orbs Agentic 툴을 호출하면 Orbs Network가 라우팅과 공동 서명 오라클 검증을 처리한 뒤 온체인에서 거래가 체결되는 구조도."
       },
       "poweredBy": {
         "title": "Powered by Orbs Network",
-        "body": "Not a new protocol. The same battle-tested L3 infrastructure that has executed $2.2B+ in DeFi volume across limit orders, TWAP, and DCA strategies since 2022.\n\nLive integrations with PancakeSwap, SushiSwap, THENA, QuickSwap, SpookySwap, and more. Dozens of independent validators. Over 1B ORBS staked. Running on mainnet since 2019."
+        "body": "새로운 프로토콜이 아닙니다. 2022년부터 지정가 주문, TWAP, DCA 전략 전반에서 22억달러 이상의 DeFi 거래량을 처리해온, 이미 검증된 바로 그 L3 인프라입니다.\n\nPancakeSwap, SushiSwap, THENA, QuickSwap, SpookySwap 등과 이미 통합되어 있습니다. 수십 개의 독립 검증인, 10억개 이상 스테이킹된 ORBS, 2019년부터 운영 중인 메인넷 기반입니다."
       },
       "getStarted": {
-        "title": "Get Started. Start building in 5 minutes.",
+        "title": "시작해보세요. 5분 안에 빌드를 시작할 수 있습니다.",
         "items": {
           "docs": {
-            "title": "Read the Docs",
-            "body": "Understand the tools and integration patterns."
+            "title": "문서 읽기",
+            "body": "도구과 적용 패턴을 배워보세요."
           },
           "api": {
-            "title": "Get your API Key",
-            "body": "Access the execution layer in minutes."
+            "title": "API 키 받기",
+            "body": "단 몇 분 안에 실행 레이어에 접근할 수 있습니다."
           },
           "call": {
-            "title": "Make your first call",
-            "body": "autoswap, autolimit, or TWAP — one line of code."
+            "title": "지금 체험해보세요",
+            "body": "autoswap, autolimit, TWAP - 단 한 줄의 코드면 됩니다."
           }
         }
       },
-      "disclaimer": "Orbs Agentic is a beta product under active development. All underlying digital assets, blockchain networks, and DeFi platforms are subject to ongoing development and various risks. Use at your own risk."
+      "disclaimer": "Orbs Agentic은 현재 활발히 개발 중인 베타 제품입니다. 관련된 모든 디지털 자산, 블록체인 네트워크, DeFi 플랫폼은 지속적으로 변화하며 다양한 위험을 수반합니다. 사용에 따른 책임은 사용자에게 있습니다."
     }
   }
 }

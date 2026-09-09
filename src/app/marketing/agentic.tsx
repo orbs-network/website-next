@@ -74,6 +74,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           body: t(`tools.items.${id}.body`),
         }))}
         lang={textLang(t('tools.intro'), locale)}
+        titleLang={textLang(t('tools.title'), locale)}
       />
 
       <ChainLogos
@@ -96,6 +97,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         height={AGENTIC_DIAGRAM.height}
         imageAlt={t('architecture.alt')}
         lang={textLang(t('architecture.alt'), locale)}
+        titleLang={textLang(t('architecture.title'), locale)}
       />
 
       <ArchitectureSection
