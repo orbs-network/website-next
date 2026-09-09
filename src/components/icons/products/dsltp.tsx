@@ -1,10 +1,15 @@
 import type { HTMLAttributes } from 'react'
+import { DSltpGlyph } from './glyphs'
 
 type DSltpProps = HTMLAttributes<HTMLSpanElement>
 
 /**
- * dSLTP product lockup — a downward triangle / chevron glyph + label. Uses
- * `currentColor` so the glyph inherits the parent `text-*` color.
+ * dSLTP product lockup — downward triangle + label. The glyph uses
+ * `currentColor`, so it inherits the parent `text-*` color.
+ *
+ * The mark itself lives in `./glyphs` so the menu rows can use it without the
+ * wordmark. It is `aria-hidden` there, because the label beside it already
+ * names the product.
  */
 export function DSltp({ className, ...rest }: DSltpProps) {
   const classes = ['inline-flex items-center gap-2 text-h5 uppercase tracking-wider', className]
@@ -12,16 +17,7 @@ export function DSltp({ className, ...rest }: DSltpProps) {
     .join(' ')
   return (
     <span className={classes} {...rest}>
-      <svg
-        viewBox="0 0 24 24"
-        width="1em"
-        height="1em"
-        xmlns="http://www.w3.org/2000/svg"
-        role="img"
-        aria-label="dSLTP glyph"
-      >
-        <path fill="currentColor" d="M2 6 L22 6 L12 21 Z" />
-      </svg>
+      <DSltpGlyph />
       <span>
         d<strong>SLTP</strong>
       </span>

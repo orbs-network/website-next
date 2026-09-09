@@ -1,20 +1,33 @@
 {
   "_note": "Japanese chrome is deliberately mostly English. The legacy site's jp/_shared/navbar menu links are English there too — every label in jp/_shared/navbar/menu-links/**/*.md is ASCII. The only genuinely translated Japanese chrome on the legacy site is the GDPR banner, the subscribe form, and the footer logo blurb; of those only \"footer.blurb\" exists here so far, and it carries the real legacy copy from jp/_shared/footer/logo-section.md rather than a new translation. Every other footer label is English because the legacy Japanese footer shows it in English. \"footer.links.accessibility\" is empty on purpose: that footer links Terms of Use and Privacy Policy only, and an empty label is how this codebase expresses an omitted link (see ArchitectureSection). Translating the nav here would invent copy the Japanese site has never shown, so these keys mirror English until real copy is supplied.",
   "nav": {
-    "products": "Products",
-    "resources": "Resources",
-    "developers": "Developers",
-    "blog": "Blog",
-    "media": "Media",
-    "liquidityHub": "Liquidity Hub",
-    "perpetualHub": "Perpetual Hub",
-    "tetra": "Tetra",
-    "stakingCalculator": "Staking Calculator",
-    "faqSupport": "FAQ & Support",
-    "brandingKit": "Branding Kit",
-    "documentation": "Documentation",
-    "apiReference": "API Reference",
-    "github": "GitHub"
+    "groups": {
+      "products": "Products",
+      "resources": "Resources",
+      "developers": "Developers"
+    },
+    "sections": {
+      "infrastructure": "Infrastructure",
+      "advancedTrading": "Advanced Trading Tools",
+      "tools": "Tools"
+    },
+    "links": {
+      "liquidityHub": "Liquidity Hub",
+      "perpetualHub": "Perpetual Hub",
+      "dlimit": "dLIMIT Protocol",
+      "dtwap": "dTWAP Protocol",
+      "dsltp": "dSLTP Protocol",
+      "blog": "Blog",
+      "whitePapers": "Whitepapers",
+      "faq": "FAQ",
+      "tetraWallet": "Tetra Wallet",
+      "stakingCalculator": "Staking Calculator",
+      "developerDocs": "Developer Docs",
+      "notifications": "Notification Protocol",
+      "tonVote": "TON Vote",
+      "tonAccess": "TON Access",
+      "media": "Media"
+    }
   },
   "header": {
     "getInTouch": "Get in Touch",

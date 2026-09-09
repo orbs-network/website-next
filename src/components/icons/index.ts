@@ -18,12 +18,21 @@ export { ArrowLeft } from './arrows/arrow-left'
 export { ArrowUp } from './arrows/arrow-up'
 export { ArrowDown } from './arrows/arrow-down'
 
-// Products
+// Products — lockups (glyph + wordmark)
 export { LiquidityHub } from './products/liquidity-hub'
 export { PerpetualHub } from './products/perpetual-hub'
 export { DLimit } from './products/dlimit'
 export { DTwap } from './products/dtwap'
 export { DSltp } from './products/dsltp'
+
+// Products — bare glyphs, for menu rows where the label is a sibling
+export {
+  DLimitGlyph,
+  DSltpGlyph,
+  DTwapGlyph,
+  LiquidityHubGlyph,
+  PerpetualHubGlyph,
+} from './products/glyphs'
 
 // Partners
 export { LynexLogo } from './partners/lynex-logo'

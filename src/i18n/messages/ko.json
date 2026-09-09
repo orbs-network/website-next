@@ -1,20 +1,33 @@
 {
   "_note": "Korean values are lifted from the legacy site's ko/_shared/**/*.md rather than newly translated. Keys left in English are ones the legacy Korean site also shows in English: the Resources and Developers menus are untranslated there, in both the navbar and the footer, and \"footer.links.accessibility\" keeps the legacy footer's own English \"Accessibility declaration\". The Products/Resources/Developers group headings have no legacy counterpart at all (the legacy menu groups are Overview/Protocols/Resources/Community). Those resolve when #30 replaces this placeholder nav with the real structure. \"footer.blurb\" is the legacy ko/_shared/footer/logo-section.md copy with its inline dLIMIT/dTWAP/Liquidity Hub links dropped — Prose renders paragraphs and bold, not links, and all three targets sit in the adjacent Powered by Orbs column.",
   "nav": {
-    "products": "Products",
-    "resources": "Resources",
-    "developers": "Developers",
-    "blog": "블로그",
-    "media": "미디어",
-    "liquidityHub": "유동성 허브",
-    "perpetualHub": "선물 유동성 허브",
-    "tetra": "Tetra",
-    "stakingCalculator": "Staking Calculator",
-    "faqSupport": "FAQ",
-    "brandingKit": "브랜드 로고",
-    "documentation": "Documentation",
-    "apiReference": "API Reference",
-    "github": "GitHub"
+    "groups": {
+      "products": "Products",
+      "resources": "Resources",
+      "developers": "Developers"
+    },
+    "sections": {
+      "infrastructure": "Infrastructure",
+      "advancedTrading": "Advanced Trading Tools",
+      "tools": "Tools"
+    },
+    "links": {
+      "liquidityHub": "유동성 허브",
+      "perpetualHub": "선물 유동성 허브",
+      "dlimit": "dLIMIT 프로토콜",
+      "dtwap": "dTWAP 프로토콜",
+      "dsltp": "dSLTP 프로토콜",
+      "blog": "블로그",
+      "whitePapers": "백서 및 개발문서",
+      "faq": "FAQ",
+      "tetraWallet": "Tetra Wallet",
+      "stakingCalculator": "Staking Calculator",
+      "developerDocs": "Developer Docs",
+      "notifications": "DeFi 알림 프로토콜",
+      "tonVote": "TON Vote",
+      "tonAccess": "TON 액세스",
+      "media": "미디어"
+    }
   },
   "header": {
     "getInTouch": "문의하기",
