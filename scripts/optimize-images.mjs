@@ -21,7 +21,7 @@
  * source at build — plus not carrying 60-megapixel originals in git forever.
  */
 
-import { readdir, stat, writeFile } from 'node:fs/promises'
+import { readFile, readdir, stat, writeFile } from 'node:fs/promises'
 import { extname, join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
@@ -90,6 +90,38 @@ async function optimize(path) {
   return { before, after: buffer.length, width: meta.width, height: meta.height, buffer }
 }
 
+/**
+ * Content modules declare each image's intrinsic dimensions so `next/image` can
+ * reserve the right box before the file loads. Resizing invalidates them.
+ *
+ * This reports the drift rather than editing source: a script that rewrites
+ * TypeScript by regex is a worse problem than the one it solves, and this one
+ * already missed three constants that happened to be formatted across several
+ * lines. Reporting means the next person sees the list and fixes it; silence
+ * meant three pages reserved the wrong aspect ratio for a while.
+ */
+async function reportStaleDeclaredDimensions() {
+  const dir = join(REPO, 'src/content/pages')
+  const declared = /src: '(\/marketing\/[^']+)',\s*width: (\d+),\s*height: (\d+)/g
+  const stale = []
+
+  for (const name of await readdir(dir)) {
+    if (!name.endsWith('.ts')) continue
+    const source = await readFile(join(dir, name), 'utf8')
+
+    for (const [, src, width, height] of source.matchAll(declared)) {
+      const meta = await sharp(join(REPO, 'public', src)).metadata()
+      if (meta.width !== Number(width) || meta.height !== Number(height)) {
+        stale.push(`  ${src}: declared ${width}x${height}, file is ${meta.width}x${meta.height}  (${name})`)
+      }
+    }
+  }
+
+  if (stale.length > 0) {
+    process.stdout.write(`\nSTALE DECLARED DIMENSIONS — update these constants:\n${stale.join('\n')}\n`)
+  }
+}
+
 async function main() {
   const argv = process.argv.slice(2)
   const dryRun = argv.includes('--dry-run')
@@ -128,6 +160,8 @@ async function main() {
       `Total: ${kb(totalBefore)} -> ${kb(totalAfter)} ` +
       `(-${Math.round((1 - totalAfter / totalBefore) * 100)}%)${dryRun ? '  [dry run]' : ''}\n`
   )
+
+  await reportStaleDeclaredDimensions()
 }
 
 main().catch((error) => {

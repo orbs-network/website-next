@@ -57,8 +57,8 @@ export const AGENTIC_ORACLE_STEPS = ['decide', 'submit', 'price', 'cosign'] as c
 
 export const AGENTIC_DIAGRAM = {
   src: '/marketing/agentic/diagram.png',
-  width: 2680,
-  height: 1508,
+  width: 1800,
+  height: 1013,
 } as const
 
 /** The three ways in, in legacy order. */
