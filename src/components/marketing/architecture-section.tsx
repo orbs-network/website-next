@@ -42,7 +42,12 @@ export function ArchitectureSection({
 }: SectionImage & {
   title: string
   body: string
-  links: readonly ArchitectureLink[]
+  /**
+   * Optional: two of Perpetual Hub's sections are a heading, prose and a
+   * diagram with nothing to click. Requiring an empty array there would be a
+   * caller working around the type rather than describing the section.
+   */
+  links?: readonly ArchitectureLink[]
   /** Set when this copy is English inside a non-English document. */
   lang?: string
   /**
@@ -56,7 +61,7 @@ export function ArchitectureSection({
    */
   titleLang?: string
 }) {
-  const visibleLinks = links.filter((link) => link.label.trim() !== '')
+  const visibleLinks = (links ?? []).filter((link) => link.label.trim() !== '')
 
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
