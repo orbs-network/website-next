@@ -56,12 +56,11 @@ export async function Footer({ locale }: { locale: Locale }) {
               className="inline-flex"
             >
               {/*
-                `OrbsLogo` names itself "Orbs". Inside a link that already has
-                an `aria-label`, that is a second piece of content in one link —
-                the same redundancy the social icons avoid, so it is hidden the
-                same way and the link keeps one accessible name.
+                Hidden for the same reason as in the header: the lockup's own
+                wordmark would be a second piece of content inside a link that
+                is already labelled.
               */}
-              <OrbsLogo className="h-8 w-auto" aria-hidden focusable="false" />
+              <OrbsLogo className="text-xl" aria-hidden />
             </Link>
 
             {/*

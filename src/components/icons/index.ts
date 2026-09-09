@@ -1,6 +1,7 @@
 export type { ArrowVariant, BrandVariant, IconBaseProps, PartnerVariant, Theme } from './types'
 
 export { OrbsLogo } from './orbs-logo'
+export { OrbsMark } from './orbs-mark'
 export { ThemeToggleIcon } from './theme-toggle-icon'
 export { LocaleIcon } from './locale-icon'
 

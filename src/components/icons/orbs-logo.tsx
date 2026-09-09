@@ -1,52 +1,45 @@
-import type { BrandVariant, IconBaseProps } from './types'
+import type { HTMLAttributes } from 'react'
+import { OrbsMark } from './orbs-mark'
+import type { BrandVariant } from './types'
 
-type OrbsLogoProps = IconBaseProps & {
+type OrbsLogoProps = HTMLAttributes<HTMLSpanElement> & {
   variant?: BrandVariant
 }
 
 /**
- * Orbs wordmark + glyph. Placeholder-quality approximation of the real
- * brand mark — three overlapping orbs (periwinkle / pink / cyan) next to an
- * "ORBS" wordmark. The designer will swap in the real asset before launch.
+ * The Orbs lockup: the brand mark followed by the wordmark.
  *
- * The `color` variant keeps brand hex fills on the glyph but renders the
- * wordmark in `currentColor` so it inherits the parent `text-*` color and
- * stays legible in both light and dark themes. The `dark` variant uses
- * `currentColor` for both glyph and wordmark; `white` hard-codes white.
+ * Replaces a placeholder that drew three plain circles and set the wordmark as
+ * an SVG `<text>` node. The text node was the worse half of that: it rendered
+ * only if Montserrat had loaded, fell back to whatever the system offered when
+ * it had not, and spaced differently across platforms — a wordmark that is not
+ * the same shape twice. As HTML text it inherits the page font like every other
+ * string on the site.
+ *
+ * A `<span>` rather than an `<svg>`, matching the product lockups in
+ * `icons/products`: mark and label are siblings, so the label is real text that
+ * can be selected, translated and read aloud rather than a glyph outline.
+ *
+ * Sized by FONT SIZE, not by width. The mark is `1.4em`, so `text-2xl` on the
+ * caller scales both parts together and they cannot drift apart — which a
+ * `w-48 h-auto` on an svg could not guarantee once the wordmark stopped being
+ * part of that svg.
+ *
+ * The mark is `aria-hidden` here because the wordmark beside it already says
+ * "Orbs"; leaving its `role="img"` exposed would name one lockup twice (#84).
+ * That also makes this safe to use standalone — the visible text carries the
+ * name — while callers that wrap it in an already-labelled link pass
+ * `aria-hidden` on the lockup itself.
  */
-export function OrbsLogo({ variant = 'color', width = '6em', height = '1.5em', ...rest }: OrbsLogoProps) {
-  const wordmarkFill = variant === 'white' ? '#ffffff' : 'currentColor'
-  const orb1 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#7A89E9'
-  const orb2 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#DC8AE0'
-  const orb3 = variant === 'white' ? '#ffffff' : variant === 'dark' ? 'currentColor' : '#2CEDFC'
+export function OrbsLogo({ variant = 'color', className, ...rest }: OrbsLogoProps) {
+  const classes = ['inline-flex items-center gap-2 font-bold uppercase leading-none tracking-wider', className]
+    .filter(Boolean)
+    .join(' ')
 
   return (
-    <svg
-      viewBox="0 0 120 32"
-      width={width}
-      height={height}
-      fill="none"
-      xmlns="http://www.w3.org/2000/svg"
-      role="img"
-      aria-label="Orbs"
-      {...rest}
-    >
-      <g opacity={variant === 'color' ? 0.9 : 1}>
-        <circle cx="11" cy="11" r="8" fill={orb1} />
-        <circle cx="21" cy="11" r="8" fill={orb2} opacity={variant === 'color' ? 0.85 : 1} />
-        <circle cx="16" cy="20" r="8" fill={orb3} opacity={variant === 'color' ? 0.85 : 1} />
-      </g>
-      <text
-        x="38"
-        y="22"
-        fontFamily="Montserrat, system-ui, sans-serif"
-        fontWeight="700"
-        fontSize="18"
-        letterSpacing="2"
-        fill={wordmarkFill}
-      >
-        ORBS
-      </text>
-    </svg>
+    <span className={classes} {...rest}>
+      <OrbsMark variant={variant} aria-hidden focusable="false" className="size-[1.4em] shrink-0" />
+      <span>Orbs</span>
+    </span>
   )
 }
