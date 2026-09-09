@@ -6,6 +6,8 @@ import { useState } from 'react'
 import { Separator } from '@/components/ui/separator'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import { MenuItemW } from '@/components/ui/menu-item'
+import { textLang } from '@/i18n/script'
+import type { Locale } from '@/i18n/locales'
 import { GLYPHS, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-client'
 
 /**
@@ -35,15 +37,28 @@ import { GLYPHS, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-
 export function MobileNav({
   groups,
   topLevel,
+  locale,
   label,
   title,
+  closeLabel,
 }: {
   groups: readonly ResolvedNavGroup[]
   topLevel: readonly ResolvedNavLink[]
+  /**
+   * Needed to decide each label's `lang`.
+   *
+   * These three strings go through the same per-string rule as the menu rows:
+   * they are English in the Japanese catalog (as almost all Japanese chrome is)
+   * and translated in Korean, so a blanket document `lang` would have a screen
+   * reader pronounce "Open menu" with Japanese rules.
+   */
+  locale: Locale
   /** Accessible name for the trigger — the button shows only an icon. */
   label: string
   /** Required by Radix Dialog: names the panel for assistive tech. */
   title: string
+  /** Accessible name for the panel's close control. */
+  closeLabel: string
 }) {
   const [open, setOpen] = useState(false)
 
@@ -51,18 +66,26 @@ export function MobileNav({
     <Sheet open={open} onOpenChange={setOpen}>
       <SheetTrigger
         aria-label={label}
+        lang={textLang(label, locale)}
         className="inline-flex size-9 items-center justify-center text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
         <MenuIcon className="size-5" aria-hidden focusable="false" />
       </SheetTrigger>
 
-      <SheetContent side="right" className="w-[min(22rem,90vw)] overflow-y-auto">
+      <SheetContent
+        side="right"
+        className="w-[min(22rem,90vw)] overflow-y-auto"
+        closeLabel={closeLabel}
+        closeLang={textLang(closeLabel, locale)}
+      >
         {/*
           Radix warns — and screen readers suffer — without a title on a dialog.
           It is visually hidden because the panel's own heading is the groups
           themselves; a visible "Menu" above them would be noise.
         */}
-        <SheetTitle className="sr-only">{title}</SheetTitle>
+        <SheetTitle className="sr-only" lang={textLang(title, locale)}>
+          {title}
+        </SheetTitle>
 
         <nav className="mt-8 flex flex-col gap-6">
           {groups.map((group, groupIndex) => (

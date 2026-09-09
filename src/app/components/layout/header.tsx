@@ -73,8 +73,10 @@ export async function Header({ locale }: { locale: Locale }) {
               <MobileNav
                 groups={groups}
                 topLevel={topLevel}
+                locale={locale}
                 label={nav('menuLabel')}
                 title={nav('menuTitle')}
+                closeLabel={nav('menuClose')}
               />
             </div>
           </div>

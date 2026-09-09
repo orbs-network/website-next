@@ -28,7 +28,8 @@
       "media": "Media"
     },
     "menuLabel": "Open menu",
-    "menuTitle": "Menu"
+    "menuTitle": "Menu",
+    "menuClose": "Close"
   },
   "header": {
     "getInTouch": "Get in Touch",

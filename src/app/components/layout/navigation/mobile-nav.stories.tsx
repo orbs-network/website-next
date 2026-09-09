@@ -39,8 +39,10 @@ const RESOURCES: ResolvedNavGroup = {
 const BASE = {
   groups: [PRODUCTS, RESOURCES],
   topLevel: [{ key: 'media', href: '/news/', external: false, label: 'Media' }],
+  locale: 'en' as const,
   label: 'Open menu',
   title: 'Menu',
+  closeLabel: 'Close',
 }
 
 /** Nothing is in the DOM until asked for — the trigger is the only control. */
@@ -131,5 +133,39 @@ export const ExternalRowsOpenSafely: Story = {
 
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+  },
+}
+
+/**
+ * The trigger, panel title and close control take the same per-string `lang`
+ * treatment as the menu rows. Korean translates the close control but leaves
+ * "Open menu" in English, so only one of them is marked — a blanket document
+ * `lang` would have a screen reader read the English one with Korean rules.
+ */
+export const LabelsCarryPerStringLang: Story = {
+  args: { ...BASE, locale: 'ko', label: 'Open menu', closeLabel: '닫기' },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const trigger = canvas.getByRole('button', { name: 'Open menu' })
+
+    await expect(trigger).toHaveAttribute('lang', 'en')
+
+    await userEvent.click(trigger)
+    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
+
+    // Korean close label is genuinely Korean, so it carries no override.
+    await expect(within(dialog).getByText('닫기')).not.toHaveAttribute('lang')
+  },
+}
+
+/** The close control is named from the catalog, not shadcn's hardcoded English. */
+export const CloseControlIsTranslated: Story = {
+  args: { ...BASE, locale: 'ko', closeLabel: '닫기' },
+  play: async ({ canvasElement }) => {
+    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
+
+    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
+    await expect(within(dialog).getByRole('button', { name: '닫기' })).toBeInTheDocument()
+    await expect(within(dialog).queryByRole('button', { name: 'Close' })).not.toBeInTheDocument()
   },
 }
