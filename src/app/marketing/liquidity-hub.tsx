@@ -102,7 +102,12 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           items: t(`partners.items.${partner.id}.list`).split('\n').filter(Boolean),
           cta: t(`partners.items.${partner.id}.cta`),
         }))}
-        lang={textLang(t('partners.title'), locale)}
+        // From a partner subtitle, not the title: "Partners" stays English in
+        // the Korean catalog while everything under it is translated, so the
+        // title carries its own override and the section takes the language of
+        // its body.
+        lang={textLang(t('partners.items.quickswap.subtitle'), locale)}
+        titleLang={textLang(t('partners.title'), locale)}
       />
 
       <ArchitectureSection

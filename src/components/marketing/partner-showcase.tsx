@@ -35,15 +35,28 @@ export function PartnerShowcase({
   title,
   partners,
   lang,
+  titleLang,
 }: {
   title: string
   partners: readonly ResolvedPartner[]
   /** Set when this copy is English inside a non-English document. */
   lang?: string
+  /**
+   * Set when the HEADING's language differs from the rest of the section.
+   *
+   * "Partners" stays English in the Korean catalog — the legacy page leaves it
+   * that way — while the subtitles, lists and calls to action beneath it are
+   * Korean. Deriving one section language from the title marked all of that
+   * Korean copy English, the same defect `ArchitectureSection` carries a
+   * `titleLang` to avoid.
+   */
+  titleLang?: string
 }) {
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center">{title}</H2>
+      <H2 className="text-balance text-center" lang={titleLang}>
+        {title}
+      </H2>
 
       <div className="mt-16 space-y-16">
         {partners.map((partner) => (
