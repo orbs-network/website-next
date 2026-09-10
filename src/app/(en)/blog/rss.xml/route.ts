@@ -10,8 +10,7 @@ import { absoluteUrl, siteUrl } from '@/app/lib/site'
  *
  * Generated from Contentful rather than by parsing built HTML, which is what
  * the old `build-rss-feed.js` did.
- */
-/**
+ *
  * Rendered per request, then cached at the edge by the `Cache-Control` header
  * the handler sets — see `GET`.
  *
