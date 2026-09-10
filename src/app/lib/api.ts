@@ -1,3 +1,4 @@
+import { cache } from 'react'
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
 import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
@@ -322,10 +323,29 @@ export async function getPostById(entryId: string, preview = false): Promise<Blo
 }
 
 /**
+ * Wrapped in React `cache()` so the two reads of one post share a request.
+ *
+ * Every post route reads this twice — once in `generateMetadata`, once in the
+ * page body — because the metadata has to come from the same source the body
+ * renders or a draft renders under published metadata. Next dedupes repeated
+ * `fetch()` calls automatically, but the Contentful SDK uses its own HTTP
+ * client, so those two reads were invisible to it and went out as two requests.
+ * Across a full prerender of the archive that was ~460 wasted round trips per
+ * build, each pulling a complete Rich Text document.
+ *
+ * `cache()` is scoped to a single render pass, so this dedupes the pair without
+ * holding anything between requests — freshness still comes from `revalidate`
+ * and the Contentful webhook, unchanged.
+ *
+ * NB: the memo key is the argument LIST, so `getPostBySlug(slug)` and
+ * `getPostBySlug(slug, false)` are separate entries despite being equivalent.
+ * Both call sites pass `isDraft` explicitly. Keep it that way, or the dedupe
+ * silently stops working.
+ *
  * @param preview Read through the Preview API so unpublished drafts resolve.
  *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
  */
-export async function getPostBySlug(slug: string, preview = false): Promise<BlogPostFields | null> {
+export const getPostBySlug = cache(async (slug: string, preview = false): Promise<BlogPostFields | null> => {
   const client = getClient(preview)
 
   const posts = await client.getEntries<TypeBlogPostSkeleton>({
@@ -339,5 +359,5 @@ export async function getPostBySlug(slug: string, preview = false): Promise<Blog
   }
 
   return posts.items[0].fields
-}
+})
 
