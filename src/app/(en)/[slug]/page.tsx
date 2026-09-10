@@ -107,7 +107,32 @@ type Props = {
 // (#19) is the primary path; this bounds staleness if a webhook is missed.
 export const revalidate = 3600
 
+/**
+ * Prerender the whole archive on production builds only.
+ *
+ * Returning a slug here means "render this page at build time", so the full
+ * list costs one Contentful read per post on every build. That is the right
+ * trade for production — posts get most of their traffic in bursts from
+ * Twitter link-backs, and a burst should land on warm cache, not on ~460 cold
+ * renders — but it is pure waste everywhere else. Preview deploys are built on
+ * every push and nobody reads their archive; local builds are run constantly
+ * while developing. Between them they were the bulk of this project's
+ * Contentful consumption, and in September 2026 they exhausted the space's
+ * Delivery API allowance outright, blocking every build including production.
+ *
+ * `dynamicParams` is left at its default of `true`, so the posts omitted here
+ * are not gone — they render on first request and are then cached and
+ * revalidated exactly as a prerendered page is. The only difference is when the
+ * first render happens.
+ *
+ * The sitemap enumerates posts independently (`getAllPostRefs`), so what is
+ * prerendered has no bearing on what crawlers are told exists.
+ *
+ * To exercise the production path locally, set `VERCEL_ENV=production`.
+ */
 export async function generateStaticParams() {
+  if (process.env.VERCEL_ENV !== 'production') return []
+
   const slugs = await getAllPostSlugs()
 
   return slugs.map((slug) => ({ slug }))
