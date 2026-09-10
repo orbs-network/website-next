@@ -120,7 +120,7 @@ export const DTWAP_SLIDES = [
 ] as const
 
 /** Protocol architecture diagram, alongside the maker/taker explanation. */
-export const DTWAP_SCHEMA_IMAGE = { src: '/marketing/dtwap/schema.png', width: 2235, height: 1328 } as const
+export const DTWAP_SCHEMA_IMAGE = { src: '/marketing/dtwap/schema.png', width: 1800, height: 1070 } as const
 
 /**
  * Taken from the legacy components, not from the content frontmatter — the

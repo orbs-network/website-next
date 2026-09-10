@@ -37,8 +37,8 @@ export const PERPETUAL_HUB_BENEFITS = [
 /** "Integrate": the trading-stack diagram. */
 export const PERPETUAL_HUB_DIAGRAM = {
   src: '/marketing/perpetual-hub/diagram.png',
-  width: 2081,
-  height: 1092,
+  width: 1800,
+  height: 945,
 } as const
 
 /** "Partners & Integrations": a logo board rather than a per-DEX grid. */

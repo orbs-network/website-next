@@ -43,7 +43,7 @@ export const AGENTIC_TOOLS = ['autoswap', 'autolimit', 'secureswap', 'twap'] as 
  */
 export const AGENTIC_CHAINS: readonly LogoRowItem[] = [
   { name: 'Ethereum', logo: { src: '/marketing/agentic/chains/ethereum.png', width: 250, height: 250 } },
-  { name: 'BSC', logo: { src: '/marketing/agentic/chains/bnb.png', width: 2000, height: 2000 } },
+  { name: 'BSC', logo: { src: '/marketing/agentic/chains/bnb.png', width: 1800, height: 1800 } },
   { name: 'Polygon', logo: { src: '/marketing/agentic/chains/polygon.png', width: 250, height: 241 } },
   { name: 'Avalanche', logo: { src: '/marketing/agentic/chains/avalanche.png', width: 250, height: 250 } },
   { name: 'Arbitrum', logo: { src: '/marketing/agentic/chains/arbitrum.jpg', width: 250, height: 250 } },
@@ -57,8 +57,8 @@ export const AGENTIC_ORACLE_STEPS = ['decide', 'submit', 'price', 'cosign'] as c
 
 export const AGENTIC_DIAGRAM = {
   src: '/marketing/agentic/diagram.png',
-  width: 2680,
-  height: 1508,
+  width: 1800,
+  height: 1013,
 } as const
 
 /** The three ways in, in legacy order. */

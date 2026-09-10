@@ -104,4 +104,4 @@ export const DLIMIT_LINKS = {
 /** The five benefit cards, in legacy order. Copy is `pages.dlimit.benefits.items.<id>`. */
 export const DLIMIT_BENEFITS = ['bestPrice', 'reliable', 'decentralized', 'userProtection', 'trackRecord'] as const
 
-export const DLIMIT_SCHEMA_IMAGE = { src: '/marketing/dlimit/schema.png', width: 9921, height: 6098 } as const
+export const DLIMIT_SCHEMA_IMAGE = { src: '/marketing/dlimit/schema.png', width: 1800, height: 1106 } as const

@@ -29,8 +29,8 @@ export const LIQUIDITY_HUB_AUDIENCES = ['users', 'dex', 'solvers'] as const
 
 export const LIQUIDITY_HUB_DIAGRAM = {
   src: '/marketing/liquidity-hub/diagram.png',
-  width: 2006,
-  height: 926,
+  width: 1800,
+  height: 831,
 } as const
 
 /**

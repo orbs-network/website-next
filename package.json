@@ -12,7 +12,8 @@
     "generate-types": "cf-content-types-generator src/contentful-types/*.json -o src/app/generated-types -X",
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
-    "visual-review": "node scripts/visual-review.mjs"
+    "visual-review": "node scripts/visual-review.mjs",
+    "optimize-images": "node scripts/optimize-images.mjs"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.6",
@@ -54,6 +55,7 @@
     "eslint-plugin-storybook": "^10.6.0",
     "playwright": "^1.57.0",
     "postcss": "^8.5.26",
+    "sharp": "^0.35.4",
     "storybook": "^10.5.8",
     "tailwindcss": "^3.4.1",
     "typescript": "^5",
