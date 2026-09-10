@@ -108,22 +108,39 @@ type Props = {
 export const revalidate = 3600
 
 /**
- * Prerender the whole archive on production builds only.
+ * How much of the archive a production build renders ahead of time.
  *
- * Returning a slug here means "render this page at build time", so the full
- * list costs one Contentful read per post on every build. That is the right
- * trade for production — posts get most of their traffic in bursts from
- * Twitter link-backs, and a burst should land on warm cache, not on ~460 cold
- * renders — but it is pure waste everywhere else. Preview deploys are built on
- * every push and nobody reads their archive; local builds are run constantly
- * while developing. Between them they were the bulk of this project's
- * Contentful consumption, and in September 2026 they exhausted the space's
- * Delivery API allowance outright, blocking every build including production.
+ * Sized to the traffic pattern rather than the archive. Posts get their views
+ * in bursts from Twitter link-backs, and what gets linked is a post that was
+ * just published — so warming the newest window covers essentially every burst,
+ * while the older ~400 posts, which are linked rarely and read rarely, do not
+ * need to be paid for on every deploy.
+ *
+ * Raise it if link-backs to older posts turn out to be common. The cost is
+ * linear: one Contentful read per post per production build.
+ */
+const PRERENDERED_POST_COUNT = 50
+
+/**
+ * Prerender the newest posts, and only on production builds.
+ *
+ * Returning a slug here means "render this page at build time", so each one
+ * costs a Contentful read on every build. Two things bound that:
+ *
+ *  - **Environment.** Preview deploys are built on every push and nobody reads
+ *    their archive; local builds run constantly while developing. Between them
+ *    they were the bulk of this project's Contentful consumption, and in
+ *    September 2026 they exhausted the space's Delivery API allowance outright,
+ *    blocking every build including production (#115).
+ *  - **Count.** Prerendering all ~456 posts made deploys the single largest
+ *    consumer even after the environment gate — roughly 15% of the monthly
+ *    allowance spent on shipping rather than on serving anyone.
  *
  * `dynamicParams` is left at its default of `true`, so the posts omitted here
- * are not gone — they render on first request and are then cached and
- * revalidated exactly as a prerendered page is. The only difference is when the
- * first render happens.
+ * are not gone: they render on first request and are then cached and
+ * revalidated exactly as a prerendered page is. The only difference is who pays
+ * for the first render — and for a post nobody has opened in a year, nobody
+ * was going to.
  *
  * The sitemap enumerates posts independently (`getAllPostRefs`), so what is
  * prerendered has no bearing on what crawlers are told exists.
@@ -133,9 +150,11 @@ export const revalidate = 3600
 export async function generateStaticParams() {
   if (process.env.VERCEL_ENV !== 'production') return []
 
+  // Newest first — `getAllPostSlugs` preserves POST_ORDER, so this is the most
+  // recent window rather than an arbitrary slice.
   const slugs = await getAllPostSlugs()
 
-  return slugs.map((slug) => ({ slug }))
+  return slugs.slice(0, PRERENDERED_POST_COUNT).map((slug) => ({ slug }))
 }
 
 export async function generateMetadata({ params }: Props): Promise<Metadata> {
