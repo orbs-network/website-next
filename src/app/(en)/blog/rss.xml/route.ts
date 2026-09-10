@@ -11,6 +11,16 @@ import { absoluteUrl, siteUrl } from '@/app/lib/site'
  * Generated from Contentful rather than by parsing built HTML, which is what
  * the old `build-rss-feed.js` did.
  */
+/**
+ * Rendered per request, then cached at the edge by the `Cache-Control` header
+ * the handler sets — see `GET`.
+ *
+ * NOT ISR. The feed embeds `absoluteUrl()` output in `<atom:link rel="self">`
+ * and in every item link, so prerendering it would freeze the build-time
+ * SITE_URL into a document that advertises its own canonical address — the
+ * same defect #71 tracks for canonicals, and the reason `sitemap.ts` is
+ * dynamic too. Freshness here is a CDN concern, not a build-time one.
+ */
 export const dynamic = 'force-dynamic'
 
 /** Matches the legacy channel metadata so readers see no change. */
@@ -115,7 +125,27 @@ ${items.filter((post) => post.slug).map(renderItem).join('\n')}
   return new Response(xml, {
     headers: {
       'Content-Type': 'application/rss+xml; charset=utf-8',
-      'Cache-Control': 'public, max-age=0, s-maxage=3600, stale-while-revalidate=86400',
+      /*
+       * One origin render per day, and the CDN absorbs every poll in between.
+       *
+       * This is the only thing standing between the Contentful allowance and
+       * however many readers decide to poll: the handler reads Contentful on
+       * every origin render, and feed readers poll on their own schedule
+       * regardless of how rarely the blog publishes. At `s-maxage=3600` a
+       * cold cache cost up to 730 reads a month; at a day it is ~30.
+       *
+       * `max-age=0` keeps browsers revalidating so a human visiting the URL
+       * still sees current content. `stale-while-revalidate` then serves the
+       * cached copy for a further week while it refreshes in the background,
+       * so a poll never waits on Contentful and a Contentful outage degrades
+       * to a stale feed rather than a 500.
+       *
+       * A day of staleness costs subscribers nothing in practice: the webhook
+       * cannot purge this (it is a CDN cache, not an ISR entry), but readers
+       * keep items they have already seen, and a blog that publishes weekly
+       * has nothing to show for most of any given day.
+       */
+      'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800',
     },
   })
 }
