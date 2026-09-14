@@ -1,20 +1,12 @@
-import { ChevronDown } from 'lucide-react'
 import { H1, H2 } from '@/app/components/typography'
+import { Disclosure } from './disclosure'
 import { MarkdownProse } from './markdown-prose'
 
 /**
  * A FAQ page: sections of questions, each answer collapsed until opened.
  *
- * Built on native `<details>`/`<summary>` rather than a JS disclosure. That is
- * not minimalism for its own sake — the browser supplies the expanded/collapsed
- * state, keyboard handling and the correct screen-reader announcement for free,
- * and it all works before hydration. These pages are static and otherwise ship
- * no client JavaScript at all; adding a Radix accordion would make a list of
- * questions the only interactive thing on the site that needs a bundle.
- *
- * Answers are also findable with the browser's own in-page search in Chromium,
- * which expands closed `<details>` to reveal a match. A JS accordion hides its
- * content from that entirely.
+ * Each answer is a `Disclosure` — see that component for why this is native
+ * `<details>` rather than a JS accordion.
  */
 
 export type FaqSection = {
@@ -87,31 +79,9 @@ export function FaqDocument({
 
               <div className="divide-y divide-border border-y border-border">
                 {section.questions.map(({ question, answer }) => (
-                  <details key={question} className="group py-4">
-                    <summary
-                      className={[
-                        // `list-none` plus the WebKit pseudo-element: the default
-                        // triangle marker cannot be styled and sits misaligned
-                        // against a multi-line question, so it is replaced by the
-                        // chevron below.
-                        'flex cursor-pointer list-none items-start justify-between gap-4',
-                        'font-medium text-fg [&::-webkit-details-marker]:hidden',
-                        'hover:text-accent-primary',
-                        'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
-                      ].join(' ')}
-                    >
-                      {question}
-                      <ChevronDown
-                        className="mt-1 size-4 shrink-0 transition-transform group-open:rotate-180"
-                        aria-hidden
-                        focusable="false"
-                      />
-                    </summary>
-
-                    <div className="mt-3 space-y-4 [&_ol]:mt-3 [&_ul]:mt-3">
-                      <MarkdownProse>{answer}</MarkdownProse>
-                    </div>
-                  </details>
+                  <Disclosure key={question} summary={question}>
+                    <MarkdownProse>{answer}</MarkdownProse>
+                  </Disclosure>
                 ))}
               </div>
             </div>

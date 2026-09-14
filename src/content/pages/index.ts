@@ -45,6 +45,8 @@ export const MARKETING_PAGE_PATHS = [
   '/ecosystem',
   // Network section: the Lambda/VM compute layer.
   '/execution-services',
+  // Network section: proof of stake, guardians and delegators.
+  '/pos',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]
