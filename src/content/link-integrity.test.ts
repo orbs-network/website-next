@@ -38,10 +38,8 @@ const CONTENT = join(REPO, 'src/content')
 const PENDING: readonly string[] = [
   '/brand-assets',
   '/contact',
-  '/dtwap-and-dlimit-faq',
   '/ecosystem',
   '/execution-services',
-  '/faq',
   '/notifications',
   '/overview',
   '/pos',

@@ -4,6 +4,7 @@ import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { AgenticPage } from './agentic'
 import { AiSkillsPage } from './ai-skills'
 import { InstitutionalPage } from './institutional'
+import { FaqPage } from './faq'
 import { LegalPage } from './legal'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
@@ -101,6 +102,17 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
       <LegalPage path="/liquidity-hub-terms-of-use" locale={locale} namespace="pages.liquidityHubTerms" />
     ),
     namespace: 'pages.liquidityHubTerms',
+  },
+
+  // Both FAQs share a renderer, as the legal pages do. Each keeps its own
+  // namespace, because each needs its own title and description.
+  '/faq': {
+    render: (locale) => <FaqPage path="/faq" locale={locale} namespace="pages.faq" />,
+    namespace: 'pages.faq',
+  },
+  '/dtwap-and-dlimit-faq': {
+    render: (locale) => <FaqPage path="/dtwap-and-dlimit-faq" locale={locale} namespace="pages.dtwapDlimitFaq" />,
+    namespace: 'pages.dtwapDlimitFaq',
   },
 }
 

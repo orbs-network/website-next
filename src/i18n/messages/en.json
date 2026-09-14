@@ -731,6 +731,18 @@
         "title": "Liquidity Hub Terms of Use",
         "description": "The terms governing use of the Liquidity Hub software protocol and smart contracts."
       }
+    },
+    "faq": {
+      "meta": {
+        "title": "FAQ",
+        "description": "Answers to common questions about Orbs, its Layer-3 network, Proof-of-Stake, staking and the TON tooling."
+      }
+    },
+    "dtwapDlimitFaq": {
+      "meta": {
+        "title": "dTWAP and dLIMIT FAQ",
+        "description": "Answers to common questions about the dTWAP, dLIMIT and dSLTP protocols, troubleshooting and technical documentation."
+      }
     }
   }
 }

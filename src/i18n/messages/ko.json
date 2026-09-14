@@ -586,6 +586,18 @@
         "title": "Liquidity Hub Terms of Use",
         "description": "The terms governing use of the Liquidity Hub software protocol and smart contracts."
       }
+    },
+    "faq": {
+      "meta": {
+        "title": "자주 묻는 질문",
+        "description": "Orbs와 레이어3 네트워크, 지분증명, 스테이킹 및 TON 도구에 대한 자주 묻는 질문과 답변입니다."
+      }
+    },
+    "dtwapDlimitFaq": {
+      "meta": {
+        "title": "dTWAP 및 dLIMIT FAQ",
+        "description": "dTWAP, dLIMIT, dSLTP 프로토콜과 문제 해결 및 기술 문서에 대한 자주 묻는 질문과 답변입니다."
+      }
     }
   }
 }

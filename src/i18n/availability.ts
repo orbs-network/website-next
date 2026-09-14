@@ -79,6 +79,13 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // English-only: none of them has a `jp/` or `ko/` directory in the legacy
   // repo, so there is nothing to serve and nothing to claim.
   '/privacy-policy': { en: 'translated', ja: 'translated', ko: 'placeholder' },
+  // `content/jp/faq` exists but holds the English text — zero Japanese
+  // characters across all 33 answers — so Japanese is reachable and
+  // `placeholder`. Korean is a real translation.
+  '/faq': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // No `content/jp/dtwap-and-dlimit-faq` in the legacy repo, so Japanese is not
+  // offered rather than being served English under a `ja` tag.
+  '/dtwap-and-dlimit-faq': { en: 'translated', ko: 'translated' },
 }
 
 /**
