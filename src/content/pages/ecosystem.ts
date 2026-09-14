@@ -85,12 +85,12 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Upbit',
         url: 'https://upbit.com/exchange?code=CRIX.UPBIT.KRW-ORBS',
-        logo: '/ecosystem/exchanges/upbit.svg',
+        logo: '/ecosystem/exchanges/upbit.png',
       },
       {
         name: 'Bittrex',
         url: 'https://www.orbs.com/bittrex-international-lists-orbs/',
-        logo: '/ecosystem/exchanges/bittrex.svg',
+        logo: '/ecosystem/exchanges/bittrex.png',
       },
       {
         name: 'Bithumb',
@@ -100,10 +100,10 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'KuCoin',
         url: 'https://trade.kucoin.com/spot/ORBS-USDT?lang=en_US',
-        logo: '/ecosystem/exchanges/kucoin.svg',
+        logo: '/ecosystem/exchanges/kucoin.png',
       },
-      { name: 'Okex', url: 'https://www.okex.com/markets/spot-info/orbs-usdt', logo: '/ecosystem/exchanges/okex.svg' },
-      { name: 'Gate.io', url: 'https://www.gate.io/trade/ORBS_USDT', logo: '/ecosystem/exchanges/gateio.svg' },
+      { name: 'Okex', url: 'https://www.okex.com/markets/spot-info/orbs-usdt', logo: '/ecosystem/exchanges/okex.png' },
+      { name: 'Gate.io', url: 'https://www.gate.io/trade/ORBS_USDT', logo: '/ecosystem/exchanges/gateio.png' },
       {
         name: 'Huobi',
         url: 'https://www.orbs.com/Huobi-Global-Lists-Orbs-Token/',
@@ -122,31 +122,31 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Coinone',
         url: 'https://coinone.co.kr/exchange/trade/orbs/krw',
-        logo: '/ecosystem/exchanges/coinone.svg',
+        logo: '/ecosystem/exchanges/coinone.png',
       },
-      { name: 'LaToken', url: 'https://latoken.com/exchange/ORBS_USDT', logo: '/ecosystem/exchanges/latoken.svg' },
+      { name: 'LaToken', url: 'https://latoken.com/exchange/ORBS_USDT', logo: '/ecosystem/exchanges/latoken.png' },
       {
         name: 'Coinsbit',
         url: 'https://coinsbit.io/trade_classic/ORBS_ETH',
         logo: '/ecosystem/exchanges/coinsbit.svg',
       },
       { name: 'Indodax', url: 'https://indodax.com/market/ORBSIDR', logo: '/ecosystem/exchanges/Indodax.png' },
-      { name: 'P2PB2b', url: 'https://p2pb2b.io/trade/ORBS_USDT/', logo: '/ecosystem/exchanges/p2p.svg' },
+      { name: 'P2PB2b', url: 'https://p2pb2b.io/trade/ORBS_USDT/', logo: '/ecosystem/exchanges/p2p.png' },
       {
         name: 'Bibox',
         url: 'https://www.bibox.com/en/exchange/basic/ORBS_USDT',
-        logo: '/ecosystem/exchanges/bibox.svg',
+        logo: '/ecosystem/exchanges/bibox.png',
       },
       {
         name: 'Bitbns',
         url: 'https://www.orbs.com/bitbns-exchange-lists-orbs-token-orbs/',
-        logo: '/ecosystem/exchanges/bitbns.svg',
+        logo: '/ecosystem/exchanges/bitbns.png',
       },
-      { name: 'ZT Global', url: 'https://www.ztb.im/exchange?coin=ORBS_USDT', logo: '/ecosystem/exchanges/zt.svg' },
+      { name: 'ZT Global', url: 'https://www.ztb.im/exchange?coin=ORBS_USDT', logo: '/ecosystem/exchanges/zt.png' },
       {
         name: 'Phemex',
         url: 'https://www.orbs.com/Phemex-Exchange-Lists-the-Orbs-Token/',
-        logo: '/ecosystem/exchanges/phemex.svg',
+        logo: '/ecosystem/exchanges/phemex.png',
       },
       {
         name: 'Bitrue',
@@ -248,57 +248,57 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Xangle',
         url: 'https://xangle.io/project/ORBS/key-info',
-        logo: '/ecosystem/transparencyAndData/xangle.svg',
+        logo: '/ecosystem/transparencyAndData/xangle.png',
       },
-      { name: 'Messari', url: 'https://messari.io/asset/orbs', logo: '/ecosystem/transparencyAndData/messari.svg' },
+      { name: 'Messari', url: 'https://messari.io/asset/orbs', logo: '/ecosystem/transparencyAndData/messari.png' },
       {
         name: 'Flipsidecrypto',
         url: 'https://orbs.flipsidecrypto.com/',
-        logo: '/ecosystem/transparencyAndData/flipside.svg',
+        logo: '/ecosystem/transparencyAndData/flipside.png',
       },
       {
         name: 'Start-up Nation Central',
         url: 'https://finder.startupnationcentral.org/company_page/orbs',
-        logo: '/ecosystem/transparencyAndData/startup.svg',
+        logo: '/ecosystem/transparencyAndData/startup.png',
       },
       {
         name: 'Staking Rewards',
         url: 'https://www.stakingrewards.com/earn/orbs',
-        logo: '/ecosystem/transparencyAndData/rewards.svg',
+        logo: '/ecosystem/transparencyAndData/rewards.png',
       },
       {
         name: 'CoinGecko',
         url: 'https://www.coingecko.com/en/coins/orbs',
-        logo: '/ecosystem/transparencyAndData/coingeko.svg',
+        logo: '/ecosystem/transparencyAndData/coingeko.png',
       },
       {
         name: 'CoinMarketCap',
         url: 'https://coinmarketcap.com/currencies/orbs/',
-        logo: '/ecosystem/transparencyAndData/coinmarketcap.svg',
+        logo: '/ecosystem/transparencyAndData/coinmarketcap.png',
       },
       {
         name: 'TokenInsight',
         url: 'https://tokeninsight.com/tokenDetail/orbs-network(orbs)?cid=19502',
         logo: '/ecosystem/transparencyAndData/tokeninsight.svg',
       },
-      { name: 'ENS', url: 'https://ens.domains/', logo: '/ecosystem/transparencyAndData/ens.svg' },
+      { name: 'ENS', url: 'https://ens.domains/', logo: '/ecosystem/transparencyAndData/ens.png' },
       { name: 'TheGraph', url: 'https://thegraph.com/', logo: '/ecosystem/transparencyAndData/thegraph.png' },
-      { name: 'EVAI', url: 'https://evai.io/', logo: '/ecosystem/transparencyAndData/evai.svg' },
+      { name: 'EVAI', url: 'https://evai.io/', logo: '/ecosystem/transparencyAndData/evai.png' },
       {
         name: 'Moonlight',
         url: 'https://bubbles.moonlighttoken.com/token/0xebd49b26169e1b52c04cfd19fcf289405df55f80',
-        logo: '/ecosystem/transparencyAndData/moonlight.svg',
+        logo: '/ecosystem/transparencyAndData/moonlight.png',
       },
       {
         name: 'crypto.com',
         url: 'https://crypto.com/price/orbs?utm_medium=widget&utm_campaign=CoinBlocksModern&utm_source=analytics.orbs.network&utm_id=orbs',
         logo: '/ecosystem/transparencyAndData/cryptocom.svg',
       },
-      { name: 'delta', url: 'https://delta.app/en/crypto/orbs/orbs', logo: '/ecosystem/transparencyAndData/delta.svg' },
+      { name: 'delta', url: 'https://delta.app/en/crypto/orbs/orbs', logo: '/ecosystem/transparencyAndData/delta.png' },
       {
         name: 'CryptoRunner',
         url: 'https://cryptorunner.com/currencies/ORBS/orbs/USD/',
-        logo: '/ecosystem/transparencyAndData/cryptorunner.svg',
+        logo: '/ecosystem/transparencyAndData/cryptorunner.png',
       },
       {
         name: 'Stack',
@@ -342,23 +342,23 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
     key: 'socialImpact',
     entries: [
       { name: 'Hexa Foundation', url: 'https://www.hexa.org/', logo: '/ecosystem/socialImpact/hexa.svg' },
-      { name: 'Yozma Group', url: '', logo: '/ecosystem/socialImpact/yozma.svg' },
+      { name: 'Yozma Group', url: '', logo: '/ecosystem/socialImpact/yozma.png' },
     ],
   },
   {
     key: 'nft',
-    entries: [{ name: 'myNFT.fyi', url: '', logo: '/ecosystem/nft/mynft.svg' }],
+    entries: [{ name: 'myNFT.fyi', url: '', logo: '/ecosystem/nft/mynft.png' }],
   },
   {
     key: 'chains',
     entries: [
-      { name: 'Ethereum', url: 'https://ethereum.org/en/', logo: '/ecosystem/chains/ethereum.svg' },
-      { name: 'BSC', url: 'https://www.binance.org/en/smartChain', logo: '/ecosystem/chains/binance.svg' },
-      { name: 'Polygon', url: 'https://polygon.technology/', logo: '/ecosystem/chains/polygon.svg' },
-      { name: 'Solana', url: 'https://solana.com/', logo: '/ecosystem/chains/solana.svg' },
-      { name: 'avalance', url: 'https://www.avax.network/', logo: '/ecosystem/chains/avalanche.svg' },
-      { name: 'Harmony', url: 'https://www.orbs.com/Harmony/', logo: '/ecosystem/chains/harmony.svg' },
-      { name: 'FTM', url: 'https://www.orbs.com/Fantom/', logo: '/ecosystem/chains/fantom.svg' },
+      { name: 'Ethereum', url: 'https://ethereum.org/en/', logo: '/ecosystem/chains/ethereum.png' },
+      { name: 'BSC', url: 'https://www.binance.org/en/smartChain', logo: '/ecosystem/chains/binance.png' },
+      { name: 'Polygon', url: 'https://polygon.technology/', logo: '/ecosystem/chains/polygon.png' },
+      { name: 'Solana', url: 'https://solana.com/', logo: '/ecosystem/chains/solana.png' },
+      { name: 'avalance', url: 'https://www.avax.network/', logo: '/ecosystem/chains/avalanche.png' },
+      { name: 'Harmony', url: 'https://www.orbs.com/Harmony/', logo: '/ecosystem/chains/harmony.png' },
+      { name: 'FTM', url: 'https://www.orbs.com/Fantom/', logo: '/ecosystem/chains/fantom.png' },
       {
         name: 'Cronos',
         url: 'https://www.orbs.com/Orbs-Ecosystem-Expands-to-Cronos/',
@@ -383,17 +383,17 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'AWS',
         url: 'https://docs.orbs.network/contract-sdk/gamma-in-depth/deploying-gamma-in-the-cloud/amazon-web-services',
-        logo: '/ecosystem/cloud/aws.svg',
+        logo: '/ecosystem/cloud/aws.png',
       },
       {
         name: 'Google Cloud',
         url: 'https://docs.orbs.network/contract-sdk/gamma-in-depth/deploying-gamma-in-the-cloud/google-cloud-platform',
-        logo: '/ecosystem/cloud/google.svg',
+        logo: '/ecosystem/cloud/google.png',
       },
       {
         name: 'MS Azure',
         url: 'https://docs.orbs.network/contract-sdk/gamma-in-depth/deploying-gamma-in-the-cloud/azure',
-        logo: '/ecosystem/cloud/azure.svg',
+        logo: '/ecosystem/cloud/azure.png',
       },
     ],
   },
@@ -401,19 +401,19 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
     key: 'explorers',
     entries: [
       { name: 'Prism', url: 'https://prism.orbs.network/', logo: '/ecosystem/explorers/prism.svg' },
-      { name: 'tokenview', url: 'https://tokenview.com/en/', logo: '/ecosystem/explorers/tokenview.svg' },
+      { name: 'tokenview', url: 'https://tokenview.com/en/', logo: '/ecosystem/explorers/tokenview.png' },
       {
         name: 'Ethplorer',
         url: 'https://ethplorer.io/address/0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa#chart=candlestick',
-        logo: '/ecosystem/explorers/ethplorer.svg',
+        logo: '/ecosystem/explorers/ethplorer.png',
       },
-      { name: 'BscScan', url: 'https://bscscan.com/', logo: '/ecosystem/explorers/bscan.svg' },
+      { name: 'BscScan', url: 'https://bscscan.com/', logo: '/ecosystem/explorers/bscan.png' },
       {
         name: 'AvaScan',
         url: 'https://www.orbs.com/ORBS-is-now-live-on-AvaScan/',
-        logo: '/ecosystem/explorers/avascan.svg',
+        logo: '/ecosystem/explorers/avascan.png',
       },
-      { name: 'FTMScan', url: 'https://www.orbs.com/FTMScan/', logo: '/ecosystem/explorers/ftmscan.svg' },
+      { name: 'FTMScan', url: 'https://www.orbs.com/FTMScan/', logo: '/ecosystem/explorers/ftmscan.png' },
       { name: 'TONscan', url: 'https://tonscan.org/', logo: '/ecosystem/explorers/tonscan.svg' },
     ],
   },
@@ -423,16 +423,16 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'ChainLink',
         url: 'https://www.orbs.com/orbs-sponsors-chainlinks-price-data-feed/',
-        logo: '/ecosystem/oracles/chainlink.svg',
+        logo: '/ecosystem/oracles/chainlink.png',
       },
     ],
   },
   {
     key: 'partnerships',
     entries: [
-      { name: 'GBBC', url: 'https://gbbcouncil.org/', logo: '/ecosystem/partnerships/gbbc.svg' },
+      { name: 'GBBC', url: 'https://gbbcouncil.org/', logo: '/ecosystem/partnerships/gbbc.png' },
       { name: 'WEF', url: 'https://www.weforum.org/organizations/orbs-group', logo: '/ecosystem/partnerships/wef.svg' },
-      { name: 'CBAN', url: 'https://www.orbs.com/orbs-and-cban/', logo: '/ecosystem/partnerships/cban.svg' },
+      { name: 'CBAN', url: 'https://www.orbs.com/orbs-and-cban/', logo: '/ecosystem/partnerships/cban.png' },
       {
         name: 'Paradigm',
         url: 'https://www.orbs.com/grant-approved-paradigm-fund/',
@@ -441,7 +441,7 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Yes24',
         url: 'https://www.orbs.com/sey-chain-yes24-partnership/',
-        logo: '/ecosystem/partnerships/yes.svg',
+        logo: '/ecosystem/partnerships/yes.png',
       },
       {
         name: 'dappradar',
@@ -459,24 +459,24 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Samsung blockchain',
         url: 'https://www.samsung.com/global/galaxy/apps/samsung-blockchain/',
-        logo: '/ecosystem/partnerships/samsung.svg',
+        logo: '/ecosystem/partnerships/samsung.png',
       },
     ],
   },
   {
     key: 'staking',
     entries: [
-      { name: 'Citadel.one', url: 'https://citadel.one/', logo: '/ecosystem/staking/citadel.svg' },
+      { name: 'Citadel.one', url: 'https://citadel.one/', logo: '/ecosystem/staking/citadel.png' },
       {
         name: 'Bitgo',
         url: 'https://www.orbs.com/celsius-bitgo-staked-join-orbs-universe/',
-        logo: '/ecosystem/staking/bitgo.svg',
+        logo: '/ecosystem/staking/bitgo.png',
       },
-      { name: 'Moonstake', url: 'https://wallet.moonstake.io/', logo: '/ecosystem/staking/moonstake.svg' },
+      { name: 'Moonstake', url: 'https://wallet.moonstake.io/', logo: '/ecosystem/staking/moonstake.png' },
       {
         name: 'Bithumb',
         url: 'https://www.orbs.com/bithumb-announces-orbs-staking/',
-        logo: '/ecosystem/staking/bithumb.svg',
+        logo: '/ecosystem/staking/bithumb.png',
       },
       {
         name: 'CrossStake',
@@ -497,64 +497,64 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Metamask',
         url: 'https://www.orbs.com/orbs-swaps-and-staking-now-available-on-metamask-wallet/',
-        logo: '/ecosystem/wallets/metamask.svg',
+        logo: '/ecosystem/wallets/metamask.png',
       },
-      { name: 'Ledger', url: '', logo: '/ecosystem/wallets/ledger.svg' },
+      { name: 'Ledger', url: '', logo: '/ecosystem/wallets/ledger.png' },
       {
         name: 'Coinbase Wallet',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-the-coinbase-wallet-mobile-app/',
-        logo: '/ecosystem/wallets/coinbase.svg',
+        logo: '/ecosystem/wallets/coinbase.png',
       },
       {
         name: 'Trust Wallet',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-the-trust-wallet-mobile/',
-        logo: '/ecosystem/wallets/trust.svg',
+        logo: '/ecosystem/wallets/trust.png',
       },
       {
         name: 'EnjIn Wallet',
         url: 'https://www.orbs.com/tetra-staking-wallet-by-orbs-now-on-mobile/',
-        logo: '/ecosystem/wallets/enjin.svg',
+        logo: '/ecosystem/wallets/enjin.png',
       },
       {
         name: 'MEW',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-myetherwallet-mobile-app/',
-        logo: '/ecosystem/wallets/mew.svg',
+        logo: '/ecosystem/wallets/mew.png',
       },
       {
         name: 'BlockFolio',
         url: 'https://www.orbs.com/orbs-is-now-available-on-blockfolio/',
-        logo: '/ecosystem/wallets/blockfolio.svg',
+        logo: '/ecosystem/wallets/blockfolio.png',
       },
       {
         name: 'Status',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-the-status-wallet-mobile-app/',
-        logo: '/ecosystem/wallets/status.svg',
+        logo: '/ecosystem/wallets/status.png',
       },
       {
         name: 'Krystal',
         url: 'https://www.orbs.com/orbs-and-krystal-announce-a-partnership-focused-on-defi/',
-        logo: '/ecosystem/wallets/krystal.svg',
+        logo: '/ecosystem/wallets/krystal.png',
       },
       {
         name: 'Token Pocket',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-token-pocket-wallet-mobile-app/',
-        logo: '/ecosystem/wallets/pocket.svg',
+        logo: '/ecosystem/wallets/pocket.png',
       },
       {
         name: 'imToken',
         url: 'https://www.orbs.com/orbs-tetra-staking-is-now-available-on-imtoken-wallet/',
         logo: '/ecosystem/wallets/imtoken.svg',
       },
-      { name: "D'Cent", url: '', logo: '/ecosystem/wallets/dcent.svg' },
+      { name: "D'Cent", url: '', logo: '/ecosystem/wallets/dcent.png' },
       {
         name: 'SafePal',
         url: 'https://www.orbs.com/Orbs-Staking-is-Now-Available-on-the-SafePal-Crypto-Wallet/',
-        logo: '/ecosystem/wallets/safepal.svg',
+        logo: '/ecosystem/wallets/safepal.png',
       },
       {
         name: 'onto',
         url: 'https://www.orbs.com/Orbs-Staking-is-Now-Available-on-ONTO-Wallet/',
-        logo: '/ecosystem/wallets/onto.svg',
+        logo: '/ecosystem/wallets/onto.png',
       },
       {
         name: 'Coin98',
@@ -589,63 +589,63 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Balancer',
         url: 'https://pools.balancer.exchange/#/pool/0x795dfdfd413c4a9492cef5b58723f9fb3c8af624/',
-        logo: '/ecosystem/defi/balancer.svg',
+        logo: '/ecosystem/defi/balancer.png',
       },
       {
         name: 'Uniswap',
         url: 'https://app.uniswap.org/#/add/ETH/0xff56Cc6b1E6dEd347aA0B7676C85AB0B3D08B0FA',
-        logo: '/ecosystem/defi/uniswap.svg',
+        logo: '/ecosystem/defi/uniswap.png',
       },
-      { name: 'Defi.org', url: 'https://defi.org', logo: '/ecosystem/defi/defi.svg' },
+      { name: 'Defi.org', url: 'https://defi.org', logo: '/ecosystem/defi/defi.png' },
       {
         name: 'Benchmark Protocol',
         url: 'https://medium.com/benchmarkprotocol/the-benchmark-protocol-team-is-excited-to-announce-that-the-orbs-network-token-orbs-will-be-b33ed13c6680',
-        logo: '/ecosystem/defi/benchmark.svg',
+        logo: '/ecosystem/defi/benchmark.png',
       },
       {
         name: 'Pancakeswap',
         url: 'https://www.orbs.com/orbs-is-now-live-on-pancakeswap/',
-        logo: '/ecosystem/defi/pancake.svg',
+        logo: '/ecosystem/defi/pancake.png',
       },
       {
         name: 'Sushi',
         url: 'https://www.orbs.com/orbs-is-now-live-on-sushiswap/',
-        logo: '/ecosystem/defi/sushiswap.svg',
+        logo: '/ecosystem/defi/sushiswap.png',
       },
       {
         name: 'Kyber Network',
         url: 'https://www.orbs.com/orbs-is-now-live-on-kyber-dmm/',
-        logo: '/ecosystem/defi/kyber.svg',
+        logo: '/ecosystem/defi/kyber.png',
       },
       {
         name: '1inch',
         url: 'https://www.orbs.com/orbs-is-now-live-on-1inch-exchange/',
-        logo: '/ecosystem/defi/1inch.svg',
+        logo: '/ecosystem/defi/1inch.png',
       },
       {
         name: 'Alpaca Finance',
         url: 'https://www.orbs.com/orbs-added-to-alpaca-finance-vaults/',
-        logo: '/ecosystem/defi/alpaca.svg',
+        logo: '/ecosystem/defi/alpaca.png',
       },
       {
         name: 'Beefy Finance',
         url: 'https://www.orbs.com/orbs-added-to-beefy-finance-vaults/',
-        logo: '/ecosystem/defi/beefy.svg',
+        logo: '/ecosystem/defi/beefy.png',
       },
       {
         name: 'QuickSwap',
         url: 'https://www.orbs.com/orbs-is-now-live-on-quickswap/',
-        logo: '/ecosystem/defi/quickswap.svg',
+        logo: '/ecosystem/defi/quickswap.png',
       },
       {
         name: 'DinoSwap',
         url: 'https://www.orbs.com/Orbs-Extinction-Pool-Launched-on-DinoSwap/',
-        logo: '/ecosystem/defi/dino.svg',
+        logo: '/ecosystem/defi/dino.png',
       },
       {
         name: 'KogeFarm',
         url: 'https://www.orbs.com/Orbs-Added-to-KogeFarm-Vaults/',
-        logo: '/ecosystem/defi/kogefarm.svg',
+        logo: '/ecosystem/defi/kogefarm.png',
       },
       {
         name: 'Solana Wormhole',
@@ -660,13 +660,13 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Pangolin',
         url: 'https://www.orbs.com/ORBS-is-Now-Available-on-Pangolin/',
-        logo: '/ecosystem/defi/pangolin.svg',
+        logo: '/ecosystem/defi/pangolin.png',
       },
       { name: 'Rango', url: 'https://www.orbs.com/ORBS-is-now-live-on-Rango/', logo: '/ecosystem/defi/rango.jpg' },
       {
         name: 'snowball',
         url: 'https://www.orbs.com/Further-Expansion-on-Avalanche-Orbs-Goes-Live-on-Snowball/',
-        logo: '/ecosystem/defi/snowball.svg',
+        logo: '/ecosystem/defi/snowball.png',
       },
       {
         name: 'SpookySwap',
@@ -676,18 +676,18 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'WOWswap',
         url: 'https://www.orbs.com/orbs-added-to-wowswap/#:~:text=We%20are%20excited%20to%20announce,leverage%20on%20the%20WOWswap%20protocol.',
-        logo: '/ecosystem/defi/wowswap.svg',
+        logo: '/ecosystem/defi/wowswap.png',
       },
       {
         name: 'Raydium',
         url: 'https://www.orbs.com/Orbs-is-now-live-on-Raydium/',
-        logo: '/ecosystem/defi/raydium.svg',
+        logo: '/ecosystem/defi/raydium.png',
       },
       { name: 'Serum', url: 'https://www.orbs.com/Serum/', logo: '/ecosystem/defi/serum.svg' },
       {
         name: 'spiritswap',
         url: 'https://www.orbs.com/ORBS-is-now-live-on-SpiritSwap/',
-        logo: '/ecosystem/defi/spiritswap.svg',
+        logo: '/ecosystem/defi/spiritswap.png',
       },
       {
         name: 'JPYC',
@@ -745,7 +745,7 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
   },
   {
     key: 'media',
-    entries: [{ name: 'inboundjunction', url: '', logo: '/ecosystem/media/inbound.svg' }],
+    entries: [{ name: 'inboundjunction', url: '', logo: '/ecosystem/media/inbound.png' }],
   },
   {
     key: 'governance',
