@@ -10,5 +10,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function TermsOfUse() {
-  return <LegalPage path={PATH} locale="en" />
+  return <LegalPage path={PATH} locale="en" namespace="pages.termsOfUse" />
 }

@@ -14,18 +14,60 @@ import { cn } from '@/lib/utils'
  * anywhere in the path, which matters because it keeps the door open to feeding
  * these from a CMS later without revisiting the security question.
  */
+/**
+ * Adds the trailing slash `trailingSlash: true` makes canonical.
+ *
+ * The documents were authored with slashless paths, and every one of those
+ * costs a 308 on click. Normalised here rather than edited into each document,
+ * so a future document cannot reintroduce it.
+ *
+ * Any hash or query is preserved and the slash goes before it — `/x#y` becomes
+ * `/x/#y`, not `/x#y/`, which would be a different and nonexistent URL.
+ */
+function internalHref(href: string): string {
+  const [path, ...rest] = href.split(/(?=[#?])/)
+
+  if (path === '' || path.endsWith('/')) return href
+
+  return `${path}/${rest.join('')}`
+}
+
 export function LegalDocument({
   markdown,
+  title,
   lang,
   dir,
 }: {
   markdown: string
+  /**
+   * The page's title, rendered as the `h1` when the document has none of its
+   * own.
+   *
+   * Only the privacy policy opens with `#`. The two terms documents start at
+   * `##` and the accessibility declaration has no headings at all — it uses
+   * bold runs — so those three pages had no `h1`, which leaves screen-reader
+   * heading navigation with nothing to land on and gives the page no
+   * document-level heading for search.
+   */
+  title: string
   /** Set when the document's language differs from the page it is served on. */
   lang?: string
   dir?: 'ltr' | 'rtl'
 }) {
+  // Matched at the start of a line, since `#` occurs mid-sentence in legal text.
+  const hasOwnHeading = /^#\s/m.test(markdown)
+
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
+      {/*
+        Deliberately OUTSIDE the article, which is where `lang` and `dir` live.
+        The title comes from the message catalog in the ROUTE's language, while
+        the document may be in another — the accessibility declaration is
+        Hebrew but titled in English. Inside the article it would inherit
+        `lang="he" dir="rtl"` and be announced as Hebrew, set right-aligned.
+      */}
+      {!hasOwnHeading && <H1 className="mx-auto mb-8 max-w-3xl">{title}</H1>}
+
       <article
         lang={lang}
         dir={dir}
@@ -86,7 +128,7 @@ export function LegalDocument({
 
               return (
                 <a
-                  href={resolved}
+                  href={external ? resolved : internalHref(resolved as string)}
                   {...(external && !resolved?.startsWith('mailto:')
                     ? { target: '_blank', rel: 'noopener noreferrer' }
                     : {})}

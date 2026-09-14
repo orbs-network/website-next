@@ -1,3 +1,4 @@
+import { getTranslations } from 'next-intl/server'
 import { LegalDocument } from '@/components/marketing/legal-document'
 import { LEGAL_DOCUMENTS, type LegalPagePath } from '@/content/legal'
 import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
@@ -14,7 +15,21 @@ import { DEFAULT_LOCALE, type Locale } from '@/i18n/locales'
  * drives `placeholderRobots` to keep them out of the index, so the fallback is
  * visible to readers without competing with the English page in search.
  */
-export function LegalPage({ path, locale }: { path: LegalPagePath; locale: Locale }) {
+export async function LegalPage({
+  path,
+  locale,
+  namespace,
+}: {
+  path: LegalPagePath
+  locale: Locale
+  /**
+   * Catalog namespace holding this page's `meta.title`.
+   *
+   * Passed in from the registry, which already maps every path to one, rather
+   * than duplicating that mapping here where the two could drift.
+   */
+  namespace: string
+}) {
   const document = LEGAL_DOCUMENTS[path]
   const translated = document.body[locale]
   const markdown = translated ?? document.body[DEFAULT_LOCALE]
@@ -41,5 +56,7 @@ export function LegalPage({ path, locale }: { path: LegalPagePath; locale: Local
    */
   const lang = document.lang ?? (translated ? undefined : DEFAULT_LOCALE)
 
-  return <LegalDocument markdown={markdown} lang={lang} dir={document.dir} />
+  const t = await getTranslations({ locale, namespace: `${namespace}.meta` })
+
+  return <LegalDocument markdown={markdown} title={t('title')} lang={lang} dir={document.dir} />
 }

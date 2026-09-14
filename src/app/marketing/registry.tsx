@@ -83,19 +83,23 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   // show. The namespace still differs per page, because each needs its own
   // title and description for `marketingMetadata`.
   '/privacy-policy': {
-    render: (locale) => <LegalPage path="/privacy-policy" locale={locale} />,
+    render: (locale) => <LegalPage path="/privacy-policy" locale={locale} namespace="pages.privacyPolicy" />,
     namespace: 'pages.privacyPolicy',
   },
   '/terms-of-use': {
-    render: (locale) => <LegalPage path="/terms-of-use" locale={locale} />,
+    render: (locale) => <LegalPage path="/terms-of-use" locale={locale} namespace="pages.termsOfUse" />,
     namespace: 'pages.termsOfUse',
   },
   '/accessibility-declaration': {
-    render: (locale) => <LegalPage path="/accessibility-declaration" locale={locale} />,
+    render: (locale) => (
+      <LegalPage path="/accessibility-declaration" locale={locale} namespace="pages.accessibilityDeclaration" />
+    ),
     namespace: 'pages.accessibilityDeclaration',
   },
   '/liquidity-hub-terms-of-use': {
-    render: (locale) => <LegalPage path="/liquidity-hub-terms-of-use" locale={locale} />,
+    render: (locale) => (
+      <LegalPage path="/liquidity-hub-terms-of-use" locale={locale} namespace="pages.liquidityHubTerms" />
+    ),
     namespace: 'pages.liquidityHubTerms',
   },
 }
