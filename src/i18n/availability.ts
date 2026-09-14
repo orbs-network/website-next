@@ -110,6 +110,9 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // English text copied — so Japanese is reachable and `placeholder`. Korean is
   // a real translation.
   '/execution-services': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // Both are real translations and substantial ones — 9,478 non-Latin
+  // characters under `jp/pos` and 7,718 under `ko/pos`.
+  '/pos': { en: 'translated', ja: 'translated', ko: 'translated' },
 }
 
 /**

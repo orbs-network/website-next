@@ -40,7 +40,6 @@ const PENDING: readonly string[] = [
   '/brand-assets',
   '/contact',
   '/notifications',
-  '/pos',
   '/ton-access',
   '/ton-vote',
 ]
@@ -60,6 +59,7 @@ const PENDING: readonly string[] = [
  */
 const KNOWN_POST_SLUGS: readonly string[] = [
   '/Introducing-Orbs-Agentic',
+  '/PolygonStakingDate',
   '/Introducing-dSLTP-The-First-Stop-Loss-Take-Profit-Solution-for-DeFi',
   '/Perpetual-Hub-by-Orbs',
 ]
