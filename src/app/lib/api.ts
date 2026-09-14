@@ -83,26 +83,34 @@ function getClient(preview = false) {
 }
 
 /**
- * Build and serve without Contentful, when it is explicitly allowed to.
+ * Let the BUILD finish without Contentful, when explicitly allowed to.
  *
- * Off unless `CONTENTFUL_ALLOW_DEGRADED=1`. With it set, a Contentful
- * AVAILABILITY failure stops being fatal: the affected query returns empty and
- * the build continues, so everything that does not depend on Contentful — the
- * marketing pages, the whole of Phase 3 — can still ship while the space is
- * down.
+ * Two conditions, both required. `CONTENTFUL_ALLOW_DEGRADED=1` is the
+ * operator's opt-in; `NEXT_PHASE` restricts it to `next build`. With both, a
+ * Contentful AVAILABILITY failure stops being fatal for that query, which lets
+ * work with nothing to do with the blog — the marketing pages, all of Phase 3 —
+ * ship while the space is down (#115).
  *
- * Written for #115, where the space was blocked for exceeding its Delivery API
- * allowance and every build failed on the first query, including deploys of
- * work that never touches the blog.
+ * THE PHASE CHECK IS THE LOAD-BEARING HALF. Without it the same fallback
+ * applies to request-time rendering, and empty is not a safe answer there:
  *
- * This is a deliberate hazard and wants treating as one. With the flag on, a
- * Contentful outage produces an EMPTY blog rather than a failed build — the
- * failure mode is silence, which is exactly the shape of bug that ships
- * unnoticed. It is safe today only because orbs.com still serves from the
- * legacy host, so the Vercel deployment has no public readers. **Unset it
- * before the DNS cutover (#39).**
+ *  - `sitemap.ts` and the RSS route are `force-dynamic`, so they render per
+ *    request. Degrading them serves a sitemap listing no posts and a feed
+ *    containing no items — with a 200, so the CDN caches it for the 24 hours
+ *    #117 and #118 configured. Telling crawlers the entire archive has gone,
+ *    then holding that answer for a day, is far worse than the 500 they would
+ *    otherwise get and retry.
+ *  - An ISR page rendered empty at request time caches an empty 200 for its
+ *    revalidate window, so a transient blip outlives itself.
+ *
+ * A build-time empty is contained by comparison: it lands in the deploy's
+ * initial static output and is corrected by the first revalidation once the
+ * space recovers. That is the trade being made, and it is only worth making
+ * because orbs.com still serves from the legacy host, so this deployment has no
+ * public readers. **Unset the flag before the DNS cutover (#39).**
  */
-const ALLOW_DEGRADED = process.env.CONTENTFUL_ALLOW_DEGRADED === '1'
+const DEGRADE_DURING_BUILD =
+  process.env.CONTENTFUL_ALLOW_DEGRADED === '1' && process.env.NEXT_PHASE === 'phase-production-build'
 
 /**
  * The HTTP status of a Contentful failure, if that failure is an availability
@@ -135,27 +143,34 @@ function availabilityFailureStatus(error: unknown): number | null {
 
   if (status === null) return null
 
-  return status === 402 || status === 429 || status >= 500 ? status : null
+  // Bounded at 600: a status outside the defined range is a malformed response,
+  // not an upstream saying "try later", and should stay fatal rather than be
+  // read as one.
+  const isAvailability = status === 402 || status === 429 || (status >= 500 && status < 600)
+
+  return isAvailability ? status : null
 }
 
 /**
- * Run a Contentful query, falling back to `empty` if the space is unavailable
- * AND `CONTENTFUL_ALLOW_DEGRADED` permits it.
+ * Run a Contentful query, falling back to `empty` only when the space is
+ * unavailable AND `DEGRADE_DURING_BUILD` allows it.
  *
- * Every other error — and every error at all when the flag is unset —
- * propagates untouched, so the default behaviour of the build is exactly what
- * it was.
+ * Everything else propagates untouched: any error at request time, any error
+ * with the flag unset, and any non-availability error in either case. So the
+ * default behaviour of both the build and the running site is exactly what it
+ * was.
  */
 async function degradable<T>(what: string, empty: T, run: () => Promise<T>): Promise<T> {
   try {
     return await run()
   } catch (error) {
     const status = availabilityFailureStatus(error)
-    if (status === null || !ALLOW_DEGRADED) throw error
+    if (status === null || !DEGRADE_DURING_BUILD) throw error
 
     console.warn(
       `[api] ${what}: Contentful returned ${status} and CONTENTFUL_ALLOW_DEGRADED is set — ` +
-        'continuing with no data. This page will be empty until the space recovers and it is rebuilt.'
+        'building with no data. This will be empty in the deployed output until the space ' +
+        'recovers and the page revalidates.'
     )
     return empty
   }
