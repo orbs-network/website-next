@@ -10,6 +10,15 @@ export type EcosystemCard = {
 export type EcosystemGroup = {
   key: string
   title: string
+  /**
+   * Set when the category title is in a different language from the route.
+   *
+   * It always is, outside English: the legacy `jp/` and `ko/` ecosystem
+   * directories hold the English category titles verbatim, so every heading on
+   * /jp/ecosystem and /ko/ecosystem is English inside a Japanese or Korean
+   * document and has to say so.
+   */
+  titleLang?: string
   entries: readonly EcosystemCard[]
 }
 
@@ -33,7 +42,9 @@ export function EcosystemDirectory({ title, groups }: { title: string; groups: r
 
       {groups.map((group) => (
         <div key={group.key} className="mt-16 first:mt-0">
-          <H2 className="mb-8">{group.title}</H2>
+          <H2 className="mb-8" lang={group.titleLang}>
+            {group.title}
+          </H2>
 
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {group.entries.map((entry) => (
