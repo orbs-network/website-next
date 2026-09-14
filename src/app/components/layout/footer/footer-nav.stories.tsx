@@ -82,19 +82,25 @@ export const TranslatedPagePrefixesTheLocale: Story = {
 
 /**
  * A page with no Korean version falls back to the English URL rather than
- * minting `/ko/pos/`, which would be a second URL serving the same English page.
- * Most of the footer is in this state until Phase 3 lands the pages.
+ * minting `/ko/institutional/`, which would be a second URL serving the same
+ * English page.
+ *
+ * This used `/pos` until that page gained a Korean translation, at which point
+ * the story asserted the opposite of what the code should do and failed.
+ * `/institutional` is English-only — absent from `AVAILABILITY` entirely, which
+ * is that map's documented default — so it demonstrates the fallback without
+ * depending on a page that Phase 3 is actively translating.
  */
 export const UntranslatedPageFallsBackToEnglishUrl: Story = {
   args: {
     id: 'footer-overview',
     title: 'Overview',
     locale: 'ko',
-    items: [{ spec: spec('proofOfStake', '/pos'), label: '지분증명(PoS V3)' }],
+    items: [{ spec: spec('institutional', '/institutional'), label: '기관용' }],
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(canvas.getByRole('link', { name: '지분증명(PoS V3)' })).toHaveAttribute('href', '/pos/')
+    await expect(canvas.getByRole('link', { name: '기관용' })).toHaveAttribute('href', '/institutional/')
   },
 }
 
