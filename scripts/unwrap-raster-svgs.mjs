@@ -15,11 +15,20 @@
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem --dry-run
  *
+ * RENDERS the SVG rather than extracting its payload. The first version of this
+ * script pulled the base64 out and resized it, which is wrong: every one of
+ * these 97 wrappers positions its image with a `<use>` transform, and several
+ * scale X and Y differently to crop it to the viewBox. Extracting the payload
+ * discards that geometry and produces different artwork — an uncropped or
+ * differently-proportioned logo that still loads fine, so nothing looks broken.
+ * Rasterising the whole SVG at the display size keeps the geometry by
+ * definition.
+ *
  * CONSERVATIVE BY DESIGN. A file is only converted when it holds exactly one
  * base64 payload AND every tag in it belongs to the wrapper vocabulary below.
  * Anything with a `<path>`, `<circle>`, `<text>` or similar has real vector
- * content and is left alone — shipping a raster in place of a genuine vector
- * would be a worse outcome than the bytes it saves.
+ * content and is left alone — rasterising a genuine vector would be a worse
+ * outcome than the bytes it saves.
  */
 
 import { readdir, readFile, stat, unlink, writeFile } from 'node:fs/promises'
@@ -46,20 +55,16 @@ async function* walk(dir) {
   }
 }
 
-/** The single embedded raster, or null if this is not a pure wrapper. */
-function embeddedRaster(source) {
-  const payloads = [...source.matchAll(/data:image\/([a-z+]+);base64,([A-Za-z0-9+/=\s]+)/g)]
-  if (payloads.length !== 1) return null
+/** Whether this file is a pure raster wrapper and safe to rasterise. */
+function isRasterWrapper(source) {
+  if ((source.match(/data:image\/[a-z+]+;base64,/g) ?? []).length !== 1) return false
 
   const tags = new Set([...source.matchAll(/<([a-zA-Z][a-zA-Z0-9]*)/g)].map((m) => m[1]))
   for (const tag of tags) {
-    if (!WRAPPER_TAGS.has(tag)) return null
+    if (!WRAPPER_TAGS.has(tag)) return false
   }
 
-  const [, format, data] = payloads[0]
-  if (format !== 'png' && format !== 'jpeg' && format !== 'jpg') return null
-
-  return { format: format === 'jpg' ? 'jpeg' : format, buffer: Buffer.from(data.replace(/\s/g, ''), 'base64') }
+  return true
 }
 
 async function main() {
@@ -76,16 +81,17 @@ async function main() {
   for await (const path of walk(root)) {
     const size = (await stat(path)).size
     const source = await readFile(path, 'utf8')
-    const raster = embeddedRaster(source)
 
-    if (!raster) {
+    if (!isRasterWrapper(source)) {
       before += size
       after += size
       kept.push(relative(REPO, path))
       continue
     }
 
-    const output = await sharp(raster.buffer)
+    // `density` oversamples before the downscale, so the result is sharp at the
+    // cap rather than rendered at the SVG's nominal size and stretched.
+    const output = await sharp(path, { density: 288 })
       .resize({ width: MAX_WIDTH, withoutEnlargement: true })
       .png({ compressionLevel: 9, effort: 10 })
       .toBuffer()
