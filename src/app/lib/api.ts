@@ -103,11 +103,23 @@ function getClient(preview = false) {
  *  - An ISR page rendered empty at request time caches an empty 200 for its
  *    revalidate window, so a transient blip outlives itself.
  *
- * A build-time empty is contained by comparison: it lands in the deploy's
- * initial static output and is corrected by the first revalidation once the
- * space recovers. That is the trade being made, and it is only worth making
- * because orbs.com still serves from the legacy host, so this deployment has no
- * public readers. **Unset the flag before the DNS cutover (#39).**
+ * A build-time empty is contained by comparison, but it is NOT self-healing.
+ * `/`, `/blog` and `/news` are prerendered, so a degraded build writes an empty
+ * 200 into that deployment's ISR cache. Contentful coming back does not fire
+ * the revalidation webhook — nothing published — so those pages stay empty
+ * until their `revalidate` window expires and someone requests them.
+ *
+ * So a degraded deploy is a stopgap and has to be replaced, not waited out:
+ *
+ *   **When the space recovers, unset the flag and redeploy.** Do not rely on
+ *   revalidation to heal it.
+ *
+ * That is one action, and it is one that has to happen anyway to remove the
+ * flag, which is why this is documented rather than engineered around.
+ *
+ * The whole trade is only worth making because orbs.com still serves from the
+ * legacy host, so this deployment has no public readers. **Unset the flag
+ * before the DNS cutover (#39).**
  */
 const DEGRADE_DURING_BUILD =
   process.env.CONTENTFUL_ALLOW_DEGRADED === '1' && process.env.NEXT_PHASE === 'phase-production-build'
