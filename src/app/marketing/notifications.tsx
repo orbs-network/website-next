@@ -111,8 +111,11 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
           <Image
             src={NOTIFICATION_IMAGES.schema}
             alt={t('schema.title')}
+            /* Measured, not assumed: 1800x1129. Guessing 900 reserved a 2:1
+               box that expanded by ~114px when the file loaded, shifting every
+               paragraph below it. */
             width={1800}
-            height={900}
+            height={1129}
             sizes="(min-width: 1024px) 896px, 100vw"
             className="mt-12 h-auto w-full"
           />

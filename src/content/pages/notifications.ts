@@ -45,7 +45,19 @@ export const NOTIFICATION_INTEGRATIONS: readonly NotificationIntegration[] = [
   {
     id: 'opensea',
     name: 'OpenSea',
-    url: 'https://github.com/open-defi-notification-protocol/projects/tree/master/opensea',
+    /*
+     * The repo root, not `/tree/master/opensea`.
+     *
+     * The legacy content points at that directory and it no longer exists —
+     * the projects repo has 43 of them and `opensea` is not among them, so the
+     * integration was removed at some point and the card outlived it. GitHub
+     * answers a missing tree path with a 200 and a rendered "not found" page,
+     * which is why a status-code check does not catch this.
+     *
+     * Pointed at the list so the link goes somewhere real. Whether the card
+     * should exist at all is a content question — flagged on the PR.
+     */
+    url: 'https://github.com/open-defi-notification-protocol/projects',
     image: '/marketing/notifications/integrations/opensea.png',
   },
   {
