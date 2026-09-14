@@ -45,8 +45,6 @@ const PENDING: readonly string[] = [
   '/pos',
   '/ton-access',
   '/ton-vote',
-  '/white-papers',
-  '/white-papers/dTWAP',
 ]
 
 /**

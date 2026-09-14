@@ -743,6 +743,114 @@
         "title": "dTWAP and dLIMIT FAQ",
         "description": "Answers to common questions about the dTWAP, dLIMIT and dSLTP protocols, troubleshooting and technical documentation."
       }
+    },
+    "whitePapers": {
+      "meta": {
+        "title": "White Papers",
+        "description": "Orbs position papers, consensus research, token specifications and grant programme documents."
+      },
+      "categories": {
+        "proofOfStake": "Proof of Stake",
+        "whitePapers": "White Papers",
+        "workingPapers": "Working Papers",
+        "researchPapers": "Research Papers",
+        "tokenSpecifications": "Token Specifications",
+        "grants": "Grants"
+      },
+      "items": {
+        "Orbs-PoS-V3-Multi-chain-Staking": {
+          "title": "Orbs PoS V3: Multi-Chain Staking",
+          "abstract": "Everything you need to know about Orbs PoS V3: Multi-chain staking. For the first time, in version 3, the Orbs protocol has expanded staking to an additional blockchain beyond Ethereum mainnet - Polygon mainnet. Understand how multi-chain staking influences the committee, validator nodes and delegations using Tetra - Orbs staking wallet."
+        },
+        "orbs-pos-v2-the-age-of-guardians": {
+          "title": "Orbs PoS V2: The Age of Guardians",
+          "abstract": "Version 2 of Orbs Proof-of-Stake will emphasize usage and performance while empowering the Orbs Universe Guardians. Orbs V2 will enable the Orbs Universe Guardians to take an active role in building and maintaining a secure, scalable network by running validator nodes, which will be the first choice for blockchain adoption, and to better manage and serve the network and its participants."
+        },
+        "proof-of-stake-ecosystem": {
+          "title": "Orbs PoS V1: Year Zero Genesis",
+          "abstract": "The Orbs Proof-of-Stake (PoS) ecosystem is the back bone of the Orbs network and the Universe that is being created. This document is provided for discussion purposes and presents the PoS architecture and model in its Year Zero genesis, implemented in V1."
+        },
+        "orbs-technology-overview-2": {
+          "title": "Orbs Technology Overview",
+          "abstract": "An overview of all major technology and business aspects that make up the Orbs platform. This paper, published in 2019, outlines the core differentiators of the Orbs network architecture and approach to blockchain design. The paper covers the main technological innovations and how they come together to offer Orbs' unique value proposition."
+        },
+        "orbs-position-paper": {
+          "title": "Orbs Position Paper",
+          "abstract": "The original Orbs Position Paper published close to Orbs inception in 2018. The paper outlines the original vision behind Orbs, why was the project created, what are its main goals and what is the general path to achieve them. The Position Paper has always been the guide by which Orbs development is measured."
+        },
+        "ton-vote": {
+          "title": "Decentralized Gasless DAO Governance for TON",
+          "abstract": "[TON.Vote](https://ton.vote/) is a completely decentralized, on-chain DAO governance platform built exclusively for the TON ecosystem, developed by the Orbs team. The core user base is anticipated to be TON DAOs, projects, and other TON-related communities requiring governance activities."
+        },
+        "dTWAP": {
+          "title": "dTWAP for Decentralized Exchanges (DEXs)",
+          "abstract": "This lightpaper outlines the concept and architecture behind Orbs’ new decentralized TWAP protocol and a prototype UI that will allow DEXs to harness this technology to benefit the platform and its users."
+        },
+        "use-of-ethereum-as-a-base-layer-for-pos-and-poa-platforms": {
+          "title": "Use of Ethereum as a Base Layer for PoS and PoA Platforms",
+          "abstract": "We designed Orbs for applications that make use of multiple blockchain platforms (i.e. a hybrid system) because we believe such design makes more sense for complex, real-world use cases. In this paper, we would like to highlight some of the advantages and challenges hybrid designs can bring to infrastructure projects."
+        },
+        "blockchain-virtualization-a-necessity-for-real-world-dapps": {
+          "title": "Blockchain Virtualization: A Necessity for Real-World DApps",
+          "abstract": "In this paper we explore how virtualization solved significant barriers in web application backends, analyze the barriers experienced with current-generation blockchain technology, and explain how virtualization technology offers the potential to overcome these barriers."
+        },
+        "eliminating-the-security-vs-scalability-dilemma-randomized-committee-consensus-protocols": {
+          "title": "Eliminating the Security-vs-Scalability Dilemma: Randomized-Committee Consensus Protocols",
+          "abstract": "Current-generation blockchain protocols can determine their level of decentralization on an security-performance spectrum. A new family of consensus protocols enable the maximization of both security and throughput by employing novel cryptographic techniques for trustlessly generating random seeds in a group, without allowing any party to manipulate or predict the randomization results."
+        },
+        "blockchain-architecture-considerations-to-compete-with-paas-cloud-services": {
+          "title": "Blockchain Architecture Considerations to Compete with PaaS/Cloud Services",
+          "abstract": "In this document we present our findings, along with some architecture designs that may be used to create a blockchain platform that is competitive with centralized platforms. These aspects include cost structures, system performance when scaling up, avoidance of platform lock-ins to reduce technical risks, and completeness of the smart contracts environment."
+        },
+        "helix-consensus-whitepaper": {
+          "title": "Helix Consensus White Paper",
+          "abstract": "An introduction to Helix, a decentralized, scalable and fair consensus algorithm. This novel consensus algorithm which is based on PBFT was developed by the Orbs team together with the Technion - Israel Institute of Technology. A concise version of this paper is in proceedings of the 26th IEEE International Conference on Network Protocols (ICNP ’18). For citations, please refer to the official IEEE page at https://ieeexplore.ieee.org/document/8526804"
+        },
+        "enforcing-fairness-in-blockchain-transaction-ordering": {
+          "title": "Enforcing Fairness in Blockchain Transaction Ordering",
+          "abstract": "In this peer reviewed research paper, we propose a toolbox of techniques to enforce fair block selection for blockchain consensus protocols, to improve quality of service. A version of this paper is in proceedings of the 2019 IEEE International Conference on Blockchain and Cryptocurrency, http://icbc2019.ieee-icbc.org/."
+        },
+        "fully-distributed-group-signatures": {
+          "title": "Fully Distributed Group Signatures",
+          "abstract": "A group signature scheme is a powerful primitive by which one can sign a message as a member of a well-defined group without leaking one’s individual identity, but the group manager can revoke this anonymity and reveal the identity of the signer. We present two highly efficient fully distributed group signature schemes in this paper."
+        },
+        "rational-threshold-cryptosystems": {
+          "title": "Rational Threshold Cryptosystems",
+          "abstract": "We propose a framework for threshold cryptosystems under a permissionless-economic model in which the participants are rational profit-maximizing entities. The key threat to rational threshold cryptosystems is collusion—by cooperating `illegally’, a subset of participants can reveal the cryptosystem’s secret, which, in turn is translated to unfair profit. Our countermeasure to collusion is framing."
+        },
+        "accelerating-decentralized-execution-of-blockchain": {
+          "title": "Accelerating Decentralized Execution of Blockchain Transactions Towards Centralized Performance",
+          "abstract": "In this peer reviewed research paper, we focus on scaling blockchain protocol. Our approach introduces a decentralized execution model in which network nodes interact with a stronger centralized accelerator whose work can be verified in a fully decentralized way without compromising most of the performance gains."
+        },
+        "bloom-filter-with-a-false-positive-free-zone": {
+          "title": "Bloom Filter with a False Positive Free Zone",
+          "abstract": "A bloom filter is a probabilistic data structure for set representation with relatively low data storage use. In this peer reviewed paper, the Orbs research team proposed model improvements. This paper appeared at IEEE Infocom, April 2018 - https://ieeexplore.ieee.org/document/8486415."
+        },
+        "orbs-token-distribution": {
+          "title": "Orbs Token Distribution",
+          "abstract": "This document explains the use of the ORBS token, the total supply and distribution of various pools. These token metrics were set on the project inception and remained static throughout the years."
+        },
+        "Orbs-Operation-Fees": {
+          "title": "Orbs Operation Fees",
+          "abstract": "This list of operation fees provides the specifics of how the overall vision of stable and predictable operation fees will be implemented in the Orbs network. The goal of predictability is accomplished because the purchasing power of ORBS tokens is fixed as equal to a defined amount of computing power."
+        },
+        "token-utility-research": {
+          "title": "Orbs Grant Program: Fourth Call For Grants",
+          "abstract": "The Orbs project is launching a new call for grants under the OEGP. In this round, we are looking for research and proposals regarding the uses and utility of the Orbs tokens and refining the token model."
+        },
+        "grants": {
+          "title": "Orbs Grant Program: Third Call For Grants",
+          "abstract": "The Orbs project is building on the TON Network (ton.org) and is working to provide L3 infrastructure services to TON dapps that can significantly increase their capabilities without relying on centralized infrastructure. In this third call for grants, Orbs is offering developer grants for building and integration work to Orbs core TON protocols. The grants are focused mostly around the TON ecosystem for FunC and TWA developers."
+        },
+        "orbs-grant-grogram-second-call-for-grants": {
+          "title": "Orbs Grant Program: Second Call for Grants",
+          "abstract": "The Orbs project is launching a new call for grants under the OEGP. For this round, the focus will be on applications that will draw on the power of the Orbs Universe, with its Guardians and Delegators, using their ability to arrive at consensus through the Orbs protocol incentive layer powered by the ORBS token."
+        },
+        "orbs-grant-program": {
+          "title": "Orbs Grant Program: First Call for Grants",
+          "abstract": "Orbs is committed to advance the process of decentralization by involving even more developers and teams in the development of the Orbs ecosystem and is introducing the Orbs Ecosystem Grant Program (OEGP). We believe that the special features of the blockchain infrastructure of the Orbs Network and the incredibly strong and active community in the Orbs PoS Universe together provide a unique opportunity to interface and collaborate with DeFi"
+        }
+      }
     }
   }
 }
