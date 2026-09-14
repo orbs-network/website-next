@@ -106,6 +106,10 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // do not translate. So the routes stay reachable and `placeholder`; there is
   // no translation to claim.
   '/ecosystem': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
+  // `content/jp/execution-services` exists with ZERO non-Latin characters — the
+  // English text copied — so Japanese is reachable and `placeholder`. Korean is
+  // a real translation.
+  '/execution-services': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**

@@ -43,6 +43,8 @@ export const MARKETING_PAGE_PATHS = [
   '/overview',
   // The ecosystem directory, from the dataset #37 tracks.
   '/ecosystem',
+  // Network section: the Lambda/VM compute layer.
+  '/execution-services',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]
