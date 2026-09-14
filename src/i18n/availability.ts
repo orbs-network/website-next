@@ -118,6 +118,11 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // non-Latin characters against 7,718 for `/pos`, so several strings fall back
   // and carry their own `lang`.
   '/notifications': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // Both locale directories exist and both URLs return 200 today, so omitting
+  // them here would 404 two live pages. Neither is a translation — zero
+  // non-Latin characters in either — so both are `placeholder`: reachable,
+  // noindex, serving the English captions with `lang="en"` on each.
+  '/brand-assets': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
 }
 
 /**
