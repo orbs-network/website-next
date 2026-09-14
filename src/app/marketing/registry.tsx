@@ -6,6 +6,7 @@ import { AiSkillsPage } from './ai-skills'
 import { InstitutionalPage } from './institutional'
 import { FaqPage } from './faq'
 import { LegalPage } from './legal'
+import { EcosystemPage } from './ecosystem'
 import { OverviewPage } from './overview'
 import { WhitePapersPage } from './white-papers'
 import { DlimitPage } from './dlimit'
@@ -124,6 +125,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/overview': {
     render: (locale) => <OverviewPage locale={locale} />,
     namespace: 'pages.overview',
+  },
+  '/ecosystem': {
+    render: (locale) => <EcosystemPage locale={locale} />,
+    namespace: 'pages.ecosystem',
   },
 }
 
