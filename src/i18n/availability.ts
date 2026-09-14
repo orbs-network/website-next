@@ -101,6 +101,11 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // so the Japanese catalog holds the English text and this is `placeholder` —
   // reachable, noindex, not advertised as an hreflang alternate.
   '/overview': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // Both locale directories exist but hold the English category titles
+  // verbatim, and the entries themselves are project names — proper nouns that
+  // do not translate. So the routes stay reachable and `placeholder`; there is
+  // no translation to claim.
+  '/ecosystem': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
 }
 
 /**

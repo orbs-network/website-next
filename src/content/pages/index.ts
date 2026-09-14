@@ -41,6 +41,8 @@ export const MARKETING_PAGE_PATHS = [
   '/white-papers',
   // The Orbs network overview. Composed from the shared marketing library.
   '/overview',
+  // The ecosystem directory, from the dataset #37 tracks.
+  '/ecosystem',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

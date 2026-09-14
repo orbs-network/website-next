@@ -949,6 +949,29 @@
           }
         }
       }
+    },
+    "ecosystem": {
+      "meta": {
+        "title": "Ecosystem",
+        "description": "Projects, exchanges, wallets and chains building on or integrated with the Orbs network."
+      },
+      "categories": {
+        "useCases": "Use-cases and Applications",
+        "exchanges": "Exchanges",
+        "transparencyAndData": "Transparency and Data",
+        "socialImpact": "Social Impact",
+        "nft": "NFT",
+        "chains": "Supported Chains",
+        "cloud": "Cloud Dev. Environment",
+        "explorers": "Explorers",
+        "oracles": "Oracles",
+        "partnerships": "Partnerships",
+        "staking": "Staking",
+        "wallets": "Wallets",
+        "defi": "DeFi",
+        "media": "Media",
+        "governance": "Governance"
+      }
     }
   }
 }
