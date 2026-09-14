@@ -6,6 +6,7 @@ import { AiSkillsPage } from './ai-skills'
 import { InstitutionalPage } from './institutional'
 import { FaqPage } from './faq'
 import { LegalPage } from './legal'
+import { WhitePapersPage } from './white-papers'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
@@ -113,6 +114,11 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/dtwap-and-dlimit-faq': {
     render: (locale) => <FaqPage path="/dtwap-and-dlimit-faq" locale={locale} namespace="pages.dtwapDlimitFaq" />,
     namespace: 'pages.dtwapDlimitFaq',
+  },
+
+  '/white-papers': {
+    render: (locale) => <WhitePapersPage locale={locale} />,
+    namespace: 'pages.whitePapers',
   },
 }
 

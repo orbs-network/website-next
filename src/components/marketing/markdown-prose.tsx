@@ -90,3 +90,25 @@ const COMPONENTS = {
 export function MarkdownProse({ children }: { children: string }) {
   return <Markdown components={COMPONENTS}>{children}</Markdown>
 }
+
+/**
+ * Markdown reduced to the words, for places that cannot render elements.
+ *
+ * A `<meta name="description">` takes text, so passing a raw abstract there
+ * published `[TON.Vote](https://ton.vote/) is ...` to search results and social
+ * cards. Link labels are kept and their destinations dropped, which is what a
+ * reader of a snippet needs; emphasis markers and list bullets go too.
+ *
+ * Not a markdown parser — it handles the constructs these abstracts actually
+ * contain. Anything more would be re-implementing the renderer above to produce
+ * a string.
+ */
+export function plainText(markdown: string): string {
+  return markdown
+    .replace(/\[([^\]]*)\]\([^)]*\)/g, '$1')
+    .replace(/^\s*[-*]\s+/gm, '')
+    .replace(/\\([*_[\]])/g, '$1')
+    .replace(/\*\*([^*]+)\*\*/g, '$1')
+    .replace(/\s+/g, ' ')
+    .trim()
+}

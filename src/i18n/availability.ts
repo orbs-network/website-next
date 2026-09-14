@@ -86,6 +86,10 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // No `content/jp/dtwap-and-dlimit-faq` in the legacy repo, so Japanese is not
   // offered rather than being served English under a `ja` tag.
   '/dtwap-and-dlimit-faq': { en: 'translated', ko: 'translated' },
+  // Japanese is a real translation — all 24 paper titles under
+  // `content/jp/white-papers` are Japanese. Korean is not: only 6 of 27 are,
+  // the rest being the English text, so it is `placeholder`.
+  '/white-papers': { en: 'translated', ja: 'translated', ko: 'placeholder' },
 }
 
 /**

@@ -1,3 +1,4 @@
+import { existsSync, statSync } from 'node:fs'
 import { readdir } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -45,8 +46,6 @@ const PENDING: readonly string[] = [
   '/pos',
   '/ton-access',
   '/ton-vote',
-  '/white-papers',
-  '/white-papers/dTWAP',
 ]
 
 /**
@@ -68,8 +67,45 @@ const KNOWN_POST_SLUGS: readonly string[] = [
   '/Perpetual-Hub-by-Orbs',
 ]
 
-/** Static assets under `public/`, not routes. */
-const ASSET_PREFIXES = ['/marketing/', '/assets/', '/images/', '/fonts/', '/_next/']
+/**
+ * A path pointing at a real file under `public/` is an asset, not a route.
+ *
+ * Checked by existence rather than against a list of known prefixes. The list
+ * version silently broke the first time a new asset directory appeared — the
+ * white-paper PDFs and thumbnails under `/white-papers/` were reported as
+ * missing routes — and it fails in the more dangerous direction too: a prefix
+ * left in the list after its directory is deleted would hide a genuinely broken
+ * link forever.
+ */
+function isAsset(path: string): boolean {
+  if (path.startsWith('/_next/')) return true
+
+  const candidate = join(REPO, 'public', path)
+
+  // A FILE, not merely something that exists. `public/blog` is a directory of
+  // post imagery and `/blog` is also a route — treating directory existence as
+  // proof of an asset would have excluded the blog index from checking
+  // entirely, which is the failure this whole test exists to prevent.
+  return existsSync(candidate) && statSync(candidate).isFile()
+}
+
+/**
+ * Dynamic routes whose valid values are enumerable without a network call.
+ *
+ * `staticRoutes` deliberately ignores dynamic segments, because `[slug]`
+ * matches any single-segment path and treating it as a wildcard would make
+ * every unbuilt page "resolve". But `[paper]` under `/white-papers` is
+ * different: its `generateStaticParams` reads a committed list, so the exact
+ * set of valid URLs is known here too.
+ *
+ * Read from the same module the route reads, so a paper removed there stops
+ * validating here in the same commit.
+ */
+async function enumerableDynamicRoutes(): Promise<string[]> {
+  const { WHITE_PAPERS } = await import('@/content/pages/white-papers')
+
+  return WHITE_PAPERS.map(({ slug }) => `/white-papers/${slug}`)
+}
 
 async function* walk(dir: string): AsyncGenerator<string> {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -133,7 +169,7 @@ async function linkedPaths(): Promise<Map<string, string[]>> {
 
     for (const value of strings(exports)) {
       if (!value.startsWith('/')) continue
-      if (ASSET_PREFIXES.some((prefix) => value.startsWith(prefix))) continue
+      if (isAsset(value)) continue
 
       // Written without a trailing slash by convention; `localeHref` adds one.
       const path = value.replace(/\/$/, '') || '/'
@@ -158,7 +194,14 @@ describe('internal links', () => {
    * here is for that contention, not for the work, which takes ~90ms alone.
    */
   beforeAll(async () => {
-    ;[routes, linked] = await Promise.all([staticRoutes(), linkedPaths()])
+    const [discovered, enumerable, found] = await Promise.all([
+      staticRoutes(),
+      enumerableDynamicRoutes(),
+      linkedPaths(),
+    ])
+
+    routes = new Set([...discovered, ...enumerable])
+    linked = found
   }, 60_000)
 
   it('all resolve to a route that exists, or are listed as pending', () => {

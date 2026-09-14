@@ -324,6 +324,134 @@
         "title": "dTWAP and dLIMIT FAQ",
         "description": "Answers to common questions about the dTWAP, dLIMIT and dSLTP protocols, troubleshooting and technical documentation."
       }
+    },
+    "whitePapers": {
+      "meta": {
+        "title": "ホワイトペーパー",
+        "description": "Orbsのポジションペーパー、コンセンサス研究、トークン仕様、助成金プログラム文書。"
+      },
+      "categories": {
+        "proofOfStake": "OrbsのProof of Stakeユニバース",
+        "whitePapers": "ホワイトペーパー",
+        "workingPapers": "ワーキングペーパー",
+        "researchPapers": "リサーチペーパー",
+        "tokenSpecifications": "トークンの仕様",
+        "grants": "助成金プログラム"
+      },
+      "items": {
+        "Orbs-PoS-V3-Multi-chain-Staking": {
+          "title": "OrbsのPoS V3: マルチチェーン・ステーキング",
+          "abstract": "OrbsのPoS V3について知っておくべきこと：EthereumとPolygonでのマルチチェーン・ステーキングについて"
+        },
+        "orbs-pos-v2-the-age-of-guardians": {
+          "title": "OrbsのPoS V2：The Age of Guardians「ガーディアンの時代」",
+          "abstract": "新しく改良された Orbs の Proof-of-stake メカニズムのすべての主要機能の概要"
+        },
+        "proof-of-stake-ecosystem": {
+          "title": "OrbsのPoSエコシステムV1",
+          "abstract": "Orbs の Proof-of-Stake（PoS）エコシステムは、Orbs ネットワークとユニバースの重要な基盤です。本ドキュメントは、ディスカッションの目的で提供され、V1 で実装されたジェネシス元年の PoS アーキテクチャとモデルを示しています。"
+        },
+        "orbs-technology-overview-2": {
+          "title": "Orbsテクノロジー概要",
+          "abstract": "Orbs プラットフォームを構成するすべての主要なテクノロジーとビジネスに関する概要。"
+        },
+        "orbs-position-paper": {
+          "title": "Orbsポジションペーパー",
+          "abstract": "Orbs のポジションペーパー"
+        },
+        "ton-vote": {
+          "title": "Decentralized Gasless DAO Governance for TON",
+          "abstract": "[TON.Vote](https://ton.vote/) is a completely decentralized, on-chain DAO governance platform built exclusively for the TON ecosystem, developed by the Orbs team. The core user base is anticipated to be TON DAOs, projects, and other TON-related communities requiring governance activities."
+        },
+        "dTWAP": {
+          "title": "dTWAP for Decentralized Exchanges (DEXs)",
+          "abstract": "This lightpaper outlines the concept and architecture behind Orbs’ new decentralized TWAP protocol and a prototype UI that will allow DEXs to harness this technology to benefit the platform and its users."
+        },
+        "use-of-ethereum-as-a-base-layer-for-pos-and-poa-platforms": {
+          "title": "PoSおよびPoAプラットフォームのベースレイヤーとしてのイーサリアムの使用",
+          "abstract": "Orbs は複数のブロックチェーン・プラットフォーム（ハイブリッドシステム）を利用するアプリケーション向けに設計されています。その設計は複雑な実際のユースケースに適していると考えています。本ホワイトペーパーでは、ハイブリッド設計がインフラストラクチャ・プロジェクトにもたらす可能性のあるいくつかの利点と課題に焦点を当てたいと思います。"
+        },
+        "blockchain-virtualization-a-necessity-for-real-world-dapps": {
+          "title": "ブロックチェーンの仮想化：現実世界のDAppから求められるもの",
+          "abstract": "本ホワイトペーパーでは、仮想化することで、ウェブ・アプリケーションのバックエンドの重要な課題をどのように解決したかや、現世代のブロックチェーン技術が経験した課題の分析、仮想化テクノロジーがこれらの課題をどう克服するかを説明します。"
+        },
+        "eliminating-the-security-vs-scalability-dilemma-randomized-committee-consensus-protocols": {
+          "title": "セキュリティとスケーラビリティのジレンマの排除：ランダム化された委員会のコンセンサスプロトコル",
+          "abstract": "現世代のブロックチェーン・プロトコルは、セキュリティ・パフォーマンス・スペクトルで分散化のレベルを決定できます。コンセンサス・プロトコルの新しい種類は、ランダム化の結果を操作または予測することなく、信頼を構築せずともグループ内で乱数シードを生成するための新しい暗号化技術を採用することにより、セキュリティとスループットの両方を最大化できます。"
+        },
+        "blockchain-architecture-considerations-to-compete-with-paas-cloud-services": {
+          "title": "PaaS/クラウドサービスと競合するためのブロックチェーンアーキテクチャの考慮事項",
+          "abstract": "本資料では、中央集権型プラットフォームと競合するブロックチェーン・プラットフォームを設計するために使用できるいくつかのアーキテクチャ設計とともに、調査結果を示します。これらの側面には、コスト構造、スケールアップ時のシステムパフォーマンス、技術的リスクを軽減するためのプラットフォーム・ロックインの回避、スマートコントラクト環境の完全性が含まれます。"
+        },
+        "helix-consensus-whitepaper": {
+          "title": "Helixコンセンサス・ホワイトペーパー",
+          "abstract": "分散型でスケーラブルで公正なコンセンサス・アルゴリズムである Helix の紹介。\n\n\\*このペーパーの簡潔なバージョンは、第 26 回 IEEE International Conference on Network Protocols（ICNP ’18）の提出物にあります。引用は、IEEE の公式ページ[https://ieeexplore.ieee.org/document/8526804](https://ieeexplore.ieee.org/document/8526804 \"リンク\")をご参照してください。"
+        },
+        "enforcing-fairness-in-blockchain-transaction-ordering": {
+          "title": "ブロックチェーン・トランザクションの順序付けにおける公平性の強化",
+          "abstract": "この作業では、サービス品質を向上させるために公正なブロック選択を実施するための手法のツールボックスを提案します。\n\n\\*このペーパーのバージョンは、ブロックチェーンと暗号通貨に関する 2019 IEEE International Conference [http://icbc2019.ieee-icbc.org/.](http://icbc2019.ieee-icbc.org \"リンク\")に提出されました。"
+        },
+        "fully-distributed-group-signatures": {
+          "title": "完全に分散されたグループ署名",
+          "abstract": "グループ署名スキームは、個人の ID を漏らすことなく、明確に定義されたグループのメンバーとしてメッセージに署名できる強力なプリミティブですが、グループ管理者はこの匿名性を取り消して、署名者の ID を明らかにすることができます。本ホワイトペーパーでは、2 つの非常に効率的な完全分散型グループ署名スキームを紹介します。"
+        },
+        "rational-threshold-cryptosystems": {
+          "title": "合理的なしきい値の暗号システム",
+          "abstract": "参加者が合理的な利潤最大化エンティティである、非許可性の経済モデルのもとでのしきい値の暗号システムのフレームワークを提案します。合理的なしきい値の暗号システムにおける主な脅威は共謀です。「違法に」協力することにより、参加者の一部が暗号システムの秘密を明かす可能性があり、それが不当な利益につながります。共謀に対する私たちの対策はフレーミングです。"
+        },
+        "accelerating-decentralized-execution-of-blockchain": {
+          "title": "ブロックチェーンの分散化の実行を加速",
+          "abstract": "スケーラビリティを可能にするために、ネットワーク・ノードがより強力なアクセラレータと相互作用する分散実行モデルを提案します。"
+        },
+        "bloom-filter-with-a-false-positive-free-zone": {
+          "title": "誤検知のないフリーゾーンを備えたブルームフィルタ",
+          "abstract": "ブルームフィルタは、データストレージの使用量が比較的少ないデータセットに適した確率的データ構造です。\n\n\\*本ペーパーは 2018 年 4 月の IEEE Infocom に掲載されました：[https://ieeexplore.ieee.org/document/8486415.](https://ieeexplore.ieee.org/document/8486415 \"リンク\")"
+        },
+        "orbs-token-distribution": {
+          "title": "Orbsのトークン配布",
+          "abstract": "本ドキュメントでは、ORBS トークンの使用用途や、供給プールと配布プールについて説明します。"
+        },
+        "Orbs-Operation-Fees": {
+          "title": "Orbsの利用料金",
+          "abstract": "この利用料金のリストは、安定した予測可能な利用料金の全体的なビジョンが Orbs ネットワークでどのように実装されるかについての詳細を提供します。 ORBS トークンの購買力は、定義された計算能力と同様に固定されているため、予測可能性の目標は達成されます。"
+        },
+        "token-utility-research": {
+          "title": "Orbs Grant Program: Fourth Call For Grants",
+          "abstract": "The Orbs project is launching a new call for grants under the OEGP. In this round, we are looking for research and proposals regarding the uses and utility of the Orbs tokens and refining the token model."
+        },
+        "grants": {
+          "title": "Orbs Grant Program: Third Call For Grants",
+          "abstract": "The Orbs project is building on the TON Network (ton.org) and is working to provide L3 infrastructure services to TON dapps that can significantly increase their capabilities without relying on centralized infrastructure. In this third call for grants, Orbs is offering developer grants for building and integration work to Orbs core TON protocols. The grants are focused mostly around the TON ecosystem for FunC and TWA developers."
+        },
+        "orbs-grant-grogram-second-call-for-grants": {
+          "title": "Orbs Grant Program: Second Call for Grants",
+          "abstract": "The Orbs project is launching a new call for grants under the OEGP. For this round, the focus will be on applications that will draw on the power of the Orbs Universe, with its Guardians and Delegators, using their ability to arrive at consensus through the Orbs protocol incentive layer powered by the ORBS token."
+        },
+        "orbs-grant-program": {
+          "title": "Orbs助成金プログラム",
+          "abstract": "Orbs は、さらに多くの開発者やプロジェクトチームが Orbs エコシステムの開発に関わることで、分散化のプロセスが前進すると考えています。その取り組みの 1 つとして、Orbs エコシステム助成金プログラム（OEGP）を立ち上げました。助成金を提供することで、Orbs ネットワークが提供するブロックチェーン・インフラストラクチャの魅了的な機能と、Orbs の PoS ユニバースの強力でアクティブなコミュニティが一緒になって、DeFi とのインターフェースやコラボレーションを生めるよう体制を構築しております。"
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-election-committees": {
+          "title": "Orbs PoS V2: The Age of Guardians – Election Committees",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-minimum-self-delegation": {
+          "title": "Orbs PoS V2: The Age of Guardians – Minimum self delegation",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-pos-on-ethereum": {
+          "title": "Orbs PoS V2: The Age of Guardians – PoS on Ethereum",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-rewards-distributions": {
+          "title": "Orbs PoS V2: The Age of Guardians – Rewards distribution",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-rewards-fees-bootstrap-fund": {
+          "title": "Orbs PoS V2: The Age of Guardians – Rewards, Fees and Bootstrap Fund",
+          "abstract": ""
+        }
+      }
     }
   }
 }
