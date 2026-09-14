@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { H1, H2 } from '@/app/components/typography'
+import { MarkdownProse } from './markdown-prose'
 
 export type WhitePaperCard = {
   slug: string
@@ -88,9 +89,20 @@ export function WhitePaperList({ title, groups }: { title: string; groups: reado
                         <p className="mt-1 text-detail uppercase tracking-widest text-fg-muted">{paper.date}</p>
                       )}
 
-                      <p className="mt-3 leading-relaxed text-fg-muted" lang={paper.abstractLang}>
-                        {paper.abstract}
-                      </p>
+                      {/*
+                        Through `MarkdownProse`, not a bare `<p>`. Eight of the
+                        imported abstracts contain markdown links — `ton-vote`
+                        in all three locales, plus several Japanese and Korean
+                        research papers — and JSX interpolation escapes them, so
+                        a reader saw the literal `[TON.Vote](https://ton.vote/)`
+                        instead of a link.
+
+                        The `lang` sits on the wrapper because the renderer
+                        emits its own `<p>`.
+                      */}
+                      <div className="mt-3" lang={paper.abstractLang}>
+                        <MarkdownProse>{paper.abstract}</MarkdownProse>
+                      </div>
                     </div>
                   </article>
                 </li>

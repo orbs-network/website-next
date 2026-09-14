@@ -4,6 +4,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { H1 } from '@/app/components/typography'
 import { Button } from '@/components/ui/button'
+import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { absoluteUrl } from '@/app/lib/site'
 
@@ -63,7 +64,10 @@ export default async function WhitePaperPage({ params }: Props) {
 
         {paper.date && <p className="mt-3 text-detail uppercase tracking-widest text-fg-muted">{paper.date}</p>}
 
-        <p className="mt-6 max-w-2xl leading-relaxed text-fg-muted">{t(`items.${slug}.abstract`)}</p>
+        {/* Through the markdown renderer: several abstracts contain links. */}
+        <div className="mt-6 max-w-2xl">
+          <MarkdownProse>{t(`items.${slug}.abstract`)}</MarkdownProse>
+        </div>
 
         <div className="mt-8">
           {/*
