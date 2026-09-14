@@ -388,12 +388,12 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Google Cloud',
         url: 'https://docs.orbs.network/contract-sdk/gamma-in-depth/deploying-gamma-in-the-cloud/google-cloud-platform',
-        logo: '/ecosystem/cloud/azure.svg',
+        logo: '/ecosystem/cloud/google.svg',
       },
       {
         name: 'MS Azure',
         url: 'https://docs.orbs.network/contract-sdk/gamma-in-depth/deploying-gamma-in-the-cloud/azure',
-        logo: '/ecosystem/cloud/google.svg',
+        logo: '/ecosystem/cloud/azure.svg',
       },
     ],
   },
@@ -528,7 +528,7 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
       {
         name: 'Status',
         url: 'https://www.orbs.com/orbs-staking-is-now-available-on-the-status-wallet-mobile-app/',
-        logo: '/ecosystem/wallets/blockfolio.svg',
+        logo: '/ecosystem/wallets/status.svg',
       },
       {
         name: 'Krystal',
@@ -596,7 +596,7 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
         url: 'https://app.uniswap.org/#/add/ETH/0xff56Cc6b1E6dEd347aA0B7676C85AB0B3D08B0FA',
         logo: '/ecosystem/defi/uniswap.svg',
       },
-      { name: 'Defi.org', url: 'Defi.org', logo: '/ecosystem/defi/defi.svg' },
+      { name: 'Defi.org', url: 'https://defi.org', logo: '/ecosystem/defi/defi.svg' },
       {
         name: 'Benchmark Protocol',
         url: 'https://medium.com/benchmarkprotocol/the-benchmark-protocol-team-is-excited-to-announce-that-the-orbs-network-token-orbs-will-be-b33ed13c6680',

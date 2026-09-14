@@ -38,29 +38,60 @@ export function EcosystemDirectory({ title, groups }: { title: string; groups: r
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {group.entries.map((entry) => (
               <li key={`${group.key}-${entry.name}`}>
-                <a
-                  href={entry.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="flex h-full flex-col items-center justify-center gap-3 rounded-sm border border-border p-5 text-center transition-colors hover:border-accent-primary hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                >
-                  {entry.logo && (
-                    <Image
-                      src={entry.logo}
-                      alt=""
-                      width={96}
-                      height={40}
-                      sizes="96px"
-                      className="h-10 w-auto max-w-[6rem] object-contain"
-                    />
-                  )}
-                  <span className="text-detail font-medium">{entry.name}</span>
-                </a>
+                <EcosystemTile entry={entry} />
               </li>
             ))}
           </ul>
         </div>
       ))}
     </section>
+  )
+}
+
+/**
+ * One project. A link when there is somewhere to go, otherwise plain.
+ *
+ * Five entries in the dataset carry `url: ''` — Ledger, D'Cent, myNFT.fyi,
+ * inboundjunction and Yozma Group. Rendered through an anchor, an empty `href`
+ * resolves to the CURRENT page, so each of those cards silently reopened
+ * /ecosystem/ in a new tab. A card with no destination should not look or
+ * behave like one: no anchor, no hover affordance, no tab stop.
+ */
+function EcosystemTile({ entry }: { entry: EcosystemCard }) {
+  const tile = 'flex h-full flex-col items-center justify-center gap-3 rounded-sm border border-border p-5 text-center'
+
+  const body = (
+    <>
+      {/*
+        Decorative: the visible name is the accessible label. Giving the image
+        the project name as `alt` would have a screen reader announce it twice.
+      */}
+      {entry.logo && (
+        <Image
+          src={entry.logo}
+          alt=""
+          width={96}
+          height={40}
+          sizes="96px"
+          className="h-10 w-auto max-w-[6rem] object-contain"
+        />
+      )}
+      <span className="text-detail font-medium">{entry.name}</span>
+    </>
+  )
+
+  if (!entry.url) {
+    return <div className={tile}>{body}</div>
+  }
+
+  return (
+    <a
+      href={entry.url}
+      target="_blank"
+      rel="noopener noreferrer"
+      className={`${tile} transition-colors hover:border-accent-primary hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring`}
+    >
+      {body}
+    </a>
   )
 }
