@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises'
 import { join, relative } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { dirname, resolve } from 'node:path'
-import { describe, expect, it } from 'vitest'
+import { beforeAll, describe, expect, it } from 'vitest'
 
 /**
  * Every internal link in `src/content/` must point at a route that exists.
@@ -151,20 +151,33 @@ async function linkedPaths(): Promise<Map<string, string[]>> {
 }
 
 describe('internal links', () => {
-  it('all resolve to a route that exists, or are listed as pending', async () => {
-    const routes = await staticRoutes()
+  let routes: Set<string>
+  let linked: Map<string, string[]>
+
+  /**
+   * Scanned once for all three assertions.
+   *
+   * Not per-test. Each one needed one or both halves, so doing it in the tests
+   * walked the tree and imported every content module four times over — enough
+   * to blow Vitest's 5s default when `npm test` runs this project alongside the
+   * Storybook one and the two compete for a cold start. The generous timeout
+   * here is for that contention, not for the work, which takes ~90ms alone.
+   */
+  beforeAll(async () => {
+    ;[routes, linked] = await Promise.all([staticRoutes(), linkedPaths()])
+  }, 60_000)
+
+  it('all resolve to a route that exists, or are listed as pending', () => {
     const known = new Set([...routes, ...KNOWN_POST_SLUGS, ...PENDING])
 
-    const broken = [...(await linkedPaths())]
+    const broken = [...linked]
       .filter(([path]) => !known.has(path))
       .map(([path, sources]) => `${path}  (linked from ${[...new Set(sources)].join(', ')})`)
 
     expect(broken, `\nInternal links with no route:\n  ${broken.join('\n  ')}\n`).toEqual([])
   })
 
-  it('has no stale PENDING entries — a page that ships must delete its line', async () => {
-    const routes = await staticRoutes()
-
+  it('has no stale PENDING entries — a page that ships must delete its line', () => {
     const shipped = PENDING.filter((path) => routes.has(path))
 
     expect(
@@ -173,9 +186,7 @@ describe('internal links', () => {
     ).toEqual([])
   })
 
-  it('has no unused PENDING entries — an unlinked page does not belong here', async () => {
-    const linked = await linkedPaths()
-
+  it('has no unused PENDING entries — an unlinked page does not belong here', () => {
     const orphaned = PENDING.filter((path) => !linked.has(path))
 
     expect(
