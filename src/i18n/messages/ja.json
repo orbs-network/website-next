@@ -385,7 +385,7 @@
         },
         "helix-consensus-whitepaper": {
           "title": "Helixコンセンサス・ホワイトペーパー",
-          "abstract": "分散型でスケーラブルで公正なコンセンサス・アルゴリズムである Helix の紹介。\n\n\\*このペーパーの簡潔なバージョンは、第 26 回 IEEE International Conference on Network Protocols（ICNP ’18）の提出物にあります。引用は、IEEE の公式ページ[https://ieeexplore.ieee.org/document/8526804]（https://ieeexplore.ieee.org/document/8526804 \"リンク\"）をご参照してください。"
+          "abstract": "分散型でスケーラブルで公正なコンセンサス・アルゴリズムである Helix の紹介。\n\n\\*このペーパーの簡潔なバージョンは、第 26 回 IEEE International Conference on Network Protocols（ICNP ’18）の提出物にあります。引用は、IEEE の公式ページ[https://ieeexplore.ieee.org/document/8526804](https://ieeexplore.ieee.org/document/8526804 \"リンク\")をご参照してください。"
         },
         "enforcing-fairness-in-blockchain-transaction-ordering": {
           "title": "ブロックチェーン・トランザクションの順序付けにおける公平性の強化",

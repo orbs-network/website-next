@@ -4,7 +4,7 @@ import { notFound } from 'next/navigation'
 import { getTranslations } from 'next-intl/server'
 import { H1 } from '@/app/components/typography'
 import { Button } from '@/components/ui/button'
-import { MarkdownProse } from '@/components/marketing/markdown-prose'
+import { MarkdownProse, plainText } from '@/components/marketing/markdown-prose'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { absoluteUrl } from '@/app/lib/site'
 
@@ -33,7 +33,9 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
 
   return {
     title: t(`items.${slug}.title`),
-    description: t(`items.${slug}.abstract`),
+    // Stripped: a meta description is text, and several abstracts contain
+    // markdown links that would otherwise be published as raw syntax.
+    description: plainText(t(`items.${slug}.abstract`)),
     alternates: { canonical: absoluteUrl(`/white-papers/${slug}/`) },
   }
 }
