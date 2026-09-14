@@ -36,19 +36,15 @@ const CONTENT = join(REPO, 'src/content')
  * that resolves is a failure, not a pass.
  */
 const PENDING: readonly string[] = [
-  '/accessibility-declaration',
   '/brand-assets',
   '/contact',
   '/dtwap-and-dlimit-faq',
   '/ecosystem',
   '/execution-services',
   '/faq',
-  '/liquidity-hub-terms-of-use',
   '/notifications',
   '/overview',
   '/pos',
-  '/privacy-policy',
-  '/terms-of-use',
   '/ton-access',
   '/ton-vote',
   '/white-papers',

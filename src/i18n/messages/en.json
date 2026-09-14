@@ -707,6 +707,30 @@
         "contact": "Talk to the team",
         "github": "View on GitHub"
       }
+    },
+    "privacyPolicy": {
+      "meta": {
+        "title": "Privacy Policy",
+        "description": "How Orbs collects, uses and protects personal information, and the rights you have over it."
+      }
+    },
+    "termsOfUse": {
+      "meta": {
+        "title": "Terms of Use",
+        "description": "The terms governing use of the Orbs website and the services offered through it."
+      }
+    },
+    "accessibilityDeclaration": {
+      "meta": {
+        "title": "Accessibility Declaration",
+        "description": "Orbs' accessibility declaration, covering the standards the site is built to and how to report a problem."
+      }
+    },
+    "liquidityHubTerms": {
+      "meta": {
+        "title": "Liquidity Hub Terms of Use",
+        "description": "The terms governing use of the Liquidity Hub software protocol and smart contracts."
+      }
     }
   }
 }
