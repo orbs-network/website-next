@@ -85,7 +85,17 @@ updates:
 #               manifest and lockfile. Not configurable from this file.
 #   * updates — the PRs, configured here.
 #
-# So the 44 alerts that directory contributes will persist until either its
-# package-lock.json stops being committed or the directory is removed at
-# cutover. Removing the lockfile would cost reproducibility on a script that
-# writes to production Contentful, so it stays for now.
+# So alerts from that directory show up on the repo's security tab even though
+# nothing here asks Dependabot to touch it. It once contributed 46 of them —
+# every open alert the repo had, while `npm audit` at the root reported zero,
+# because the root audit only reads the root lockfile.
+#
+# That is now fixed by updating its lockfile in place (`npm audit fix`), which
+# needed no change to its package.json and no loss of reproducibility. The
+# earlier framing here — that the only ways out were deleting the lockfile or
+# deleting the directory — missed that third option.
+#
+# Keep it at zero the same way: run `npm audit fix` inside that directory when
+# alerts appear. Excluding it from `updates` stays right — upgrade PRs against
+# a local one-off script are noise — but that is a separate thing from letting
+# its advisories accumulate until they drown out a real one in the app.
