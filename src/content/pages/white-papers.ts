@@ -18,6 +18,15 @@ export type WhitePaper = {
   date: string
   image: string
   pdf: string
+  /**
+   * Editions of the same paper in another language, where one exists.
+   *
+   * Five papers have them. They are offered as extra links on the paper page
+   * rather than through localised routes, because the page itself is
+   * English-only — see the note on `/white-papers/[paper]`. Without this the
+   * migration would simply lose five documents that are published today.
+   */
+  pdfByLocale?: Partial<Record<'ja' | 'ko', string>>
 }
 
 export type WhitePaperCategory = {
@@ -40,6 +49,10 @@ export const WHITE_PAPER_CATEGORIES: readonly WhitePaperCategory[] = [
         date: 'July 2020',
         image: '/white-papers/img/orbs-pos-v2-the-age-of-guardians.png',
         pdf: '/white-papers/docs/ORBS_V2-The-Age-of-Guardians_V2.5.pdf',
+        pdfByLocale: {
+          ja: '/white-papers/docs/JP_ CONTENT-OVERVIEW_V2.5-The-Age-of-Guardians_Nov20.pdf',
+          ko: '/white-papers/docs/KR_ORBS_V2-The-Age-of-Guardians_V2.5.pdf',
+        },
       },
       {
         slug: 'proof-of-stake-ecosystem',
@@ -63,6 +76,7 @@ export const WHITE_PAPER_CATEGORIES: readonly WhitePaperCategory[] = [
         date: 'April 2018',
         image: '/white-papers/img/orbs-position-paper.png',
         pdf: '/white-papers/docs/Orbs-Position-Paper-OFFICIAL-V1.7.pdf',
+        pdfByLocale: { ko: '/white-papers/docs/ORBS_position_paper_1_7_0_KR_001.pdf' },
       },
     ],
   },
@@ -185,16 +199,67 @@ export const WHITE_PAPER_CATEGORIES: readonly WhitePaperCategory[] = [
         date: 'August 2021',
         image: '/white-papers/img/orbs-grant-grogram-second-call-for-grants.png',
         pdf: '/white-papers/docs/orbs-grant-grogram-second-call-for-grants.pdf',
+        pdfByLocale: { ko: '/white-papers/docs/orbs-grant-grogram-second-call-for-grants_KO.pdf' },
       },
       {
         slug: 'orbs-grant-program',
         date: 'August 2020',
         image: '/white-papers/img/orbs-grant-program.png',
         pdf: '/white-papers/docs/Orbs-Grant-Program.pdf',
+        pdfByLocale: { ja: '/white-papers/docs/Orbs-Grant-Program-JP.pdf' },
       },
     ],
   },
 ]
 
-/** Flat lookup for the per-paper route. */
-export const WHITE_PAPERS: readonly WhitePaper[] = WHITE_PAPER_CATEGORIES.flatMap((c) => c.papers)
+/**
+ * Papers with a page but no card on the index.
+ *
+ * Five sections of the Age of Guardians paper, published as standalone PDFs.
+ * The legacy index never listed them, but every one returns 200 today — so
+ * they need routes or the migration deletes five live URLs. They carry no
+ * thumbnail or date because the legacy content has none for them.
+ */
+const UNLISTED_PAPERS: readonly WhitePaper[] = [
+  {
+    slug: 'orbs-pos-v2-the-age-of-guardians-section-election-committees',
+    date: '',
+    image: '',
+    pdf: '/white-papers/docs/age_of_guardians_doc_part_election_committees.pdf',
+  },
+  {
+    slug: 'orbs-pos-v2-the-age-of-guardians-section-minimum-self-delegation',
+    date: '',
+    image: '',
+    pdf: '/white-papers/docs/age_of_guardians_doc_part_minimum_self_delegation.pdf',
+  },
+  {
+    slug: 'orbs-pos-v2-the-age-of-guardians-section-pos-on-ethereum',
+    date: '',
+    image: '',
+    pdf: '/white-papers/docs/age_of_guardians_doc_part_pos_on_ethereum.pdf',
+  },
+  {
+    slug: 'orbs-pos-v2-the-age-of-guardians-section-rewards-distributions',
+    date: '',
+    image: '',
+    pdf: '/white-papers/docs/age_of_guardians_doc_part_reward_distributions.pdf',
+  },
+  {
+    slug: 'orbs-pos-v2-the-age-of-guardians-section-rewards-fees-bootstrap-fund',
+    date: '',
+    image: '',
+    pdf: '/white-papers/docs/age_of_guardians_doc_part_rewards_fees_and_bootstrap_fund.pdf',
+  },
+]
+
+/**
+ * Flat lookup for the per-paper route.
+ *
+ * Index cards PLUS the unlisted sections: what the index shows and what has a
+ * URL are different questions, and `generateStaticParams` wants the second.
+ */
+export const WHITE_PAPERS: readonly WhitePaper[] = [
+  ...WHITE_PAPER_CATEGORIES.flatMap((c) => c.papers),
+  ...UNLISTED_PAPERS,
+]

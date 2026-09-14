@@ -430,6 +430,26 @@
         "orbs-grant-program": {
           "title": "Orbs助成金プログラム",
           "abstract": "Orbs は、さらに多くの開発者やプロジェクトチームが Orbs エコシステムの開発に関わることで、分散化のプロセスが前進すると考えています。その取り組みの 1 つとして、Orbs エコシステム助成金プログラム（OEGP）を立ち上げました。助成金を提供することで、Orbs ネットワークが提供するブロックチェーン・インフラストラクチャの魅了的な機能と、Orbs の PoS ユニバースの強力でアクティブなコミュニティが一緒になって、DeFi とのインターフェースやコラボレーションを生めるよう体制を構築しております。"
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-election-committees": {
+          "title": "Orbs PoS V2: The Age of Guardians – Election Committees",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-minimum-self-delegation": {
+          "title": "Orbs PoS V2: The Age of Guardians – Minimum self delegation",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-pos-on-ethereum": {
+          "title": "Orbs PoS V2: The Age of Guardians – PoS on Ethereum",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-rewards-distributions": {
+          "title": "Orbs PoS V2: The Age of Guardians – Rewards distribution",
+          "abstract": ""
+        },
+        "orbs-pos-v2-the-age-of-guardians-section-rewards-fees-bootstrap-fund": {
+          "title": "Orbs PoS V2: The Age of Guardians – Rewards, Fees and Bootstrap Fund",
+          "abstract": ""
         }
       }
     }

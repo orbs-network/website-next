@@ -84,6 +84,46 @@ export default async function WhitePaperPage({ params }: Props) {
         </div>
 
         {/*
+          Other editions of the same paper.
+
+          Five papers have a Japanese or Korean PDF. The legacy site reached
+          them through /jp/ and /ko/ paper routes, which this page does not
+          reproduce — so without these links the migration would simply lose
+          five published documents. Each anchor carries the `lang` of the
+          edition it points at, not of this page.
+        */}
+        {paper.pdfByLocale && (
+          <ul className="mt-4 flex flex-wrap gap-x-6 gap-y-2">
+            {paper.pdfByLocale.ja && (
+              <li>
+                <a
+                  href={paper.pdfByLocale.ja}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  lang="ja"
+                  className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
+                >
+                  日本語版 (PDF)
+                </a>
+              </li>
+            )}
+            {paper.pdfByLocale.ko && (
+              <li>
+                <a
+                  href={paper.pdfByLocale.ko}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  lang="ko"
+                  className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
+                >
+                  한국어판 (PDF)
+                </a>
+              </li>
+            )}
+          </ul>
+        )}
+
+        {/*
           `hidden` below `sm`. An inline PDF on a phone is a postage stamp the
           reader cannot zoom independently of the page, and every mobile browser
           already offers a better full-screen viewer via the link above.
