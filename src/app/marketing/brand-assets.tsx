@@ -23,6 +23,9 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
       <ul className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {BRAND_ASSETS.map((asset) => {
           const caption = t(`items.${asset.id}`)
+          // English on the Japanese and Korean routes, where the captions are
+          // untranslated placeholders.
+          const captionLang = textLang(caption, locale)
 
           return (
             <li key={asset.id} className="flex flex-col rounded-sm border border-border">
@@ -51,7 +54,7 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
               </div>
 
               <div className="flex items-center justify-between gap-4 p-4">
-                <span className="text-detail text-fg-muted" lang={textLang(caption, locale)}>
+                <span className="text-detail text-fg-muted" lang={captionLang}>
                   {caption}
                 </span>
 
@@ -76,6 +79,15 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
                       href={asset[format]}
                       download
                       aria-label={`${caption}, ${format.toUpperCase()}`}
+                      /*
+                        On the ANCHOR, not just the visible caption. An
+                        `aria-label` replaces the accessible name and takes its
+                        language from the element carrying it — so on /jp/ and
+                        /ko/ the English label was announced with Japanese and
+                        Korean pronunciation rules even though the caption
+                        beside it was correctly tagged.
+                      */
+                      lang={captionLang}
                       className="text-detail font-medium text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
                     >
                       {format.toUpperCase()}
