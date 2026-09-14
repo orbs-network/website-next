@@ -89,6 +89,9 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
           icon: product.icon,
           href: resolveLocaleLink({ href: product.href }, locale).href,
           title: t(`products.items.${product.id}.title`),
+          // Product names, English in every locale — so they must say so, or a
+          // Korean section announces "dTWAP" with Korean rules.
+          titleLang: textLang(t(`products.items.${product.id}.title`), locale),
           body: t(`products.items.${product.id}.body`),
         }))}
         lang={lang('products.items.dtwap.body')}
@@ -108,7 +111,17 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         lang={lang('why.howBody')}
       />
 
-      <ArchitectureSection eyebrow={t('mission.title')} body={t('mission.body')} lang={lang('mission.body')} />
+      {/*
+        `title`, not `eyebrow`. Mission is a standalone section, and as an
+        eyebrow it rendered as a small <p> label — absent from the heading
+        outline, so nothing in the document structure marked where it began.
+      */}
+      <ArchitectureSection
+        title={t('mission.title')}
+        body={t('mission.body')}
+        titleLang={lang('mission.title')}
+        lang={lang('mission.body')}
+      />
 
       <FeatureGrid
         title={t('benefits.title')}

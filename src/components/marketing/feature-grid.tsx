@@ -8,6 +8,16 @@ import { Prose } from './prose'
 export type Feature = {
   id: string
   title: string
+  /**
+   * Set when THIS CARD's title is in a different language from the grid.
+   *
+   * The grid's `lang` covers the section, which is right when everything in it
+   * agrees. It is not: the overview's product cards are named dTWAP, dLIMIT,
+   * Liquidity Hub and Perpetual Hub in every locale, so on the Korean page four
+   * English product names sat inside a Korean section and were announced with
+   * Korean pronunciation rules.
+   */
+  titleLang?: string
   body: string
   /**
    * Makes the whole card a link.
@@ -92,11 +102,16 @@ export function FeatureGrid({
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
       <div className="mx-auto max-w-3xl text-center">
-        {eyebrow && (
-          <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
-        )}
+        {eyebrow && <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>}
+        {/*
+          `whitespace-pre-line`: two of these titles are authored with a line
+          break — "ORBS infrastructure / powers four main protocols" — and the
+          break is a typographic decision about where the phrase splits, not
+          incidental whitespace. Without it the browser collapses it to a space
+          and wraps on viewport width instead.
+        */}
         {title && (
-          <H2 className="text-balance" lang={titleLang}>
+          <H2 className="whitespace-pre-line text-balance" lang={titleLang}>
             {title}
           </H2>
         )}
@@ -131,9 +146,13 @@ export function FeatureGrid({
               */}
               <H3 asChild weight="medium">
                 {title ? (
-                  <h3>{feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}</h3>
+                  <h3 lang={feature.titleLang}>
+                    {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
+                  </h3>
                 ) : (
-                  <h2>{feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}</h2>
+                  <h2 lang={feature.titleLang}>
+                    {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
+                  </h2>
                 )}
               </H3>
             </CardHeader>
