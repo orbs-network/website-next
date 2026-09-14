@@ -31,6 +31,10 @@ export const MARKETING_PAGE_PATHS = [
   '/terms-of-use',
   '/accessibility-declaration',
   '/liquidity-hub-terms-of-use',
+  // FAQ. Same markdown-document treatment as the legal pages; `##` is a
+  // section and `###` a question.
+  '/faq',
+  '/dtwap-and-dlimit-faq',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]
