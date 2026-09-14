@@ -39,6 +39,8 @@ export const MARKETING_PAGE_PATHS = [
   // separate English-only route, not through this registry — each is a wrapper
   // around one PDF that exists in a single language.
   '/white-papers',
+  // The Orbs network overview. Composed from the shared marketing library.
+  '/overview',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

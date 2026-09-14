@@ -42,7 +42,6 @@ const PENDING: readonly string[] = [
   '/ecosystem',
   '/execution-services',
   '/notifications',
-  '/overview',
   '/pos',
   '/ton-access',
   '/ton-vote',

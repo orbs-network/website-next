@@ -452,6 +452,84 @@
           "abstract": ""
         }
       }
+    },
+    "overview": {
+      "meta": {
+        "title": "概要",
+        "description": "Orbsとは:高度なオンチェーン取引のために構築された分散型レイヤー3ブロックチェーンインフラ。"
+      },
+      "hero": {
+        "headline": "Bringing CeFi-level\nexecution to DeFi",
+        "intro": "L3 For Advanced On-chain Trading"
+      },
+      "what": {
+        "title": "What is Orbs?",
+        "body": "Orbs is a decentralized Layer-3 (L3) blockchain infrastructure designed specifically for advanced on-chain trading. Orbs improves on-chain trading by providing technology for aggregated liquidity, advanced trading orders, and decentralized derivatives.\n\nThis is made possible by Orbs enhancing the capabilities of both EVM and non-EVM smart contracts without moving liquidity onto a new chain. This unique setup creates a decentralized backend that brings CeFi-level execution to DeFi trading."
+      },
+      "challenge": {
+        "eyebrow": "PAIN",
+        "title": "On-chain Trading Challenges",
+        "body": "People prefer on-chain trading for enhanced privacy, security, anonymity, ease of onboarding, and lack of counterparty risk. However, on-chain execution often lags behind due to limitations in smart contract functionality, interoperability issues, liquidity fragmentation, inferior user experience, and suboptimal pricing."
+      },
+      "solution": {
+        "eyebrow": "SOLUTION",
+        "title": "Layer 3 Technology Stack",
+        "body": "Orbs Layer 3 brings CeFi-level capabilities to DeFi by providing DeFi platforms with a decentralized backend, delivering scalable, efficient, and secure trading solutions without the need for centralized backends."
+      },
+      "tech": {
+        "eyebrow": "Tech",
+        "title": "Layer 3 Technology Stack",
+        "body": "Orbs is a Layer 3 blockchain designed to enhance the capabilities of existing Layer 1 and Layer 2 blockchains. Utilizing Proof-of-Stake consensus, Orbs acts as an intermediary execution layer, facilitating complex logic and scripts beyond the native functionalities of smart contracts. Innovative protocols like dLIMIT, dTWAP, and Liquidity Hub push the boundaries of DeFi and smart contract technology. Orbs provides a scalable, efficient, and customizable environment for dApps, addressing scalability challenges inherent in Ethereum and other L1 blockchains."
+      },
+      "products": {
+        "title": "ORBS infrastructure\npowers four main protocols",
+        "items": {
+          "dtwap": {
+            "title": "dTWAP",
+            "body": "Advanced order type for DEXs allowing for time-based orders to be executed on chain."
+          },
+          "dlimit": {
+            "title": "dLIMIT",
+            "body": "Advanced order type for DEXs allowing for limit orders to be executed on chain."
+          },
+          "liquidityHub": {
+            "title": "Liquidity Hub",
+            "body": "Decentralized optimization layer for DEXs enabling DEXs to tap into external liquidity sources in order to provide CeFi-competitive prices on swaps."
+          },
+          "perpetualHub": {
+            "title": "Perpetual Hub",
+            "body": "Full suite of services for decentralized perpetuals platforms, including hedger, liquidator and oracle, enabling intent-based on-chain perpetual futures trading."
+          }
+        }
+      },
+      "why": {
+        "title": "Why?",
+        "body": "Orbs' mission is to revolutionize on-chain trading by delivering CeFi-level pricing and execution capabilities to the decentralized finance (DeFi) ecosystem.",
+        "howTitle": "How?",
+        "howBody": "This is achieved by leveraging Orbs' innovative Layer-3 blockchain infrastructure, which enhances existing Layer-1 and Layer-2 solutions and enables complex logic to be implemented on a fully decentralized stack without moving liquidity to a new chain. Utilizing proof-of-stake consensus, Orbs provides DEXs with a decentralized backend that powers unique protocols such as dLIMIT, dTWAP, Liquidity Hub, and Perpetual Hub. These, in turn, optimize trading with aggregated liquidity, advanced trading orders, and on-chain derivatives, which push the boundaries of DeFi and on-chain trading."
+      },
+      "mission": {
+        "title": "Mission",
+        "body": "Orbs is dedicated to transforming the DeFi landscape by bringing CeFi-level execution to on-chain trading. Orbs Layer-3 blockchain infrastructure supports protocols that empower traders with advanced tools and platforms, ensuring secure, scalable, and efficient trading solutions without centralized intermediaries."
+      },
+      "benefits": {
+        "title": "How do Users Benefit from\nProtocols Powered by Orbs",
+        "intro": "Users benefit from protocols powered by Orbs in several key ways:",
+        "items": {
+          "access": {
+            "title": "On-chain Access to Advanced Trading Products and Services",
+            "body": "Orbs enables on-chain availability of sophisticated trading features found in CeFi Venues. Protocols such as dLIMIT and dTWAP offer advanced order types like TWAP and limit orders directly on decentralized exchanges, which were previously unavailable on-chain. This advancement allows traders to execute more strategic and controlled trades, enhancing their trading experience and capabilities."
+          },
+          "pricing": {
+            "title": "Competitive Pricing and Lower Fees",
+            "body": "By utilizing Liquidity Hub, Orbs allows DEXs to provide their users with access to aggregated liquidity from multiple sources, ensuring more competitive pricing on swaps. This means users can achieve better prices and lower fees compared to traditional decentralized exchanges that may suffer from liquidity fragmentation. Additionally, the Perpetual Hub offers more capital-efficient perpetual trading, translating to better pricing and reduced costs for users engaging in perpetual futures trading."
+          },
+          "decentralization": {
+            "title": "Decentralization and Privacy",
+            "body": "Protocols powered by Orbs maintain the core principles of decentralization, providing users with enhanced privacy, security, and anonymity. By eliminating the need for centralized backends, Orbs ensures that users can trade in a decentralized manner, protecting their data and maintaining control over their assets."
+          }
+        }
+      }
     }
   }
 }
