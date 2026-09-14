@@ -82,6 +82,112 @@ function getClient(preview = false) {
   })
 }
 
+/**
+ * Let the BUILD finish without Contentful, when explicitly allowed to.
+ *
+ * Two conditions, both required. `CONTENTFUL_ALLOW_DEGRADED=1` is the
+ * operator's opt-in; `NEXT_PHASE` restricts it to `next build`. With both, a
+ * Contentful AVAILABILITY failure stops being fatal for that query, which lets
+ * work with nothing to do with the blog — the marketing pages, all of Phase 3 —
+ * ship while the space is down (#115).
+ *
+ * THE PHASE CHECK IS THE LOAD-BEARING HALF. Without it the same fallback
+ * applies to request-time rendering, and empty is not a safe answer there:
+ *
+ *  - `sitemap.ts` and the RSS route are `force-dynamic`, so they render per
+ *    request. Degrading them serves a sitemap listing no posts and a feed
+ *    containing no items — with a 200, so the CDN caches it for the 24 hours
+ *    #117 and #118 configured. Telling crawlers the entire archive has gone,
+ *    then holding that answer for a day, is far worse than the 500 they would
+ *    otherwise get and retry.
+ *  - An ISR page rendered empty at request time caches an empty 200 for its
+ *    revalidate window, so a transient blip outlives itself.
+ *
+ * A build-time empty is contained by comparison, but it is NOT self-healing.
+ * `/`, `/blog` and `/news` are prerendered, so a degraded build writes an empty
+ * 200 into that deployment's ISR cache. Contentful coming back does not fire
+ * the revalidation webhook — nothing published — so those pages stay empty
+ * until their `revalidate` window expires and someone requests them.
+ *
+ * So a degraded deploy is a stopgap and has to be replaced, not waited out:
+ *
+ *   **When the space recovers, unset the flag and redeploy.** Do not rely on
+ *   revalidation to heal it.
+ *
+ * That is one action, and it is one that has to happen anyway to remove the
+ * flag, which is why this is documented rather than engineered around.
+ *
+ * The whole trade is only worth making because orbs.com still serves from the
+ * legacy host, so this deployment has no public readers. **Unset the flag
+ * before the DNS cutover (#39).**
+ */
+const DEGRADE_DURING_BUILD =
+  process.env.CONTENTFUL_ALLOW_DEGRADED === '1' && process.env.NEXT_PHASE === 'phase-production-build'
+
+/**
+ * The HTTP status of a Contentful failure, if that failure is an availability
+ * one — and `null` for anything else.
+ *
+ * Availability means the space is there but cannot serve right now: 402 (quota
+ * exhausted or blocked), 429 (rate limited), 5xx (upstream). Those are worth
+ * riding out.
+ *
+ * 401, 403 and 404 are deliberately NOT in that set. A bad token, a revoked
+ * key or a wrong space id must stay fatal — degrading those would turn a
+ * misconfigured deployment into a site that builds happily with no content,
+ * which is far worse than a failed build.
+ *
+ * The SDK reports the status inconsistently — sometimes on the error, sometimes
+ * on a `response`, and for the blocked-space case only inside a JSON string in
+ * `message` — so all three are checked rather than assuming one shape.
+ */
+function availabilityFailureStatus(error: unknown): number | null {
+  if (typeof error !== 'object' || error === null) return null
+
+  const candidate = error as { status?: unknown; response?: { status?: unknown }; message?: unknown }
+  const reported = candidate.response?.status ?? candidate.status
+  let status = typeof reported === 'number' ? reported : null
+
+  if (status === null && typeof candidate.message === 'string') {
+    const embedded = candidate.message.match(/"status"\s*:\s*(\d{3})/)
+    if (embedded) status = Number(embedded[1])
+  }
+
+  if (status === null) return null
+
+  // Bounded at 600: a status outside the defined range is a malformed response,
+  // not an upstream saying "try later", and should stay fatal rather than be
+  // read as one.
+  const isAvailability = status === 402 || status === 429 || (status >= 500 && status < 600)
+
+  return isAvailability ? status : null
+}
+
+/**
+ * Run a Contentful query, falling back to `empty` only when the space is
+ * unavailable AND `DEGRADE_DURING_BUILD` allows it.
+ *
+ * Everything else propagates untouched: any error at request time, any error
+ * with the flag unset, and any non-availability error in either case. So the
+ * default behaviour of both the build and the running site is exactly what it
+ * was.
+ */
+async function degradable<T>(what: string, empty: T, run: () => Promise<T>): Promise<T> {
+  try {
+    return await run()
+  } catch (error) {
+    const status = availabilityFailureStatus(error)
+    if (status === null || !DEGRADE_DURING_BUILD) throw error
+
+    console.warn(
+      `[api] ${what}: Contentful returned ${status} and CONTENTFUL_ALLOW_DEGRADED is set — ` +
+        'building with no data. This will be empty in the deployed output until the space ' +
+        'recovers and the page revalidates.'
+    )
+    return empty
+  }
+}
+
 // Contentful's CDA caps a single response at 1000 entries and defaults to 100.
 // Always pass an explicit limit — the default silently truncates.
 const CDA_MAX_LIMIT = 1000
@@ -135,27 +241,27 @@ function withoutReservedSlugs(posts: BlogPostFields[]): BlogPostFields[] {
   return posts.filter((post) => {
     if (!post.slug || !isReservedRootSlug(post.slug)) return true
 
-    console.warn(
-      `[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`
-    )
+    console.warn(`[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`)
     return false
   })
 }
 
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
-  const client = getClient()
+  return degradable('getPosts', { items: [], total: 0 }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    order: [...POST_ORDER],
-    limit: Math.min(limit, CDA_MAX_LIMIT),
-    skip,
+    const page = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      order: [...POST_ORDER],
+      limit: Math.min(limit, CDA_MAX_LIMIT),
+      skip,
+    })
+
+    return {
+      items: withoutReservedSlugs(page.items.map((post) => post.fields)),
+      total: page.total,
+    }
   })
-
-  return {
-    items: withoutReservedSlugs(page.items.map((post) => post.fields)),
-    total: page.total,
-  }
 }
 
 /**
@@ -163,15 +269,17 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
  * set and discarding most of it.
  */
 export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
-  const client = getClient()
+  return degradable('getRecentPosts', [], async () => {
+    const client = getClient()
 
-  const posts = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    order: [...POST_ORDER],
-    limit: count,
+    const posts = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      order: [...POST_ORDER],
+      limit: count,
+    })
+
+    return withoutReservedSlugs(posts.items.map((post) => post.fields))
   })
-
-  return withoutReservedSlugs(posts.items.map((post) => post.fields))
 }
 
 /** Media mentions per page. Matches the blog's 12 for a consistent grid. */
@@ -193,19 +301,21 @@ export type MediaPage = {
  * pages or on neither.
  */
 export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}): Promise<MediaPage> {
-  const client = getClient()
+  return degradable('getMediaMentions', { items: [], total: 0 }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeMediaMentionSkeleton>({
-    content_type: 'mediaMention',
-    order: ['-fields.date', 'sys.id'],
-    limit: Math.min(limit, CDA_MAX_LIMIT),
-    skip,
+    const page = await client.getEntries<TypeMediaMentionSkeleton>({
+      content_type: 'mediaMention',
+      order: ['-fields.date', 'sys.id'],
+      limit: Math.min(limit, CDA_MAX_LIMIT),
+      skip,
+    })
+
+    return {
+      items: page.items.map((item) => item.fields),
+      total: page.total,
+    }
   })
-
-  return {
-    items: page.items.map((item) => item.fields),
-    total: page.total,
-  }
 }
 
 /**
@@ -217,21 +327,23 @@ export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}
  * time for the same reason.
  */
 export async function getMediaSummary(): Promise<{ total: number; lastModified: Date | null }> {
-  const client = getClient()
+  return degradable('getMediaSummary', { total: 0, lastModified: null }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeMediaMentionSkeleton>({
-    content_type: 'mediaMention',
-    order: ['-sys.updatedAt'],
-    select: ['sys.updatedAt'],
-    limit: 1,
+    const page = await client.getEntries<TypeMediaMentionSkeleton>({
+      content_type: 'mediaMention',
+      order: ['-sys.updatedAt'],
+      select: ['sys.updatedAt'],
+      limit: 1,
+    })
+
+    const newest = page.items[0]?.sys.updatedAt
+
+    return {
+      total: page.total,
+      lastModified: newest ? new Date(newest) : null,
+    }
   })
-
-  const newest = page.items[0]?.sys.updatedAt
-
-  return {
-    total: page.total,
-    lastModified: newest ? new Date(newest) : null,
-  }
 }
 
 export type PostRef = {
@@ -255,47 +367,49 @@ export type PostRef = {
  * a build-time cost that grows with the archive for no benefit.
  */
 export async function getAllPostRefs(): Promise<PostRef[]> {
-  const client = getClient()
-  const refs: PostRef[] = []
-  let skip = 0
+  return degradable('getAllPostRefs', [], async () => {
+    const client = getClient()
+    const refs: PostRef[] = []
+    let skip = 0
 
-  for (;;) {
-    const page = await client.getEntries<TypeBlogPostSkeleton>({
-      content_type: 'blogPost',
-      select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
-      order: [...POST_ORDER],
-      limit: CDA_MAX_LIMIT,
-      skip,
-    })
+    for (;;) {
+      const page = await client.getEntries<TypeBlogPostSkeleton>({
+        content_type: 'blogPost',
+        select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
+        order: [...POST_ORDER],
+        limit: CDA_MAX_LIMIT,
+        skip,
+      })
 
-    for (const post of page.items) {
-      if (!post.fields.slug) continue
+      for (const post of page.items) {
+        if (!post.fields.slug) continue
 
-      // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
-      // static segments beat `[slug]`. Emitting it anyway would prerender a URL
-      // that renders something else and list it in the sitemap as the post.
-      // Dropped rather than published broken, and logged so it is fixable —
-      // silence here would look exactly like the post never existing.
-      if (isReservedRootSlug(post.fields.slug)) {
-        console.warn(
-          `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
-            'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
-        )
-        continue
+        // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
+        // static segments beat `[slug]`. Emitting it anyway would prerender a URL
+        // that renders something else and list it in the sitemap as the post.
+        // Dropped rather than published broken, and logged so it is fixable —
+        // silence here would look exactly like the post never existing.
+        if (isReservedRootSlug(post.fields.slug)) {
+          console.warn(
+            `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
+              'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
+          )
+          continue
+        }
+
+        refs.push({
+          slug: post.fields.slug,
+          date: post.fields.date,
+          updatedAt: post.sys.updatedAt || post.fields.date,
+        })
       }
 
-      refs.push({
-        slug: post.fields.slug,
-        date: post.fields.date,
-        updatedAt: post.sys.updatedAt || post.fields.date,
-      })
+      skip += page.items.length
+      if (skip >= page.total || page.items.length === 0) break
     }
 
-    skip += page.items.length
-    if (skip >= page.total || page.items.length === 0) break
-  }
-
-  return refs
+    return refs
+  })
 }
 
 /** Slugs only, for `generateStaticParams()`. */
@@ -346,18 +460,19 @@ export async function getPostById(entryId: string, preview = false): Promise<Blo
  *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
  */
 export const getPostBySlug = cache(async (slug: string, preview = false): Promise<BlogPostFields | null> => {
-  const client = getClient(preview)
+  return degradable('getPostBySlug', null, async () => {
+    const client = getClient(preview)
 
-  const posts = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    'fields.slug': slug,
-    limit: 1,
+    const posts = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      'fields.slug': slug,
+      limit: 1,
+    })
+
+    if (!posts.items.length) {
+      return null
+    }
+
+    return posts.items[0].fields
   })
-
-  if (!posts.items.length) {
-    return null
-  }
-
-  return posts.items[0].fields
 })
-
