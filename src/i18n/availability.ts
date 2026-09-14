@@ -90,6 +90,12 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // `content/jp/white-papers` are Japanese. Korean is not: only 6 of 27 are,
   // the rest being the English text, so it is `placeholder`.
   '/white-papers': { en: 'translated', ja: 'translated', ko: 'placeholder' },
+  // Korean is a full translation. Japanese is PARTIAL — `jp/overview` is
+  // translated except for `md/why-section.md`, which is an empty file — but the
+  // bulk of the page is real Japanese, so it is `translated` rather than
+  // `placeholder`, with the missing strings falling back per-string and tagged
+  // `lang="en"` where they do.
+  '/overview': { en: 'translated', ja: 'translated', ko: 'translated' },
 }
 
 /**
