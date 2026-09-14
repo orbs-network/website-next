@@ -82,6 +82,85 @@ function getClient(preview = false) {
   })
 }
 
+/**
+ * Build and serve without Contentful, when it is explicitly allowed to.
+ *
+ * Off unless `CONTENTFUL_ALLOW_DEGRADED=1`. With it set, a Contentful
+ * AVAILABILITY failure stops being fatal: the affected query returns empty and
+ * the build continues, so everything that does not depend on Contentful — the
+ * marketing pages, the whole of Phase 3 — can still ship while the space is
+ * down.
+ *
+ * Written for #115, where the space was blocked for exceeding its Delivery API
+ * allowance and every build failed on the first query, including deploys of
+ * work that never touches the blog.
+ *
+ * This is a deliberate hazard and wants treating as one. With the flag on, a
+ * Contentful outage produces an EMPTY blog rather than a failed build — the
+ * failure mode is silence, which is exactly the shape of bug that ships
+ * unnoticed. It is safe today only because orbs.com still serves from the
+ * legacy host, so the Vercel deployment has no public readers. **Unset it
+ * before the DNS cutover (#39).**
+ */
+const ALLOW_DEGRADED = process.env.CONTENTFUL_ALLOW_DEGRADED === '1'
+
+/**
+ * The HTTP status of a Contentful failure, if that failure is an availability
+ * one — and `null` for anything else.
+ *
+ * Availability means the space is there but cannot serve right now: 402 (quota
+ * exhausted or blocked), 429 (rate limited), 5xx (upstream). Those are worth
+ * riding out.
+ *
+ * 401, 403 and 404 are deliberately NOT in that set. A bad token, a revoked
+ * key or a wrong space id must stay fatal — degrading those would turn a
+ * misconfigured deployment into a site that builds happily with no content,
+ * which is far worse than a failed build.
+ *
+ * The SDK reports the status inconsistently — sometimes on the error, sometimes
+ * on a `response`, and for the blocked-space case only inside a JSON string in
+ * `message` — so all three are checked rather than assuming one shape.
+ */
+function availabilityFailureStatus(error: unknown): number | null {
+  if (typeof error !== 'object' || error === null) return null
+
+  const candidate = error as { status?: unknown; response?: { status?: unknown }; message?: unknown }
+  const reported = candidate.response?.status ?? candidate.status
+  let status = typeof reported === 'number' ? reported : null
+
+  if (status === null && typeof candidate.message === 'string') {
+    const embedded = candidate.message.match(/"status"\s*:\s*(\d{3})/)
+    if (embedded) status = Number(embedded[1])
+  }
+
+  if (status === null) return null
+
+  return status === 402 || status === 429 || status >= 500 ? status : null
+}
+
+/**
+ * Run a Contentful query, falling back to `empty` if the space is unavailable
+ * AND `CONTENTFUL_ALLOW_DEGRADED` permits it.
+ *
+ * Every other error — and every error at all when the flag is unset —
+ * propagates untouched, so the default behaviour of the build is exactly what
+ * it was.
+ */
+async function degradable<T>(what: string, empty: T, run: () => Promise<T>): Promise<T> {
+  try {
+    return await run()
+  } catch (error) {
+    const status = availabilityFailureStatus(error)
+    if (status === null || !ALLOW_DEGRADED) throw error
+
+    console.warn(
+      `[api] ${what}: Contentful returned ${status} and CONTENTFUL_ALLOW_DEGRADED is set — ` +
+        'continuing with no data. This page will be empty until the space recovers and it is rebuilt.'
+    )
+    return empty
+  }
+}
+
 // Contentful's CDA caps a single response at 1000 entries and defaults to 100.
 // Always pass an explicit limit — the default silently truncates.
 const CDA_MAX_LIMIT = 1000
@@ -135,27 +214,27 @@ function withoutReservedSlugs(posts: BlogPostFields[]): BlogPostFields[] {
   return posts.filter((post) => {
     if (!post.slug || !isReservedRootSlug(post.slug)) return true
 
-    console.warn(
-      `[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`
-    )
+    console.warn(`[api] Hiding post with reserved slug "${post.slug}" from listings — it collides with a site route.`)
     return false
   })
 }
 
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
-  const client = getClient()
+  return degradable('getPosts', { items: [], total: 0 }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    order: [...POST_ORDER],
-    limit: Math.min(limit, CDA_MAX_LIMIT),
-    skip,
+    const page = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      order: [...POST_ORDER],
+      limit: Math.min(limit, CDA_MAX_LIMIT),
+      skip,
+    })
+
+    return {
+      items: withoutReservedSlugs(page.items.map((post) => post.fields)),
+      total: page.total,
+    }
   })
-
-  return {
-    items: withoutReservedSlugs(page.items.map((post) => post.fields)),
-    total: page.total,
-  }
 }
 
 /**
@@ -163,15 +242,17 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
  * set and discarding most of it.
  */
 export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
-  const client = getClient()
+  return degradable('getRecentPosts', [], async () => {
+    const client = getClient()
 
-  const posts = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    order: [...POST_ORDER],
-    limit: count,
+    const posts = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      order: [...POST_ORDER],
+      limit: count,
+    })
+
+    return withoutReservedSlugs(posts.items.map((post) => post.fields))
   })
-
-  return withoutReservedSlugs(posts.items.map((post) => post.fields))
 }
 
 /** Media mentions per page. Matches the blog's 12 for a consistent grid. */
@@ -193,19 +274,21 @@ export type MediaPage = {
  * pages or on neither.
  */
 export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}): Promise<MediaPage> {
-  const client = getClient()
+  return degradable('getMediaMentions', { items: [], total: 0 }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeMediaMentionSkeleton>({
-    content_type: 'mediaMention',
-    order: ['-fields.date', 'sys.id'],
-    limit: Math.min(limit, CDA_MAX_LIMIT),
-    skip,
+    const page = await client.getEntries<TypeMediaMentionSkeleton>({
+      content_type: 'mediaMention',
+      order: ['-fields.date', 'sys.id'],
+      limit: Math.min(limit, CDA_MAX_LIMIT),
+      skip,
+    })
+
+    return {
+      items: page.items.map((item) => item.fields),
+      total: page.total,
+    }
   })
-
-  return {
-    items: page.items.map((item) => item.fields),
-    total: page.total,
-  }
 }
 
 /**
@@ -217,21 +300,23 @@ export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}
  * time for the same reason.
  */
 export async function getMediaSummary(): Promise<{ total: number; lastModified: Date | null }> {
-  const client = getClient()
+  return degradable('getMediaSummary', { total: 0, lastModified: null }, async () => {
+    const client = getClient()
 
-  const page = await client.getEntries<TypeMediaMentionSkeleton>({
-    content_type: 'mediaMention',
-    order: ['-sys.updatedAt'],
-    select: ['sys.updatedAt'],
-    limit: 1,
+    const page = await client.getEntries<TypeMediaMentionSkeleton>({
+      content_type: 'mediaMention',
+      order: ['-sys.updatedAt'],
+      select: ['sys.updatedAt'],
+      limit: 1,
+    })
+
+    const newest = page.items[0]?.sys.updatedAt
+
+    return {
+      total: page.total,
+      lastModified: newest ? new Date(newest) : null,
+    }
   })
-
-  const newest = page.items[0]?.sys.updatedAt
-
-  return {
-    total: page.total,
-    lastModified: newest ? new Date(newest) : null,
-  }
 }
 
 export type PostRef = {
@@ -255,47 +340,49 @@ export type PostRef = {
  * a build-time cost that grows with the archive for no benefit.
  */
 export async function getAllPostRefs(): Promise<PostRef[]> {
-  const client = getClient()
-  const refs: PostRef[] = []
-  let skip = 0
+  return degradable('getAllPostRefs', [], async () => {
+    const client = getClient()
+    const refs: PostRef[] = []
+    let skip = 0
 
-  for (;;) {
-    const page = await client.getEntries<TypeBlogPostSkeleton>({
-      content_type: 'blogPost',
-      select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
-      order: [...POST_ORDER],
-      limit: CDA_MAX_LIMIT,
-      skip,
-    })
+    for (;;) {
+      const page = await client.getEntries<TypeBlogPostSkeleton>({
+        content_type: 'blogPost',
+        select: ['fields.slug', 'fields.date', 'sys.updatedAt'],
+        order: [...POST_ORDER],
+        limit: CDA_MAX_LIMIT,
+        skip,
+      })
 
-    for (const post of page.items) {
-      if (!post.fields.slug) continue
+      for (const post of page.items) {
+        if (!post.fields.slug) continue
 
-      // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
-      // static segments beat `[slug]`. Emitting it anyway would prerender a URL
-      // that renders something else and list it in the sitemap as the post.
-      // Dropped rather than published broken, and logged so it is fixable —
-      // silence here would look exactly like the post never existing.
-      if (isReservedRootSlug(post.fields.slug)) {
-        console.warn(
-          `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
-            'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
-        )
-        continue
+        // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
+        // static segments beat `[slug]`. Emitting it anyway would prerender a URL
+        // that renders something else and list it in the sitemap as the post.
+        // Dropped rather than published broken, and logged so it is fixable —
+        // silence here would look exactly like the post never existing.
+        if (isReservedRootSlug(post.fields.slug)) {
+          console.warn(
+            `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
+              'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
+          )
+          continue
+        }
+
+        refs.push({
+          slug: post.fields.slug,
+          date: post.fields.date,
+          updatedAt: post.sys.updatedAt || post.fields.date,
+        })
       }
 
-      refs.push({
-        slug: post.fields.slug,
-        date: post.fields.date,
-        updatedAt: post.sys.updatedAt || post.fields.date,
-      })
+      skip += page.items.length
+      if (skip >= page.total || page.items.length === 0) break
     }
 
-    skip += page.items.length
-    if (skip >= page.total || page.items.length === 0) break
-  }
-
-  return refs
+    return refs
+  })
 }
 
 /** Slugs only, for `generateStaticParams()`. */
@@ -346,18 +433,19 @@ export async function getPostById(entryId: string, preview = false): Promise<Blo
  *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
  */
 export const getPostBySlug = cache(async (slug: string, preview = false): Promise<BlogPostFields | null> => {
-  const client = getClient(preview)
+  return degradable('getPostBySlug', null, async () => {
+    const client = getClient(preview)
 
-  const posts = await client.getEntries<TypeBlogPostSkeleton>({
-    content_type: 'blogPost',
-    'fields.slug': slug,
-    limit: 1,
+    const posts = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      'fields.slug': slug,
+      limit: 1,
+    })
+
+    if (!posts.items.length) {
+      return null
+    }
+
+    return posts.items[0].fields
   })
-
-  if (!posts.items.length) {
-    return null
-  }
-
-  return posts.items[0].fields
 })
-
