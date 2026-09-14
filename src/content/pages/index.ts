@@ -47,6 +47,8 @@ export const MARKETING_PAGE_PATHS = [
   '/execution-services',
   // Network section: proof of stake, guardians and delegators.
   '/pos',
+  // The Open DeFi Notification Protocol.
+  '/notifications',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]
