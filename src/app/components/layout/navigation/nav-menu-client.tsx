@@ -184,7 +184,19 @@ function NavRow({ link }: { link: ResolvedNavLink }) {
       //
       // Overridden at the call site rather than changed on `MenuItemW`, whose
       // default is a design-system decision rather than this PR's to make.
-      className="-mx-2 w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:bg-accent hover:no-underline"
+      //
+      // No hover background. This carried `hover:bg-accent`, which reads as a
+      // subtle tint in stock shadcn but not here: `--accent` is mapped to
+      // `--color-accent-primary` (indigo-400) in globals.css, so the row filled
+      // with saturated brand blue. Hover is the accent TEXT colour instead —
+      // `MenuItemW` already does that by default, so removing the background is
+      // the whole fix. The row's extent still comes from `-mx-2 px-2 py-2.5`,
+      // which is what makes the target full-width and the item legible as one
+      // thing; that was never the background's job.
+      //
+      // Same mapping bites `pagination.tsx` and the `dropdown-menu` primitive —
+      // see #120, which is about the token rather than its call sites.
+      className="-mx-2 w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:no-underline"
     >
       {link.external ? (
         <a href={link.href} target="_blank" rel="noopener noreferrer">

@@ -147,7 +147,11 @@ export function MobileNav({
  * leaving a menu open over it is still wrong.
  */
 function MobileNavRow({ link, onNavigate }: { link: ResolvedNavLink; onNavigate: () => void }) {
-  const className = '-mx-2 flex w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:bg-accent hover:no-underline'
+  // No hover background, matching the desktop rows — see the note on `NavRow`
+  // in nav-menu-client.tsx. `--accent` is the brand indigo here rather than
+  // shadcn's subtle neutral, so `hover:bg-accent` filled the row with saturated
+  // blue; hover is the accent text colour, which `MenuItemW` already applies.
+  const className = '-mx-2 flex w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:no-underline'
   // Same map as the desktop rows: a product shows the same mark in both navs.
   const Glyph = link.icon ? GLYPHS[link.icon] : undefined
   const icon = Glyph ? <Glyph className="size-5" /> : undefined
