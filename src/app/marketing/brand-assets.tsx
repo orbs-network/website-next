@@ -21,9 +21,12 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
       <H1 className="mb-12">{t('meta.title')}</H1>
 
       <ul className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
-        {BRAND_ASSETS.map((asset) => (
-          <li key={asset.id} className="flex flex-col rounded-sm border border-border">
-            {/*
+        {BRAND_ASSETS.map((asset) => {
+          const caption = t(`items.${asset.id}`)
+
+          return (
+            <li key={asset.id} className="flex flex-col rounded-sm border border-border">
+              {/*
               The panel follows the artwork, not the theme.
               
               These logos are transparent PNGs and SVGs drawn in one colour, so a
@@ -32,51 +35,57 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
               panel is therefore chosen per asset from its own name. Gradient
               variants read on either and take the dark one.
             */}
-            <div
-              className={`flex flex-1 items-center justify-center rounded-t-sm p-8 ${
-                asset.id.includes('black') ? 'bg-neutral-100' : 'bg-neutral-800'
-              }`}
-            >
-              <Image
-                src={asset.preview}
-                alt=""
-                width={200}
-                height={120}
-                sizes="200px"
-                className="h-auto max-h-24 w-auto max-w-[200px]"
-              />
-            </div>
+              <div
+                className={`flex flex-1 items-center justify-center rounded-t-sm p-8 ${
+                  asset.id.includes('black') ? 'bg-neutral-100' : 'bg-neutral-800'
+                }`}
+              >
+                <Image
+                  src={asset.preview}
+                  alt=""
+                  width={200}
+                  height={120}
+                  sizes="200px"
+                  className="h-auto max-h-24 w-auto max-w-[200px]"
+                />
+              </div>
 
-            <div className="flex items-center justify-between gap-4 p-4">
-              <span className="text-detail text-fg-muted" lang={textLang(t(`items.${asset.id}`), locale)}>
-                {t(`items.${asset.id}`)}
-              </span>
+              <div className="flex items-center justify-between gap-4 p-4">
+                <span className="text-detail text-fg-muted" lang={textLang(caption, locale)}>
+                  {caption}
+                </span>
 
-              <span className="flex shrink-0 gap-3">
-                {/*
+                <span className="flex shrink-0 gap-3">
+                  {/*
                   `download` turns these into saves rather than navigations.
                   Without it a browser renders the file inline and the reader has
                   to right-click, which is not what a download link should ask
                   of anyone.
+
+                  Each carries an `aria-label` naming its asset. The visible text
+                  is the format alone, which is right beside the caption but
+                  useless out of context: a screen-reader link rotor lists all
+                  eighteen of these, and without the label they read as nine
+                  identical pairs of "PNG" and "SVG". The label keeps the visible
+                  word inside it, so speech control still matches what is on
+                  screen.
                 */}
-                <a
-                  href={asset.png}
-                  download
-                  className="text-detail font-medium text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
-                >
-                  PNG
-                </a>
-                <a
-                  href={asset.svg}
-                  download
-                  className="text-detail font-medium text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
-                >
-                  SVG
-                </a>
-              </span>
-            </div>
-          </li>
-        ))}
+                  {(['png', 'svg'] as const).map((format) => (
+                    <a
+                      key={format}
+                      href={asset[format]}
+                      download
+                      aria-label={`${caption}, ${format.toUpperCase()}`}
+                      className="text-detail font-medium text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
+                    >
+                      {format.toUpperCase()}
+                    </a>
+                  ))}
+                </span>
+              </div>
+            </li>
+          )
+        })}
       </ul>
     </section>
   )
