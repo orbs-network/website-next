@@ -90,12 +90,17 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // `content/jp/white-papers` are Japanese. Korean is not: only 6 of 27 are,
   // the rest being the English text, so it is `placeholder`.
   '/white-papers': { en: 'translated', ja: 'translated', ko: 'placeholder' },
-  // Korean is a full translation. Japanese is PARTIAL — `jp/overview` is
-  // translated except for `md/why-section.md`, which is an empty file — but the
-  // bulk of the page is real Japanese, so it is `translated` rather than
-  // `placeholder`, with the missing strings falling back per-string and tagged
-  // `lang="en"` where they do.
-  '/overview': { en: 'translated', ja: 'translated', ko: 'translated' },
+  // Korean is a real translation: 31 of 38 strings are Korean.
+  //
+  // Japanese is NOT, despite `jp/overview` existing. That directory holds a
+  // structurally different, older page — four files against the English
+  // seventeen — and only 5 of 38 strings came back Japanese. Worse, the ones
+  // that did belong to a previous design: its hero reads "making smart
+  // contracts smarter" while every other section says "bringing CeFi-level
+  // execution to DeFi". Serving that mix is less coherent than serving English,
+  // so the Japanese catalog holds the English text and this is `placeholder` —
+  // reachable, noindex, not advertised as an hreflang alternate.
+  '/overview': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**

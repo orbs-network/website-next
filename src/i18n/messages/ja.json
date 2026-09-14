@@ -459,7 +459,7 @@
         "description": "Orbsとは:高度なオンチェーン取引のために構築された分散型レイヤー3ブロックチェーンインフラ。"
       },
       "hero": {
-        "headline": "スマート コントラクトを\n# よりスマートに",
+        "headline": "Bringing CeFi-level\nexecution to DeFi",
         "intro": "L3 For Advanced On-chain Trading"
       },
       "what": {
@@ -478,8 +478,8 @@
       },
       "tech": {
         "eyebrow": "Tech",
-        "title": "市場ニーズと解決策：\n### ブロックーチェンサービスにおける中央集権的要素を排除します。",
-        "body": "近年、DeFi、Web 3.0プロトコル、およびDappのサービスはますます精度が増し、複雑化しています。ただしスマートコントラクトは、元々の設計理念からして制限が多く、DeFiおよびWeb 3.0プロジェクトは依然として中央集権型バックエンド・インフラストラクチャに依存しているのが実態です。これは、セキュリティの観点からも、コミュニティの観点からも理想的とは言えません。\n\nOrbsネットワークは、分散型サーバーレスクラウドとして動作することでこの問題を解決し、開発者がスマートコントラクトを拡張できるようにします。これらは、Orbs PoSバリデータ（Orbsではガーディアンと呼ばれる）によって実行され、これまでのように中央集中型バックエンドソリューションに依存する必要がなくなります。"
+        "title": "Layer 3 Technology Stack",
+        "body": "Orbs is a Layer 3 blockchain designed to enhance the capabilities of existing Layer 1 and Layer 2 blockchains. Utilizing Proof-of-Stake consensus, Orbs acts as an intermediary execution layer, facilitating complex logic and scripts beyond the native functionalities of smart contracts. Innovative protocols like dLIMIT, dTWAP, and Liquidity Hub push the boundaries of DeFi and smart contract technology. Orbs provides a scalable, efficient, and customizable environment for dApps, addressing scalability challenges inherent in Ethereum and other L1 blockchains."
       },
       "products": {
         "title": "ORBS infrastructure\npowers four main protocols",
