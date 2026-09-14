@@ -37,7 +37,6 @@ const CONTENT = join(REPO, 'src/content')
  * that resolves is a failure, not a pass.
  */
 const PENDING: readonly string[] = [
-  '/brand-assets',
   '/contact',
   '/ton-access',
   '/ton-vote',

@@ -961,6 +961,23 @@
         "title": "iOS와 Android 앱 모두 제공됩니다",
         "body": "무료로 제공되는 iOS와 Android 앱을 사용해서 알림을 받아보세요. 디스코드, 트위터, 텔레그램 등을 통해 지속적인 지원을 받을 수 있습니다."
       }
+    },
+    "brandAssets": {
+      "meta": {
+        "title": "브랜드 자산",
+        "description": "Download the Orbs logo in horizontal, vertical, gradient, black and white variants, as PNG or SVG."
+      },
+      "items": {
+        "horizontal-gradient-logo": "Horizontal gradiant logo",
+        "vertical-gradient-logo": "Vertical gradiant logo",
+        "horizontal-black-logo": "Horizontal Black logo",
+        "vertical-black-logo": "Vertical Black logo",
+        "horizontal-white-logo": "Horizontal White logo",
+        "vertical-white-logo": "Vertical White logo",
+        "white-logo": "White logo",
+        "gradient-logo": "Gradiant logo",
+        "black-logo": "Black logo"
+      }
     }
   }
 }
