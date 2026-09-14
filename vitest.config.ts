@@ -16,8 +16,33 @@ export default defineConfig({
   optimizeDeps: {
     include: ['@opentelemetry/api'],
   },
+  // Matches the `@/*` -> `./src/*` alias in tsconfig.json. Storybook supplies
+  // this to its own project via the Next.js framework config; the node project
+  // has no framework behind it and would otherwise fail to resolve any import
+  // written the way the rest of the codebase writes them.
+  resolve: {
+    alias: {
+      '@': path.join(dirname, 'src'),
+    },
+  },
   test: {
     projects: [
+      {
+        // Plain unit tests, in Node rather than a browser.
+        //
+        // The Storybook project below renders components in real Chromium,
+        // which is right for anything with a DOM and wrong for everything
+        // else — a test that only reads files and compares strings should not
+        // need a browser to start. `npm test` runs both.
+        extends: true,
+        test: {
+          name: 'node',
+          environment: 'node',
+          // `.test.ts` only. Stories are `.stories.tsx` and belong to the
+          // Storybook project, so the two cannot collide.
+          include: ['src/**/*.test.ts'],
+        },
+      },
       {
         extends: true,
         plugins: [
