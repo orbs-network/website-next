@@ -14,6 +14,23 @@
  * entry here is also a slug that a post must not use — see
  * `RESERVED_ROOT_SEGMENTS`.
  */
-export const MARKETING_PAGE_PATHS = ['/dtwap', '/dlimit', '/dsltp', '/perpetual-hub', '/liquidity-hub', '/agentic', '/ai/skills', '/ai/skills/spot-advanced-swap-orders', '/institutional'] as const
+export const MARKETING_PAGE_PATHS = [
+  '/dtwap',
+  '/dlimit',
+  '/dsltp',
+  '/perpetual-hub',
+  '/liquidity-hub',
+  '/agentic',
+  '/ai/skills',
+  '/ai/skills/spot-advanced-swap-orders',
+  '/institutional',
+  // Legal. Rendered from markdown rather than catalog copy — see
+  // `src/content/legal/index.ts` for why long-form documents are stored
+  // differently from UI strings.
+  '/privacy-policy',
+  '/terms-of-use',
+  '/accessibility-declaration',
+  '/liquidity-hub-terms-of-use',
+] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

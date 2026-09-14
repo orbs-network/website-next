@@ -27,6 +27,19 @@ const nextConfig = {
   // Enable React Compiler for automatic memoization (Next.js 16)
   reactCompiler: true,
   /**
+   * Keep the legal markdown in the deployment.
+   *
+   * `src/content/legal/index.ts` reads these with `fs` at module scope. Today
+   * that happens at build, because every marketing route is fully static — so
+   * strictly this is not needed. It is here so that stays true by design rather
+   * than by luck: if one of those pages ever gains `revalidate` or a dynamic
+   * API, the read moves to request time, and without the files traced into the
+   * bundle it would fail in production while working locally.
+   */
+  outputFileTracingIncludes: {
+    '/**': ['./src/content/legal/**'],
+  },
+  /**
    * Edge-cache the sitemap.
    *
    * `sitemap.ts` is `force-dynamic` — it has to be, or `absoluteUrl()` freezes

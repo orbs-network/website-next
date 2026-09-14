@@ -4,6 +4,7 @@ import { MARKETING_PAGE_PATHS, type MarketingPagePath } from '@/content/pages'
 import { AgenticPage } from './agentic'
 import { AiSkillsPage } from './ai-skills'
 import { InstitutionalPage } from './institutional'
+import { LegalPage } from './legal'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
@@ -76,6 +77,30 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/perpetual-hub': {
     render: (locale) => <PerpetualHubPage locale={locale} />,
     namespace: 'pages.perpetualHub',
+  },
+
+  // Legal pages share one renderer — they differ only in which document they
+  // show. The namespace still differs per page, because each needs its own
+  // title and description for `marketingMetadata`.
+  '/privacy-policy': {
+    render: (locale) => <LegalPage path="/privacy-policy" locale={locale} namespace="pages.privacyPolicy" />,
+    namespace: 'pages.privacyPolicy',
+  },
+  '/terms-of-use': {
+    render: (locale) => <LegalPage path="/terms-of-use" locale={locale} namespace="pages.termsOfUse" />,
+    namespace: 'pages.termsOfUse',
+  },
+  '/accessibility-declaration': {
+    render: (locale) => (
+      <LegalPage path="/accessibility-declaration" locale={locale} namespace="pages.accessibilityDeclaration" />
+    ),
+    namespace: 'pages.accessibilityDeclaration',
+  },
+  '/liquidity-hub-terms-of-use': {
+    render: (locale) => (
+      <LegalPage path="/liquidity-hub-terms-of-use" locale={locale} namespace="pages.liquidityHubTerms" />
+    ),
+    namespace: 'pages.liquidityHubTerms',
   },
 }
 
