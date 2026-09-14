@@ -8,6 +8,7 @@ import { FaqPage } from './faq'
 import { LegalPage } from './legal'
 import { EcosystemPage } from './ecosystem'
 import { ExecutionServicesPage } from './execution-services'
+import { NotificationsPage } from './notifications'
 import { OverviewPage } from './overview'
 import { PosPage } from './pos'
 import { WhitePapersPage } from './white-papers'
@@ -139,6 +140,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/pos': {
     render: (locale) => <PosPage locale={locale} />,
     namespace: 'pages.pos',
+  },
+  '/notifications': {
+    render: (locale) => <NotificationsPage locale={locale} />,
+    namespace: 'pages.notifications',
   },
 }
 

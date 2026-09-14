@@ -656,6 +656,37 @@
         "v3": "Orbs V3: Multi-chain Staking",
         "v25": "Orbs V2.5 Update documentation"
       }
+    },
+    "notifications": {
+      "meta": {
+        "title": "DeFi Notifications",
+        "description": "DeFiのためのオープンな通知プロトコル。無料のiOS/Androidアプリ付き。"
+      },
+      "hero": {
+        "eyebrow": "DeFi Notifications",
+        "headline": "Open notification\nprotocol for DeFi",
+        "intro": "The Open DeFi Notification Protocol is a community led initiative to provide users with decentralized and free mobile notifications for on-chain events.",
+        "cta": "GET STARTED"
+      },
+      "contribute": {
+        "title": "Add notifications for any project by implementing a simple JavaScript web3 class",
+        "heading": "Contribute your integration",
+        "body": "",
+        "exampleTitle": "Aave Example",
+        "exampleBody": "This notification will protect Aave users from liquidation by notifying them when their position health factor drops below 1.1",
+        "cta": "Contribute your notification"
+      },
+      "integrations": {
+        "title": "Recent community contributions"
+      },
+      "schema": {
+        "title": "Powered by Orbs Network",
+        "body": "Notification schemas are constantly executed by protocol alert nodes in order to analyze new blocks of on-chain data for notifying protocol subscribers. Alert nodes are running on Orbs Network, a permissionless and decentralized oracle chain, and executed by the public validators of the network. Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019."
+      },
+      "apps": {
+        "title": "Open source iOS and Android app",
+        "body": "Users can receive notifications for free by using a sleek open-source iOS and Android app, or through Discord, Twitter, Telegram, etc."
+      }
     }
   }
 }
