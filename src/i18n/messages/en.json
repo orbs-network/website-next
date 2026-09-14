@@ -972,6 +972,31 @@
         "media": "Media",
         "governance": "Governance"
       }
+    },
+    "executionServices": {
+      "meta": {
+        "title": "Execution Services",
+        "description": "Orbs Lambda and Orbs VM: decentralized serverless functions and container-based compute."
+      },
+      "hero": {
+        "headline": "Execution Services"
+      },
+      "vm": {
+        "title": "Orbs VM - Decentralized Docker-Based Virtual Machine",
+        "body": "**Dedicated decentralized virtual machine, similar in concept to AWS EC2 - but decentralized.**\n\nImplement your custom service as a Docker container, without any blockchain specific knowledge. Use any programming language you like, such as Go, C++, Rust, JavaScript, Java, Python and more. Deploy your container to have it executed as an always-on service on dozens of independent decentralized validator nodes."
+      },
+      "alternatives": {
+        "title": "Compute Cloud Alternatives",
+        "body": "Amazon Web Services (AWS) is the leading centralized compute cloud platform in the world today. AWS segments the compute cloud market according to the flexibility/complexity tradeoff. For simplicity - AWS offers the serverless AWS Lamda. For flexibility - AWS offers the powerful AWS EC2.\n\nThe Orbs network aspires to be the leading decentralized compute cloud platform. Orbs segments the decentralized compute cloud market in a similar way. For simplicity - Orbs offers the serverless AWS Lambda. For flexibility - Orbs offers the powerful Orbs VM."
+      },
+      "evolution": {
+        "title": "Evolution of Decentralized Execution",
+        "body": "The first decentralized execution platform in the world that was truly Turing-complete is the Ethereum Virtual Machine (EVM). The EVM was a marvel of innovation, but for security considerations as a base layer, had to limit its execution capabilities in a tight security sandbox.\n\nOrbs Lambda expands these capabilities significantly by allowing developers to use the world's most popular language - JavaScript - without limits and fully access data outside the chain.\nOrbs VM takes execution capabilities a step further and allows developers to use any programming language over the world's most popular container - Docker."
+      },
+      "lambdaProduct": {
+        "title": "Orbs Lambda - Decentralized Serverless Cloud Function",
+        "body": "**Event driven, serverless and decentralized computing solution, similar in concept to AWS Lambda - but decentralized.**\n\nWrite your cloud function in regular JavaScript, without any blockchain specific knowledge. Code can utilize familiar node.js libraries such as node-fetch. Select a trigger for execution, like running on a new L1/L2 block or on a new L1/L2 on-chain event, and deploy. Your function will be executed on dozens of independent decentralized validator nodes."
+      }
     }
   }
 }

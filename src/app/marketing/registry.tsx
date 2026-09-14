@@ -7,6 +7,7 @@ import { InstitutionalPage } from './institutional'
 import { FaqPage } from './faq'
 import { LegalPage } from './legal'
 import { EcosystemPage } from './ecosystem'
+import { ExecutionServicesPage } from './execution-services'
 import { OverviewPage } from './overview'
 import { WhitePapersPage } from './white-papers'
 import { DlimitPage } from './dlimit'
@@ -129,6 +130,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/ecosystem': {
     render: (locale) => <EcosystemPage locale={locale} />,
     namespace: 'pages.ecosystem',
+  },
+  '/execution-services': {
+    render: (locale) => <ExecutionServicesPage locale={locale} />,
+    namespace: 'pages.executionServices',
   },
 }
 
