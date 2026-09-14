@@ -687,6 +687,23 @@
         "title": "Open source iOS and Android app",
         "body": "Users can receive notifications for free by using a sleek open-source iOS and Android app, or through Discord, Twitter, Telegram, etc."
       }
+    },
+    "brandAssets": {
+      "meta": {
+        "title": "ブランドアセット",
+        "description": "Download the Orbs logo in horizontal, vertical, gradient, black and white variants, as PNG or SVG."
+      },
+      "items": {
+        "horizontal-gradient-logo": "Horizontal gradiant logo",
+        "vertical-gradient-logo": "Vertical gradiant logo",
+        "horizontal-black-logo": "Horizontal Black logo",
+        "vertical-black-logo": "Vertical Black logo",
+        "horizontal-white-logo": "Horizontal White logo",
+        "vertical-white-logo": "Vertical White logo",
+        "white-logo": "White logo",
+        "gradient-logo": "Gradiant logo",
+        "black-logo": "Black logo"
+      }
     }
   }
 }

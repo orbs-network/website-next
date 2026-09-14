@@ -6,6 +6,7 @@ import { AiSkillsPage } from './ai-skills'
 import { InstitutionalPage } from './institutional'
 import { FaqPage } from './faq'
 import { LegalPage } from './legal'
+import { BrandAssetsPage } from './brand-assets'
 import { EcosystemPage } from './ecosystem'
 import { ExecutionServicesPage } from './execution-services'
 import { NotificationsPage } from './notifications'
@@ -144,6 +145,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/notifications': {
     render: (locale) => <NotificationsPage locale={locale} />,
     namespace: 'pages.notifications',
+  },
+  '/brand-assets': {
+    render: (locale) => <BrandAssetsPage locale={locale} />,
+    namespace: 'pages.brandAssets',
   },
 }
 

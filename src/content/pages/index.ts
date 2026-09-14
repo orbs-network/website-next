@@ -49,6 +49,8 @@ export const MARKETING_PAGE_PATHS = [
   '/pos',
   // The Open DeFi Notification Protocol.
   '/notifications',
+  // Brand asset downloads.
+  '/brand-assets',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]
