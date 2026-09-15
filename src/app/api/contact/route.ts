@@ -29,10 +29,24 @@ export const runtime = 'nodejs'
 export const dynamic = 'force-dynamic'
 
 /**
+ * An environment variable, treating blank as absent.
+ *
+ * `??` is not enough. `.env.example` lists every optional variable as
+ * `NAME=`, and a `.env.local` copied from it gives `process.env.NAME` the
+ * EMPTY STRING rather than `undefined` — so `?? fallback` keeps the blank, and
+ * the fallback that exists to make the variable optional never applies. Here
+ * that would have sent every enquiry to `""` and turned each one into a 502.
+ */
+function setting(value: string | undefined): string | undefined {
+  const trimmed = value?.trim()
+  return trimmed === '' ? undefined : trimmed
+}
+
+/**
  * Where enquiries land. Settled with the operator: forwarded to the team, who
  * handle the reply themselves.
  */
-const TO = process.env.CONTACT_TO_EMAIL ?? 'hello@orbs.com'
+const TO = setting(process.env.CONTACT_TO_EMAIL) ?? 'hello@orbs.com'
 
 /**
  * The sending identity. Required, with no fallback, and that is the point.
@@ -53,7 +67,7 @@ const TO = process.env.CONTACT_TO_EMAIL ?? 'hello@orbs.com'
  * not today, and sending from it returns `403 The orbs.com domain is not
  * verified`. See #35.
  */
-const FROM = process.env.CONTACT_FROM_EMAIL
+const FROM = setting(process.env.CONTACT_FROM_EMAIL)
 
 /**
  * A plain 200 whatever the reason.
@@ -109,7 +123,7 @@ export async function POST(request: Request) {
     return accepted()
   }
 
-  const apiKey = process.env.RESEND_API_KEY
+  const apiKey = setting(process.env.RESEND_API_KEY)
 
   // Loud, and a failure the browser surfaces. The alternative is a form that
   // looks like it works while every enquiry is dropped — exactly the state the
