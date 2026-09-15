@@ -53,14 +53,6 @@ export type ContactFormLabels = {
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed'
 
-const EMPTY = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  phone: '',
-  message: '',
-}
-
 /**
  * `tooLong` is not reachable from this form — every input carries the matching
  * `maxLength`, so the browser stops the reader before the validator sees an
@@ -75,27 +67,43 @@ function fieldError(field: ContactField, reason: ContactFieldError, labels: Cont
   return labels.required
 }
 
+/**
+ * The submitted values, read from the form itself.
+ *
+ * Uncontrolled, deliberately. The inputs are the truth about what the reader
+ * sees; component state is a copy of it that can be wrong. Browser autofill is
+ * the case that matters — a fill applied to the prerendered markup before React
+ * hydrates, or by a password manager that sets the value without dispatching an
+ * event, leaves state empty while the fields look full. The form would then
+ * validate as blank and refuse to send an enquiry the reader could see in front
+ * of them.
+ *
+ * It is the same reason the honeypot is read here rather than held in state: a
+ * script that types into the real input has to be visible to us.
+ */
+function submitted(form: HTMLFormElement, locale: Locale) {
+  const data = new FormData(form)
+  const field = (name: string) => {
+    const value = data.get(name)
+    return typeof value === 'string' ? value : ''
+  }
+
+  return {
+    firstName: field('firstName'),
+    lastName: field('lastName'),
+    email: field('email'),
+    phone: field('phone'),
+    message: field('message'),
+    locale,
+    [HONEYPOT_FIELD]: field(HONEYPOT_FIELD),
+  }
+}
+
 export function ContactForm({ labels, locale }: { labels: ContactFormLabels; locale: Locale }) {
-  const [values, setValues] = React.useState(EMPTY)
   const [errors, setErrors] = React.useState<ContactErrors>({})
   const [status, setStatus] = React.useState<Status>('idle')
 
-  /**
-   * Read from the DOM rather than from state.
-   *
-   * The point of the honeypot is to catch something that filled the input we
-   * hid. If this component owned its value, a script driving the real form
-   * would type into the DOM node and we would still send the empty string we
-   * were holding — the check would only ever fire for a request that posted the
-   * field directly, which is the one case that does not need catching.
-   */
-  const honeypot = React.useRef<HTMLInputElement>(null)
-
-  const update = (field: ContactField) => (event: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    const { value } = event.target
-
-    setValues((current) => ({ ...current, [field]: value }))
-
+  const clearError = (field: ContactField) => () => {
     // Clear this field's error as it is corrected, rather than leaving it until
     // the next submit. Only clears — typing into one field never re-validates
     // another, so nothing new appears while the reader is mid-sentence.
@@ -113,7 +121,9 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
 
     if (status === 'sending') return
 
-    const payload = { ...values, locale, [HONEYPOT_FIELD]: honeypot.current?.value ?? '' }
+    // Read before anything sets `sending`. Disabling an input removes it from
+    // `FormData`, so the order here is not incidental.
+    const payload = submitted(event.currentTarget, locale)
     const result = validateContactMessage(payload)
 
     if (!result.ok) {
@@ -142,7 +152,8 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
         return
       }
 
-      setValues(EMPTY)
+      // No reset needed: the form unmounts and the success panel takes its
+      // place.
       setStatus('sent')
     } catch {
       // Offline, or the request was blocked. Same outcome for the reader either
@@ -171,8 +182,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
           maxLength={CONTACT_LIMITS.name}
           label={labels.firstName}
           placeholder={labels.firstNamePlaceholder}
-          value={values.firstName}
-          onChange={update('firstName')}
+          onChange={clearError('firstName')}
           error={errors.firstName && fieldError('firstName', errors.firstName, labels)}
           disabled={sending}
         />
@@ -182,8 +192,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
           maxLength={CONTACT_LIMITS.name}
           label={labels.lastName}
           placeholder={labels.lastNamePlaceholder}
-          value={values.lastName}
-          onChange={update('lastName')}
+          onChange={clearError('lastName')}
           error={errors.lastName && fieldError('lastName', errors.lastName, labels)}
           disabled={sending}
         />
@@ -194,8 +203,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
           maxLength={CONTACT_LIMITS.email}
           label={labels.email}
           placeholder={labels.emailPlaceholder}
-          value={values.email}
-          onChange={update('email')}
+          onChange={clearError('email')}
           error={errors.email && fieldError('email', errors.email, labels)}
           disabled={sending}
         />
@@ -206,8 +214,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
           maxLength={CONTACT_LIMITS.phone}
           label={labels.phone}
           placeholder={labels.phonePlaceholder}
-          value={values.phone}
-          onChange={update('phone')}
+          onChange={clearError('phone')}
           error={errors.phone && fieldError('phone', errors.phone, labels)}
           disabled={sending}
         />
@@ -218,8 +225,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
         maxLength={CONTACT_LIMITS.message}
         label={labels.message}
         placeholder={labels.messagePlaceholder}
-        value={values.message}
-        onChange={update('message')}
+        onChange={clearError('message')}
         error={errors.message && fieldError('message', errors.message, labels)}
         disabled={sending}
       />
@@ -236,7 +242,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
         spot.
       */}
       <div className="absolute left-[-9999px] top-auto h-px w-px overflow-hidden" aria-hidden="true">
-        <input ref={honeypot} type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
+        <input type="text" name={HONEYPOT_FIELD} tabIndex={-1} autoComplete="off" defaultValue="" />
       </div>
 
       {status === 'failed' ? (
