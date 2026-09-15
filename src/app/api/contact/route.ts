@@ -2,6 +2,7 @@ import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { formatEnquiry, looksAutomated, validateContactMessage } from '@/lib/contact-message'
 import { clientAddress, withinRateLimit } from './rate-limit'
+import { isSameOrigin } from './same-origin'
 
 /**
  * Forwards a contact enquiry to the team.
@@ -82,6 +83,25 @@ function accepted() {
 }
 
 export async function POST(request: Request) {
+  // First, and before the rate limit. A cross-site request costs nothing to
+  // refuse, and checking it here means an attack driving other people's
+  // browsers at this endpoint cannot burn through THEIR allowances and lock
+  // them out of a form they never used. See `same-origin.ts` for the attack.
+  if (!isSameOrigin(request.headers)) {
+    return NextResponse.json({ ok: false }, { status: 403 })
+  }
+
+  // A second, independent lock on the same door. `application/json` is not a
+  // safelisted content type, so a cross-site `fetch` asking for it needs a
+  // preflight, and that preflight cannot pass: Next answers `OPTIONS` itself
+  // with `204`, `allow: OPTIONS, POST` and NO `Access-Control-Allow-Origin`
+  // (measured, not assumed), so the browser refuses before sending the POST.
+  // A hostile page's remaining option is to lie about the content type to stay
+  // a simple request, which is what this refuses.
+  if (!request.headers.get('content-type')?.startsWith('application/json')) {
+    return NextResponse.json({ ok: false }, { status: 415 })
+  }
+
   const now = Date.now()
   const address = clientAddress(request.headers)
 
