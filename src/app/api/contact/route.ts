@@ -75,8 +75,17 @@ export async function POST(request: Request) {
   // gets as far as sending mail, but it does still cost an invocation each, and
   // a limiter that can be skipped by sending garbage is one an abuser will send
   // garbage to skip.
-  if (!withinRateLimit(address, now)) {
-    console.warn(`[contact] rate limited ${address}`)
+  const limit = withinRateLimit(address, now)
+
+  if (!limit.allowed) {
+    // Once per client per window, not once per request. A client that keeps
+    // posting after being blocked cannot get mail out, but it could write log
+    // records forever — which turns a limit it cannot pass into an unbounded
+    // log bill and enough noise to bury someone else's incident.
+    if (limit.firstBlock) {
+      console.warn(`[contact] rate limited ${address}`)
+    }
+
     return accepted()
   }
 

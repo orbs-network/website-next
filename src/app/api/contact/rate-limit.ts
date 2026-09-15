@@ -38,7 +38,22 @@ const WINDOW_MS = 10 * 60 * 1000
  */
 const MAX_TRACKED = 10_000
 
-const hits = new Map<string, number[]>()
+type Client = {
+  /** Accepted request times inside the current window. */
+  hits: number[]
+  /**
+   * Whether this client's block has already been logged.
+   *
+   * Without it, a client that keeps posting after being blocked writes one log
+   * record per request forever — an attacker can therefore turn a limit they
+   * cannot get past into an unbounded log bill and enough noise to bury the
+   * signal that would have shown someone else's problem. Cleared when the
+   * window clears, so a client that comes back tomorrow is reported again.
+   */
+  warned: boolean
+}
+
+const clients = new Map<string, Client>()
 
 /**
  * The client address, from the proxy headers Vercel sets.
@@ -67,26 +82,39 @@ export function clientAddress(headers: Headers): string {
   return headers.get('x-real-ip') ?? 'unknown'
 }
 
-/** Whether this client may send now. Records the attempt when it may. */
-export function withinRateLimit(address: string, now: number): boolean {
-  const since = now - WINDOW_MS
-  const recent = (hits.get(address) ?? []).filter((at) => at > since)
+export type RateLimitResult = {
+  allowed: boolean
+  /**
+   * True only on the request that first crosses the limit for this client.
+   *
+   * The caller logs on this rather than on `!allowed`, so a sustained flood
+   * produces one line per client per window instead of one per request.
+   */
+  firstBlock: boolean
+}
 
-  if (recent.length >= LIMIT) {
+/** Whether this client may send now. Records the attempt when it may. */
+export function withinRateLimit(address: string, now: number): RateLimitResult {
+  const since = now - WINDOW_MS
+  const existing = clients.get(address)
+  const hits = (existing?.hits ?? []).filter((at) => at > since)
+
+  if (hits.length >= LIMIT) {
+    const firstBlock = existing?.warned !== true
     // Rewritten even on rejection, so the pruning above is not skipped for a
-    // client that keeps hitting the limit.
-    hits.set(address, recent)
-    return false
+    // client that keeps hitting the limit and its array cannot grow.
+    clients.set(address, { hits, warned: true })
+    return { allowed: false, firstBlock }
   }
 
-  recent.push(now)
-  hits.set(address, recent)
+  hits.push(now)
+  clients.set(address, { hits, warned: false })
 
-  if (hits.size > MAX_TRACKED) {
+  if (clients.size > MAX_TRACKED) {
     evictStale(since)
   }
 
-  return true
+  return { allowed: true, firstBlock: false }
 }
 
 /**
@@ -94,19 +122,19 @@ export function withinRateLimit(address: string, now: number): boolean {
  * enough — the oldest entries by insertion order, which is what `Map` preserves.
  */
 function evictStale(since: number): void {
-  for (const [address, timestamps] of hits) {
-    if (timestamps.every((at) => at <= since)) {
-      hits.delete(address)
+  for (const [address, client] of clients) {
+    if (client.hits.every((at) => at <= since)) {
+      clients.delete(address)
     }
   }
 
-  for (const address of hits.keys()) {
-    if (hits.size <= MAX_TRACKED) break
-    hits.delete(address)
+  for (const address of clients.keys()) {
+    if (clients.size <= MAX_TRACKED) break
+    clients.delete(address)
   }
 }
 
 /** Test seam. Not called by the route. */
 export function resetRateLimit(): void {
-  hits.clear()
+  clients.clear()
 }
