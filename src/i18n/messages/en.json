@@ -1123,6 +1123,55 @@
         "gradient-logo": "Gradiant logo",
         "black-logo": "Black logo"
       }
+    },
+    "contact": {
+      "meta": {
+        "title": "Contact Us",
+        "description": "Get in touch with Orbs — about building on the network, running a guardian, or anything else. Plus every official channel, by language."
+      },
+      "hero": {
+        "title": "Contact Us",
+        "subtitle": "We'd love to hear from you. Here's how you can reach us."
+      },
+      "form": {
+        "firstName": "First Name",
+        "firstNamePlaceholder": "Enter your first name here",
+        "lastName": "Last Name",
+        "lastNamePlaceholder": "Enter your last name here",
+        "email": "Email",
+        "emailPlaceholder": "Enter your email here",
+        "phone": "Phone Number (optional)",
+        "phonePlaceholder": "Enter your phone number",
+        "message": "Message",
+        "messagePlaceholder": "Something you want to tell us? Or maybe to ask?",
+        "submit": "Submit",
+        "submitting": "Sending…",
+        "required": "Please fill the field",
+        "invalidEmail": "Please insert valid email",
+        "invalidPhone": "Please insert valid phone number",
+        "failed": "Something went wrong and your message was not sent. Please try again, or email us at {email}.",
+        "success": {
+          "title": "Thank you for reaching out!",
+          "body": "We will contact you soon."
+        },
+        "orEmail": "Or email us at <address></address>."
+      },
+      "channels": {
+        "title": "Social Channels",
+        "groups": {
+          "telegram": "Telegram",
+          "x": "X",
+          "youtube": "YouTube",
+          "community": "Communication",
+          "blog": "Blog"
+        },
+        "languages": {
+          "en": "English",
+          "ja": "Japanese",
+          "ko": "Korean",
+          "announcements": "Announcements Channel"
+        }
+      }
     }
   }
 }

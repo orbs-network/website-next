@@ -123,6 +123,16 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // non-Latin characters in either — so both are `placeholder`: reachable,
   // noindex, serving the English captions with `lang="en"` on each.
   '/brand-assets': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
+  // Both are real translations of the part that matters. `jp/contact/md/form.md`
+  // and `ko/contact/md/form.md` translate every label, placeholder, validation
+  // message and the success screen — the entire form, which is the page.
+  //
+  // The channel list beside it is English in all three locales, because both
+  // locale pages reference the SHARED `/contact/socials/index.md` rather than a
+  // translated copy. That is a handful of proper nouns and language names, each
+  // marked `lang="en"` by `textLang`, and it does not make the page a
+  // near-duplicate of the English one the way a `placeholder` page is.
+  '/contact': { en: 'translated', ja: 'translated', ko: 'translated' },
 }
 
 /**
