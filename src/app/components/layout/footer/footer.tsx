@@ -15,9 +15,11 @@ import { FooterSocials } from './footer-socials'
  *
  * Two of the legacy sections are deliberately not here:
  *
- *  - **Subscribe.** A popup form posting to a mailing-list backend, which is #35
- *    (Resend route handlers, Phase 4). Porting the markup without the handler
- *    would ship a form that silently does nothing.
+ *  - **Subscribe.** A popup form posting to a mailing-list backend that returns
+ *    404 — the Heroku service behind it is gone, so there is no list to add
+ *    anyone to. Porting the markup without a destination would ship a form that
+ *    silently does nothing, which is the bug the contact form (#35) existed to
+ *    fix. Whether there should be a newsletter at all is #145.
  *  - **Latest tweets.** An embedded Twitter widget — a third-party script in the
  *    chrome of all 456 prerendered pages. That is #33 (interactive widgets),
  *    where its cost can be weighed on its own.
