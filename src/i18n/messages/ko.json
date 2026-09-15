@@ -978,6 +978,55 @@
         "gradient-logo": "Gradiant logo",
         "black-logo": "Black logo"
       }
+    },
+    "contact": {
+      "meta": {
+        "title": "Contact Us",
+        "description": "Orbs에 문의하세요. 네트워크 위에서의 개발, 가디언 운영, 그 밖의 모든 문의를 받습니다. 언어별 공식 채널도 안내합니다."
+      },
+      "hero": {
+        "title": "문의하기",
+        "subtitle": "Orbs는 여러분의 목소리에 귀기울입니다. 이곳을 통해 연락주세요."
+      },
+      "form": {
+        "firstName": "이름",
+        "firstNamePlaceholder": "이름을 적어주세요",
+        "lastName": "성",
+        "lastNamePlaceholder": "성을 적어주세요",
+        "email": "이메일",
+        "emailPlaceholder": "이메일을 적어주세요",
+        "phone": "전화번호 (선택)",
+        "phonePlaceholder": "전화번호를 적어주세요",
+        "message": "하시고 싶은 말",
+        "messagePlaceholder": "저희에게 하시고 싶으신 말씀, 혹은 질문사항을 여기에 적어주세요",
+        "submit": "제출하기",
+        "submitting": "보내는 중…",
+        "required": "알맞는 내용을 입력해주세요",
+        "invalidEmail": "이메일 주소가 올바르지 않습니다",
+        "invalidPhone": "전화번호가 올바르지 않습니다",
+        "failed": "메시지를 보내지 못했습니다. 다시 시도하시거나 {email} 으로 연락해 주세요.",
+        "success": {
+          "title": "연락주셔서 감사합니다!",
+          "body": "빠른 시일내에 회신드리겠습니다."
+        },
+        "orEmail": "또는 <address></address> 으로 메일을 보내주세요."
+      },
+      "channels": {
+        "title": "Social Channels",
+        "groups": {
+          "telegram": "Telegram",
+          "x": "X",
+          "youtube": "YouTube",
+          "community": "Communication",
+          "blog": "Blog"
+        },
+        "languages": {
+          "en": "English",
+          "ja": "Japanese",
+          "ko": "Korean",
+          "announcements": "Announcements Channel"
+        }
+      }
     }
   }
 }

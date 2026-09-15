@@ -51,6 +51,9 @@ export const MARKETING_PAGE_PATHS = [
   '/notifications',
   // Brand asset downloads.
   '/brand-assets',
+  // The contact form, posting to `/api/contact`. The only marketing page with a
+  // server-side dependency beyond the catalog.
+  '/contact',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

@@ -704,6 +704,55 @@
         "gradient-logo": "Gradiant logo",
         "black-logo": "Black logo"
       }
+    },
+    "contact": {
+      "meta": {
+        "title": "Contact Us",
+        "description": "Orbsへのお問い合わせ。ネットワーク上での開発、ガーディアンの運営、その他のご相談はこちらから。言語別の公式チャンネル一覧も掲載しています。"
+      },
+      "hero": {
+        "title": "問い合わせ",
+        "subtitle": "たくさんのお問い合わせをお待ちしています。ご連絡方法はこちらです。"
+      },
+      "form": {
+        "firstName": "名",
+        "firstNamePlaceholder": "名を入力",
+        "lastName": "姓",
+        "lastNamePlaceholder": "姓を入力",
+        "email": "eメール",
+        "emailPlaceholder": "eメールアドレスを入力",
+        "phone": "電話番号（任意）",
+        "phonePlaceholder": "電話番号を入力",
+        "message": "メッセージ",
+        "messagePlaceholder": "お問い合わせの内容",
+        "submit": "送信",
+        "submitting": "送信中…",
+        "required": "必要な項目を入力",
+        "invalidEmail": "正しいeメールアドレスを入力",
+        "invalidPhone": "正しい電話番号を入力",
+        "failed": "送信できませんでした。もう一度お試しいただくか、{email} までご連絡ください。",
+        "success": {
+          "title": "お問い合わせをいただき、ありがとうございます！",
+          "body": "なるべく早くご連絡させていただきます。"
+        },
+        "orEmail": "または <address></address> までメールでご連絡ください。"
+      },
+      "channels": {
+        "title": "Social Channels",
+        "groups": {
+          "telegram": "Telegram",
+          "x": "X",
+          "youtube": "YouTube",
+          "community": "Communication",
+          "blog": "Blog"
+        },
+        "languages": {
+          "en": "English",
+          "ja": "Japanese",
+          "ko": "Korean",
+          "announcements": "Announcements Channel"
+        }
+      }
     }
   }
 }
