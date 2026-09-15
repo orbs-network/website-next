@@ -136,39 +136,31 @@ export function validateContactMessage(body: unknown): ContactValidation {
 /** The name of the honeypot input. Hidden in the form; bots fill it. */
 export const HONEYPOT_FIELD = 'company'
 
-/** How fast a submission has to arrive to be treated as scripted. */
-export const MIN_FILL_MS = 3000
-
 /**
  * Whether a submission looks automated.
  *
- * Two cheap signals, neither of which asks anything of a real person:
+ * One signal: a field hidden from view, from the accessibility tree and from
+ * the tab order, which anyone who cannot see it leaves empty. Bots fill every
+ * input they find. It is trivially defeated by an attacker who looks at the
+ * page once, and that is understood — it costs nothing, adds no third-party
+ * script and no dependency, and stops the indiscriminate traffic that is almost
+ * all form spam. The control against a determined abuser is the rate limit; see
+ * `route.ts`.
  *
- *  - A honeypot field, hidden from view and left empty by anyone who cannot see
- *    it. Bots fill every input they find.
- *  - Time to submit. Someone reading five labels and typing a message does not
- *    finish in under three seconds; a script does it instantly.
- *
- * Both are trivially defeated by an attacker who looks at the page once, and
- * that is understood. They cost nothing, add no third-party script and no
- * dependency, and stop the indiscriminate traffic that is almost all form spam.
- * The control against a determined abuser is the rate limit — see `route.ts`.
+ * There WAS a second signal here: reject anything submitted within three
+ * seconds of hydration, on the theory that nobody reads five labels and types a
+ * message that fast. It is removed, and should not come back in that form.
+ * Someone whose browser autofills their name, address and phone and who pastes
+ * a prepared message can beat three seconds honestly — and because a rejection
+ * deliberately answers 200, they would be shown the success screen while their
+ * enquiry was discarded. Silently losing a real enquiry is the exact failure
+ * this page exists to fix; it is not worth the marginal spam a timer catches
+ * that the honeypot does not.
  */
-export function looksAutomated(body: unknown, now: number): boolean {
+export function looksAutomated(body: unknown): boolean {
   if (typeof body !== 'object' || body === null) return true
 
-  const raw = body as Record<string, unknown>
-
-  if (text(raw[HONEYPOT_FIELD]) !== '') return true
-
-  const startedAt = Number(raw.startedAt)
-  if (!Number.isFinite(startedAt)) return true
-
-  const elapsed = now - startedAt
-
-  // Negative means a clock the client controls disagrees with ours, which is
-  // not evidence of a bot — accept it rather than punish a skewed clock.
-  return elapsed >= 0 && elapsed < MIN_FILL_MS
+  return text((body as Record<string, unknown>)[HONEYPOT_FIELD]) !== ''
 }
 
 /** The forwarded enquiry, as plain text. */

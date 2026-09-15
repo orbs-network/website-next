@@ -35,16 +35,25 @@ export const dynamic = 'force-dynamic'
 const TO = process.env.CONTACT_TO_EMAIL ?? 'hello@orbs.com'
 
 /**
- * The sending identity, from the environment because it cannot be its final
- * value yet.
+ * The sending identity. Required, with no fallback, and that is the point.
  *
- * `orbs.com` is NOT a verified Resend domain — sending from it returns
- * `403 The orbs.com domain is not verified`, measured against the live API. So
- * the default is Resend's sandbox sender, which works today and delivers, and
- * the switch to `noreply@orbs.com` becomes an environment change rather than a
- * code change once the DNS records are in place. See #35.
+ * The obvious default is Resend's sandbox sender, `onboarding@resend.dev`. It
+ * does not work here, and the way it fails is the dangerous kind — it sends
+ * fine in a local test and 403s in production. Measured against the live API:
+ *
+ *   from onboarding@resend.dev to delivered@resend.dev  -> 200, id returned
+ *   from onboarding@resend.dev to hello@orbs.com        -> 403 "You can only
+ *     send testing emails to your own email address (sukh@orbs.com)"
+ *
+ * So a sandbox default would turn every real enquiry into a 502 while every
+ * smoke test passed. Better to have no sender than a sender that only works
+ * when you are testing.
+ *
+ * Set this once `orbs.com` is verified at https://resend.com/domains — it is
+ * not today, and sending from it returns `403 The orbs.com domain is not
+ * verified`. See #35.
  */
-const FROM = process.env.CONTACT_FROM_EMAIL ?? 'Orbs Website <onboarding@resend.dev>'
+const FROM = process.env.CONTACT_FROM_EMAIL
 
 /**
  * A plain 200 whatever the reason.
@@ -79,8 +88,8 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: false }, { status: 400 })
   }
 
-  if (looksAutomated(body, now)) {
-    console.info('[contact] discarded a submission that looked automated')
+  if (looksAutomated(body)) {
+    console.info('[contact] discarded a submission that filled the honeypot')
     return accepted()
   }
 
@@ -93,11 +102,13 @@ export async function POST(request: Request) {
 
   const apiKey = process.env.RESEND_API_KEY
 
-  if (!apiKey) {
-    // Loud, and a failure the browser surfaces. The alternative is a form that
-    // looks like it works while every enquiry is dropped — which is exactly the
-    // state the legacy form has been in.
-    console.error('[contact] RESEND_API_KEY is not set — the enquiry was NOT delivered')
+  // Loud, and a failure the browser surfaces. The alternative is a form that
+  // looks like it works while every enquiry is dropped — exactly the state the
+  // legacy form has been in since its backend went away.
+  if (!apiKey || !FROM) {
+    console.error(
+      `[contact] misconfigured (${!apiKey ? 'RESEND_API_KEY' : 'CONTACT_FROM_EMAIL'} is not set) — the enquiry was NOT delivered`
+    )
     return NextResponse.json({ ok: false }, { status: 500 })
   }
 

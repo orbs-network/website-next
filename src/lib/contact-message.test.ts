@@ -2,7 +2,6 @@ import { describe, expect, it } from 'vitest'
 import {
   CONTACT_LIMITS,
   HONEYPOT_FIELD,
-  MIN_FILL_MS,
   formatEnquiry,
   looksAutomated,
   validateContactMessage,
@@ -102,31 +101,29 @@ describe('validateContactMessage', () => {
 })
 
 describe('looksAutomated', () => {
-  const now = 1_700_000_000_000
-  const human = { ...VALID, [HONEYPOT_FIELD]: '', startedAt: now - 30_000 }
+  const human = { ...VALID, [HONEYPOT_FIELD]: '' }
 
   it('passes someone who filled the form by hand', () => {
-    expect(looksAutomated(human, now)).toBe(false)
+    expect(looksAutomated(human)).toBe(false)
+  })
+
+  it('passes a submission that never mentions the honeypot', () => {
+    // A fast submit is NOT evidence of a bot. Autofill plus a pasted message
+    // beats any threshold worth setting, and a rejection here answers 200 — so
+    // a timing rule would show the success screen while discarding a real
+    // enquiry. It was removed for that reason; this pins the behaviour.
+    expect(looksAutomated(VALID)).toBe(false)
   })
 
   it('catches a filled honeypot', () => {
-    expect(looksAutomated({ ...human, [HONEYPOT_FIELD]: 'Acme Inc' }, now)).toBe(true)
+    expect(looksAutomated({ ...human, [HONEYPOT_FIELD]: 'Acme Inc' })).toBe(true)
+    // Whitespace is not a value a human typed into an invisible field either.
+    expect(looksAutomated({ ...human, [HONEYPOT_FIELD]: '   x' })).toBe(true)
   })
 
-  it('catches a submission faster than anyone could type', () => {
-    expect(looksAutomated({ ...human, startedAt: now - (MIN_FILL_MS - 1) }, now)).toBe(true)
-    expect(looksAutomated({ ...human, startedAt: now - MIN_FILL_MS }, now)).toBe(false)
-  })
-
-  it('catches a request with no timestamp at all', () => {
-    expect(looksAutomated({ ...VALID }, now)).toBe(true)
-    expect(looksAutomated({ ...human, startedAt: 'soon' }, now)).toBe(true)
-  })
-
-  it('does not punish a client whose clock runs fast', () => {
-    // `startedAt` in our future produces a negative elapsed time. That is a
-    // skewed clock, not evidence of a script.
-    expect(looksAutomated({ ...human, startedAt: now + 60_000 }, now)).toBe(false)
+  it('rejects a body that is not an object', () => {
+    expect(looksAutomated(null)).toBe(true)
+    expect(looksAutomated('company=Acme')).toBe(true)
   })
 })
 

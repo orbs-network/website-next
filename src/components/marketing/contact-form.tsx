@@ -81,21 +81,6 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
   const [status, setStatus] = React.useState<Status>('idle')
 
   /**
-   * When the reader arrived, used by the handler's timing check.
-   *
-   * Set on mount rather than during render. This page is prerendered, so a
-   * value computed while rendering would be the BUILD time — hours or days old
-   * by the time anyone submits, which makes every submission look leisurely and
-   * silently disables the check. Setting it at hydration measures the thing we
-   * actually care about.
-   */
-  const startedAt = React.useRef(0)
-
-  React.useEffect(() => {
-    startedAt.current = Date.now()
-  }, [])
-
-  /**
    * Read from the DOM rather than from state.
    *
    * The point of the honeypot is to catch something that filled the input we
@@ -128,13 +113,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
 
     if (status === 'sending') return
 
-    const payload = {
-      ...values,
-      locale,
-      startedAt: startedAt.current,
-      [HONEYPOT_FIELD]: honeypot.current?.value ?? '',
-    }
-
+    const payload = { ...values, locale, [HONEYPOT_FIELD]: honeypot.current?.value ?? '' }
     const result = validateContactMessage(payload)
 
     if (!result.ok) {
