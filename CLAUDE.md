@@ -15,7 +15,7 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm test` — Vitest, running **two projects** defined in `vitest.config.ts`:
   - `storybook` — stories rendered in real Chromium via `@vitest/browser-playwright`. Run one file with `npx vitest run src/components/ui/button.stories.tsx`.
   - `node` — plain unit tests (`src/**/*.test.ts`), no browser. Run with `npx vitest run --project node`.
-- `npm run optimize-images` — resize and recompress rasters under `public/`. Visually lossless and idempotent; see the script's header for the measurement. **Do not run it over `public/marketing/brand-assets/`** — those are downloads, served byte-for-byte as published, and the width cap would shrink two of them.
+- `npm run optimize-images` — resize and recompress rasters under `public/`. Visually lossless and idempotent; see the script's header for the measurement. Scope it with `--dir` (`node scripts/optimize-images.mjs --dir public/marketing/<page>`) when you only mean to touch one page's assets — with no argument it walks all of `public/` and will happily rewrite a hundred files you did not mean to touch. `public/marketing/brand-assets/` is skipped by the script itself: those are downloads, served byte-for-byte as published, and the width cap would shrink two of them. It used to be a rule in this file, which is how it got broken.
 - `node scripts/unwrap-raster-svgs.mjs --dir <dir>` — replaces SVGs that are only a wrapper around one embedded raster. `next/image` does not optimise SVG, so those reach the reader at full size; one ecosystem logo was 826 KB for a 96x40 render.
 - `npm run visual-review` — screenshots at desktop and mobile, optionally against a base branch.
 
