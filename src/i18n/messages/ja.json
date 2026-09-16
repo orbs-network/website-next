@@ -824,6 +824,64 @@
           "quote": "Registering API keys in web3 always seemed absurd to me. Where are you supposed to store them? Client-side isn’t safe and server-side means running a centralized backend."
         }
       }
+    },
+    "tonVote": {
+      "meta": {
+        "title": "TON.Vote",
+        "description": "A no-code, on-chain DAO governance tool for The Open Network. The official DAO voting platform of the TON Foundation."
+      },
+      "hero": {
+        "headline": "No-code DAO governance tool for The Open Network (TON)",
+        "intro": "TON.Vote is a completely decentralized, on-chain and trustless DAO voting platform built exclusively for the TON ecosystem. Official DAO voting platform of the TON Foundation.",
+        "cta": "Get started",
+        "whitePaper": "White paper"
+      },
+      "tools": {
+        "title": "The best DAO governance tool on TON",
+        "decentralized": {
+          "title": "Decentralized",
+          "body": "Allows all end users to audit the integrity of all votes"
+        },
+        "gasless": {
+          "title": "Gasless Voting",
+          "body": "Supports off-chain voting to increase engagement"
+        },
+        "advancedVoting": {
+          "title": "Advanced Voting Strategies",
+          "body": "Conditions to calculate users’ voting power, such as staked tokens only or minimum wallet balances to fight bots"
+        },
+        "snapshot": {
+          "title": "Snapshot",
+          "body": "Snapshot token holdings at a specific historic block, with no limitation on tokens for the duration of the vote."
+        },
+        "manipulation": {
+          "title": "Manipulation Monitoring & Prevention",
+          "body": "Ability to address unforeseen events and abuse during the vote, such as adding a minimum balance to fight bots"
+        },
+        "verifiableUi": {
+          "title": "Verifiable UI",
+          "body": "Orbs L3 technology ensures that the votes displayed in the UI are accurate and match those stored in the smart contract data"
+        }
+      },
+      "slider": {
+        "title": "Customizable themed space pages",
+        "intro": "TON.Vote is a place for the community to come together. Create your own customizable project space page with your project’s logo and colour scheme.",
+        "slides": {
+          "directory": "Every DAO space on TON in one searchable directory.",
+          "proposal": "A proposal with its voting options, live results and the countdown to close.",
+          "space": "A project’s own space page, with its proposals and their outcomes."
+        },
+        "slideLabel": "Show slide {number}",
+        "telegram": "Telegram support",
+        "cta": "Get started"
+      },
+      "partners": {
+        "title": "Launch partners"
+      },
+      "verification": {
+        "title": "Verified voting results using Orbs L3",
+        "body": "TON.Vote implements Orbs’ L3 technology, with the Orbs independent pool of Guardians (validators) providing an extra layer of assurance to the already robust voting system. In addition to independent validators and manual chain checking, Orbs Guardians independently verify the accuracy of the displayed votes in the UI with those stored in the smart contract data.\n\nThis extra level of verification ensures that there is no tampering with the votes, as they are stored in an immutable format. By cross-checking the information presented on the front end, the Orbs Guardians verify that there is no mismatch of data, reinforcing the entire process’s trust and transparency.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019."
+      }
     }
   }
 }

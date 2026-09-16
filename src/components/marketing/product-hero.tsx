@@ -24,6 +24,18 @@ type HeroImage = { image: string; imageAlt: string } | { image?: undefined; imag
 type HeroCta = { ctaLabel: string; ctaHref: string } | { ctaLabel?: undefined; ctaHref?: undefined }
 
 /**
+ * An optional second button beside the first, same both-or-neither rule.
+ *
+ * Only TON.Vote needs one: its legacy header carries GET STARTED and
+ * WHITEPAPER side by side. Rendering the second as a standalone centred section
+ * under the hero — which is what this page did before the prop existed — reads
+ * as a button that lost its paragraph.
+ */
+type HeroSecondaryCta =
+  | { secondaryCtaLabel: string; secondaryCtaHref: string }
+  | { secondaryCtaLabel?: undefined; secondaryCtaHref?: undefined }
+
+/**
  * Opening block of a product page: headline, standfirst, primary call to
  * action, source links, and an optional hero illustration.
  *
@@ -45,6 +57,8 @@ export function ProductHero({
   intro,
   ctaLabel,
   ctaHref,
+  secondaryCtaLabel,
+  secondaryCtaHref,
   image,
   imageAlt,
   repo,
@@ -53,7 +67,8 @@ export function ProductHero({
   headlineLang,
   eyebrow,
 }: HeroImage &
-  HeroCta & {
+  HeroCta &
+  HeroSecondaryCta & {
     headline: string
     intro: string
     repo?: string
@@ -82,9 +97,7 @@ export function ProductHero({
       */}
       <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
         <div lang={lang}>
-          {eyebrow && (
-            <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
-          )}
+          {eyebrow && <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>}
 
           <h1
             lang={headlineLang}
@@ -106,6 +119,12 @@ export function ProductHero({
             {ctaLabel && (
               <Button asChild size="lg">
                 <Link href={ctaHref}>{ctaLabel}</Link>
+              </Button>
+            )}
+
+            {secondaryCtaLabel && (
+              <Button asChild size="lg" variant="secondary">
+                <Link href={secondaryCtaHref}>{secondaryCtaLabel}</Link>
               </Button>
             )}
 

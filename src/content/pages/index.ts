@@ -56,6 +56,8 @@ export const MARKETING_PAGE_PATHS = [
   '/contact',
   // The TON Access RPC gateway, with the code-example selector.
   '/ton-access',
+  // The TON.Vote DAO governance tool.
+  '/ton-vote',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

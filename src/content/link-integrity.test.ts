@@ -31,12 +31,16 @@ const APP = join(REPO, 'src/app')
 const CONTENT = join(REPO, 'src/content')
 
 /**
- * Paths that are linked but not yet built, each pending a Phase 3 slice (#32).
+ * Paths that are linked but not yet built.
  *
- * DELETE THE LINE when the page ships. The test enforces that: an entry here
- * that resolves is a failure, not a pass.
+ * EMPTY, and that is the finish line: every internal link in `src/content/`
+ * now resolves to a route that exists. It started at seventeen.
+ *
+ * Keep it empty. If something has to go in here, it is debt with a deadline —
+ * DELETE THE LINE when the page ships, which the test enforces: an entry that
+ * resolves is a failure, not a pass.
  */
-const PENDING: readonly string[] = ['/ton-vote']
+const PENDING: readonly string[] = []
 
 /**
  * Blog posts referenced from marketing copy, by slug.
