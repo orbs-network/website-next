@@ -9,6 +9,7 @@ import { LegalPage } from './legal'
 import { BrandAssetsPage } from './brand-assets'
 import { ContactPage } from './contact'
 import { TonAccessPage } from './ton-access'
+import { TonVotePage } from './ton-vote'
 import { EcosystemPage } from './ecosystem'
 import { ExecutionServicesPage } from './execution-services'
 import { NotificationsPage } from './notifications'
@@ -159,6 +160,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/ton-access': {
     render: (locale) => <TonAccessPage locale={locale} />,
     namespace: 'pages.tonAccess',
+  },
+  '/ton-vote': {
+    render: (locale) => <TonVotePage locale={locale} />,
+    namespace: 'pages.tonVote',
   },
 }
 

@@ -142,6 +142,12 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // the apostrophe in a quote. The English text, copied. So the catalog mirrors
   // English and the route is reachable but noindex.
   '/ton-access': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  // The same split as `/ton-access`, measured the same way. Korean is a real
+  // translation — 911 non-Latin characters covering the hero, all six tool
+  // cards, the slider section and the whole verification passage. Japanese is
+  // the English text: `content/jp/ton-vote` has 13 non-ASCII characters, which
+  // is exactly what the ENGLISH directory has, and they are curly quotes.
+  '/ton-vote': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**
