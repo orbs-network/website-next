@@ -22,7 +22,16 @@ import { cn } from '@/lib/utils'
  * horrible bug to track down.
  *
  * The caller owns positioning: this fills its nearest positioned ancestor, so
- * the section it decorates needs `relative`.
+ * the section it decorates needs `relative` AND `isolate`.
+ *
+ * `isolate` is the part worth explaining. `-z-10` puts this behind its
+ * siblings; without a stacking context on the section, "behind" is resolved
+ * against the root, and an opaque background anywhere up the tree would hide it
+ * entirely. That is not the case today — measured, with and without the element,
+ * over a text-free strip of the hero: 34 distinct colours painted, 1 without —
+ * but it is one `bg-*` on an ancestor away from being true, and the failure is
+ * silent. `isolate` confines the negative index to the section and removes the
+ * dependency on anything above it.
  */
 
 export type BackdropVariant = 'grid' | 'glow'

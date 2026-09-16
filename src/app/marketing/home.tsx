@@ -75,7 +75,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         401px of horizontal scroll. Clipping here means the graphic can never do
         that, whatever width it is given.
       */}
-      <section className="relative mx-auto overflow-hidden px-5 pt-16 pb-section">
+      <section className="relative isolate mx-auto overflow-hidden px-5 pt-16 pb-section">
         {/*
           The grid the first build shipped without. Behind the hero, faded out
           at the bottom, and `-z-10` so it never sits over the copy.
@@ -357,10 +357,15 @@ export async function HomePage({ locale }: { locale: Locale }) {
         field, not a bare button row. `CTA Area` is 518px tall around a 174px
         container, so the space around the buttons IS the design.
       */}
-      <section className="relative overflow-hidden px-5 py-44">
+      <section className="relative isolate overflow-hidden px-5 py-44">
         <SectionBackdrop variant="glow" />
 
-        <div className="relative flex flex-wrap justify-center gap-4">
+        {/*
+          The design's `CTA section Container` is 174px tall; the buttons are
+          42px. Reserving that height is what makes the block the size it was
+          drawn, rather than padding around a thin row.
+        */}
+        <div className="relative flex min-h-[174px] flex-wrap items-center justify-center gap-4">
           <Button asChild variant="secondary">
             <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
               {t('connect.follow')}
