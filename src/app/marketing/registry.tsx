@@ -8,6 +8,7 @@ import { FaqPage } from './faq'
 import { LegalPage } from './legal'
 import { BrandAssetsPage } from './brand-assets'
 import { ContactPage } from './contact'
+import { TonAccessPage } from './ton-access'
 import { EcosystemPage } from './ecosystem'
 import { ExecutionServicesPage } from './execution-services'
 import { NotificationsPage } from './notifications'
@@ -154,6 +155,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/contact': {
     render: (locale) => <ContactPage locale={locale} />,
     namespace: 'pages.contact',
+  },
+  '/ton-access': {
+    render: (locale) => <TonAccessPage locale={locale} />,
+    namespace: 'pages.tonAccess',
   },
 }
 

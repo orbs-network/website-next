@@ -1172,6 +1172,77 @@
           "announcements": "Announcements Channel"
         }
       }
+    },
+    "tonAccess": {
+      "meta": {
+        "title": "TON Access",
+        "description": "A reliable, anonymous, decentralized RPC network for TON dapps making HTTP queries to blockchain state from the browser. No API key."
+      },
+      "hero": {
+        "headline": "HTTP API for The Open Network (TON). Decentralized.",
+        "intro": "The most reliable decentralized RPC network for TON dapps making HTTP queries to blockchain state from the browser. Unrestricted anonymous access without an API key.",
+        "cta": "Get started",
+        "github": "GitHub"
+      },
+      "cards": {
+        "unthrottled": {
+          "title": "Unthrottled",
+          "summary": "No throttling for anonymous dapp users",
+          "body": "RPC gateways like toncenter throttle anonymous users to 1 request per second. Most dapps cannot operate under these restrictions since their users are anonymous."
+        },
+        "noApiKey": {
+          "title": "No API Key",
+          "summary": "Decentralized access without registering API keys",
+          "body": "RPC gateways like toncenter reduce throttling by registering an API Key. This API Key cannot be stored client-side (secret) and cannot be stored server-side (centralized)."
+        },
+        "serverless": {
+          "title": "Serverless",
+          "summary": "No need to run your own RPC backend server",
+          "body": "You should never run a server as part of your dapp since servers are centralized. If you suffer devops downtime, your users will lose access to their funds."
+        },
+        "decentralized": {
+          "title": "Decentralized",
+          "summary": "Trust a protocol, not a centralized business",
+          "body": "Dozens of permissionless validators of the Orbs Network staked with $100 million. Your access to TON does not depend on a single centralized business."
+        },
+        "highRedundancy": {
+          "title": "High Redundancy",
+          "summary": "Robust API with no single point of failure",
+          "body": "Operated by the dozens of independent validators of the Orbs Network that are running in mainnet since 2019 with virtually no downtime."
+        },
+        "wideSupport": {
+          "title": "Wide Support",
+          "summary": "Supports all RPC API flavors — HTTP v2, v4, raw ADNL",
+          "body": "The TON ecosystem has different RPC API flavors, each with its own tradeoffs — HTTP v2 by TonCenter, HTTP v4 by TonHub and raw ADNL. TON Access supports all three."
+        }
+      },
+      "example": {
+        "title": "Initialize the RPC endpoint",
+        "flavor": "HTTP API Flavor",
+        "library": "Client Library",
+        "network": "Network",
+        "mainnet": "Mainnet",
+        "testnet": "Testnet",
+        "copy": "Copy",
+        "copied": "Copied",
+        "github": "GitHub readme",
+        "telegram": "Telegram support"
+      },
+      "schema": {
+        "title": "Powered by Orbs Network",
+        "body": "Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019. By routing your dapp RPC requests through Orbs validators, you maintain decentralized access to the chain without relying on a single centralized business."
+      },
+      "voices": {
+        "title": "What are our developers saying?",
+        "talKol": {
+          "role": "TON ambassador and Orbs founder",
+          "quote": "We created TON Access by learning from the failings of Ethereum. Most EVM dapps access the chain through Infura, a centralized business. By depending on Orbs validators, we can guarantee decentralized access, similar to what pokt.network is doing on EVM."
+        },
+        "shaharYakir": {
+          "role": "Creator of minter.ton.org",
+          "quote": "Registering API keys in web3 always seemed absurd to me. Where are you supposed to store them? Client-side isn’t safe and server-side means running a centralized backend."
+        }
+      }
     }
   }
 }

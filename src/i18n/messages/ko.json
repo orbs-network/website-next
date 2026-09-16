@@ -1027,6 +1027,77 @@
           "announcements": "Announcements Channel"
         }
       }
+    },
+    "tonAccess": {
+      "meta": {
+        "title": "TON Access",
+        "description": "A reliable, anonymous, decentralized RPC network for TON dapps making HTTP queries to blockchain state from the browser. No API key."
+      },
+      "hero": {
+        "headline": "THE OPEN NETWORK, TON을 위한 탈중앙 HTTP API",
+        "intro": "TON의 dapp들이 가장 믿을 수 있는 탈중앙 RPC 네트워크. 브라우저에서 HTTP 쿼리를 통해 블록체인 상태를 읽습니다. API key없이 누구나 제한없이 액세스가 가능합니다.",
+        "cta": "지금 시작해보기",
+        "github": "GitHub"
+      },
+      "cards": {
+        "unthrottled": {
+          "title": "Unthrottled",
+          "summary": "어떤 디앱이든지 스로틀링이 없습니다",
+          "body": "toncenter같은 RPC 게이트웨이는 익명 유저에 대해 초당 1개의 쿼리로 제한합니다. 대부분의 디앱은 익명 사용자들이기 때문에 이런 제한 아래에서는 운영이 불가능합니다."
+        },
+        "noApiKey": {
+          "title": "No API Key",
+          "summary": "API key 등록이 필요없는 탈중앙 액세스",
+          "body": "toncenter같은 RPC 게이트웨이는 API key 등록 사용자에게 제한을 줄여줍니다. 하지만 이 API key는 보안때문에 클라이언트측에 저장해서도 안되고, 서버측에 저장한다면 중앙화로 인해 디앱이 아니게 됩니다."
+        },
+        "serverless": {
+          "title": "Serverless",
+          "summary": "RPC 백앤드 서버 구축, 더 이상 필요하지 않습니다",
+          "body": "디앱 서비스를 위해서는 중앙 서버를 운영하면 안됩니다. 중앙화 된 서버에서 devops 가동 중지 상황이 발생하면, 유저들은 자신의 자산에 대한 접근 권한을 상실하게 될 것입니다."
+        },
+        "decentralized": {
+          "title": "Decentralized",
+          "summary": "중앙화된 비즈니스가 아닌, 프로토콜을 신뢰하세요.",
+          "body": "수십대의 탈중앙 분산 밸리데이터들이 오브스 네트워크에 1억불 이상을 스테이킹하고 있습니다. 여러분들이 TON을 사용하는 것은 어떤 중앙화된 비즈니스에 의존하는 것이 아닙니다."
+        },
+        "highRedundancy": {
+          "title": "High Redundancy",
+          "summary": "작은 허점도 없는 강력한 API",
+          "body": "오브스 네트워크는 수십개의 독립적인 밸리데이터가 2019년부터 한번도 멈추지 않고 메인넷을 운영해오고 있습니다."
+        },
+        "wideSupport": {
+          "title": "Wide Support",
+          "summary": "HTTP v2, v4, raw ADNL 모든 종류의 RPC API를 지원합니다",
+          "body": "TON 생태계는 서로 다른 특징을 가진 RPC API들이 있습니다 - TonCenter 에서는 HTTP v2, TonHub에서는 HTTP v4, 기본 ADNL. TON Access는 이 세가지를 모두 지원합니다."
+        }
+      },
+      "example": {
+        "title": "RPC Endpoint 시작하기",
+        "flavor": "HTTP API 종류",
+        "library": "Client Library",
+        "network": "Network",
+        "mainnet": "Mainnet",
+        "testnet": "Testnet",
+        "copy": "복사",
+        "copied": "복사됨",
+        "github": "GitHub readme",
+        "telegram": "Telegram support"
+      },
+      "schema": {
+        "title": "오브스 네트워크에서 구동",
+        "body": "오브스 네트워크는 수십여대의 독립적인 밸리데이터 노드가 지분증명(PoS) 합의 방식을 바탕으로 운영하고 있으며 1억불 이상을 스테이킹하고 있습니다. 우리 메인넷은 2019년부터 운영되어 왔습니다. 오브스 밸리데이터를 통해 여러분들의 dapp RPC 요청사항을 처리함으로써, 어떤 중앙화된 지점에 대한 의존성 없이 체인에 탈중앙 접근이 가능합니다."
+      },
+      "voices": {
+        "title": "개발자의 이야기를 들어볼까요?",
+        "talKol": {
+          "role": "TON 앰배서더 / Orbs 창립자",
+          "quote": "우리는 이더리움에서의 실패로부터 TON Access를 어떻게 만들지 배웠습니다. 대부분 EVM 디앱들은 Infura를 통해 체인정보를 가져오는데, 이는 중앙화 서비스입니다. 오브스 밸리데이터를 활용하면, EVM에서 pokt.network가 하는 것과 유사하게 탈중앙 접근을 보장해줍니다."
+        },
+        "shaharYakir": {
+          "role": "minter.ton.org 개발자",
+          "quote": "웹3에서 API 키를 등록해서 사용한다는 것은 항상 제 마음에 들지 않았습니다. 이 키값은 어디에 저장되어 있는 걸까요? 클라이언트 입장에서는 안전하지 않고, 서버 측면에서보면 중앙화된 백엔드 운영이 필요함을 뜻합니다."
+        }
+      }
     }
   }
 }
