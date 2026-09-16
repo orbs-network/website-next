@@ -4,12 +4,12 @@ import { Disclaimer } from '@/components/marketing/disclaimer'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { ProductHero } from '@/components/marketing/product-hero'
 import {
-  PERPETUAL_HUB_BENEFITS,
-  PERPETUAL_HUB_DIAGRAM,
-  PERPETUAL_HUB_HERO,
-  PERPETUAL_HUB_LINKS,
-  PERPETUAL_HUB_PARTNERS_IMAGE,
-} from '@/content/pages/perpetual-hub'
+  DPERPS_BENEFITS,
+  DPERPS_DIAGRAM,
+  DPERPS_HERO,
+  DPERPS_LINKS,
+  DPERPS_PARTNERS_IMAGE,
+} from '@/content/pages/dperps'
 import { resolveLocaleLink } from '@/content/shared/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -27,15 +27,15 @@ import { textLang } from '@/i18n/script'
  * legal disclosure rather than marketing copy and should not read like the
  * pitch above it.
  */
-export async function PerpetualHubPage({ locale }: { locale: Locale }) {
-  const t = await getTranslations({ locale, namespace: 'pages.perpetualHub' })
+export async function DperpsPage({ locale }: { locale: Locale }) {
+  const t = await getTranslations({ locale, namespace: 'pages.dperps' })
 
   // Korean sends both the hero button and the one-pager to a Naver article
   // rather than to the English announcement post, so destinations resolve per
   // locale rather than being shared.
-  const cta = resolveLocaleLink(PERPETUAL_HUB_HERO.cta, locale)
-  const contact = resolveLocaleLink(PERPETUAL_HUB_LINKS.contact, locale)
-  const onePager = resolveLocaleLink(PERPETUAL_HUB_LINKS.onePager, locale)
+  const cta = resolveLocaleLink(DPERPS_HERO.cta, locale)
+  const contact = resolveLocaleLink(DPERPS_LINKS.contact, locale)
+  const onePager = resolveLocaleLink(DPERPS_LINKS.onePager, locale)
 
   return (
     <>
@@ -44,7 +44,7 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={cta.href}
-        image={PERPETUAL_HUB_HERO.image.src}
+        image={DPERPS_HERO.image.src}
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
@@ -53,7 +53,7 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
 
       <FeatureGrid
         title={t('benefits.title')}
-        features={PERPETUAL_HUB_BENEFITS.map((benefit) => ({
+        features={DPERPS_BENEFITS.map((benefit) => ({
           id: benefit.id,
           icon: benefit.icon,
           title: t(`benefits.items.${benefit.id}.title`),
@@ -66,9 +66,9 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
       <ArchitectureSection
         title={t('integrate.title')}
         body={t('integrate.body')}
-        image={PERPETUAL_HUB_DIAGRAM.src}
-        imageWidth={PERPETUAL_HUB_DIAGRAM.width}
-        imageHeight={PERPETUAL_HUB_DIAGRAM.height}
+        image={DPERPS_DIAGRAM.src}
+        imageWidth={DPERPS_DIAGRAM.width}
+        imageHeight={DPERPS_DIAGRAM.height}
         imageAlt={t('integrate.alt')}
         lang={textLang(t('integrate.body'), locale)}
         titleLang={textLang(t('integrate.title'), locale)}
@@ -77,9 +77,9 @@ export async function PerpetualHubPage({ locale }: { locale: Locale }) {
       <ArchitectureSection
         title={t('partners.title')}
         body={t('partners.body')}
-        image={PERPETUAL_HUB_PARTNERS_IMAGE.src}
-        imageWidth={PERPETUAL_HUB_PARTNERS_IMAGE.width}
-        imageHeight={PERPETUAL_HUB_PARTNERS_IMAGE.height}
+        image={DPERPS_PARTNERS_IMAGE.src}
+        imageWidth={DPERPS_PARTNERS_IMAGE.width}
+        imageHeight={DPERPS_PARTNERS_IMAGE.height}
         imageAlt={t('partners.alt')}
         lang={textLang(t('partners.body'), locale)}
         titleLang={textLang(t('partners.title'), locale)}

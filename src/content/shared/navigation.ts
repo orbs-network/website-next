@@ -71,7 +71,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
         key: 'infrastructure',
         links: [
           { key: 'liquidityHub', href: '/liquidity-hub', icon: 'liquidityHub' },
-          { key: 'perpetualHub', href: '/perpetual-hub', icon: 'perpetualHub' },
+          { key: 'perpetualHub', href: '/dperps', icon: 'perpetualHub' },
         ],
       },
       {

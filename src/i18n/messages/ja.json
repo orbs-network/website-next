@@ -13,7 +13,7 @@
     },
     "links": {
       "liquidityHub": "Liquidity Hub",
-      "perpetualHub": "Perpetual Hub",
+      "perpetualHub": "dPERPS",
       "dlimit": "dLIMIT Protocol",
       "dtwap": "dTWAP Protocol",
       "dsltp": "dSLTP Protocol",
@@ -53,7 +53,7 @@
       "whitePapers": "White Papers",
       "faq": "FAQ",
       "liquidityHub": "Liquidity Hub",
-      "perpetualHub": "Perpetual Hub",
+      "perpetualHub": "dPERPS",
       "dtwap": "dTWAP Protocol",
       "dlimit": "dLIMIT Protocol",
       "dsltp": "dSLTP Protocol",
@@ -497,7 +497,7 @@
             "body": "Decentralized optimization layer for DEXs enabling DEXs to tap into external liquidity sources in order to provide CeFi-competitive prices on swaps."
           },
           "perpetualHub": {
-            "title": "Perpetual Hub",
+            "title": "dPERPS",
             "body": "Full suite of services for decentralized perpetuals platforms, including hedger, liquidator and oracle, enabling intent-based on-chain perpetual futures trading."
           }
         }
@@ -506,7 +506,7 @@
         "title": "Why?",
         "body": "Orbs' mission is to revolutionize on-chain trading by delivering CeFi-level pricing and execution capabilities to the decentralized finance (DeFi) ecosystem.",
         "howTitle": "How?",
-        "howBody": "This is achieved by leveraging Orbs' innovative Layer-3 blockchain infrastructure, which enhances existing Layer-1 and Layer-2 solutions and enables complex logic to be implemented on a fully decentralized stack without moving liquidity to a new chain. Utilizing proof-of-stake consensus, Orbs provides DEXs with a decentralized backend that powers unique protocols such as dLIMIT, dTWAP, Liquidity Hub, and Perpetual Hub. These, in turn, optimize trading with aggregated liquidity, advanced trading orders, and on-chain derivatives, which push the boundaries of DeFi and on-chain trading."
+        "howBody": "This is achieved by leveraging Orbs' innovative Layer-3 blockchain infrastructure, which enhances existing Layer-1 and Layer-2 solutions and enables complex logic to be implemented on a fully decentralized stack without moving liquidity to a new chain. Utilizing proof-of-stake consensus, Orbs provides DEXs with a decentralized backend that powers unique protocols such as dLIMIT, dTWAP, Liquidity Hub, and dPERPS. These, in turn, optimize trading with aggregated liquidity, advanced trading orders, and on-chain derivatives, which push the boundaries of DeFi and on-chain trading."
       },
       "mission": {
         "title": "Mission",
@@ -522,7 +522,7 @@
           },
           "pricing": {
             "title": "Competitive Pricing and Lower Fees",
-            "body": "By utilizing Liquidity Hub, Orbs allows DEXs to provide their users with access to aggregated liquidity from multiple sources, ensuring more competitive pricing on swaps. This means users can achieve better prices and lower fees compared to traditional decentralized exchanges that may suffer from liquidity fragmentation. Additionally, the Perpetual Hub offers more capital-efficient perpetual trading, translating to better pricing and reduced costs for users engaging in perpetual futures trading."
+            "body": "By utilizing Liquidity Hub, Orbs allows DEXs to provide their users with access to aggregated liquidity from multiple sources, ensuring more competitive pricing on swaps. This means users can achieve better prices and lower fees compared to traditional decentralized exchanges that may suffer from liquidity fragmentation. Additionally, the dPERPS offers more capital-efficient perpetual trading, translating to better pricing and reduced costs for users engaging in perpetual futures trading."
           },
           "decentralization": {
             "title": "Decentralization and Privacy",

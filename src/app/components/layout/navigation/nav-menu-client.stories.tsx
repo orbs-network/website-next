@@ -19,7 +19,7 @@ const PRODUCTS: ResolvedNavGroup = {
       label: 'Infrastructure',
       links: [
         { key: 'liquidityHub', href: '/liquidity-hub/', external: false, label: 'Liquidity Hub', icon: 'liquidityHub' },
-        { key: 'perpetualHub', href: '/perpetual-hub/', external: false, label: 'Perpetual Hub', icon: 'perpetualHub' },
+        { key: 'perpetualHub', href: '/dperps/', external: false, label: 'Perpetual Hub', icon: 'perpetualHub' },
       ],
     },
     {

@@ -71,7 +71,7 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
     key: 'poweredBy',
     links: [
       { key: 'liquidityHub', href: '/liquidity-hub' },
-      { key: 'perpetualHub', href: '/perpetual-hub' },
+      { key: 'perpetualHub', href: '/dperps' },
       { key: 'dtwap', href: '/dtwap' },
       { key: 'dlimit', href: '/dlimit' },
       { key: 'dsltp', href: '/dsltp' },

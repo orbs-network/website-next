@@ -19,7 +19,7 @@ import { WhitePapersPage } from './white-papers'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
 import { LiquidityHubPage } from './liquidity-hub'
-import { PerpetualHubPage } from './perpetual-hub'
+import { DperpsPage } from './dperps'
 import { SpotOrdersPage } from './spot-orders'
 import { DtwapPage } from './dtwap'
 
@@ -85,9 +85,9 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
     render: (locale) => <LiquidityHubPage locale={locale} />,
     namespace: 'pages.liquidityHub',
   },
-  '/perpetual-hub': {
-    render: (locale) => <PerpetualHubPage locale={locale} />,
-    namespace: 'pages.perpetualHub',
+  '/dperps': {
+    render: (locale) => <DperpsPage locale={locale} />,
+    namespace: 'pages.dperps',
   },
 
   // Legal pages share one renderer — they differ only in which document they
