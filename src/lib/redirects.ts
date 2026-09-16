@@ -72,9 +72,29 @@ const SEGMENTS: Record<Locale, string> = {
  * Every source/destination pair, expanded across the locales the destination
  * actually exists in, in the trailing-slash form `trailingSlash: true` serves.
  *
- * Next matches `source` against the path as requested. The canonical form
- * carries the slash — the slashless request is separately 308'd to it first —
- * so matching the slashed form is what keeps this to one hop.
+ * ON THE TRAILING SLASH, because it looks like a missed optimisation and is
+ * not. A slashless request takes TWO hops: Next's own `trailingSlash` rule
+ * normalises `/perpetual-hub` to `/perpetual-hub/` before any custom redirect
+ * is evaluated, and only then does this one fire.
+ *
+ * Writing the source without the slash does NOT collapse that. Measured both
+ * ways against a production build — the numbers are identical, because Next
+ * normalises the request before matching either form:
+ *
+ *   source `/perpetual-hub/`   /perpetual-hub -> 2 hops   /perpetual-hub/ -> 1
+ *   source `/perpetual-hub`    /perpetual-hub -> 2 hops   /perpetual-hub/ -> 1
+ *
+ * The only way to collapse it is `skipTrailingSlashRedirect`, which would hand
+ * us slash normalisation for every URL on the site — far more risk than one
+ * hop is worth.
+ *
+ * And the hop costs nothing anyway: the LIVE legacy site already 301s
+ * `/perpetual-hub` to `/perpetual-hub/`, so the canonical, indexed, linked form
+ * is the slashed one and it reaches the new URL in a single hop. A slashless
+ * inbound link pays exactly what it pays today.
+ *
+ * The slashed form is kept here because it is the canonical one, not because it
+ * is faster.
  */
 export function expandedRedirects(): { source: string; destination: string; permanent: true }[] {
   return REDIRECTS.flatMap(({ from, to, locales }) =>
