@@ -23,6 +23,34 @@ const config: Config = {
         stops it entirely, which is what keeps this the right side of WCAG
         2.2.2 — continuously moving text with no pause control.
       */
+      /*
+        Section padding, from the design rather than from the default scale.
+
+        `3.4 Home` uses 100px top and bottom on its content sections —
+        `Products Content Area` is exactly 100 + 640 content + 100 = 840. The
+        Tailwind scale jumps 96 (py-24) to 112 (py-28), so neither lands on it,
+        and `py-20` (80px) is what the first pass used throughout. Named rather
+        than arbitrary so the next page does not re-derive it.
+      */
+      spacing: {
+        section: '6.25rem',
+      },
+      /*
+        The design's background grid, as CSS rather than a 173 KB exported SVG.
+
+        Measured off `orbs-grid-clean-editable 3`: lines at #424651, 1.2px, 23%
+        opacity, spaced ~66px (verticals at x=35, 102, 168).
+
+        The design also scatters small coloured squares at some intersections —
+        #B0C2FE and #B5EDFF at 20-24px. Those are NOT reproduced: they sit at
+        specific intersections rather than a repeating one, which a gradient
+        cannot express. An SVG could, at background weight nobody sees. Noted
+        as a deliberate loss rather than an oversight.
+      */
+      backgroundImage: {
+        'grid-lines':
+          'repeating-linear-gradient(to right, rgb(66 70 81 / 0.23) 0 1.2px, transparent 1.2px 66px), repeating-linear-gradient(to bottom, rgb(66 70 81 / 0.23) 0 1.2px, transparent 1.2px 66px)',
+      },
       keyframes: {
         marquee: {
           from: { transform: 'translateX(0)' },

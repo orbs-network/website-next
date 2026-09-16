@@ -8,6 +8,7 @@ import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { Marquee } from '@/components/marketing/marquee'
+import { SectionBackdrop } from '@/components/marketing/section-backdrop'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
@@ -74,8 +75,14 @@ export async function HomePage({ locale }: { locale: Locale }) {
         401px of horizontal scroll. Clipping here means the graphic can never do
         that, whatever width it is given.
       */}
-      <section className="container mx-auto overflow-hidden px-5 pt-16 pb-24">
-        <div className="relative">
+      <section className="relative isolate mx-auto overflow-hidden px-5 pt-16 pb-section">
+        {/*
+          The grid the first build shipped without. Behind the hero, faded out
+          at the bottom, and `-z-10` so it never sits over the copy.
+        */}
+        <SectionBackdrop variant="grid" />
+
+        <div className="container relative mx-auto">
           {/*
             Decorative, and positioned behind the words rather than beside
             them: the design floats it off to the right of a centred column,
@@ -142,12 +149,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
         lang={lang('stats.processed.label')}
       />
 
-      <section className="container mx-auto border-t border-border px-5 py-20">
+      <section className="container mx-auto border-t border-border px-5 py-section">
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('stack.eyebrow')}>
           {t('stack.eyebrow')}
         </p>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-2">
+        <div className="mt-14 grid gap-16 lg:grid-cols-2">
           <div>
             <H2 className="text-balance" lang={lang('stack.title')}>
               {t('stack.title')}
@@ -157,7 +164,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </p>
           </div>
 
-          <ul className="flex flex-col gap-6">
+          <ul className="flex flex-col gap-8">
             {HOME_STACK.map((card) => (
               <HighlightCard
                 key={card.id}
@@ -181,7 +188,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <LogoRow title={t('venues.title')} titleHidden items={HOME_VENUES} titleLang={lang('venues.title')} />
 
-      <section className="container mx-auto border-t border-border px-5 py-20">
+      <section className="container mx-auto border-t border-border px-5 py-section">
         <div className="text-center">
           <p
             className="text-detail font-medium uppercase tracking-widest text-fg-muted"
@@ -194,7 +201,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </H2>
         </div>
 
-        <ul className="mt-12 grid gap-6 md:grid-cols-3">
+        <ul className="mt-16 grid gap-8 md:grid-cols-3">
           {HOME_SOLUTIONS.map((card) => (
             <HighlightCard
               key={card.id}
@@ -210,7 +217,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section className="container mx-auto border-t border-border px-5 py-20">
+      <section className="container mx-auto border-t border-border px-5 py-section">
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('features.eyebrow')}>
           {t('features.eyebrow')}
         </p>
@@ -219,7 +226,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </H2>
 
         <FeatureTabs
-          className="mt-12"
+          className="mt-16"
           tabs={HOME_FEATURES.map((id) => ({
             id,
             title: t(`features.${id}.title`),
@@ -243,12 +250,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto border-t border-border px-5 py-20" lang={lang('network.body')}>
+      <section className="container mx-auto border-t border-border px-5 py-section" lang={lang('network.body')}>
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('network.eyebrow')}>
           {t('network.eyebrow')}
         </p>
 
-        <div className="mt-10 grid gap-12 lg:grid-cols-2 lg:items-center">
+        <div className="mt-14 grid gap-16 lg:grid-cols-2 lg:items-center">
           <div>
             <H2 className="text-balance" lang={lang('network.title')}>
               {t('network.title')}
@@ -277,7 +284,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       </section>
 
       {posts.length > 0 && (
-        <section className="container mx-auto border-t border-border px-5 py-20">
+        <section className="container mx-auto border-t border-border px-5 py-section">
           <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('news.eyebrow')}>
             {t('news.eyebrow')}
           </p>
@@ -317,18 +324,18 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </section>
       )}
 
-      <section className="container mx-auto border-t border-border px-5 py-20">
+      <section className="container mx-auto border-t border-border px-5 py-section">
         <H2 className="text-balance" lang={lang('discover.title')}>
           {t('discover.title')}
         </H2>
 
-        <ul className="mt-12 flex flex-col">
+        <ul className="mt-16 flex flex-col">
           {HOME_DISCOVER.map((item) => (
             <li key={item.id}>
               <Link
                 href={localeHref(item.href, locale)}
                 lang={lang(`discover.${item.id}`)}
-                className="flex items-center justify-between border-b border-border py-6 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                className="flex items-center justify-between border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
               >
                 {t(`discover.${item.id}`)}
                 <span aria-hidden="true">&rarr;</span>
@@ -345,8 +352,20 @@ export async function HomePage({ locale }: { locale: Locale }) {
         lang={lang('marquee.oneApi')}
       />
 
-      <section className="container mx-auto px-5 py-20">
-        <div className="flex flex-wrap justify-center gap-4">
+      {/*
+        The design's closing block: three calls to action centred in a glowing
+        field, not a bare button row. `CTA Area` is 518px tall around a 174px
+        container, so the space around the buttons IS the design.
+      */}
+      <section className="relative isolate overflow-hidden px-5 py-44">
+        <SectionBackdrop variant="glow" />
+
+        {/*
+          The design's `CTA section Container` is 174px tall; the buttons are
+          42px. Reserving that height is what makes the block the size it was
+          drawn, rather than padding around a thin row.
+        */}
+        <div className="relative flex min-h-[174px] flex-wrap items-center justify-center gap-4">
           <Button asChild variant="secondary">
             <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
               {t('connect.follow')}

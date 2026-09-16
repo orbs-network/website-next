@@ -101,7 +101,7 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
             onKeyDown={(event) => onKeyDown(event, index)}
             lang={tab.titleLang}
             className={cn(
-              'border-b border-border py-5 text-start text-h4 transition-colors',
+              'border-b border-border py-6 text-start text-h4 transition-colors',
               'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
               index === selected ? 'text-accent-primary' : 'text-fg hover:text-accent-primary'
             )}
@@ -121,7 +121,7 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
         tabIndex={0}
         lang={active.panelLang}
         className={cn(
-          'flex min-h-[26rem] min-w-0 items-start rounded-sm p-8 sm:p-12',
+          'flex min-h-[34rem] min-w-0 items-start rounded-sm p-8 sm:p-12',
           // A CSS gradient rather than an exported image: it is a gradient, so
           // it scales to any box at zero bytes and cannot go blurry.
           'bg-gradient-to-br from-periwinkle-200 via-periwinkle-400 to-indigo-600',
