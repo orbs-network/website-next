@@ -36,7 +36,7 @@ const CONTENT = join(REPO, 'src/content')
  * DELETE THE LINE when the page ships. The test enforces that: an entry here
  * that resolves is a failure, not a pass.
  */
-const PENDING: readonly string[] = ['/ton-access', '/ton-vote']
+const PENDING: readonly string[] = ['/ton-vote']
 
 /**
  * Blog posts referenced from marketing copy, by slug.
@@ -150,6 +150,27 @@ function strings(value: unknown, seen = new Set<unknown>()): string[] {
   return Object.values(value as Record<string, unknown>).flatMap((nested) => strings(nested, seen))
 }
 
+/**
+ * Whether an exported string is plausibly an internal link.
+ *
+ * "Starts with a slash" on its own is too loose, and it started mattering the
+ * moment a content module exported something other than prose: the TON Access
+ * snippets begin `// copy paste the following snippet`, which is a slash, a
+ * slash, and a sentence. The guard read each of them as a link to a route that
+ * does not exist and failed the build.
+ *
+ * Two extra rules, neither of which can hide a real broken link:
+ *
+ *  - No `//` prefix. That is a protocol-relative URL or, here, a comment. An
+ *    internal path never has one.
+ *  - No whitespace, newlines included. `localeHref` builds URLs from these, and
+ *    a path with a space in it is not something anyone writes on purpose — if
+ *    one ever appeared it would be broken for a reason this test cannot fix.
+ */
+function isInternalPath(value: string): boolean {
+  return value.startsWith('/') && !value.startsWith('//') && !/\s/.test(value)
+}
+
 async function linkedPaths(): Promise<Map<string, string[]>> {
   const found = new Map<string, string[]>()
 
@@ -162,7 +183,7 @@ async function linkedPaths(): Promise<Map<string, string[]>> {
     const source = relative(REPO, file)
 
     for (const value of strings(exports)) {
-      if (!value.startsWith('/')) continue
+      if (!isInternalPath(value)) continue
       if (isAsset(value)) continue
 
       // Written without a trailing slash by convention; `localeHref` adds one.

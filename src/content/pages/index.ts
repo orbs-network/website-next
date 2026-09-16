@@ -54,6 +54,8 @@ export const MARKETING_PAGE_PATHS = [
   // The contact form, posting to `/api/contact`. The only marketing page with a
   // server-side dependency beyond the catalog.
   '/contact',
+  // The TON Access RPC gateway, with the code-example selector.
+  '/ton-access',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

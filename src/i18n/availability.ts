@@ -133,6 +133,15 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // marked `lang="en"` by `textLang`, and it does not make the page a
   // near-duplicate of the English one the way a `placeholder` page is.
   '/contact': { en: 'translated', ja: 'translated', ko: 'translated' },
+  // Korean is a real translation — 893 non-Latin characters across
+  // `content/ko/ton-access`, covering the hero, all six cards, the schema
+  // paragraph and both developer quotes.
+  //
+  // Japanese is not, and this one is unusually clear-cut: `content/jp/ton-access`
+  // contains exactly ONE non-ASCII character in the whole directory, and it is
+  // the apostrophe in a quote. The English text, copied. So the catalog mirrors
+  // English and the route is reachable but noindex.
+  '/ton-access': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 /**
