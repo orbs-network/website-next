@@ -1017,7 +1017,9 @@
       "marquee": {
         "oneApi": "One API.",
         "everyOrderType": "Every on-chain order type.",
-        "institutionalGrade": "Institutional-grade execution."
+        "institutionalGrade": "Institutional-grade execution.",
+        "pause": "Pause",
+        "resume": "Resume"
       },
       "connect": {
         "follow": "Follow us",

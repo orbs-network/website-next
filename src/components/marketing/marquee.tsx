@@ -1,37 +1,63 @@
+'use client'
+
+import * as React from 'react'
 import { cn } from '@/lib/utils'
 
 /**
- * A horizontally scrolling band of phrases.
+ * A horizontally scrolling band of phrases, with a pause control.
  *
- * A server component with no JavaScript at all — the motion is one CSS
- * animation on a duplicated track. Marquees are usually built with a scroll
- * listener or a rAF loop, which costs a bundle and a main-thread job to do
- * something the compositor does for free.
+ * **The pause control is required, not a nicety.** WCAG 2.2.2 says moving
+ * content that starts automatically and runs for more than five seconds must
+ * have a mechanism to pause, stop or hide it. This runs indefinitely.
  *
- * Two things that are not decoration:
+ * An earlier version of this file claimed `prefers-reduced-motion` satisfied
+ * that, and the comment saying so was wrong: a media query is a user-agent
+ * preference, not a mechanism in the content, and it does nothing for a reader
+ * who wants this particular thing to stop. Both are here now — the media query
+ * for people who have asked their OS to calm everything down, and a real
+ * control for everyone else.
  *
- * **The duplicate is `aria-hidden`.** Seamless looping needs the phrases twice
- * so the second copy is in place when the first scrolls out. To a screen reader
- * that is the sentence read twice, so only the first copy is exposed.
+ * The control is a `<button aria-pressed>`, which is why this is a client
+ * component. It was briefly a CSS-only checkbox driving `peer-checked:`, which
+ * kept the whole thing zero-JavaScript — but `peer-*` only reaches siblings, so
+ * the input had to sit at the top of the band while its label sat at the
+ * bottom, and focusing it threw focus to the opposite corner from the visible
+ * control. Bending the markup to keep a purity property, at the cost of the
+ * accessibility control being where it says it is, is the wrong way round.
  *
- * **`motion-reduce` stops it.** Continuously moving text that cannot be paused
- * fails WCAG 2.2.2 if it runs longer than five seconds, and this runs forever.
- * Honouring `prefers-reduced-motion` is the fix that does not need a pause
- * button; without it this is an accessibility defect shipped on the home page.
+ * The motion itself is still one CSS animation on a duplicated track. No scroll
+ * listener, no rAF loop.
+ *
+ * **The duplicate track is `aria-hidden`.** Seamless looping needs the phrases
+ * twice so the second copy is in place when the first scrolls out. To a screen
+ * reader that would be the same sentence read twice.
  */
 export function Marquee({
   phrases,
+  pauseLabel,
+  resumeLabel,
   lang,
   className,
 }: {
   phrases: readonly string[]
+  /**
+   * Names for the control in each state.
+   *
+   * Required rather than defaulted: a control with no name is announced as
+   * "button", and an English default would put English into a Japanese
+   * document without anyone choosing to.
+   */
+  pauseLabel: string
+  resumeLabel: string
   lang?: string
   className?: string
 }) {
+  const [paused, setPaused] = React.useState(false)
+
   const track = (
     <ul className="flex shrink-0 items-center gap-16 px-8">
       {phrases.map((phrase) => (
-        <li key={phrase} className="whitespace-nowrap text-h2 text-fg">
+        <li key={phrase} className="whitespace-nowrap text-h3 text-fg sm:text-h2">
           {phrase}
         </li>
       ))}
@@ -42,21 +68,46 @@ export function Marquee({
     <div
       lang={lang}
       className={cn(
-        'relative flex overflow-hidden py-16',
+        'relative overflow-hidden py-16',
         'bg-gradient-to-r from-cyan-500/40 via-periwinkle-500/40 to-lilac-500/40',
         className
       )}
     >
-      <div className="flex animate-marquee motion-reduce:animate-none">
+      {/*
+        `animation-play-state` belongs on the element running the animation.
+        On a wrapper it does nothing to the child — which is a way to ship a
+        pause button that silently does not pause.
+      */}
+      <div
+        className={cn(
+          'flex animate-marquee motion-reduce:[animation-play-state:paused]',
+          paused && '[animation-play-state:paused]'
+        )}
+      >
         {track}
-        {/*
-          The second copy exists so the loop has no gap. It is the same words,
-          so it is hidden from assistive technology rather than read twice.
-        */}
         <div aria-hidden="true" className="flex">
           {track}
         </div>
       </div>
+
+      {/*
+        `aria-pressed` rather than swapping the label alone: it states the
+        toggle's state rather than leaving a screen reader to infer it from a
+        word that changed. The visible text changes too, because a sighted
+        reader has no `aria-pressed`.
+      */}
+      <button
+        type="button"
+        onClick={() => setPaused((current) => !current)}
+        aria-pressed={paused}
+        className={cn(
+          'absolute bottom-4 right-4 rounded-sm border border-fg/30 bg-bg/70 px-3 py-1',
+          'text-detail font-medium uppercase tracking-widest text-fg transition-colors hover:border-fg',
+          'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+        )}
+      >
+        {paused ? resumeLabel : pauseLabel}
+      </button>
     </div>
   )
 }

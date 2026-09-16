@@ -23,6 +23,7 @@ import {
   HOME_VENUES,
   type HomeCard,
 } from '@/content/pages/home'
+import { postPath } from '@/app/lib/routes'
 import { readingMinutes } from '@/lib/reading-time'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
@@ -53,7 +54,16 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.home' })
   const lang = (key: string) => textLang(t(key), locale)
 
-  const posts = await getRecentPosts(HOME_NEWS_COUNT)
+  /*
+    `slug` is optional in the Contentful model, and a post without one has no
+    URL — linking it produces `/undefined/`. Filtered out rather than rendered,
+    with a type guard so the card cannot be handed one either way. (The older
+    `BlogCard` interpolates the slug straight into a template literal and does
+    produce that link; out of scope here, worth fixing separately.)
+  */
+  const posts = (await getRecentPosts(HOME_NEWS_COUNT)).filter(
+    (post): post is BlogPostFields & { slug: string } => typeof post.slug === 'string' && post.slug !== ''
+  )
 
   return (
     <>
@@ -278,8 +288,20 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </H2>
           </div>
 
+          {/*
+            `lang="en"` on the whole rail. Contentful has a single `en-US`
+            locale — there is no Japanese or Korean blog, which is why the
+            language selector hides on `/blog` — so every title, excerpt and
+            date in here is English even inside a `lang="ja"` document. The
+            arrow labels come from the catalog, which mirrors English for those
+            locales, so they belong inside the same boundary.
+
+            Without it a screen reader reads English article titles with
+            Japanese pronunciation, which is the exact defect #103 is about.
+          */}
           <CardRail
             className="mt-6"
+            lang="en"
             label={t('news.title')}
             previousLabel={t('news.previous')}
             nextLabel={t('news.next')}
@@ -316,7 +338,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <Marquee phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))} lang={lang('marquee.oneApi')} />
+      <Marquee
+        phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
+        pauseLabel={t('marquee.pause')}
+        resumeLabel={t('marquee.resume')}
+        lang={lang('marquee.oneApi')}
+      />
 
       <section className="container mx-auto px-5 py-20">
         <div className="flex flex-wrap justify-center gap-4">
@@ -400,13 +427,18 @@ function HighlightCard({
  * Reading time IS derived, because it is a function of the body rather than a
  * new fact about the post.
  */
-function NewsCard({ post, readLabel }: { post: BlogPostFields; readLabel: string }) {
+function NewsCard({ post, readLabel }: { post: BlogPostFields & { slug: string }; readLabel: string }) {
   const image = getAssetUrl(post.heroImage)
   const author = getAuthorInfo(post.author)
 
   return (
     <li className="w-[19rem] shrink-0 snap-start sm:w-[22rem]">
-      <Link href={`/${post.slug}`} className="group flex h-full flex-col focus-visible:outline-none">
+      {/*
+        `postPath`, not a template literal. `trailingSlash: true` means
+        `/Some-Post` answers with a 308 to `/Some-Post/`, so every card click
+        would cost a redirect hop.
+      */}
+      <Link href={postPath(post.slug)} className="group flex h-full flex-col focus-visible:outline-none">
         {/*
           Decorative: the title directly beneath is the link's accessible name,
           so alt text here would have a screen reader read the article twice.

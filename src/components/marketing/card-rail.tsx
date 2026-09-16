@@ -23,6 +23,7 @@ export function CardRail({
   label,
   previousLabel,
   nextLabel,
+  lang,
   className,
 }: {
   children: React.ReactNode
@@ -30,6 +31,14 @@ export function CardRail({
   label: string
   previousLabel: string
   nextLabel: string
+  /**
+   * Language of everything inside, when it differs from the document.
+   *
+   * The news rail is English in all three locales — Contentful has a single
+   * `en-US` locale — so the caller marks the whole rail rather than each title,
+   * date and arrow label separately.
+   */
+  lang?: string
   className?: string
 }) {
   const scroller = React.useRef<HTMLUListElement>(null)
@@ -74,7 +83,7 @@ export function CardRail({
   const arrow = 'rounded-sm p-2 transition-colors hover:text-accent-primary disabled:opacity-40'
 
   return (
-    <div className={className}>
+    <div className={className} lang={lang}>
       <div className="flex justify-end gap-2">
         <button
           type="button"
