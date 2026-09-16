@@ -42,9 +42,36 @@ const MAX_WIDTH = 1800
 /** Formats worth touching. SVG is vector; leave it alone. */
 const EXTENSIONS = new Set(['.png', '.jpg', '.jpeg', '.webp'])
 
+/**
+ * Directories this must never walk, however it is invoked.
+ *
+ * `public/marketing/brand-assets/` holds the logo DOWNLOADS. They are served
+ * byte-for-byte as published — a press kit whose contents we quietly resampled
+ * is not a press kit — and the width cap really does shrink two of them
+ * (4580px and 2825px originals, both capped to 1800).
+ *
+ * This was a sentence in CLAUDE.md, which is exactly as much protection as it
+ * sounds like: running `npm run optimize-images` with no `--dir` rewrote 116
+ * files including all of these. A rule that only exists in prose is a rule that
+ * gets walked past by whoever did not reread the prose that day. Now the script
+ * refuses, and says why.
+ */
+const PROTECTED = ['public/marketing/brand-assets']
+
+function isProtected(path) {
+  const rel = relative(REPO, path)
+  return PROTECTED.some((dir) => rel === dir || rel.startsWith(`${dir}/`))
+}
+
 async function* walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
     const path = join(dir, entry.name)
+
+    if (isProtected(path)) {
+      process.stdout.write(`  skipping ${relative(REPO, path)} — served as published, see PROTECTED\n`)
+      continue
+    }
+
     if (entry.isDirectory()) yield* walk(path)
     else if (EXTENSIONS.has(extname(entry.name).toLowerCase())) yield path
   }
@@ -133,6 +160,15 @@ async function main() {
   const dryRun = argv.includes('--dry-run')
   const dirArg = argv[argv.indexOf('--dir') + 1]
   const root = resolve(REPO, argv.includes('--dir') && dirArg ? dirArg : 'public')
+
+  // Pointing `--dir` straight at a protected directory would otherwise walk
+  // into it and skip each file one at a time, which reads like a bug rather
+  // than a refusal. Say no once, clearly, and exit non-zero.
+  if (isProtected(root)) {
+    throw new Error(
+      `${relative(REPO, root)} is served byte-for-byte as published and must not be optimised. See PROTECTED in this script.`
+    )
+  }
 
   let totalBefore = 0
   let totalAfter = 0
