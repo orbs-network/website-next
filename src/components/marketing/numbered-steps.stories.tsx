@@ -44,7 +44,11 @@ export const NumeralsAreNotAnnounced: Story = {
 
 /** The statement is a claim about the whole flow, so it sits outside the list. */
 export const StatementSitsOutsideTheList: Story = {
-  args: { title: 'Cosigned oracle verification', statement: 'Every execution is independently verified.', steps: STEPS },
+  args: {
+    title: 'Cosigned oracle verification',
+    statement: 'Every execution is independently verified.',
+    steps: STEPS,
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 

@@ -116,7 +116,10 @@ export async function GET() {
     <link>${escapeXml(blogUrl)}</link>
     <lastBuildDate>${lastBuild}</lastBuildDate>
     <atom:link href="${escapeXml(feedUrl)}" rel="self" type="application/rss+xml"/>
-${items.filter((post) => post.slug).map(renderItem).join('\n')}
+${items
+  .filter((post) => post.slug)
+  .map(renderItem)
+  .join('\n')}
   </channel>
 </rss>
 `

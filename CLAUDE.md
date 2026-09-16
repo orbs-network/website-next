@@ -18,14 +18,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 - `npm run optimize-images` — resize and recompress rasters under `public/`. Visually lossless and idempotent; see the script's header for the measurement. Scope it with `--dir` (`node scripts/optimize-images.mjs --dir public/marketing/<page>`) when you only mean to touch one page's assets — with no argument it walks all of `public/` and will happily rewrite a hundred files you did not mean to touch. `public/marketing/brand-assets/` is skipped by the script itself: those are downloads, served byte-for-byte as published, and the width cap would shrink two of them. It used to be a rule in this file, which is how it got broken.
 - `node scripts/unwrap-raster-svgs.mjs --dir <dir>` — replaces SVGs that are only a wrapper around one embedded raster. `next/image` does not optimise SVG, so those reach the reader at full size; one ecosystem logo was 826 KB for a 96x40 render.
 - `npm run visual-review` — screenshots at desktop and mobile, optionally against a base branch.
+- `npm run format` / `npm run format:check` — Prettier over the repo. **CI runs `format:check`**, so a badly formatted file fails the build. Run `format` before pushing rather than reaching for `prettier --write` with a glob — an unscoped write once swept 30 unrelated files into a rename PR and buried a 7-file diff in a 37-file one.
 
 ## Architecture
 
-**Next.js 16 App Router, deployed on Vercel.** `reactCompiler: true` in `next.config.mjs` enables the React Compiler for automatic memoization. Pages are prerendered at build time via `generateStaticParams()` and served from the CDN; server features (route handlers, ISR, on-demand revalidation, draft mode) are available and in use.
+**Next.js 16 App Router, deployed on Vercel.** `reactCompiler: true` in `next.config.ts` enables the React Compiler for automatic memoization. Pages are prerendered at build time via `generateStaticParams()` and served from the CDN; server features (route handlers, ISR, on-demand revalidation, draft mode) are available and in use.
 
 This replaced a static export (`output: 'export'` + `images.unoptimized: true`), which could not run `next/image` and forced a full rebuild of every blog page to publish one post. Rationale in `docs/migration-plan.md` section 2.1. Do not reintroduce `output: 'export'` — Contentful revalidation webhooks, draft-mode preview, and the Resend form handlers all require a server.
 
 **Three component roots, by convention:**
+
 - `src/components/ui/` — shadcn/ui primitives (`components.json` points here; style `new-york`, base color `neutral`, CSS variables). Add shadcn components here via the CLI.
 - `src/components/icons/` — typed SVG icon components (Orbs logo, socials, arrows, theme/locale, product + partner logos). Re-exported via `src/components/icons/index.ts`. Use `currentColor` for monochrome variants so Tailwind `text-*` controls them; color variants may hard-code brand hex. Partner wordmarks are placeholders pending real brand SVGs.
 - `src/app/components/` — app-specific compositions (`layout/`, `blog/`, `theme/`, `typography.tsx`). Not managed by shadcn.
@@ -46,7 +48,7 @@ Path alias `@/*` → `./src/*` (see `tsconfig.json`). `@/lib/utils` is the `cn()
 
 ## Conventions
 
-- Prettier: no semicolons, single quotes, `printWidth: 120`, `trailingComma: 'es5'` (`.prettierrc.json`).
+- Prettier: no semicolons, single quotes, `printWidth: 120`, `trailingComma: 'es5'` (`.prettierrc.json`). Enforced in CI. `.prettierignore` deliberately excludes generated output (`src/app/generated-types/`, `src/contentful-types/`) and long-form documents (`src/content/legal/`, `src/content/faq/`) — reformatting a privacy policy produces a diff on a legal document nobody asked for, and regenerating a generated file reverts the formatting anyway.
 - TypeScript strict mode is on (`tsconfig.json`). No `any`.
 - Import icons from `lucide-react` (set in `components.json`).
 - Stories live next to components as `*.stories.tsx` (e.g. `src/components/ui/button.stories.tsx`); the Storybook config globs `src/**/*.stories.@(js|jsx|mjs|ts|tsx)`.

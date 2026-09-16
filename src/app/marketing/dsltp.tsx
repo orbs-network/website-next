@@ -3,13 +3,7 @@ import { ArchitectureSection } from '@/components/marketing/architecture-section
 import { DiagramSection } from '@/components/marketing/diagram-section'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { ProductHero } from '@/components/marketing/product-hero'
-import {
-  DSLTP_BENEFITS,
-  DSLTP_GRAPH_IMAGE,
-  DSLTP_HERO,
-  DSLTP_LINKS,
-  DSLTP_MAP_IMAGE,
-} from '@/content/pages/dsltp'
+import { DSLTP_BENEFITS, DSLTP_GRAPH_IMAGE, DSLTP_HERO, DSLTP_LINKS, DSLTP_MAP_IMAGE } from '@/content/pages/dsltp'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 

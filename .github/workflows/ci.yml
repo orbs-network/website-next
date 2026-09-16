@@ -20,5 +20,11 @@ jobs:
           cache: npm
       - run: npm ci
       - run: npx playwright install --with-deps chromium
+      # Formatting is checked, not assumed. It had drifted to 35 files with
+      # nothing failing, so a `prettier --write` during unrelated work swept
+      # 30 of them into a PR and buried the actual change. Same principle as
+      # the link-integrity and redirect guards: fail CI rather than ask people
+      # to remember.
+      - run: npm run format:check
       - run: npm run lint
       - run: npm test

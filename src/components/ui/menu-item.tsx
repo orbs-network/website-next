@@ -88,8 +88,10 @@ type MenuItemWBaseProps = BaseProps & {
   icon?: React.ReactNode
 }
 
-type MenuItemWAnchorProps = MenuItemWBaseProps & Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof MenuItemWBaseProps>
-type MenuItemWButtonProps = MenuItemWBaseProps & Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof MenuItemWBaseProps>
+type MenuItemWAnchorProps = MenuItemWBaseProps &
+  Omit<React.AnchorHTMLAttributes<HTMLAnchorElement>, keyof MenuItemWBaseProps>
+type MenuItemWButtonProps = MenuItemWBaseProps &
+  Omit<React.ButtonHTMLAttributes<HTMLButtonElement>, keyof MenuItemWBaseProps>
 
 export type MenuItemWProps = MenuItemWAnchorProps | MenuItemWButtonProps
 

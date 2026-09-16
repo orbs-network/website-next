@@ -69,14 +69,14 @@ admin access to `orbs.com` DNS is available.
 
 ### 2.2 Content split: Contentful vs hardcoded
 
-| Content | Home | Reason |
-| --- | --- | --- |
+| Content             | Home       | Reason                                             |
+| ------------------- | ---------- | -------------------------------------------------- |
 | Blog posts, authors | Contentful | Already built. Frequently added by non-developers. |
-| Media mentions | Contentful | 328 entries, actively growing, added by comms. |
-| ~25 marketing pages | Hardcoded | Bespoke layout, low churn, developer-owned. |
-| White papers | Hardcoded | 33 entries, last updated 2024-01. |
-| Policy pages | Hardcoded | Effectively static. |
-| Governance blog | Deleted | Empty since 2023-01. See 2.6. |
+| Media mentions      | Contentful | 328 entries, actively growing, added by comms.     |
+| ~25 marketing pages | Hardcoded  | Bespoke layout, low churn, developer-owned.        |
+| White papers        | Hardcoded  | 33 entries, last updated 2024-01.                  |
+| Policy pages        | Hardcoded  | Effectively static.                                |
+| Governance blog     | Deleted    | Empty since 2023-01. See 2.6.                      |
 
 **Why marketing pages are not in Contentful:** the product and landing pages are
 heavy bespoke layout — sliders, code-snippet switchers, schema diagrams, benefit
@@ -85,7 +85,7 @@ abstraction used ~7 times that fights us on every one. Marketing is not going to
 edit the dTWAP architecture diagram from a CMS. Contentful earns its keep on
 repetitive content; landing pages are not that.
 
-**Why media mentions *are* in Contentful:** this is the exception that proves
+**Why media mentions _are_ in Contentful:** this is the exception that proves
 the rule. Each entry is five fields (headline, thumbnail, publisher logo,
 external URL, date) with no body. New entries land roughly weekly. Hardcoding
 them would mean a PR and a deploy every time comms adds a press hit.
@@ -189,12 +189,12 @@ the bulk is the historical archive, most of which is reported already migrated.
 
 ### Assets
 
-| Bucket | Size | Destination |
-| --- | --- | --- |
-| Blog images | 782 MB | Contentful assets |
-| Media thumbnails and logos | 62 MB | Contentful assets |
-| Marketing page images | ~58 MB | `public/`, optimized on the way in |
-| Fonts | 1.5 MB | `next/font` where possible |
+| Bucket                     | Size   | Destination                        |
+| -------------------------- | ------ | ---------------------------------- |
+| Blog images                | 782 MB | Contentful assets                  |
+| Media thumbnails and logos | 62 MB  | Contentful assets                  |
+| Marketing page images      | ~58 MB | `public/`, optimized on the way in |
+| Fonts                      | 1.5 MB | `next/font` where possible         |
 
 Total `assets/img` in the old repo is 901 MB. The old repo carries
 `remove-large-files.sh` and `return-large-files.sh` specifically to work around
@@ -325,16 +325,16 @@ The bulk of the work.
 
 For anyone reading the Cuttlebelle source during the rebuild.
 
-| Path | What it is |
-| --- | --- |
-| `content/` | Markdown + YAML frontmatter. Directory structure equals URL routes. |
-| `code/pages/page.js` | The single root layout. |
-| `code/partials/` | ~262 components across 31 feature directories plus `shared/`. |
-| `code/util/` | Date formatting, URL mapping, i18n helpers. |
-| `assets/sass/` | 59 SCSS files compiling to `assets/css/index.css`. |
-| `assets/js/` | Vanilla JS bundles for analytics, forms, sliders, ecosystem. |
-| `assets/datasets/` | Ecosystem JSON, code snippets, geo data. |
-| `markdown.js` | Custom Marked renderer — heading anchors, table wrappers, link rules. |
-| `prebuild.sh` | Flattens blog directories before the Cuttlebelle build. |
-| `build-rss-feed.js` | Generates `/blog/rss.xml` by parsing built HTML. |
-| `.circleci/config.yml` | Build and deploy to GitHub Pages. |
+| Path                   | What it is                                                            |
+| ---------------------- | --------------------------------------------------------------------- |
+| `content/`             | Markdown + YAML frontmatter. Directory structure equals URL routes.   |
+| `code/pages/page.js`   | The single root layout.                                               |
+| `code/partials/`       | ~262 components across 31 feature directories plus `shared/`.         |
+| `code/util/`           | Date formatting, URL mapping, i18n helpers.                           |
+| `assets/sass/`         | 59 SCSS files compiling to `assets/css/index.css`.                    |
+| `assets/js/`           | Vanilla JS bundles for analytics, forms, sliders, ecosystem.          |
+| `assets/datasets/`     | Ecosystem JSON, code snippets, geo data.                              |
+| `markdown.js`          | Custom Marked renderer — heading anchors, table wrappers, link rules. |
+| `prebuild.sh`          | Flattens blog directories before the Cuttlebelle build.               |
+| `build-rss-feed.js`    | Generates `/blog/rss.xml` by parsing built HTML.                      |
+| `.circleci/config.yml` | Build and deploy to GitHub Pages.                                     |

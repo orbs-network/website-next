@@ -99,10 +99,7 @@ export function MobileNav({
               {group.sections.map((section, sectionIndex) => (
                 <div key={section.key ?? `section-${sectionIndex}`} className="mt-4">
                   {section.label && (
-                    <h3
-                      lang={section.labelLang}
-                      className="mb-2 text-detail uppercase tracking-widest text-fg-muted"
-                    >
+                    <h3 lang={section.labelLang} className="mb-2 text-detail uppercase tracking-widest text-fg-muted">
                       [{section.label}]
                     </h3>
                   )}

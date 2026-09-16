@@ -62,11 +62,31 @@ export const INSTITUTIONAL_VENUES: readonly LogoRowItem[] = [
  * owners would be better; this is correct rather than merely visible.
  */
 export const INSTITUTIONAL_SIGNERS: readonly LogoRowItem[] = [
-  { name: 'Ledger', logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 }, invertOnLight: true },
-  { name: 'Safe', logo: { src: '/marketing/institutional/infra-safe.svg', width: 158, height: 46 }, invertOnLight: true },
-  { name: 'Fireblocks', logo: { src: '/marketing/institutional/infra-fireblocks.svg', width: 227, height: 35 }, invertOnLight: true },
-  { name: 'copper.co', logo: { src: '/marketing/institutional/infra-copper.svg', width: 208, height: 53 }, invertOnLight: true },
-  { name: 'BitGo', logo: { src: '/marketing/institutional/infra-bitgo.svg', width: 146, height: 39 }, invertOnLight: true },
+  {
+    name: 'Ledger',
+    logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 },
+    invertOnLight: true,
+  },
+  {
+    name: 'Safe',
+    logo: { src: '/marketing/institutional/infra-safe.svg', width: 158, height: 46 },
+    invertOnLight: true,
+  },
+  {
+    name: 'Fireblocks',
+    logo: { src: '/marketing/institutional/infra-fireblocks.svg', width: 227, height: 35 },
+    invertOnLight: true,
+  },
+  {
+    name: 'copper.co',
+    logo: { src: '/marketing/institutional/infra-copper.svg', width: 208, height: 53 },
+    invertOnLight: true,
+  },
+  {
+    name: 'BitGo',
+    logo: { src: '/marketing/institutional/infra-bitgo.svg', width: 146, height: 39 },
+    invertOnLight: true,
+  },
 ]
 
 /**

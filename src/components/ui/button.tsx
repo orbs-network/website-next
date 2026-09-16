@@ -57,8 +57,7 @@ const arrowSizeMap: Record<NonNullable<VariantProps<typeof buttonVariants>['size
 }
 
 export interface ButtonProps
-  extends React.ButtonHTMLAttributes<HTMLButtonElement>,
-    VariantProps<typeof buttonVariants> {
+  extends React.ButtonHTMLAttributes<HTMLButtonElement>, VariantProps<typeof buttonVariants> {
   asChild?: boolean
   /** Override the trailing icon. Defaults to `ArrowRight` on the primary variant. */
   icon?: React.ReactNode
@@ -72,7 +71,9 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const resolvedSize = size ?? 'default'
 
     const showIcon = variant === 'primary' && !noIcon
-    const iconNode = showIcon ? (icon ?? <ArrowRight className={arrowSizeMap[resolvedSize]} aria-hidden="true" />) : null
+    const iconNode = showIcon
+      ? (icon ?? <ArrowRight className={arrowSizeMap[resolvedSize]} aria-hidden="true" />)
+      : null
 
     const content =
       asChild && React.isValidElement(children) ? (

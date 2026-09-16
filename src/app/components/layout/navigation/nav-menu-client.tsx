@@ -1,13 +1,7 @@
 'use client'
 
 import Link from 'next/link'
-import {
-  DLimitGlyph,
-  DSltpGlyph,
-  DTwapGlyph,
-  LiquidityHubGlyph,
-  PerpetualHubGlyph,
-} from '@/components/icons'
+import { DLimitGlyph, DSltpGlyph, DTwapGlyph, LiquidityHubGlyph, PerpetualHubGlyph } from '@/components/icons'
 import { MenuItem, MenuItemW } from '@/components/ui/menu-item'
 import {
   NavigationMenu,

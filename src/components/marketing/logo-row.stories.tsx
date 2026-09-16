@@ -57,7 +57,13 @@ export const LogosAreOptional: Story = {
 export const WhiteMarksInvertInLightTheme: Story = {
   args: {
     title: 'Works with existing security infrastructure',
-    items: [{ name: 'Ledger', logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 }, invertOnLight: true }],
+    items: [
+      {
+        name: 'Ledger',
+        logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 },
+        invertOnLight: true,
+      },
+    ],
   },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('img')).toHaveClass('invert')

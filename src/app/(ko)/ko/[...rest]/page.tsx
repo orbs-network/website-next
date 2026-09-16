@@ -33,11 +33,7 @@ function pathFor(rest: string[] | undefined): string {
   return `/${(rest ?? []).join('/')}`
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ rest?: string[] }>
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ rest?: string[] }> }): Promise<Metadata> {
   return marketingMetadata(pathFor((await params).rest), LOCALE)
 }
 
