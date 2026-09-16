@@ -36,11 +36,7 @@ const CONTENT = join(REPO, 'src/content')
  * DELETE THE LINE when the page ships. The test enforces that: an entry here
  * that resolves is a failure, not a pass.
  */
-const PENDING: readonly string[] = [
-  '/contact',
-  '/ton-access',
-  '/ton-vote',
-]
+const PENDING: readonly string[] = ['/ton-access', '/ton-vote']
 
 /**
  * Blog posts referenced from marketing copy, by slug.
