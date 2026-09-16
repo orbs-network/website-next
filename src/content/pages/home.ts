@@ -5,8 +5,8 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
  *
  * Data only — every string lives in the message catalogs under `pages.home`.
  *
- * Several destinations here do not exist yet: `/dspot`, `/dperps`, `/sdk`,
- * `/venues` and `/ai-agents` are all being written. They are listed in
+ * Several destinations here do not exist yet: `/dspot`, `/sdk`, `/venues` and
+ * `/ai-agents` are all being written. They are listed in
  * `link-integrity.test.ts`'s `PENDING`, which means the guard knows about them
  * and will fail the moment one ships without its line being deleted. That is
  * deliberate debt with a deadline rather than a broken link nobody is counting.
@@ -39,8 +39,8 @@ export type HomeCard = {
  * their URLs and `/dspot` links down to them. Grouping in a menu and moving an
  * indexed URL are separate decisions, and only the first was asked for.
  *
- * `dPERPS` is the rename of Perpetual Hub, so `/perpetual-hub` will need a
- * permanent redirect when `/dperps` ships — tracked in #149, not here.
+ * `dPERPS` is the rename of Perpetual Hub. `/perpetual-hub` now permanently
+ * redirects here — see `src/lib/redirects.ts`.
  */
 export const HOME_STACK: readonly HomeCard[] = [
   { id: 'dspot', href: '/dspot' },

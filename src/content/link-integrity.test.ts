@@ -33,17 +33,20 @@ const CONTENT = join(REPO, 'src/content')
 /**
  * Paths that are linked but not yet built.
  *
- * This reached EMPTY — every one of the original seventeen resolved. These four
- * are new debt, taken on knowingly: the design 3.4 home page links to pages
- * whose content is still being written (#149). `/dperps` is also a rename of
- * `/perpetual-hub` and will need a permanent redirect when it lands.
+ * This reached EMPTY — every one of the original seventeen resolved. These are
+ * new debt, taken on knowingly: the design 3.4 home page links to pages whose
+ * content is still being written (#149).
+ *
+ * `/dperps` was here and is not any more, which is the mechanism working: it
+ * shipped as the rename of `/perpetual-hub`, so its line had to come out in the
+ * same diff or this test would have failed.
  *
  * DELETE THE LINE when each ships. The test enforces that: an entry here that
  * resolves is a failure, not a pass, so a page landing forces its own line out
  * in the same diff. The debt is counted down in the repository rather than in
  * someone's memory.
  */
-const PENDING: readonly string[] = ['/dspot', '/dperps', '/venues', '/ai-agents']
+const PENDING: readonly string[] = ['/dspot', '/venues', '/ai-agents']
 
 /**
  * Blog posts referenced from marketing copy, by slug.

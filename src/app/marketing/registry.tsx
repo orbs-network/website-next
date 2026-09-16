@@ -85,7 +85,7 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
     render: (locale) => <LiquidityHubPage locale={locale} />,
     namespace: 'pages.liquidityHub',
   },
-  '/perpetual-hub': {
+  '/dperps': {
     render: (locale) => <PerpetualHubPage locale={locale} />,
     namespace: 'pages.perpetualHub',
   },

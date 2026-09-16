@@ -18,7 +18,7 @@ export const MARKETING_PAGE_PATHS = [
   '/dtwap',
   '/dlimit',
   '/dsltp',
-  '/perpetual-hub',
+  '/dperps',
   '/liquidity-hub',
   '/agentic',
   '/ai/skills',

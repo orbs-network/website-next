@@ -9,7 +9,7 @@ export const OVERVIEW_PRODUCTS = [
   { id: 'dtwap', icon: '/marketing/overview/dtwap-logo.svg', href: '/dtwap' },
   { id: 'dlimit', icon: '/marketing/overview/dlimit-logo.svg', href: '/dlimit' },
   { id: 'liquidityHub', icon: '/marketing/overview/liquidity-hub-logo.svg', href: '/liquidity-hub' },
-  { id: 'perpetualHub', icon: '/marketing/overview/perpetual-hub-logo.svg', href: '/perpetual-hub' },
+  { id: 'perpetualHub', icon: '/marketing/overview/perpetual-hub-logo.svg', href: '/dperps' },
 ] as const
 
 /** The three reader benefits, in legacy order. */
