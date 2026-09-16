@@ -63,12 +63,12 @@ CONTENTFUL_LOCALE             # default: en-US
 
 Useful flags:
 
-| Var | Default | Notes |
-| --- | --- | --- |
-| `POST_SAMPLE_COUNT` | `3` | First N posts only. Set `0` for all. **Defaults to a sample — easy to forget.** |
-| `ONLY_CREATE_NEW` | `false` | Skip entries that already exist. Use this for the remaining backlog. |
-| `RESUME_FROM_CHECKPOINT` | `false` | Resume from `.migrate-blogposts.checkpoint.json`. |
-| `PUBLISH_AFTER_UPSERT` | `true` | Publish immediately after write. |
+| Var                      | Default | Notes                                                                           |
+| ------------------------ | ------- | ------------------------------------------------------------------------------- |
+| `POST_SAMPLE_COUNT`      | `3`     | First N posts only. Set `0` for all. **Defaults to a sample — easy to forget.** |
+| `ONLY_CREATE_NEW`        | `false` | Skip entries that already exist. Use this for the remaining backlog.            |
+| `RESUME_FROM_CHECKPOINT` | `false` | Resume from `.migrate-blogposts.checkpoint.json`.                               |
+| `PUBLISH_AFTER_UPSERT`   | `true`  | Publish immediately after write.                                                |
 
 ## Known state (2026-08-12)
 

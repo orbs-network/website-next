@@ -39,9 +39,7 @@ const RESOURCES: ResolvedNavGroup = {
     {
       key: 'tools',
       label: 'Tools',
-      links: [
-        { key: 'tetraWallet', href: 'https://staking.orbs.network/', external: true, label: 'Tetra Wallet' },
-      ],
+      links: [{ key: 'tetraWallet', href: 'https://staking.orbs.network/', external: true, label: 'Tetra Wallet' }],
     },
   ],
 }

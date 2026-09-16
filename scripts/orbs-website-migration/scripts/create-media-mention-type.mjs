@@ -17,11 +17,7 @@
 import 'dotenv/config'
 import contentful from 'contentful-management'
 
-const {
-  CONTENTFUL_MANAGEMENT_TOKEN,
-  CONTENTFUL_SPACE_ID,
-  CONTENTFUL_ENVIRONMENT_ID = 'master',
-} = process.env
+const { CONTENTFUL_MANAGEMENT_TOKEN, CONTENTFUL_SPACE_ID, CONTENTFUL_ENVIRONMENT_ID = 'master' } = process.env
 
 const APPLY = process.argv.includes('--apply')
 

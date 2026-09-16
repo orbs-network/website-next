@@ -251,8 +251,7 @@ function unwrapLinkedImages(md) {
  * and also removes a divider immediately above it if present.
  */
 function stripDividerAndAboutOrbs(md) {
-  const headingRe =
-    /^\s*(?:#{1,6}\s*)?(?:(?:\*\*|__)\s*)?About Orbs\s*(?:(?:\*\*|__)\s*)?\s*$/im
+  const headingRe = /^\s*(?:#{1,6}\s*)?(?:(?:\*\*|__)\s*)?About Orbs\s*(?:(?:\*\*|__)\s*)?\s*$/im
 
   const m = headingRe.exec(md)
   if (!m) return md
@@ -271,8 +270,7 @@ function stripDividerAndAboutOrbs(md) {
   // inside the quotes covers the four markup variants actually present,
   // including `<div class = 'line-separator '>`, which the old pattern missed
   // entirely.
-  const divSepTail =
-    /(?:\n\s*\n)?\s*<div[^>]*class\s*=\s*['"]\s*line-separator\s*['"][^>]*>\s*<\/div>\s*$/i
+  const divSepTail = /(?:\n\s*\n)?\s*<div[^>]*class\s*=\s*['"]\s*line-separator\s*['"][^>]*>\s*<\/div>\s*$/i
   const hrTagTail = /(?:\n\s*\n)?\s*<hr\b[^>]*>\s*$/i
   const mdHrTail = /(?:\n\s*\n)?\s*(?:---|\*\*\*|___)\s*$/i
 
@@ -293,7 +291,12 @@ function stripDividerAndAboutOrbs(md) {
     }
   }
 
-  return md.slice(0, cutStart).replace(/\n{3,}/g, '\n\n').trimEnd() + '\n'
+  return (
+    md
+      .slice(0, cutStart)
+      .replace(/\n{3,}/g, '\n\n')
+      .trimEnd() + '\n'
+  )
 }
 
 /**
@@ -318,7 +321,8 @@ function normalizeHeadings(md) {
     const text = m[2].trim()
     if (text.length < 3 || text.length > 90) return null
     if (/[.!?]$/.test(text)) return null
-    if (/$begin:math:display$\[\^$end:math:display$]+]$begin:math:text$\[\^\)\]\+$end:math:text$/.test(text)) return null
+    if (/$begin:math:display$\[\^$end:math:display$]+]$begin:math:text$\[\^\)\]\+$end:math:text$/.test(text))
+      return null
     return text
   }
 
@@ -500,9 +504,7 @@ async function reconcilePublishState(entry, fm, slug) {
 }
 
 async function resolveAuthorEntryId(authorFrontmatterValue) {
-  const authorPath = Array.isArray(authorFrontmatterValue)
-    ? authorFrontmatterValue[0]
-    : authorFrontmatterValue
+  const authorPath = Array.isArray(authorFrontmatterValue) ? authorFrontmatterValue[0] : authorFrontmatterValue
 
   const basename = path.basename(String(authorPath))
   const matches = await glob(`${AUTHORS_DIR}/**/${basename}`)
@@ -664,9 +666,7 @@ async function main() {
   }
 
   console.log(`Total posts in ${BLOGS_LIST_FILE}: ${allPostRelPaths.length}`)
-  console.log(
-    `Migrating: ${selected.length} post(s)${sampleCount > 0 ? ` (sample: first ${sampleCount})` : ''}`
-  )
+  console.log(`Migrating: ${selected.length} post(s)${sampleCount > 0 ? ` (sample: first ${sampleCount})` : ''}`)
   console.log(`Mode: ${onlyCreateNew ? 'create-only (skip updates)' : 'upsert (create/update)'}`)
   if (cp && resumeFromCheckpoint) {
     console.log(`Resuming from checkpoint: index ${startIndex + 1}/${selected.length} (${selected[startIndex]})`)
@@ -879,9 +879,7 @@ async function main() {
         if (node?.type === 'code') {
           return {
             nodeType: 'paragraph',
-            content: [
-              { nodeType: 'text', value: String(node.value || ''), marks: [{ type: 'code' }], data: {} },
-            ],
+            content: [{ nodeType: 'text', value: String(node.value || ''), marks: [{ type: 'code' }], data: {} }],
             data: {},
           }
         }

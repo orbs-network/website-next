@@ -27,13 +27,7 @@ export { DTwap } from './products/dtwap'
 export { DSltp } from './products/dsltp'
 
 // Products — bare glyphs, for menu rows where the label is a sibling
-export {
-  DLimitGlyph,
-  DSltpGlyph,
-  DTwapGlyph,
-  LiquidityHubGlyph,
-  PerpetualHubGlyph,
-} from './products/glyphs'
+export { DLimitGlyph, DSltpGlyph, DTwapGlyph, LiquidityHubGlyph, PerpetualHubGlyph } from './products/glyphs'
 
 // Partners
 export { LynexLogo } from './partners/lynex-logo'

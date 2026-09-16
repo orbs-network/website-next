@@ -95,9 +95,7 @@ export function ArchitectureSection({
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
       {eyebrow && (
-        <p className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted">
-          {eyebrow}
-        </p>
+        <p className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
       )}
 
       {title && (

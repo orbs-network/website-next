@@ -109,8 +109,18 @@ async function withRetryWrite(fn, label, attempts = 5) {
 // ---------------------------------------------------------------------------
 
 const MONTHS = [
-  'january', 'february', 'march', 'april', 'may', 'june',
-  'july', 'august', 'september', 'october', 'november', 'december',
+  'january',
+  'february',
+  'march',
+  'april',
+  'may',
+  'june',
+  'july',
+  'august',
+  'september',
+  'october',
+  'november',
+  'december',
 ]
 
 /**
@@ -118,9 +128,18 @@ const MONTHS = [
  * appear verbatim in content/news/posts — this is not defensive generalising.
  */
 const MONTH_ALIASES = {
-  jan: 'january', feb: 'february', mar: 'march', apr: 'april',
-  jun: 'june', jul: 'july', aug: 'august', sep: 'september', sept: 'september',
-  oct: 'october', nov: 'november', dec: 'december',
+  jan: 'january',
+  feb: 'february',
+  mar: 'march',
+  apr: 'april',
+  jun: 'june',
+  jul: 'july',
+  aug: 'august',
+  sep: 'september',
+  sept: 'september',
+  oct: 'october',
+  nov: 'november',
+  dec: 'december',
   septmber: 'september',
   novermber: 'november',
 }

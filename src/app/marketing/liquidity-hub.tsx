@@ -46,11 +46,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
   return (
     <>
       {/* No call to action: the legacy header declares no button. */}
-      <ProductHero
-        headline={t('hero.headline')}
-        intro={t('hero.intro')}
-        lang={textLang(t('hero.headline'), locale)}
-      />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} lang={textLang(t('hero.headline'), locale)} />
 
       <FeatureGrid
         intro={t('sources.intro')}

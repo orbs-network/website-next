@@ -19,14 +19,7 @@ export function BaseLogo({ variant = 'dark', width = '5em', height = '1.5em', ..
       {...rest}
     >
       <rect x="2" y="6" width="20" height="20" rx="2" fill={fill} />
-      <text
-        x="30"
-        y="22"
-        fontFamily="Montserrat, system-ui, sans-serif"
-        fontWeight="600"
-        fontSize="18"
-        fill={fill}
-      >
+      <text x="30" y="22" fontFamily="Montserrat, system-ui, sans-serif" fontWeight="600" fontSize="18" fill={fill}>
         base
       </text>
     </svg>

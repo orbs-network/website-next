@@ -102,7 +102,11 @@ const typeSamples: TypeSample[] = [
   { name: 'H3 / 32', className: 'text-h3 font-semibold', sample: 'A decentralized backend for Web3' },
   { name: 'H4 / 22', className: 'text-h4 font-medium', sample: 'Section heading for supporting content' },
   { name: 'H5 / 14', className: 'text-h5 font-semibold uppercase', sample: 'Eyebrow label' },
-  { name: 'P / 18', className: 'text-p', sample: 'Orbs is an open and decentralized public blockchain infrastructure.' },
+  {
+    name: 'P / 18',
+    className: 'text-p',
+    sample: 'Orbs is an open and decentralized public blockchain infrastructure.',
+  },
   { name: 'Detail / 11', className: 'text-detail uppercase', sample: 'Fine print / metadata' },
   { name: 'Field / 20', className: 'text-field', sample: 'Form field input text' },
 ]

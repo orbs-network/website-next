@@ -6,12 +6,7 @@ type QuickSwapLogoProps = IconBaseProps & {
 }
 
 /** QuickSwap wordmark placeholder — abstract "q" glyph + "QUICKSWAP" label. */
-export function QuickSwapLogo({
-  variant = 'dark',
-  width = '7em',
-  height = '1.5em',
-  ...rest
-}: QuickSwapLogoProps) {
+export function QuickSwapLogo({ variant = 'dark', width = '7em', height = '1.5em', ...rest }: QuickSwapLogoProps) {
   const fill = variant === 'dark' ? '#121214' : '#ffffff'
   return (
     <svg
