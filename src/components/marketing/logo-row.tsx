@@ -31,6 +31,19 @@ export type LogoRowItem = {
    * marks and inverting those would be actively wrong.
    */
   invertOnLight?: boolean
+  /**
+   * The mark already spells the name, so do not print it again beside it.
+   *
+   * Chain marks are icons — a circle with a symbol — and need the name in text
+   * next to them. Venue marks are WORDMARKS: PancakeSwap's logo is the word
+   * "PancakeSwap", so rendering the name too produced "PancakeSwap
+   * PANCAKESWAP" across the whole row.
+   *
+   * The name is not dropped, only hidden: the image is `alt=""`, so without a
+   * text node the list item would have no accessible name at all and a screen
+   * reader would read six empty bullets.
+   */
+  wordmark?: boolean
 }
 
 /**
@@ -52,12 +65,22 @@ export type LogoRowItem = {
  */
 export function LogoRow({
   title,
+  titleHidden = false,
   sub,
   items,
   lang,
   titleLang,
 }: {
   title: string
+  /**
+   * Hide the heading visually, keeping it for assistive technology.
+   *
+   * Some rows are drawn as a bare strip of marks between two rules, with no
+   * visible heading. The list still needs a name — "list of six items" is not
+   * useful — so the heading stays in the accessibility tree rather than being
+   * deleted.
+   */
+  titleHidden?: boolean
   /** Optional line under the heading. */
   sub?: string
   items: readonly LogoRowItem[]
@@ -68,7 +91,7 @@ export function LogoRow({
 }) {
   return (
     <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center" lang={titleLang}>
+      <H2 className={cn('text-balance text-center', titleHidden && 'sr-only')} lang={titleLang}>
         {title}
       </H2>
 
@@ -100,7 +123,13 @@ export function LogoRow({
                 )}
               />
             )}
-            <span className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang="en">
+            <span
+              className={cn(
+                'text-detail font-medium uppercase tracking-wide text-fg-muted',
+                item.wordmark && 'sr-only'
+              )}
+              lang="en"
+            >
               {item.name}
             </span>
           </li>
