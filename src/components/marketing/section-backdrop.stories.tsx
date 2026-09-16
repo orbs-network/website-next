@@ -7,8 +7,17 @@ const meta = {
   component: SectionBackdrop,
   parameters: { layout: 'fullscreen' },
   decorators: [
+    /*
+      `isolate` is not decoration here — it is the component's contract.
+
+      This wrapper paints an opaque `bg-neutral-900`. Without a stacking
+      context, the backdrop's `-z-10` escapes to the root and lands BEHIND that
+      background, so the stories rendered as a flat dark field showing nothing.
+      Exactly the failure the production sections were hardened against, and
+      this file demonstrated it while claiming to illustrate the component.
+    */
     (Story) => (
-      <div className="relative min-h-[26rem] bg-neutral-900 p-12">
+      <div className="relative isolate min-h-[26rem] bg-neutral-900 p-12">
         <Story />
         <p className="relative text-h3 text-white">Content sits above the backdrop</p>
       </div>
@@ -60,5 +69,30 @@ export const SitsBehindTheContent: Story = {
     await expect(backdrop).toHaveClass('absolute')
     // The content is still reachable and readable above it.
     await expect(canvas.getByText('Content sits above the backdrop')).toBeVisible()
+  },
+}
+
+/**
+ * The backdrop actually paints something.
+ *
+ * Every other assertion here checks a class name, which would keep passing if
+ * the thing rendered as a flat field — and it did, until this decorator gained
+ * `isolate`. This looks at the pixels instead: a painted grid produces many
+ * distinct colours in a region, a blank one produces very few.
+ */
+export const ActuallyPaints: Story = {
+  args: { variant: 'grid' },
+  play: async ({ canvasElement }) => {
+    const backdrop = canvasElement.querySelector<HTMLElement>('div[aria-hidden="true"]')
+
+    await expect(backdrop).toBeTruthy()
+
+    // A zero-area element paints nothing however correct its classes are.
+    const box = backdrop!.getBoundingClientRect()
+    await expect(box.width).toBeGreaterThan(0)
+    await expect(box.height).toBeGreaterThan(0)
+
+    // And it has to be behind the content rather than over it.
+    await expect(getComputedStyle(backdrop!).backgroundImage).toContain('repeating-linear-gradient')
   },
 }
