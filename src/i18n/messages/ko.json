@@ -1156,6 +1156,150 @@
         "title": "오브스 L3를 사용하여 투표 결과를 검증합니다",
         "body": "TON.vote는 오브스의 L3기술을 사용합니다. 오브스의 독립적인 가디언(밸리데이터) 풀과 함께 기존의 강력한 투표 시스템에 확신을 더해주는 추가적인 레이어를 제공합니다. 오브스 가디언들은 독립적인 밸리데이터로서 체인 검사를 수행하는 것 이외에도 화면에 표시되는 투표 정보가 스마트 컨트랙트에 저장된 데이터와 일치하는지도 검증합니다.\n\n이 추가적인 검증은 투표정보를 변경 불가능한 형식으로 저장함으로써 변조되지 않도록 보증합니다. 프론트엔드의 정보를 교차검증함으로써 오브스 가디언은 데이터의 불일치가 없도록 확인하고 전체 프로세스의 신뢰성과 투명성을 강화시켜줍니다.\n\n오브스 네트워크는 수십여대의 독립적인 밸리데이터에 의해 1억달러 이상의 스테이킹수량을 부탕으로 지분증명 합의방식으로 운영되고 있습니다. 오브스 메인넷은 2019년부터 계속 운영되고 있습니다."
       }
+    },
+    "home": {
+      "meta": {
+        "title": "Trading infrastructure for on-chain finance",
+        "description": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected."
+      },
+      "hero": {
+        "eyebrow": "[$2.5B+ in trading volume]",
+        "headline": "Trading infrastructure for on-chain finance.",
+        "intro": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $2.5B+ in executed volume.",
+        "cta": "Talk to the team",
+        "docs": "Read the docs"
+      },
+      "stats": {
+        "processed": {
+          "value": "$2.5B+",
+          "label": "Processed"
+        },
+        "liveSince": {
+          "value": "2023",
+          "label": "Live since"
+        },
+        "venues": {
+          "value": "30+",
+          "label": "Venues"
+        },
+        "chains": {
+          "value": "8",
+          "label": "Chains"
+        },
+        "staked": {
+          "value": "$100M+",
+          "label": "Staked"
+        }
+      },
+      "stack": {
+        "eyebrow": "[The stack]",
+        "title": "Best price. Better execution. One stack.",
+        "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
+        "cta": "Discover",
+        "dspot": {
+          "eyebrow": "Execution control",
+          "title": "dSPOT",
+          "body": "TWAP, limit, stop-loss and take-profit — the risk-management order types trading teams expect, executed on-chain. ~90% lower gas than the previous generation, 100% fill rate across 8 chains."
+        },
+        "dperps": {
+          "eyebrow": "Derivatives",
+          "title": "dPERPS",
+          "body": "Turn-key on-chain perpetual futures — execution, hedging, liquidation, oracles, and UI — for any venue or developer."
+        }
+      },
+      "venues": {
+        "title": "Venues running on the stack"
+      },
+      "solutions": {
+        "eyebrow": "[Solutions]",
+        "title": "Built for every on-chain trading team.",
+        "venues": {
+          "eyebrow": "Venues",
+          "title": "Exchanges & wallets",
+          "body": "Embed advanced orders and aggregated liquidity in your UI — frontend-only integration, white-label ready.",
+          "cta": "For venues"
+        },
+        "institutions": {
+          "eyebrow": "Institutions",
+          "title": "Trading organisations",
+          "body": "API access for desks, treasuries and asset managers. Assets never leave the client’s wallet. Works with Fireblocks-class custody and any EIP-712 signer.",
+          "cta": "For institutions"
+        },
+        "aiAgents": {
+          "eyebrow": "AI agents",
+          "title": "Programmatic traders",
+          "body": "The DeFi agent execution layer — agents prepare, sign and manage orders; every trade is co-signed by an independent oracle.",
+          "cta": "For AI agents"
+        }
+      },
+      "features": {
+        "eyebrow": "[Key features & benefits]",
+        "title": "Institutional-grade, by default.",
+        "cta": "Talk to the team",
+        "github": "View on GitHub",
+        "nonCustodial": {
+          "title": "Non-custodial by design",
+          "panel": "No custody handoff. No counterparty risk on Orbs."
+        },
+        "gasless": {
+          "title": "Gasless across every product",
+          "panel": "Gasless across every product."
+        },
+        "mev": {
+          "title": "MEV protection",
+          "panel": "MEV protection."
+        },
+        "permissionless": {
+          "title": "Permissionless integration",
+          "panel": "Permissionless integration."
+        },
+        "robust": {
+          "title": "Robust infrastructure",
+          "panel": "Robust infrastructure."
+        },
+        "whiteLabel": {
+          "title": "White-label ready",
+          "panel": "White-label ready."
+        },
+        "reporting": {
+          "title": "Reporting & audit trails",
+          "panel": "Reporting and audit trails."
+        },
+        "audited": {
+          "title": "Audited, immutable, ownerless contracts",
+          "panel": "Audited, immutable, ownerless contracts."
+        }
+      },
+      "network": {
+        "eyebrow": "[Network]",
+        "title": "Powered by the Orbs Network.",
+        "body": "Orbs is a Layer-3 blockchain infrastructure network designed to augment the capabilities of existing smart contracts and power advanced on-chain trading execution.\n\nThe network uses proof-of-stake consensus and dozens of independent validators, with $100M+ staked. Orbs mainnet has been live since 2019."
+      },
+      "news": {
+        "eyebrow": "[Resources]",
+        "title": "In the news.",
+        "previous": "Previous articles",
+        "next": "More articles",
+        "readTime": "{minutes} min read"
+      },
+      "discover": {
+        "title": "Discover.",
+        "blog": "Blog",
+        "whitePapers": "Whitepapers",
+        "faq": "FAQ"
+      },
+      "marquee": {
+        "oneApi": "One API.",
+        "everyOrderType": "Every on-chain order type.",
+        "institutionalGrade": "Institutional-grade execution.",
+        "pause": "Pause",
+        "resume": "Resume"
+      },
+      "connect": {
+        "follow": "Follow us",
+        "community": "Join community",
+        "contact": "Talk to the team"
+      }
     }
   }
 }

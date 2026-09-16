@@ -1301,6 +1301,150 @@
         "title": "Verified voting results using Orbs L3",
         "body": "TON.Vote implements Orbs’ L3 technology, with the Orbs independent pool of Guardians (validators) providing an extra layer of assurance to the already robust voting system. In addition to independent validators and manual chain checking, Orbs Guardians independently verify the accuracy of the displayed votes in the UI with those stored in the smart contract data.\n\nThis extra level of verification ensures that there is no tampering with the votes, as they are stored in an immutable format. By cross-checking the information presented on the front end, the Orbs Guardians verify that there is no mismatch of data, reinforcing the entire process’s trust and transparency.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019."
       }
+    },
+    "home": {
+      "meta": {
+        "title": "Trading infrastructure for on-chain finance",
+        "description": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected."
+      },
+      "hero": {
+        "eyebrow": "[$2.5B+ in trading volume]",
+        "headline": "Trading infrastructure for on-chain finance.",
+        "intro": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $2.5B+ in executed volume.",
+        "cta": "Talk to the team",
+        "docs": "Read the docs"
+      },
+      "stats": {
+        "processed": {
+          "value": "$2.5B+",
+          "label": "Processed"
+        },
+        "liveSince": {
+          "value": "2023",
+          "label": "Live since"
+        },
+        "venues": {
+          "value": "30+",
+          "label": "Venues"
+        },
+        "chains": {
+          "value": "8",
+          "label": "Chains"
+        },
+        "staked": {
+          "value": "$100M+",
+          "label": "Staked"
+        }
+      },
+      "stack": {
+        "eyebrow": "[The stack]",
+        "title": "Best price. Better execution. One stack.",
+        "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
+        "cta": "Discover",
+        "dspot": {
+          "eyebrow": "Execution control",
+          "title": "dSPOT",
+          "body": "TWAP, limit, stop-loss and take-profit — the risk-management order types trading teams expect, executed on-chain. ~90% lower gas than the previous generation, 100% fill rate across 8 chains."
+        },
+        "dperps": {
+          "eyebrow": "Derivatives",
+          "title": "dPERPS",
+          "body": "Turn-key on-chain perpetual futures — execution, hedging, liquidation, oracles, and UI — for any venue or developer."
+        }
+      },
+      "venues": {
+        "title": "Venues running on the stack"
+      },
+      "solutions": {
+        "eyebrow": "[Solutions]",
+        "title": "Built for every on-chain trading team.",
+        "venues": {
+          "eyebrow": "Venues",
+          "title": "Exchanges & wallets",
+          "body": "Embed advanced orders and aggregated liquidity in your UI — frontend-only integration, white-label ready.",
+          "cta": "For venues"
+        },
+        "institutions": {
+          "eyebrow": "Institutions",
+          "title": "Trading organisations",
+          "body": "API access for desks, treasuries and asset managers. Assets never leave the client’s wallet. Works with Fireblocks-class custody and any EIP-712 signer.",
+          "cta": "For institutions"
+        },
+        "aiAgents": {
+          "eyebrow": "AI agents",
+          "title": "Programmatic traders",
+          "body": "The DeFi agent execution layer — agents prepare, sign and manage orders; every trade is co-signed by an independent oracle.",
+          "cta": "For AI agents"
+        }
+      },
+      "features": {
+        "eyebrow": "[Key features & benefits]",
+        "title": "Institutional-grade, by default.",
+        "cta": "Talk to the team",
+        "github": "View on GitHub",
+        "nonCustodial": {
+          "title": "Non-custodial by design",
+          "panel": "No custody handoff. No counterparty risk on Orbs."
+        },
+        "gasless": {
+          "title": "Gasless across every product",
+          "panel": "Gasless across every product."
+        },
+        "mev": {
+          "title": "MEV protection",
+          "panel": "MEV protection."
+        },
+        "permissionless": {
+          "title": "Permissionless integration",
+          "panel": "Permissionless integration."
+        },
+        "robust": {
+          "title": "Robust infrastructure",
+          "panel": "Robust infrastructure."
+        },
+        "whiteLabel": {
+          "title": "White-label ready",
+          "panel": "White-label ready."
+        },
+        "reporting": {
+          "title": "Reporting & audit trails",
+          "panel": "Reporting and audit trails."
+        },
+        "audited": {
+          "title": "Audited, immutable, ownerless contracts",
+          "panel": "Audited, immutable, ownerless contracts."
+        }
+      },
+      "network": {
+        "eyebrow": "[Network]",
+        "title": "Powered by the Orbs Network.",
+        "body": "Orbs is a Layer-3 blockchain infrastructure network designed to augment the capabilities of existing smart contracts and power advanced on-chain trading execution.\n\nThe network uses proof-of-stake consensus and dozens of independent validators, with $100M+ staked. Orbs mainnet has been live since 2019."
+      },
+      "news": {
+        "eyebrow": "[Resources]",
+        "title": "In the news.",
+        "previous": "Previous articles",
+        "next": "More articles",
+        "readTime": "{minutes} min read"
+      },
+      "discover": {
+        "title": "Discover.",
+        "blog": "Blog",
+        "whitePapers": "Whitepapers",
+        "faq": "FAQ"
+      },
+      "marquee": {
+        "oneApi": "One API.",
+        "everyOrderType": "Every on-chain order type.",
+        "institutionalGrade": "Institutional-grade execution.",
+        "pause": "Pause",
+        "resume": "Resume"
+      },
+      "connect": {
+        "follow": "Follow us",
+        "community": "Join community",
+        "contact": "Talk to the team"
+      }
     }
   }
 }

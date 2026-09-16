@@ -10,6 +10,28 @@ const config: Config = {
   plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],
   theme: {
     extend: {
+      /*
+        The home page's scrolling band of phrases.
+
+        Translating the whole track by exactly -50% works because the component
+        renders its phrase list TWICE — at the halfway point the second copy
+        sits exactly where the first started, so the reset is invisible. Any
+        other distance produces a visible jump.
+
+        Duration is long on purpose: a marquee fast enough to notice is a
+        marquee nobody can read. `motion-reduce:animate-none` at the call site
+        stops it entirely, which is what keeps this the right side of WCAG
+        2.2.2 — continuously moving text with no pause control.
+      */
+      keyframes: {
+        marquee: {
+          from: { transform: 'translateX(0)' },
+          to: { transform: 'translateX(-50%)' },
+        },
+      },
+      animation: {
+        marquee: 'marquee 40s linear infinite',
+      },
       borderRadius: {
         lg: 'var(--radius)',
         md: 'calc(var(--radius) - 2px)',
@@ -135,7 +157,10 @@ const config: Config = {
         h4: ['var(--font-size-h4)', { lineHeight: 'var(--line-height-h4)', letterSpacing: 'var(--tracking-tight)' }],
         h5: ['var(--font-size-h5)', { lineHeight: 'var(--line-height-h5)', letterSpacing: 'var(--tracking-wider)' }],
         p: ['var(--font-size-p)', { lineHeight: 'var(--line-height-p)' }],
-        detail: ['var(--font-size-detail)', { lineHeight: 'var(--line-height-detail)', letterSpacing: 'var(--tracking-wide)' }],
+        detail: [
+          'var(--font-size-detail)',
+          { lineHeight: 'var(--line-height-detail)', letterSpacing: 'var(--tracking-wide)' },
+        ],
         field: ['var(--font-size-field)', { lineHeight: 'var(--line-height-field)' }],
       },
     },

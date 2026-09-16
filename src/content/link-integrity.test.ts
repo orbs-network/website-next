@@ -33,14 +33,17 @@ const CONTENT = join(REPO, 'src/content')
 /**
  * Paths that are linked but not yet built.
  *
- * EMPTY, and that is the finish line: every internal link in `src/content/`
- * now resolves to a route that exists. It started at seventeen.
+ * This reached EMPTY — every one of the original seventeen resolved. These four
+ * are new debt, taken on knowingly: the design 3.4 home page links to pages
+ * whose content is still being written (#149). `/dperps` is also a rename of
+ * `/perpetual-hub` and will need a permanent redirect when it lands.
  *
- * Keep it empty. If something has to go in here, it is debt with a deadline —
- * DELETE THE LINE when the page ships, which the test enforces: an entry that
- * resolves is a failure, not a pass.
+ * DELETE THE LINE when each ships. The test enforces that: an entry here that
+ * resolves is a failure, not a pass, so a page landing forces its own line out
+ * in the same diff. The debt is counted down in the repository rather than in
+ * someone's memory.
  */
-const PENDING: readonly string[] = []
+const PENDING: readonly string[] = ['/dspot', '/dperps', '/venues', '/ai-agents']
 
 /**
  * Blog posts referenced from marketing copy, by slug.
