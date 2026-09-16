@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import { marketingMetadata } from '@/app/marketing/metadata'
-import { PerpetualHubPage } from '@/app/marketing/perpetual-hub'
+import { DperpsPage } from '@/app/marketing/dperps'
 
 const PATH = '/dperps'
 
@@ -10,5 +10,5 @@ export async function generateMetadata(): Promise<Metadata> {
 }
 
 export default function Page() {
-  return <PerpetualHubPage locale="en" />
+  return <DperpsPage locale="en" />
 }

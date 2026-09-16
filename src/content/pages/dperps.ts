@@ -10,7 +10,7 @@
  * optionally.
  */
 
-export const PERPETUAL_HUB_HERO = {
+export const DPERPS_HERO = {
   image: { src: '/marketing/perpetual-hub/hero.png', width: 1000, height: 1006 },
   /**
    * Links to the announcement post rather than an in-page anchor, as dSLTP's
@@ -28,21 +28,21 @@ export const PERPETUAL_HUB_HERO = {
 } as const
 
 /** The three modular-stack cards, in legacy order. */
-export const PERPETUAL_HUB_BENEFITS = [
+export const DPERPS_BENEFITS = [
   { id: 'tradingUi', icon: '/marketing/perpetual-hub/card-1.svg' },
   { id: 'hedger', icon: '/marketing/perpetual-hub/card-2.svg' },
   { id: 'oracles', icon: '/marketing/perpetual-hub/card-3.svg' },
 ] as const
 
 /** "Integrate": the trading-stack diagram. */
-export const PERPETUAL_HUB_DIAGRAM = {
+export const DPERPS_DIAGRAM = {
   src: '/marketing/perpetual-hub/diagram.png',
   width: 1800,
   height: 945,
 } as const
 
 /** "Partners & Integrations": a logo board rather than a per-DEX grid. */
-export const PERPETUAL_HUB_PARTNERS_IMAGE = {
+export const DPERPS_PARTNERS_IMAGE = {
   src: '/marketing/perpetual-hub/partners.png',
   width: 1340,
   height: 679,
@@ -57,7 +57,7 @@ export const PERPETUAL_HUB_PARTNERS_IMAGE = {
  * keeping it would leave a self-referential absolute link to clean up — the same
  * reasoning applied to the dLIMIT white-paper link in #89.
  */
-export const PERPETUAL_HUB_LINKS = {
+export const DPERPS_LINKS = {
   /**
    * Internal, so it resolves through `localeHref` and will become
    * `/ko/contact/` the moment #32 builds `/contact` and registers it in the
