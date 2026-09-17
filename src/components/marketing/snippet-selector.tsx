@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import { CodeBlock } from './code-block'
 
 /**
  * Three dropdowns over a library of code snippets.
@@ -18,10 +19,8 @@ import { cn } from '@/lib/utils'
  * picker — all of which a div-with-listeners has to reimplement and usually
  * gets wrong. The legacy page rolled its own.
  *
- * No syntax highlighting. It would mean a highlighter in the bundle or
- * `dangerouslySetInnerHTML` around build-time HTML, and this repo has avoided
- * the latter deliberately. Ten short snippets in a monospace block with a copy
- * button is the whole job.
+ * The code panel itself is `CodeBlock`, shared with the pages that show a
+ * single sample rather than a matrix of them.
  */
 
 export type SnippetLibrary = { id: string; label: string }
@@ -97,7 +96,6 @@ export function SnippetSelector({
   const [flavorId, setFlavorId] = React.useState(flavors[0].id)
   const [libraryId, setLibraryId] = React.useState(flavors[0].libraries[0].id)
   const [networkId, setNetworkId] = React.useState(networks[0].id)
-  const [copied, setCopied] = React.useState(false)
 
   const flavor = flavors.find((candidate) => candidate.id === flavorId) ?? flavors[0]
 
@@ -123,21 +121,6 @@ export function SnippetSelector({
   const key = `${flavor.id}.${libraryId}.${networkId}`
   const snippet = snippets[key]
 
-  async function copy() {
-    if (!snippet) return
-
-    try {
-      await navigator.clipboard.writeText(snippet)
-      setCopied(true)
-      // Not a permanent state: the label has to go back, or the next copy gives
-      // no feedback at all.
-      setTimeout(() => setCopied(false), 2000)
-    } catch {
-      // Denied permission, or an insecure context. The snippet is on screen and
-      // selectable, so there is nothing useful to say and nothing broken.
-    }
-  }
-
   return (
     <div className={className}>
       <div className="grid gap-4 sm:grid-cols-3">
@@ -146,59 +129,7 @@ export function SnippetSelector({
         <Select label={labels.network} value={networkId} options={networks} onChange={setNetworkId} />
       </div>
 
-      <div className="mt-6 overflow-hidden rounded-sm border border-border">
-        {/*
-          The copy button sits in its own bar rather than floating over the
-          code. Absolutely positioning it meant padding the `pre` down to clear
-          it, which left a band of empty space above every snippet and still
-          overlapped the first line on a narrow viewport. A row is simpler and
-          cannot collide with anything.
-        */}
-        <div className="flex justify-end border-b border-border bg-surface px-3 py-2">
-          <button
-            type="button"
-            onClick={copy}
-            className={cn(
-              'rounded-sm px-3 py-1 text-detail font-medium transition-colors',
-              'hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
-            )}
-          >
-            {copied ? labels.copied : labels.copy}
-          </button>
-        </div>
-
-        {/*
-          `lang="en"` because it is source code, not prose — a screen reader in
-          a Korean document should not read `getHttpEndpoint` as Korean. Same
-          per-string rule the rest of the site follows, applied to the one kind
-          of text that is never translated.
-
-          `tabIndex` so a keyboard user can scroll it. A `pre` that scrolls but
-          cannot be focused is unreachable without a mouse.
-        */}
-        <pre
-          lang="en"
-          tabIndex={0}
-          className={cn(
-            // Same surface as the toolbar above it, so the box reads as one
-            // card. Leaving the `pre` transparent showed the page colour
-            // through and made the code area look like a gap in the card.
-            'overflow-x-auto bg-surface p-5',
-            'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring'
-          )}
-        >
-          <code className="text-detail leading-relaxed">{snippet}</code>
-        </pre>
-      </div>
-
-      {/*
-        The copy outcome, announced rather than only shown. The button's own
-        label changing is a visual cue; without this a screen-reader user gets
-        no confirmation that anything happened.
-      */}
-      <p role="status" aria-live="polite" className="sr-only">
-        {copied ? labels.copied : ''}
-      </p>
+      <CodeBlock code={snippet} labels={labels} className="mt-6" />
     </div>
   )
 }
