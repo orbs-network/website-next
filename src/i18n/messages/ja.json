@@ -129,7 +129,9 @@
         "reactTab": "React Component",
         "stylesTab": "Fully Customizable UI",
         "reactBody": "No need to modify your DEX smart contracts. Integration is frontend-only and relies on existing contracts of the dTWAP protocol.",
-        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel."
+        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel.",
+        "copy": "Copy",
+        "copied": "Copied"
       },
       "schema": {
         "title": "Decentralized Execution of TWAP Orders",
@@ -185,7 +187,9 @@
         "reactTab": "React Component",
         "reactBody": "No need to modify your DEX smart contracts. Integration is frontend-only and relies on existing contracts of the dLIMIT protocol.",
         "stylesTab": "Fully Customizable UI",
-        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel."
+        "stylesBody": "Every DEX looks different. Our UI kit is carefully designed to support these visual nuances. Components are broken to basic Lego pieces that can be assembled to achieve your unique look-and-feel.",
+        "copy": "Copy",
+        "copied": "Copied"
       },
       "schema": {
         "title": "Decentralized Execution of Limit Orders",
@@ -674,7 +678,9 @@
         "body": "",
         "exampleTitle": "Aave Example",
         "exampleBody": "This notification will protect Aave users from liquidation by notifying them when their position health factor drops below 1.1",
-        "cta": "Contribute your notification"
+        "cta": "Contribute your notification",
+        "copy": "Copy",
+        "copied": "Copied"
       },
       "integrations": {
         "title": "Recent community contributions"

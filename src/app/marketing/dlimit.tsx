@@ -3,6 +3,7 @@ import { ArchitectureSection } from '@/components/marketing/architecture-section
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { IntegrationGrid } from '@/components/marketing/integration-grid'
 import { IntegrationTabs } from '@/components/marketing/integration-tabs'
+import { PRODUCT_SNIPPETS } from '@/content/pages/product-snippets'
 import { ProductHero } from '@/components/marketing/product-hero'
 import {
   DLIMIT_BENEFITS,
@@ -72,9 +73,20 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
       <IntegrationTabs
         title={t('code.title')}
         tabs={[
-          { id: 'react', label: t('code.reactTab'), body: t('code.reactBody') },
-          { id: 'styles', label: t('code.stylesTab'), body: t('code.stylesBody') },
+          {
+            id: 'react',
+            label: t('code.reactTab'),
+            body: t('code.reactBody'),
+            code: PRODUCT_SNIPPETS.dlimit.react,
+          },
+          {
+            id: 'styles',
+            label: t('code.stylesTab'),
+            body: t('code.stylesBody'),
+            code: PRODUCT_SNIPPETS.dlimit.styles,
+          },
         ]}
+        copyLabels={{ copy: t('code.copy'), copied: t('code.copied') }}
         lang={textLang(t('code.title'), locale)}
       />
 

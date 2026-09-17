@@ -2,9 +2,11 @@ import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { H2, H3 } from '@/app/components/typography'
 import { Button } from '@/components/ui/button'
+import { CodeBlock } from '@/components/marketing/code-block'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { ProductHero } from '@/components/marketing/product-hero'
 import { NOTIFICATION_APPS, NOTIFICATION_IMAGES, NOTIFICATION_INTEGRATIONS } from '@/content/pages/notifications'
+import { NOTIFICATION_SNIPPET } from '@/content/pages/product-snippets'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
@@ -61,6 +63,19 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
           <div className="mt-4" lang={lang('contribute.exampleBody')}>
             <MarkdownProse>{t('contribute.exampleBody')}</MarkdownProse>
           </div>
+
+          {/*
+            The sample the prose above is describing. The legacy page fetches it
+            from `assets/datasets/notification-snippets.json` and highlights it
+            client-side, so the port — which read the React partial, saw
+            `code=""` and concluded there was none — shipped an "Aave Example"
+            with no example in it. See #167.
+          */}
+          <CodeBlock
+            code={NOTIFICATION_SNIPPET}
+            labels={{ copy: t('contribute.copy'), copied: t('contribute.copied') }}
+            className="mt-6"
+          />
         </div>
 
         <div className="mt-8 text-center">
