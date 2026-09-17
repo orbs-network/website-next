@@ -29,6 +29,7 @@ import { CONTRACT_ROLES, ORBS_CONTRACTS, explorerUrl, shortAddress } from './sma
 type SmartContractsCopy = {
   contracts?: Record<string, Record<string, string>>
   roles?: Record<string, Record<string, string>>
+  architecture?: { title?: string; body?: string }
 }
 
 /** The one cast, at the JSON boundary, named so it is obvious where it is. */
@@ -128,16 +129,43 @@ describe('the catalogs', () => {
         expect(orphaned).toEqual([])
       })
 
-      it('holds no raw markdown links, because addresses are data now', () => {
-        // If a future edit pastes an explorer link back into the copy, it
-        // renders as literal `[label](url)` — `Prose` handles paragraphs and
-        // bold only. Caught here rather than by a reader.
-        const withLinks = Object.entries(page.contracts ?? {})
+      it('holds no explorer links in the copy, because addresses are data now', () => {
+        // Only ADDRESS links are lifted out. An explorer link pasted back into
+        // the prose is the legacy arrangement returning — hand-maintained, per
+        // locale, and free to drift from the chain.
+        const withExplorerLinks = Object.entries(page.contracts ?? {})
           .flatMap(([id, fields]) => Object.entries(fields).map(([field, value]) => [`${id}.${field}`, value] as const))
-          .filter(([, value]) => /\[[^\]]+\]\([^)]+\)/.test(value))
+          .filter(([, value]) => /\[[^\]]+\]\([^)]*0x[a-fA-F0-9]{40}[^)]*\)/.test(value))
           .map(([key]) => key)
 
-        expect(withLinks).toEqual([])
+        expect(withExplorerLinks).toEqual([])
+      })
+
+      it('keeps the staking specification link a link', () => {
+        // Ordinary links must survive. An earlier revision stripped every
+        // markdown link while pulling the addresses out, which flattened this
+        // one to plain text in all three locales — a reference the reader can
+        // see and cannot follow. Nothing failed; it just quietly stopped being
+        // a link.
+        expect(page.contracts?.item2?.extra).toMatch(/\[[^\]]+\]\(https:\/\/github\.com\/orbs-network\/[^)]+\)/)
+      })
+
+      it('keeps copy rendered through Prose free of markdown', () => {
+        // The roles and the architecture note go through `Prose`, which handles
+        // paragraphs and bold and nothing else — a link added to either would
+        // render as literal `[label](url)` on a published page. This is the
+        // assumption that makes the simpler renderer safe, so it is checked
+        // rather than trusted.
+        const proseFields = [
+          ...Object.entries(page.roles ?? {}).map(([id, fields]) => [`roles.${id}.body`, fields.body] as const),
+          ['architecture.body', page.architecture?.body] as const,
+        ]
+
+        const withMarkdown = proseFields
+          .filter(([, value]) => value !== undefined && /\[[^\]]+\]\([^)]+\)|^\s*[-*]\s/m.test(value))
+          .map(([key]) => key)
+
+        expect(withMarkdown).toEqual([])
       })
 
       it('holds no hex addresses in the copy', () => {

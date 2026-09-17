@@ -1319,7 +1319,7 @@
         "item2": {
           "name": "stakingContract",
           "summary": "staking contact는 PoS 참여자들의 스테이킹된 토큰을 보관합니다. 이 컨트랙트는 스테이킹 또는 언락등 참여 수량에 변경이 있을 경우 stakingContractHandler를 통해 알려주게 됩니다.",
-          "extra": "자세한 내용은 다음 링크를 참고해주세요:\nOrbs Staking Contract High-Level Specification."
+          "extra": "자세한 내용은 다음 링크를 참고해주세요:\n[Orbs Staking Contract High-Level Specification](https://github.com/orbs-network/orbs-staking-contract/blob/master/docs/CONTRACT.md)."
         },
         "item3": {
           "name": "stakingContractHandler",

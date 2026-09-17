@@ -2,6 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { H2 } from '@/app/components/typography'
 import { Disclosure } from '@/components/marketing/disclosure'
+import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { ProductHero } from '@/components/marketing/product-hero'
 import { Prose } from '@/components/marketing/prose'
 import { CONTRACT_ROLES, ORBS_CONTRACTS, explorerUrl, shortAddress } from '@/content/pages/smart-contracts'
@@ -27,6 +28,18 @@ import { textLang } from '@/i18n/script'
  * Etherscan's 404 page. That is not fixed here by correcting 13 strings; the
  * address is stored as data and the URL is generated from it, so the malformed
  * form has nowhere left to live. See `@/content/pages/smart-contracts`.
+ *
+ * Only EXPLORER links were lifted out. The copy still carries one ordinary
+ * markdown link — the staking contract's specification on GitHub, in all three
+ * catalogs — which is why the contract fields render through `MarkdownProse`.
+ * An earlier revision stripped every link while extracting the addresses and
+ * flattened that one to plain text, turning a working reference into words that
+ * cannot be clicked. `smart-contracts.test.ts` now asserts it is still a link.
+ *
+ * The roles and the architecture note render through `Prose` instead, which is
+ * paragraphs and bold only and gives them their spacing. That is safe exactly
+ * as long as their copy stays free of markdown, so the test asserts that too
+ * rather than leaving it to hold by luck.
  */
 /**
  * Steps the section headings down on small screens.
@@ -76,10 +89,22 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
               // are the mistake #103 is about. `textLang` inspects the script
               // of each name and is the only thing that gets this correct.
               summaryLang={lang(`contracts.${id}.name`)}
-              lang={lang(`contracts.${id}.summary`)}
             >
-              <Prose text={t(`contracts.${id}.summary`)} />
-              <Prose text={t(`contracts.${id}.extra`)} />
+              {/*
+                Each field carries its OWN language, and `Disclosure` is given
+                none. Deriving one from the summary and letting it cover the
+                whole panel is the #103 mistake again, and this page has live
+                instances of it: in Korean, `item6` and `item15` have Hangul
+                summaries and English detail. A single `lang` from the summary
+                would have a screen reader pronounce those English paragraphs
+                with Korean phonetics.
+              */}
+              <div lang={lang(`contracts.${id}.summary`)}>
+                <MarkdownProse>{t(`contracts.${id}.summary`)}</MarkdownProse>
+              </div>
+              <div lang={lang(`contracts.${id}.extra`)}>
+                <MarkdownProse>{t(`contracts.${id}.extra`)}</MarkdownProse>
+              </div>
 
               <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
                 {addresses.map((address) => (

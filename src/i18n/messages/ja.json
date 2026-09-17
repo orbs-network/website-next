@@ -1045,7 +1045,7 @@
         "item2": {
           "name": "ステーキング・コントラクト",
           "summary": "ステーキング・コントラクトは、参加者がステーキングしたトークンを保持します。ステーキング・コントラクトは、参加者のステークが変更された場合、例えば、ステーキングまたはステーキング解除が起こった場合に、stakingContractHandler に通知します。",
-          "extra": "参照：Orbsのステーキング・コントラクトの高レベルの仕様"
+          "extra": "参照：[Orbsのステーキング・コントラクトの高レベルの仕様](https://github.com/orbs-network/orbs-staking-contract/blob/master/docs/CONTRACT.md)"
         },
         "item3": {
           "name": "stakingContractHandler",

@@ -1464,7 +1464,7 @@
         "item2": {
           "name": "stakingContract",
           "summary": "The staking contact, holds the participants' staked tokens. The staking contract notifies the stakingContractHandler upon any change in a participant stake, for example upon a stake or unstake actions.",
-          "extra": "See: Orbs Staking Contract High-Level Specification."
+          "extra": "See: [Orbs Staking Contract High-Level Specification](https://github.com/orbs-network/orbs-staking-contract/blob/master/docs/CONTRACT.md)."
         },
         "item3": {
           "name": "stakingContractHandler",
