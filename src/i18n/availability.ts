@@ -115,9 +115,19 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   '/pos': { en: 'translated', ja: 'translated', ko: 'translated' },
   // All three live on the legacy site and both translations are real — 2,688
   // non-Latin characters under `jp/smart-contracts` and 1,791 under `ko/`,
-  // covering all 15 contract entries and all 5 roles. The contract NAMES stay
-  // English in every catalog because they are identifiers, which is why the
-  // page marks them per string rather than trusting the page language.
+  // covering all 15 contract entries and all 5 roles.
+  //
+  // The contract NAMES are the interesting part, and an earlier version of this
+  // comment got them wrong: it said they stay English in every catalog because
+  // they are identifiers. They do not. Counted across the two catalogs, of 15
+  // names:
+  //
+  //   Japanese   1 left in English, 14 translated (コントラクト・レジストリ, 委任)
+  //   Korean    13 left in English,  2 translated
+  //
+  // The same string, in the same role, treated oppositely by two translators.
+  // No page-level rule survives that — which is exactly why the page runs every
+  // name through `textLang` rather than deciding once. See #103.
   '/smart-contracts': { en: 'translated', ja: 'translated', ko: 'translated' },
   // `jp/notifications` has ZERO non-Latin characters — the English text copied —
   // so Japanese is `placeholder`. Korean is translated, though thinly: 510
