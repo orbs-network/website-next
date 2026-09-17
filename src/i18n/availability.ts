@@ -113,6 +113,12 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // Both are real translations and substantial ones — 9,478 non-Latin
   // characters under `jp/pos` and 7,718 under `ko/pos`.
   '/pos': { en: 'translated', ja: 'translated', ko: 'translated' },
+  // All three live on the legacy site and both translations are real — 2,688
+  // non-Latin characters under `jp/smart-contracts` and 1,791 under `ko/`,
+  // covering all 15 contract entries and all 5 roles. The contract NAMES stay
+  // English in every catalog because they are identifiers, which is why the
+  // page marks them per string rather than trusting the page language.
+  '/smart-contracts': { en: 'translated', ja: 'translated', ko: 'translated' },
   // `jp/notifications` has ZERO non-Latin characters — the English text copied —
   // so Japanese is `placeholder`. Korean is translated, though thinly: 510
   // non-Latin characters against 7,718 for `/pos`, so several strings fall back
