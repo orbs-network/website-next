@@ -1,5 +1,7 @@
 import Markdown from 'react-markdown'
 import { H1, H2, H3 } from '@/app/components/typography'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * Renders repo-authored markdown as React elements.
@@ -64,31 +66,64 @@ const COMPONENTS = {
   strong: ({ children }: { children?: React.ReactNode }) => (
     <strong className="font-semibold text-fg">{children}</strong>
   ),
-  a: ({ href, children }: { href?: string; children?: React.ReactNode }) => {
+  a: anchor(),
+  // The legacy markdown uses `<br>` for address blocks. Allowed through as a
+  // line break and nothing else.
+  br: () => <br />,
+}
+
+/** The link's own text, when it is plain — which is every link in this copy. */
+function linkText(children: React.ReactNode): string | undefined {
+  if (typeof children === 'string') return children
+  if (Array.isArray(children) && children.every((child) => typeof child === 'string')) return children.join('')
+  return undefined
+}
+
+/**
+ * The anchor renderer, optionally marking each link with its own language.
+ *
+ * A link label is an accessible name, and it takes its language from the
+ * element carrying it — not from the sentence around it. The Korean copy on
+ * `/smart-contracts` is exactly the case that forces this: a Korean sentence
+ * introducing a link labelled "Orbs Staking Contract High-Level Specification".
+ * The paragraph is correctly `ko`, the anchor inherits it, and a screen reader
+ * reads English words with Korean phonetics. See #103, of which this is another
+ * instance.
+ *
+ * `locale` is optional and callers that omit it get exactly the previous
+ * markup. This is deliberately not switched on everywhere in the same change —
+ * it would alter the rendered output of the legal documents and the FAQ, which
+ * deserve their own look rather than riding along with a page port.
+ */
+function anchor(locale?: Locale) {
+  return function Anchor({ href, children }: { href?: string; children?: React.ReactNode }) {
     // A bare address as the destination — `[x@y](x@y)` in the legacy markdown —
     // resolves as a RELATIVE PATH, so the contact link on a privacy policy
     // navigated to /hello@orbs.com instead of opening a mail client. Normalised
     // here rather than in each document, since it is a property of the link.
     const resolved = href && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(href) ? `mailto:${href}` : href
     const external = !resolved?.startsWith('/')
+    const text = locale === undefined ? undefined : linkText(children)
 
     return (
       <a
         href={external ? resolved : internalHref(resolved as string)}
         {...(external && !resolved?.startsWith('mailto:') ? { target: '_blank', rel: 'noopener noreferrer' } : {})}
+        lang={text === undefined ? undefined : textLang(text, locale as Locale)}
         className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
       >
         {children}
       </a>
     )
-  },
-  // The legacy markdown uses `<br>` for address blocks. Allowed through as a
-  // line break and nothing else.
-  br: () => <br />,
+  }
 }
 
-export function MarkdownProse({ children }: { children: string }) {
-  return <Markdown components={COMPONENTS}>{children}</Markdown>
+export function MarkdownProse({ children, locale }: { children: string; locale?: Locale }) {
+  // Only build a components object when the caller asked for language-aware
+  // links; otherwise reuse the module-level one.
+  const components = locale === undefined ? COMPONENTS : { ...COMPONENTS, a: anchor(locale) }
+
+  return <Markdown components={components}>{children}</Markdown>
 }
 
 /**

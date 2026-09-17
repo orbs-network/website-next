@@ -11,6 +11,23 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
 /**
+ * Steps the section headings down on small screens.
+ *
+ * `text-h2` is a fixed 56px — the type scale has no responsive step, which is
+ * #108. `H2` compensates with `hyphens-auto break-words`, and that is enough
+ * for a heading whose longest word fits; it is not enough here. "CONTRACTS
+ * MANAGEMENT AND ADMINISTRATIVE ARCHITECTURE" at 56px inside the 350px this
+ * container gives at a 390px viewport broke as "ADMINISTR / ATIVE" and
+ * "ARCHITECT / URE" — hyphenation cannot save a word wider than its line, and
+ * without a hyphenation dictionary it is a bare mid-word break.
+ *
+ * Applied to BOTH headings rather than only the long one, so the two do not
+ * render at different sizes beside each other on a phone. Removable once the
+ * scale gains a real step.
+ */
+const HEADING_STEP = 'text-h3 sm:text-h2'
+
+/**
  * The Orbs PoS contracts deployed on Ethereum.
  *
  * Missed by the Phase 3 sweep because it is not in the legacy nav — it is
@@ -41,23 +58,6 @@ import { textLang } from '@/i18n/script'
  * as long as their copy stays free of markdown, so the test asserts that too
  * rather than leaving it to hold by luck.
  */
-/**
- * Steps the section headings down on small screens.
- *
- * `text-h2` is a fixed 56px — the type scale has no responsive step, which is
- * #108. `H2` compensates with `hyphens-auto break-words`, and that is enough
- * for a heading whose longest word fits; it is not enough here. "CONTRACTS
- * MANAGEMENT AND ADMINISTRATIVE ARCHITECTURE" at 56px inside the 350px this
- * container gives at a 390px viewport broke as "ADMINISTR / ATIVE" and
- * "ARCHITECT / URE" — hyphenation cannot save a word wider than its line, and
- * without a hyphenation dictionary it is a bare mid-word break.
- *
- * Applied to BOTH headings rather than only the long one, so the two do not
- * render at different sizes beside each other on a phone. Removable once the
- * scale gains a real step.
- */
-const HEADING_STEP = 'text-h3 sm:text-h2'
-
 export async function SmartContractsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.smartContracts' })
   const lang = (key: string) => textLang(t(key), locale)
@@ -100,10 +100,10 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
                 with Korean phonetics.
               */}
               <div lang={lang(`contracts.${id}.summary`)}>
-                <MarkdownProse>{t(`contracts.${id}.summary`)}</MarkdownProse>
+                <MarkdownProse locale={locale}>{t(`contracts.${id}.summary`)}</MarkdownProse>
               </div>
               <div lang={lang(`contracts.${id}.extra`)}>
-                <MarkdownProse>{t(`contracts.${id}.extra`)}</MarkdownProse>
+                <MarkdownProse locale={locale}>{t(`contracts.${id}.extra`)}</MarkdownProse>
               </div>
 
               <ul className="flex flex-wrap gap-x-6 gap-y-2 pt-2">
