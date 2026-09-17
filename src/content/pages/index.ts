@@ -47,6 +47,9 @@ export const MARKETING_PAGE_PATHS = [
   '/execution-services',
   // Network section: proof of stake, guardians and delegators.
   '/pos',
+  // The Orbs PoS contracts on Ethereum. Not in the legacy nav — reachable only
+  // from blog posts, which is how it was missed until the #32 triage.
+  '/smart-contracts',
   // The Open DeFi Notification Protocol.
   '/notifications',
   // Brand asset downloads.

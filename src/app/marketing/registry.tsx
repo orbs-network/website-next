@@ -15,6 +15,7 @@ import { ExecutionServicesPage } from './execution-services'
 import { NotificationsPage } from './notifications'
 import { OverviewPage } from './overview'
 import { PosPage } from './pos'
+import { SmartContractsPage } from './smart-contracts'
 import { WhitePapersPage } from './white-papers'
 import { DlimitPage } from './dlimit'
 import { DsltpPage } from './dsltp'
@@ -144,6 +145,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/pos': {
     render: (locale) => <PosPage locale={locale} />,
     namespace: 'pages.pos',
+  },
+  '/smart-contracts': {
+    render: (locale) => <SmartContractsPage locale={locale} />,
+    namespace: 'pages.smartContracts',
   },
   '/notifications': {
     render: (locale) => <NotificationsPage locale={locale} />,
