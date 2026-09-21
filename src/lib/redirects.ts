@@ -94,6 +94,27 @@ export type PrefixRedirect = {
    * would make a live translated page unreachable with nothing to show for it.
    */
   locales: readonly Locale[]
+  /**
+   * Children whose slug in a locale is not the canonical English one.
+   *
+   * The pattern passes the child through unchanged, which is right for every
+   * URL where the locales agree — and they nearly always do, because the legacy
+   * directories were copied per locale. Where they disagree the pattern would
+   * send a live page to a permanent 404, so those get an explicit rule instead.
+   *
+   * There is exactly one today, and it is a good advertisement for checking
+   * rather than assuming: the Japanese edition of the second call for grants
+   * lives at `Orbs-Grant-Program-Second-Call-for-Grants`, while English and
+   * Korean carry a typo, `orbs-grant-grogram-second-call-for-grants`. Different
+   * case AND different spelling, so matching case-insensitively would not have
+   * rescued it either.
+   *
+   * Keyed by locale, then legacy child, mapping to the canonical English child.
+   * `redirects.test.ts` checks every destination against `WHITE_PAPERS`, which
+   * this module cannot import — `next.config.ts` transpiles it before the `@/*`
+   * alias exists.
+   */
+  rename?: Partial<Record<Locale, Readonly<Record<string, string>>>>
   reason: string
 }
 
@@ -101,6 +122,13 @@ export const PREFIX_REDIRECTS: readonly PrefixRedirect[] = [
   {
     prefix: '/white-papers',
     locales: ['ja', 'ko'],
+    rename: {
+      ja: {
+        // Live at 200 today; the `grogram` spelling 404s in Japanese. Verified
+        // against production, not inferred from the directory listing.
+        'Orbs-Grant-Program-Second-Call-for-Grants': 'orbs-grant-grogram-second-call-for-grants',
+      },
+    },
     reason:
       'Paper pages are English-only: each wraps one PDF, and a localised route ' +
       'would serve the same document under another language tag. The legacy ' +
@@ -167,11 +195,27 @@ export function expandedRedirects(): { source: string; destination: string; perm
  * a URL on either site.
  */
 export function expandedPrefixRedirects(): { source: string; destination: string; permanent: true }[] {
-  return PREFIX_REDIRECTS.flatMap(({ prefix, locales }) =>
+  // Renames first. Next evaluates `redirects()` in order and takes the first
+  // match, so a generic `:child` rule placed above them would swallow the exact
+  // paths they exist to correct — and the result would be a permanent redirect
+  // to a 404, which is the failure this whole entry is built to avoid.
+  const renames = PREFIX_REDIRECTS.flatMap(({ prefix, locales, rename }) =>
+    locales.flatMap((locale) =>
+      Object.entries(rename?.[locale] ?? {}).map(([from, to]) => ({
+        source: `${SEGMENTS[locale]}${prefix}/${from}/`,
+        destination: `${prefix}/${to}/`,
+        permanent: true as const,
+      }))
+    )
+  )
+
+  const patterns = PREFIX_REDIRECTS.flatMap(({ prefix, locales }) =>
     locales.map((locale) => ({
       source: `${SEGMENTS[locale]}${prefix}/:child/`,
       destination: `${prefix}/:child/`,
       permanent: true as const,
     }))
   )
+
+  return [...renames, ...patterns]
 }

@@ -5,6 +5,7 @@ import { beforeAll, describe, expect, it } from 'vitest'
 import { PREFIX_REDIRECTS, REDIRECTS, expandedPrefixRedirects, expandedRedirects } from './redirects'
 import { localesFor } from '@/i18n/availability'
 import { LOCALE_SEGMENTS } from '@/i18n/locales'
+import { WHITE_PAPERS } from '@/content/pages/white-papers'
 
 /**
  * A redirect map is a set of promises to the internet, and both ways of getting
@@ -137,7 +138,14 @@ describe('expandedRedirects', () => {
   it('emits one rule per locale the destination exists in, and no more', () => {
     const expected =
       REDIRECTS.reduce((total, { locales }) => total + locales.length, 0) +
-      PREFIX_REDIRECTS.reduce((total, { locales }) => total + locales.length, 0)
+      // One pattern per locale, plus one explicit rule per renamed child.
+      PREFIX_REDIRECTS.reduce(
+        (total, { locales, rename }) =>
+          total +
+          locales.length +
+          locales.reduce((count, locale) => count + Object.keys(rename?.[locale] ?? {}).length, 0),
+        0
+      )
 
     expect(expandedRedirects()).toHaveLength(expected)
   })
@@ -210,7 +218,14 @@ describe('expandedPrefixRedirects', () => {
    * path-to-regexp rather than of anything in this repo. Hence asserted.
    */
   it('never matches the section index itself', () => {
-    for (const { source } of expandedPrefixRedirects()) {
+    // Only the patterns. A rename is an exact path and trivially matches
+    // itself — running it through this check would compare a rule against its
+    // own source and always fail, which says nothing about the index.
+    const patterns = expandedPrefixRedirects().filter(({ source }) => source.includes(':child'))
+
+    expect(patterns.length).toBeGreaterThan(0)
+
+    for (const { source } of patterns) {
       const index = source.replace(':child/', '')
 
       expect(matches(source, index), `${source} must not match its own index ${index}`).toBe(false)
@@ -235,6 +250,45 @@ describe('expandedPrefixRedirects', () => {
     for (const { prefix } of PREFIX_REDIRECTS) {
       expect(routes.has(prefix), `${prefix} is not a route`).toBe(true)
     }
+  })
+
+  /**
+   * Caught in review, and it would have been permanent.
+   *
+   * `/jp/white-papers/Orbs-Grant-Program-Second-Call-for-Grants/` is live at
+   * 200. English and Korean spell the same paper
+   * `orbs-grant-grogram-second-call-for-grants` — a typo, carried forward
+   * because it is the indexed URL. The pattern passes the child through
+   * unchanged, so without an exception that live page would have 308ed to a
+   * slug that does not exist, and browsers would have cached it forever.
+   */
+  it('sends every renamed child to a paper that exists', () => {
+    const slugs = new Set(WHITE_PAPERS.map(({ slug }) => slug))
+
+    for (const { rename } of PREFIX_REDIRECTS) {
+      for (const [locale, entries] of Object.entries(rename ?? {})) {
+        for (const [from, to] of Object.entries(entries)) {
+          expect(slugs.has(to), `${locale}: ${from} -> ${to} is not a paper slug`).toBe(true)
+          // A rename to itself is the pattern's job and would be dead weight
+          // here — worse, it would read as though something had been handled.
+          expect(from, `${locale}: ${from} renames to itself`).not.toBe(to)
+        }
+      }
+    }
+  })
+
+  it('orders renames before the pattern that would swallow them', () => {
+    // Next takes the FIRST matching rule. `/jp/white-papers/:child/` matches the
+    // renamed path too, so order is the only thing making the exception
+    // effective — and nothing about the output would look wrong if it were
+    // reversed.
+    const rules = expandedPrefixRedirects()
+    const rename = rules.findIndex(({ source }) => source.includes('Orbs-Grant-Program-Second-Call-for-Grants'))
+    const pattern = rules.findIndex(({ source }) => source === '/jp/white-papers/:child/')
+
+    expect(rename).toBeGreaterThanOrEqual(0)
+    expect(pattern).toBeGreaterThanOrEqual(0)
+    expect(rename).toBeLessThan(pattern)
   })
 
   it('declares only locales that actually have the section', () => {
