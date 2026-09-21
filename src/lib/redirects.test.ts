@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { REDIRECTS, expandedRedirects } from './redirects'
+import { PREFIX_REDIRECTS, REDIRECTS, expandedPrefixRedirects, expandedRedirects } from './redirects'
 import { localesFor } from '@/i18n/availability'
 import { LOCALE_SEGMENTS } from '@/i18n/locales'
 
@@ -135,7 +135,9 @@ describe('expandedRedirects', () => {
   })
 
   it('emits one rule per locale the destination exists in, and no more', () => {
-    const expected = REDIRECTS.reduce((total, { locales }) => total + locales.length, 0)
+    const expected =
+      REDIRECTS.reduce((total, { locales }) => total + locales.length, 0) +
+      PREFIX_REDIRECTS.reduce((total, { locales }) => total + locales.length, 0)
 
     expect(expandedRedirects()).toHaveLength(expected)
   })
@@ -169,3 +171,98 @@ describe('expandedRedirects', () => {
     expect(expandedRedirects().find(({ source }) => source === '/perpetual-hub/')?.destination).toBe('/dperps/')
   })
 })
+
+describe('expandedPrefixRedirects', () => {
+  let routes: Set<string>
+
+  beforeAll(async () => {
+    routes = await staticRoutes()
+  }, 30_000)
+
+  it('folds the localised children onto the canonical English path', () => {
+    const rules = expandedPrefixRedirects()
+
+    expect(rules).toContainEqual({
+      source: '/jp/white-papers/:child/',
+      destination: '/white-papers/:child/',
+      permanent: true,
+    })
+    expect(rules).toContainEqual({
+      source: '/ko/white-papers/:child/',
+      destination: '/white-papers/:child/',
+      permanent: true,
+    })
+  })
+
+  /**
+   * THE one that matters here.
+   *
+   * `/jp/white-papers/` and `/ko/white-papers/` are live translated pages, and
+   * a rule whose source also matched the section index would take them out.
+   *
+   * Measured rather than imagined: building with `:child*` in place of `:child`
+   * — the obvious "be more permissive" edit — makes both indexes return **500**,
+   * because the destination interpolates to `/white-papers//`. Not a redirect,
+   * not a 404; a server error on two live pages, and only on the two locales,
+   * so an English smoke test sees nothing wrong.
+   *
+   * `:child` requires a non-empty segment, which is a property of
+   * path-to-regexp rather than of anything in this repo. Hence asserted.
+   */
+  it('never matches the section index itself', () => {
+    for (const { source } of expandedPrefixRedirects()) {
+      const index = source.replace(':child/', '')
+
+      expect(matches(source, index), `${source} must not match its own index ${index}`).toBe(false)
+    }
+  })
+
+  it('matches a child, and only one level of it', () => {
+    const source = '/ko/white-papers/:child/'
+
+    expect(matches(source, '/ko/white-papers/orbs-position-paper/')).toBe(true)
+    // Never a URL on either site. Matching it would redirect an arbitrarily
+    // deep path to a destination that cannot exist.
+    expect(matches(source, '/ko/white-papers/a/b/')).toBe(false)
+    expect(matches(source, '/ko/white-papers/')).toBe(false)
+  })
+
+  it('points every pattern at a section that is a real route', () => {
+    // The destination is `/white-papers/:child/`, whose parent must exist for
+    // the redirect to land anywhere. The child itself is a dynamic route, so
+    // the filesystem walk cannot confirm it — `link-integrity.test.ts` covers
+    // paper slugs, and `generateStaticParams` is the source of truth there.
+    for (const { prefix } of PREFIX_REDIRECTS) {
+      expect(routes.has(prefix), `${prefix} is not a route`).toBe(true)
+    }
+  })
+
+  it('declares only locales that actually have the section', () => {
+    // A locale-stripping rule for a locale that never served the section would
+    // be a redirect from a URL nobody can request — harmless, but it would mean
+    // the map is describing a site that does not exist.
+    for (const { prefix, locales } of PREFIX_REDIRECTS) {
+      for (const locale of locales) {
+        expect([...localesFor(prefix)], `${prefix} in ${locale}`).toContain(locale)
+      }
+    }
+  })
+})
+
+/**
+ * Whether a Next redirect `source` pattern matches a concrete path.
+ *
+ * A miniature of path-to-regexp covering the one construct these patterns use,
+ * `:param`, which matches exactly one non-empty segment containing no slash.
+ * Reimplemented rather than imported so the assertion describes the behaviour
+ * being relied on; if Next ever changed it, this test would keep passing and
+ * the build check in the PR is what would catch it.
+ */
+function matches(source: string, path: string): boolean {
+  const pattern = source
+    .split('/')
+    .map((segment) => (segment.startsWith(':') ? '[^/]+' : segment.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')))
+    .join('/')
+
+  return new RegExp(`^${pattern}$`).test(path)
+}

@@ -61,6 +61,55 @@ export const REDIRECTS: readonly Redirect[] = [
   },
 ]
 
+/**
+ * A section whose CHILD pages exist only in English, where the legacy site
+ * served localised ones.
+ *
+ * Distinct from `Redirect`, which moves a path and keeps the reader in their
+ * locale. This does the opposite: it folds `/jp/<prefix>/<child>/` and
+ * `/ko/<prefix>/<child>/` onto the canonical English URL, because there is one
+ * document and it exists in one place.
+ *
+ * Expressed as a pattern rather than one entry per child, which is worth
+ * justifying: the white-paper case is 50 live URLs across two locales, and a
+ * hand-written list of 50 would have to be kept in step with a set of legacy
+ * directories this repo does not contain. The pattern cannot drift from data it
+ * does not depend on.
+ *
+ * The cost is that a child which never existed also redirects — `/ko/white-
+ * papers/nonsense/` now reaches `/white-papers/nonsense/` and 404s there rather
+ * than 404ing a hop earlier. Nothing links to it and nothing indexes it, so
+ * that is a trade worth making for covering every real URL without a census.
+ */
+export type PrefixRedirect = {
+  /** The section path, locale-independent, no trailing slash. */
+  prefix: string
+  /**
+   * The locales whose prefixed children fold onto English.
+   *
+   * The section INDEX at `/jp/<prefix>/` is untouched — it is a real page in
+   * these locales. Only children match, which is what the `:child` parameter
+   * buys: it requires a non-empty segment, so the index cannot be shadowed.
+   * `redirects.test.ts` asserts that, because a rule that swallowed the index
+   * would make a live translated page unreachable with nothing to show for it.
+   */
+  locales: readonly Locale[]
+  reason: string
+}
+
+export const PREFIX_REDIRECTS: readonly PrefixRedirect[] = [
+  {
+    prefix: '/white-papers',
+    locales: ['ja', 'ko'],
+    reason:
+      'Paper pages are English-only: each wraps one PDF, and a localised route ' +
+      'would serve the same document under another language tag. The legacy ' +
+      'site published 23 Japanese and 27 Korean paper URLs that are live and ' +
+      'indexed today, so they are folded onto the canonical page rather than ' +
+      'left to 404 at cutover. See #131.',
+  },
+]
+
 /** The URL segment for each locale. Mirrors `LOCALE_SEGMENTS`; see the note above. */
 const SEGMENTS: Record<Locale, string> = {
   en: '',
@@ -97,10 +146,31 @@ const SEGMENTS: Record<Locale, string> = {
  * is faster.
  */
 export function expandedRedirects(): { source: string; destination: string; permanent: true }[] {
-  return REDIRECTS.flatMap(({ from, to, locales }) =>
+  return [
+    ...REDIRECTS.flatMap(({ from, to, locales }) =>
+      locales.map((locale) => ({
+        source: `${SEGMENTS[locale]}${from}/`,
+        destination: `${SEGMENTS[locale]}${to}/`,
+        permanent: true as const,
+      }))
+    ),
+    ...expandedPrefixRedirects(),
+  ]
+}
+
+/**
+ * The locale-stripping rules, as one pattern per section per locale.
+ *
+ * `:child` is a path parameter, which matches exactly one non-empty segment.
+ * That is load-bearing twice over: it leaves the section index alone, and it
+ * declines to match a deeper path like `/ko/white-papers/a/b/`, which was never
+ * a URL on either site.
+ */
+export function expandedPrefixRedirects(): { source: string; destination: string; permanent: true }[] {
+  return PREFIX_REDIRECTS.flatMap(({ prefix, locales }) =>
     locales.map((locale) => ({
-      source: `${SEGMENTS[locale]}${from}/`,
-      destination: `${SEGMENTS[locale]}${to}/`,
+      source: `${SEGMENTS[locale]}${prefix}/:child/`,
+      destination: `${prefix}/:child/`,
       permanent: true as const,
     }))
   )
