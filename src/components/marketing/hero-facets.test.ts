@@ -179,17 +179,43 @@ describe('facetsAround', () => {
     expect(facetsAround(0, 0, { intensity: 0 })).toEqual([])
   })
 
-  it('scales size and alpha together as intensity drops', () => {
+  it('fades all the way to nothing, rather than down to the rim size', () => {
+    /*
+      "Fade back to dots" — so a field on its way out has to approach zero, not
+      settle on the smallest facet the design draws.
+
+      The floor of 3.7px / 0.17 alpha describes a facet at the EDGE OF THE
+      DISC. An earlier version folded intensity into the same interpolation
+      that applies it, which made every facet shrink to the rim size, hold
+      there, and then disappear at the loop's cutoff. Visible as a pop, and
+      exactly what this asserts against.
+    */
     const full = facetsAround(0, 0)
     const half = facetsAround(0, 0, { intensity: 0.5 })
+    const nearlyGone = facetsAround(0, 0, { intensity: 0.02 })
 
     expect(half).toHaveLength(full.length)
 
-    const centreFull = full.find((f) => f.x === 0 && f.y === 0)
-    const centreHalf = half.find((f) => f.x === 0 && f.y === 0)
+    const centre = (fs: ReturnType<typeof facetsAround>) => fs.find((f) => f.x === 0 && f.y === 0)!
 
-    expect(centreFull?.size).toBeCloseTo(FACET_SIZE_MAX, 10)
-    expect(centreHalf?.size).toBeCloseTo((FACET_SIZE_MIN + FACET_SIZE_MAX) / 2, 10)
+    expect(centre(full).size).toBeCloseTo(FACET_SIZE_MAX, 10)
+    expect(centre(half).size).toBeCloseTo(FACET_SIZE_MAX / 2, 10)
+    expect(centre(half).opacity).toBeCloseTo(FACET_OPACITY_MAX / 2, 10)
+
+    // The whole field, not just the centre one.
+    for (const facet of nearlyGone) {
+      expect(facet.size).toBeLessThan(FACET_SIZE_MIN)
+      expect(facet.opacity).toBeLessThan(FACET_OPACITY_MIN)
+    }
+  })
+
+  it('is unchanged at full intensity', () => {
+    // The measured match against the design is defined at intensity 1, so
+    // reworking the fade must not move it.
+    const centre = facetsAround(0, 0, { intensity: 1 }).find((f) => f.x === 0 && f.y === 0)!
+
+    expect(centre.size).toBeCloseTo(FACET_SIZE_MAX, 10)
+    expect(centre.opacity).toBeCloseTo(FACET_OPACITY_MAX, 10)
   })
 
   it('costs the same wherever the cursor is', () => {

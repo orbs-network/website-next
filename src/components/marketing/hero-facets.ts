@@ -254,13 +254,29 @@ export function facetsAround(
 
       if (strength <= 0) continue
 
-      const scaled = strength * intensity
+      /*
+        DISTANCE FIRST, THEN INTENSITY AS A MULTIPLIER — not one combined
+        `strength * intensity` fed into the interpolation.
+
+        The two are different quantities. Distance decides where a facet sits
+        between the rim size and the cursor size, and the design's floor of
+        3.7px/0.17 alpha is what a facet looks like at the EDGE OF THE DISC,
+        not what it looks like on its way out. Folding intensity into the same
+        interpolation applies that floor to the fade as well: every facet
+        shrinks to 3.7px, holds at 0.17 alpha, and then vanishes at the
+        cutoff — a pop, not the "fade back to dots" the note asks for.
+
+        At full intensity this is arithmetically identical to the old form, so
+        the measured match against the design is unchanged.
+      */
+      const size = lerp(FACET_SIZE_MIN, FACET_SIZE_MAX, strength) * intensity
+      const opacity = lerp(FACET_OPACITY_MIN, FACET_OPACITY_MAX, strength) * intensity
 
       facets.push({
         x,
         y,
-        size: lerp(FACET_SIZE_MIN, FACET_SIZE_MAX, scaled),
-        opacity: lerp(FACET_OPACITY_MIN, FACET_OPACITY_MAX, scaled),
+        size,
+        opacity,
         /*
           MINUS the lag, so the near facets lead and the far ones follow. The
           sign is the whole effect: flipped, the wave collapses inward toward
