@@ -40,7 +40,13 @@ export function NetworkStatusIndicator({ labels, href }: { labels: NetworkStatus
   React.useEffect(() => {
     let cancelled = false
 
-    fetch('/api/network-status')
+    /*
+      The TRAILING SLASH is not cosmetic. `trailingSlash: true` means the
+      slashless form 308s to this one — measured, not assumed — and `fetch`
+      follows redirects silently, so the cost is an extra round trip on every
+      page load that nothing in the browser surfaces as wrong.
+    */
+    fetch('/api/network-status/')
       .then((response) => (response.ok ? response.json() : null))
       .then((body) => {
         if (!cancelled && (body?.status === 'good' || body?.status === 'degraded')) setStatus(body.status)
