@@ -253,6 +253,22 @@
 */
 @layer base {
   .band-contrast {
+    /*
+      The INHERITED text colour, and it is load-bearing.
+
+      `color` is set once on `body` from the outer theme and inherits as a
+      resolved value, so an element inside a band that sets no colour of its own
+      keeps the surrounding theme's foreground — which is, precisely, the colour
+      of the band it is now sitting on. The Discover links did exactly that and
+      rendered white on white: invisible, with the rules between them still
+      showing, so the section read as an empty list rather than a broken one.
+
+      Setting it here fixes every uncoloured descendant at once. Anything that
+      opts into `text-fg` or `text-fg-muted` already resolves correctly through
+      the tokens above.
+    */
+    color: var(--color-fg);
+
     --color-bg: var(--color-neutral-900);
     --color-surface: var(--color-neutral-700);
     --color-fg: var(--color-neutral-200);
