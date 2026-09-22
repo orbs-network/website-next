@@ -50,6 +50,43 @@ const config: Config = {
       backgroundImage: {
         'grid-lines':
           'repeating-linear-gradient(to right, rgb(66 70 81 / 0.23) 0 1.2px, transparent 1.2px 66px), repeating-linear-gradient(to bottom, rgb(66 70 81 / 0.23) 0 1.2px, transparent 1.2px 66px)',
+        /*
+          The closing call to action's glow.
+          In the design this is a group of three ~1200px circles — indigo
+          #3346f2, pink #dc8ae0 and cyan #2cedfc, each blurred by 400 — sitting
+          BELOW the section with a #121214 circle over their middle. What a
+          reader sees is therefore the top arc of that arrangement: a wide band
+          along the bottom edge running cyan on the left, through blue, to pink
+          on the right, fading upward into the page.
+          Reproduced as three radial gradients centred past the bottom edge
+          rather than as an export. The design's own version is a 1463x1374
+          group of blurred ellipses; rasterising that is a large image for
+          something gradients draw exactly, at any width, for nothing.
+          Centres and hues are the design's, converted from the Figma node
+          geometry; the vertical offsets put the circles low enough that only
+          the arc shows, which is what makes the blur unnecessary.
+        */
+        'orbs-glow': [
+          // Deliberately LARGER than the section. The design's circles are
+          // ~1200px across with a 400 blur, against a field about 520px tall,
+          // so their soft edges wash the whole area rather than sitting in a
+          // band at the bottom. Measured down the centre column, the design
+          // never drops below ~35/255 anywhere in this field; a first attempt
+          // with section-sized circles read 11 at the top, which is why the
+          // marquee looked like it was on flat black.
+          'radial-gradient(85% 150% at 18% 118%, rgb(44 237 252 / 0.55), transparent 72%)',
+          'radial-gradient(90% 150% at 80% 118%, rgb(220 138 224 / 0.50), transparent 72%)',
+          'radial-gradient(80% 145% at 50% 124%, rgb(51 70 242 / 0.65), transparent 70%)',
+          'radial-gradient(38% 52% at 52% 108%, rgb(202 208 246 / 0.85), transparent 70%)',
+          /*
+            The design's `Center Circle`: a #121214 disc over the middle of the
+            three, which is what turns a blob into a rim and is why the glow
+            fades back to the page colour at the very bottom edge rather than
+            being brightest there. `var(--color-bg)` rather than a literal, so
+            it still reads as the page in either theme.
+          */
+          'radial-gradient(42% 54% at 50% 140%, var(--color-bg) 0 55%, transparent 78%)',
+        ].join(', '),
       },
       keyframes: {
         marquee: {
