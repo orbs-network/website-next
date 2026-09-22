@@ -334,3 +334,64 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /*
+    The hero's dot grid, and the hole the facet field punches in it.
+
+    Measured off `Grid Pattern Top` on the 3.4 Home page: 2px SQUARE dots on a
+    40.5px lattice, white at 50%. See `hero-facets.ts` for how those numbers
+    were taken and why the facet lattice is a different pitch.
+
+    Two elements rather than one, which is worth explaining because it looks
+    like a wrapper that could be deleted. Each carries exactly ONE mask:
+    `.hero-dot-field` masks the hole, `.hero-dot-grid` masks the dots out of a
+    flat colour. Doing both on one element needs `mask-composite: intersect`,
+    which is the kind of property that works in every browser this was tested
+    in and then does something else in one it was not.
+  */
+  .hero-dot-field {
+    /*
+      `--hero-facet-hole` is set by `HeroFacetField` on an ancestor and read
+      here by inheritance. It defaults to 0px, at which the radial gradient is
+      its last stop everywhere — fully opaque, so the grid is untouched. That
+      default is what makes this correct with no JavaScript rather than
+      merely harmless.
+    */
+    -webkit-mask-image: radial-gradient(
+      circle var(--hero-facet-hole, 0px) at var(--hero-facet-x, 50%) var(--hero-facet-y, 50%),
+      transparent 0%,
+      transparent 55%,
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      circle var(--hero-facet-hole, 0px) at var(--hero-facet-x, 50%) var(--hero-facet-y, 50%),
+      transparent 0%,
+      transparent 55%,
+      #000 100%
+    );
+  }
+
+  .hero-dot-grid {
+    /*
+      The dots are a MASK over a themed colour, not a coloured background
+      image. A data URI cannot read a CSS custom property, so painting them
+      directly would hard-code white — correct on the dark design and invisible
+      on the light theme, which is the failure the contrast bands already
+      taught this repo once.
+
+      The tile is 81x81 holding a 4x4 rect, drawn at 40.5px. That is the 2px
+      dot the design has, at twice the numbers, so the SVG carries no
+      fractional lengths — `width='40.5'` is legal but rounds differently
+      across engines, and a half-pixel error on a 2px dot is 25% of it.
+    */
+    background-color: var(--color-fg);
+    opacity: 0.5;
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='81' height='81'%3E%3Crect width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='81' height='81'%3E%3Crect width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-size: 40.5px 40.5px;
+    mask-size: 40.5px 40.5px;
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+}

@@ -34,14 +34,17 @@ import { cn } from '@/lib/utils'
  * dependency on anything above it.
  */
 
-export type BackdropVariant = 'grid' | 'glow'
+export type BackdropVariant = 'grid' | 'dots' | 'glow'
 
 export function SectionBackdrop({
   variant,
   className,
 }: {
   /**
-   * `grid` — the line grid behind the hero and upper sections.
+   * `grid` — the line grid, from `orbs-grid-clean-editable`.
+   * `dots` — the 40.5px square-dot grid from `Grid Pattern Top`, behind the
+   *   hero. NOT interchangeable with `grid`: they are two different layers in
+   *   the design and the hero shipped wearing the wrong one.
    * `glow` — the soft radial wash behind the closing call to action.
    */
   variant: BackdropVariant
@@ -63,6 +66,14 @@ export function SectionBackdrop({
           '[mask-image:linear-gradient(to_bottom,black,transparent)]',
         ],
         /*
+          The dot grid, and the only variant that renders a child element
+          rather than a background on this one. It needs two masks — the dots
+          themselves, and the hole `HeroFacetField` punches under the cursor —
+          and stacking both on one element means `mask-composite`. See the
+          note in `globals.css`.
+        */
+        variant === 'dots' && 'hero-dot-field',
+        /*
           The glow was a single indigo blob at 25% opacity centred in the
           section — a guess, made before the design's own construction was
           read. What the design has is three brand-coloured circles sitting
@@ -74,6 +85,42 @@ export function SectionBackdrop({
         variant === 'glow' && 'bg-orbs-glow',
         className
       )}
-    />
+    >
+      {variant === 'dots' ? (
+        /*
+          THREE nested elements, one mask each, and they cannot be collapsed.
+
+          The cursor hole is on the root, this element carries the bottom fade,
+          and `.hero-dot-grid` inside carries the dots. Every pair of these is
+          a different `mask-image` on the same property.
+
+          Collapsing the fade onto the dot element is not hypothetical — it is
+          how this was first written, and the result was neither a fade nor
+          dots: the Tailwind arbitrary utility won over the component class,
+          and the `mask-size: 40.5px` meant for the dot tile then tiled the
+          FADE GRADIENT into 40px horizontal stripes across the hero.
+        */
+        <div
+          className={cn(
+            'absolute inset-0',
+            /*
+              Faded over the bottom third. A JUDGEMENT CALL, and the only line
+              in this variant that is not measured off the design.
+
+              `Grid Pattern Top` is 810px and ends flat: sampled down the left
+              margin of the composed frame, dots run from y~160 to y~790 and
+              are gone by y=800, with no fade drawn. But that frame is taller
+              than the hero it sits behind, so the cut lands under later
+              content rather than in the open. Ours fills the hero exactly, and
+              a hard edge across the middle of the page is worse than a fade
+              the design did not ask for.
+            */
+            '[mask-image:linear-gradient(to_bottom,black_0%,black_62%,transparent_100%)]'
+          )}
+        >
+          <div className="hero-dot-grid absolute inset-0" />
+        </div>
+      ) : null}
+    </div>
   )
 }

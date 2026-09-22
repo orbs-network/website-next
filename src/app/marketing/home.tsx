@@ -9,6 +9,7 @@ import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { Marquee } from '@/components/marketing/marquee'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
+import { HeroFacetField } from '@/components/marketing/hero-facet-field'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
@@ -72,12 +73,29 @@ export async function HomePage({ locale }: { locale: Locale }) {
         401px of horizontal scroll. Clipping here means the graphic can never do
         that, whatever width it is given.
       */}
-      <section className="relative isolate mx-auto overflow-hidden px-5 pt-16 pb-section">
+      {/*
+        Taller than the 3.4 frame draws it, deliberately. The design gives the
+        hero 555px inside an 810px grid layer; this is ~700, which keeps the
+        grid reading as the hero's own backdrop rather than a band that
+        outlives it.
+      */}
+      <section className="relative isolate mx-auto overflow-hidden px-5 pt-32 pb-40">
         {/*
-          The grid the first build shipped without. Behind the hero, faded out
-          at the bottom, and `-z-10` so it never sits over the copy.
+          `Grid Pattern Top`: 2px square dots on a 40.5px lattice.
+
+          This was `variant="grid"` — the 66px LINE grid, which is a different
+          layer of the design (`orbs-grid-clean-editable`, used further down the
+          page). The two look alike at a glance in a screenshot and are not the
+          same thing, so the hero has been wearing the wrong background since
+          #178.
+
+          Wrapped in `HeroFacetField`, which adds the cursor interaction on top
+          and leaves this exactly as-is when there is no pointer, no JavaScript,
+          or a reduced-motion preference.
         */}
-        <SectionBackdrop variant="grid" />
+        <HeroFacetField>
+          <SectionBackdrop variant="dots" />
+        </HeroFacetField>
 
         <div className="container relative mx-auto">
           {/*
