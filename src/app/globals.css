@@ -212,6 +212,81 @@
   }
 }
 
+/*
+  A section that reads as the OPPOSITE of the surrounding page.
+
+  The 3.4 home page is banded rather than flat: dark hero and stack, a white
+  features section, dark network, a light-grey news and discover run, then a
+  dark call to action. Sampled straight off the design frame, the bands are
+  #121214, #ffffff and #f6f6f6 — which are already `neutral-900`,
+  `neutral-100` and `neutral-200` in this file. The design was drawn in the
+  palette; the banding just never got built.
+
+  Implemented by redefining the SEMANTIC tokens rather than by setting a
+  background and a text colour. Everything inside — headings, muted captions,
+  borders, cards, shadcn primitives — resolves through `--color-fg` and
+  friends, so a band flips all of it at once and no component needs to know it
+  is in one. Setting `bg` and `text` by hand would leave every border and muted
+  caption reading against the wrong surface, which is the version of this that
+  looks nearly right.
+
+  The bands INVERT with the theme rather than being fixed white: on a
+  light-preference device the page is light and these sections are dark. That
+  keeps the designer's rhythm — the contrast relationship is what the design is
+  expressing — while honouring the reader's choice, since the 3.4 file only
+  draws the dark variant.
+
+  Use `bg-bg` for the standard band and `bg-surface` for the brighter one; the
+  pairing is symmetric in both directions.
+*/
+/*
+  The shadcn aliases are repeated inside each band, and they have to be.
+
+  `--card-foreground: var(--color-fg)` is declared on `:root`, so it is
+  SUBSTITUTED there — a custom property referencing another resolves at the
+  element that declares it, and descendants inherit the resolved value.
+  Redefining `--color-fg` further down therefore does nothing for it. Left out,
+  every `Button`, `Card` and `Popover` inside a band would keep the surrounding
+  theme's colours while the prose around them flipped: dark text on dark
+  buttons, and the kind of half-inverted section that looks like a rendering
+  bug.
+*/
+@layer base {
+  .band-contrast {
+    --color-bg: var(--color-neutral-900);
+    --color-surface: var(--color-neutral-700);
+    --color-fg: var(--color-neutral-200);
+    --color-fg-muted: var(--color-neutral-400);
+    --color-border: var(--color-neutral-600);
+
+    --card: var(--color-neutral-700);
+    --card-foreground: var(--color-neutral-200);
+    --popover: var(--color-neutral-700);
+    --popover-foreground: var(--color-neutral-200);
+    --muted: var(--color-neutral-600);
+    --muted-foreground: var(--color-neutral-400);
+    --border: var(--color-neutral-600);
+    --input: var(--color-neutral-600);
+  }
+
+  :root.dark .band-contrast {
+    --color-bg: var(--color-neutral-200);
+    --color-surface: var(--color-neutral-100);
+    --color-fg: var(--color-neutral-900);
+    --color-fg-muted: var(--color-neutral-500);
+    --color-border: var(--color-neutral-300);
+
+    --card: var(--color-neutral-100);
+    --card-foreground: var(--color-neutral-900);
+    --popover: var(--color-neutral-100);
+    --popover-foreground: var(--color-neutral-900);
+    --muted: var(--color-neutral-300);
+    --muted-foreground: var(--color-neutral-500);
+    --border: var(--color-neutral-300);
+    --input: var(--color-neutral-300);
+  }
+}
+
 @layer base {
   * {
     @apply border-border;
