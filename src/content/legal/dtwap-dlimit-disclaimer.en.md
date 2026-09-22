@@ -1,5 +1,3 @@
-#
-
 ## Orbs dTWAP and dLIMIT Disclaimer
 
 1. Orders are executed in smaller trades over a specified period of time and are subject to market conditions and other risks.
