@@ -91,7 +91,14 @@ function subscribe(onChange: () => void) {
     // value here is stale. Leaving it would let this tab report `granted` from
     // a failed write while the tag had just been set to `denied` elsewhere.
     inMemoryChoice = null
-    applyToTag(readStored())
+
+    // A MISSING value means denied, not "leave it as it was". Clearing site
+    // data in another tab removes the key, and without this the banner would
+    // reappear here — asking again — while the tag carried on granted from the
+    // earlier acceptance. That is tracking somebody through the act of
+    // withdrawing, which is the worst version of this bug rather than a corner
+    // of it.
+    applyToTag(readStored() ?? 'denied')
     onChange()
   }
 

@@ -173,3 +173,25 @@ export const StorageWriteFails: Story = {
     }
   },
 }
+
+export const AnotherTabClearsConsent: Story = {
+  // This tab accepted earlier; the choice is in storage before it mounts.
+  beforeEach: () => prime('granted'),
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.queryByRole('button', { name: 'Accept' })).toBeNull()
+
+    // Somebody clears site data in another tab.
+    window.localStorage.removeItem(CONSENT_STORAGE_KEY)
+    window.dispatchEvent(new StorageEvent('storage', { key: CONSENT_STORAGE_KEY, newValue: null }))
+
+    // The banner coming back is expected. The tag going back to denied is the
+    // part that is easy to miss: without it this document keeps tracking
+    // someone whose consent has just been withdrawn, while asking them again.
+    await waitFor(async () => {
+      await expect(canvas.getByRole('button', { name: 'Accept' })).toBeVisible()
+    })
+    expect(calls).toContainEqual(['consent', 'update', consentState('denied')])
+  },
+}
