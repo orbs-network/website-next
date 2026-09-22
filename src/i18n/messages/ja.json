@@ -1037,6 +1037,17 @@
         "follow": "Follow us",
         "community": "Join community",
         "contact": "Talk to the team"
+      },
+      "newsletter": {
+        "heading": "チームからの最新情報をお届けします。",
+        "body": "Orbsの最新ニュースとアップデートをメールでお届けします。",
+        "name": "お名前",
+        "email": "メールアドレス",
+        "submit": "登録する",
+        "sending": "登録中…",
+        "success": "登録が完了しました。ありがとうございます。",
+        "failed": "送信できませんでした。もう一度お試しください。",
+        "invalidEmail": "有効なメールアドレスを入力してください。"
       }
     },
     "smartContracts": {

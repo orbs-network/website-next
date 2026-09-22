@@ -37,25 +37,35 @@ describe('clientAddress', () => {
 
 describe('withinRateLimit', () => {
   it('allows a burst up to the limit and then stops', () => {
-    const allowed = Array.from({ length: 6 }, () => withinRateLimit('a', NOW).allowed)
+    const allowed = Array.from({ length: 6 }, () => withinRateLimit('test', 'a', NOW).allowed)
 
     expect(allowed).toEqual([true, true, true, true, true, false])
   })
 
-  it('keeps clients apart', () => {
-    for (let i = 0; i < 5; i += 1) withinRateLimit('a', NOW)
+  it('keeps scopes apart', () => {
+    // The map is module state shared by every route that imports it. Without a
+    // scope, sending an enquiry would spend part of the same visitor's
+    // newsletter allowance — one person, two unrelated actions, one quota.
+    for (let i = 0; i < 5; i += 1) withinRateLimit('contact', 'a', NOW)
 
-    expect(withinRateLimit('a', NOW).allowed).toBe(false)
-    expect(withinRateLimit('b', NOW).allowed).toBe(true)
+    expect(withinRateLimit('contact', 'a', NOW).allowed).toBe(false)
+    expect(withinRateLimit('subscribe', 'a', NOW).allowed).toBe(true)
+  })
+
+  it('keeps clients apart', () => {
+    for (let i = 0; i < 5; i += 1) withinRateLimit('test', 'a', NOW)
+
+    expect(withinRateLimit('test', 'a', NOW).allowed).toBe(false)
+    expect(withinRateLimit('test', 'b', NOW).allowed).toBe(true)
   })
 
   it('lets the window slide rather than resetting on a fixed boundary', () => {
-    for (let i = 0; i < 5; i += 1) withinRateLimit('a', NOW)
+    for (let i = 0; i < 5; i += 1) withinRateLimit('test', 'a', NOW)
 
     // Still inside the window by a millisecond.
-    expect(withinRateLimit('a', NOW + WINDOW_MS - 1).allowed).toBe(false)
+    expect(withinRateLimit('test', 'a', NOW + WINDOW_MS - 1).allowed).toBe(false)
     // Exactly a window old has expired — the check is `> now - WINDOW_MS`.
-    expect(withinRateLimit('a', NOW + WINDOW_MS).allowed).toBe(true)
+    expect(withinRateLimit('test', 'a', NOW + WINDOW_MS).allowed).toBe(true)
   })
 
   /**
@@ -64,13 +74,13 @@ describe('withinRateLimit', () => {
    * size of one window's allowance however long the flood lasts.
    */
   it('does not grow a blocked client without bound', () => {
-    for (let i = 0; i < 500; i += 1) withinRateLimit('a', NOW)
+    for (let i = 0; i < 500; i += 1) withinRateLimit('test', 'a', NOW)
 
     // Still blocked now, and still recovers exactly one window after the last
     // ACCEPTED request — not after the last attempt, which would let a flood
     // extend its own penalty indefinitely.
-    expect(withinRateLimit('a', NOW).allowed).toBe(false)
-    expect(withinRateLimit('a', NOW + WINDOW_MS).allowed).toBe(true)
+    expect(withinRateLimit('test', 'a', NOW).allowed).toBe(false)
+    expect(withinRateLimit('test', 'a', NOW + WINDOW_MS).allowed).toBe(true)
   })
 
   /**
@@ -78,27 +88,27 @@ describe('withinRateLimit', () => {
    * one log record per request for as long as it keeps going.
    */
   it('reports a block once per client per window', () => {
-    for (let i = 0; i < 5; i += 1) withinRateLimit('a', NOW)
+    for (let i = 0; i < 5; i += 1) withinRateLimit('test', 'a', NOW)
 
-    expect(withinRateLimit('a', NOW)).toEqual({ allowed: false, firstBlock: true })
+    expect(withinRateLimit('test', 'a', NOW)).toEqual({ allowed: false, firstBlock: true })
 
     for (let i = 0; i < 100; i += 1) {
-      expect(withinRateLimit('a', NOW)).toEqual({ allowed: false, firstBlock: false })
+      expect(withinRateLimit('test', 'a', NOW)).toEqual({ allowed: false, firstBlock: false })
     }
   })
 
   it('reports again after the client has served its window out', () => {
-    for (let i = 0; i < 6; i += 1) withinRateLimit('a', NOW)
+    for (let i = 0; i < 6; i += 1) withinRateLimit('test', 'a', NOW)
 
     // Window clears, one accepted request, then blocked again — a client that
     // comes back tomorrow and floods again must still be visible.
-    expect(withinRateLimit('a', NOW + WINDOW_MS).allowed).toBe(true)
-    for (let i = 0; i < 4; i += 1) withinRateLimit('a', NOW + WINDOW_MS)
+    expect(withinRateLimit('test', 'a', NOW + WINDOW_MS).allowed).toBe(true)
+    for (let i = 0; i < 4; i += 1) withinRateLimit('test', 'a', NOW + WINDOW_MS)
 
-    expect(withinRateLimit('a', NOW + WINDOW_MS)).toEqual({ allowed: false, firstBlock: true })
+    expect(withinRateLimit('test', 'a', NOW + WINDOW_MS)).toEqual({ allowed: false, firstBlock: true })
   })
 
   it('never claims firstBlock on an allowed request', () => {
-    expect(withinRateLimit('a', NOW)).toEqual({ allowed: true, firstBlock: false })
+    expect(withinRateLimit('test', 'a', NOW)).toEqual({ allowed: true, firstBlock: false })
   })
 })

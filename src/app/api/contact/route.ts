@@ -1,8 +1,8 @@
 import { NextResponse } from 'next/server'
 import { Resend } from 'resend'
 import { formatEnquiry, looksAutomated, validateContactMessage } from '@/lib/contact-message'
-import { clientAddress, withinRateLimit } from './rate-limit'
-import { isSameOrigin } from './same-origin'
+import { clientAddress, withinRateLimit } from '@/lib/rate-limit'
+import { isSameOrigin } from '@/lib/same-origin'
 
 /**
  * Forwards a contact enquiry to the team.
@@ -109,7 +109,7 @@ export async function POST(request: Request) {
   // gets as far as sending mail, but it does still cost an invocation each, and
   // a limiter that can be skipped by sending garbage is one an abuser will send
   // garbage to skip.
-  const limit = withinRateLimit(address, now)
+  const limit = withinRateLimit('contact', address, now)
 
   if (!limit.allowed) {
     // Once per client per window, not once per request. A client that keeps
