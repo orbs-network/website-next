@@ -156,8 +156,20 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
           worth anchoring; below that the statement fills it.
           `lg:inline-flex`, not `lg:block`: the lockup is an `inline-flex` row
           of mark plus wordmark, and `block` won that merge and stacked them.
+          `text-neutral-900` explicitly, for the same reason the statement above
+          does: this panel's gradient is fixed in both themes, while the band
+          around it inverts. `variant="dark"` draws from `currentColor`, so
+          without this the lockup turned near-white on pale periwinkle whenever
+          a reader was in the light theme.
+          `text-[2.75rem]` because `OrbsLogo` sizes its mark in `em` and would
+          otherwise inherit the 16px body size, landing at about 22px against
+          the design's 61px lockup.
         */}
-        <OrbsLogo variant="dark" aria-hidden className="hidden self-start lg:inline-flex" />
+        <OrbsLogo
+          variant="dark"
+          aria-hidden
+          className="hidden self-start text-[2.75rem] text-neutral-900 lg:inline-flex"
+        />
       </div>
     </div>
   )

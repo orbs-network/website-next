@@ -67,25 +67,33 @@ const config: Config = {
           the arc shows, which is what makes the blur unnecessary.
         */
         'orbs-glow': [
-          // Deliberately LARGER than the section. The design's circles are
-          // ~1200px across with a 400 blur, against a field about 520px tall,
-          // so their soft edges wash the whole area rather than sitting in a
-          // band at the bottom. Measured down the centre column, the design
-          // never drops below ~35/255 anywhere in this field; a first attempt
-          // with section-sized circles read 11 at the top, which is why the
-          // marquee looked like it was on flat black.
-          'radial-gradient(85% 150% at 18% 118%, rgb(44 237 252 / 0.55), transparent 72%)',
-          'radial-gradient(90% 150% at 80% 118%, rgb(220 138 224 / 0.50), transparent 72%)',
-          'radial-gradient(80% 145% at 50% 124%, rgb(51 70 242 / 0.65), transparent 70%)',
+          /*
+            ORDER MATTERS, AND IT IS THE REVERSE OF THE OBVIOUS ONE. CSS paints
+            the FIRST background layer closest to the reader, so this list runs
+            top layer down.
+            NO CENTRE CUTOUT, and that is a correction rather than an omission.
+            The design has one — a `Center Circle` of page colour over the
+            middle of the three — and an earlier version of this reproduced it
+            on the reading that the glow "fades back to dark at the bottom".
+            It does not. Measured down the centre column, the design's field
+            keeps brightening all the way through: 67, 70, 87, 122. What looked
+            like a fade was the footer starting. At the height this field
+            actually is, the design's dark disc sits entirely below the visible
+            area; adding one here only greys the middle of the band.
+          */
           'radial-gradient(38% 52% at 52% 108%, rgb(202 208 246 / 0.85), transparent 70%)',
           /*
-            The design's `Center Circle`: a #121214 disc over the middle of the
-            three, which is what turns a blob into a rim and is why the glow
-            fades back to the page colour at the very bottom edge rather than
-            being brightest there. `var(--color-bg)` rather than a literal, so
-            it still reads as the page in either theme.
+            Deliberately LARGER than the section. The design's circles are
+            ~1200px across with a 400 blur against a field about 520px tall, so
+            their soft edges wash the whole area rather than sitting in a band
+            at the bottom. Measured down the centre column, the design never
+            drops below ~35/255 anywhere in this field; a first attempt with
+            section-sized circles read 11 at the top, which is why the marquee
+            looked like it was on flat black.
           */
-          'radial-gradient(42% 54% at 50% 140%, var(--color-bg) 0 55%, transparent 78%)',
+          'radial-gradient(80% 145% at 50% 124%, rgb(51 70 242 / 0.65), transparent 70%)',
+          'radial-gradient(90% 150% at 80% 118%, rgb(220 138 224 / 0.50), transparent 72%)',
+          'radial-gradient(85% 150% at 18% 118%, rgb(44 237 252 / 0.55), transparent 72%)',
         ].join(', '),
       },
       keyframes: {
