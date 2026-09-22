@@ -86,6 +86,12 @@
   "languageSelector": {
     "label": "言語を変更"
   },
+  "consent": {
+    "message": "サイトの利用状況を測定するためにクッキーを使用します。同意されない限り、解析は無効のままです。",
+    "accept": "許可",
+    "reject": "拒否",
+    "policyLabel": "プライバシーポリシー"
+  },
   "pages": {
     "dtwap": {
       "meta": {

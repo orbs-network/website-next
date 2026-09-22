@@ -85,6 +85,12 @@
   "languageSelector": {
     "label": "Change language"
   },
+  "consent": {
+    "message": "We use cookies to measure how the site is used. Analytics stay off unless you accept.",
+    "accept": "Accept",
+    "reject": "Reject",
+    "policyLabel": "Privacy policy"
+  },
   "pages": {
     "dtwap": {
       "meta": {

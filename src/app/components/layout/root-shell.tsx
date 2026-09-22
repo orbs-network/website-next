@@ -7,6 +7,9 @@ import { ThemeProvider } from 'next-themes'
 import { LOCALE_HTML_LANG, type Locale } from '@/i18n/locales'
 import { getTranslations } from 'next-intl/server'
 import { textLang } from '@/i18n/script'
+import { Analytics } from '@/app/components/analytics/analytics'
+import { ConsentBanner } from '@/app/components/analytics/consent-banner'
+import { localeHref } from '@/i18n/availability'
 import { Footer } from './footer/footer'
 import { Header } from './header'
 import { ScrollToTop } from './scroll-to-top'
@@ -54,6 +57,21 @@ export async function RootShell({ locale, children }: { locale: Locale; children
   const t = await getTranslations({ locale, namespace: 'header' })
   const scrollToTopLabel = t('scrollToTop')
 
+  // Same reasoning as `scrollToTopLabel`: resolved here so the `consent`
+  // namespace stays out of every page's RSC payload for a banner shown once.
+  const consent = await getTranslations({ locale, namespace: 'consent' })
+  const consentLabels = {
+    message: consent('message'),
+    accept: consent('accept'),
+    reject: consent('reject'),
+    policyLabel: consent('policyLabel'),
+    // Our own policy, through `localeHref` so it stays in the reader's
+    // language. The legacy banner pointed Japanese and Korean readers at
+    // `aave.com/cookie-policy` — another company's policy, live on the site
+    // today.
+    policyHref: localeHref('/privacy-policy', locale),
+  }
+
   return (
     <html lang={LOCALE_HTML_LANG[locale]} suppressHydrationWarning>
       <body className={montserrat.className}>
@@ -75,8 +93,10 @@ export async function RootShell({ locale, children }: { locale: Locale; children
             <main>{children}</main>
             <Footer locale={locale} />
             <ScrollToTop label={scrollToTopLabel} lang={textLang(scrollToTopLabel, locale)} />
+            <ConsentBanner labels={consentLabels} lang={textLang(consentLabels.message, locale)} />
           </ThemeProvider>
         </NextIntlClientProvider>
+        <Analytics />
       </body>
     </html>
   )
