@@ -44,7 +44,7 @@ export const LIQUIDITY_HUB_PARTNERS: readonly Partner[] = [
   {
     id: 'quickswap',
     name: 'QuickSwap',
-    logo: '/marketing/liquidity-hub/quickswap-logo.svg',
+    logo: '/marketing/dtwap/quickswap-logo.png',
     screenshot: { src: '/marketing/liquidity-hub/quickswap-screenshot.png', width: 954, height: 1191 },
     href: 'https://quickswap.exchange/#/swap',
   },

@@ -55,6 +55,56 @@ async function* walk(dir) {
   }
 }
 
+/**
+ * How wide an embedded raster may be before it is worth shrinking.
+ *
+ * These logos are displayed in a 96px box. An embedded square icon usually
+ * occupies a fraction of the SVG's own width, so 128px already covers a 3x
+ * display with room to spare — Trader Joe's icon is 41 of 203 viewBox units,
+ * about 19 CSS px, needing 57px at 3x.
+ */
+const MAX_EMBEDDED_WIDTH = 128
+
+/**
+ * Shrink an oversized raster embedded in an otherwise REAL vector.
+ *
+ * The wrapper case above rasterises the whole file, which is only safe when
+ * there is no vector content to lose. A hybrid has both, and both are worth
+ * keeping: Trader Joe's is a genuine `<path>` wordmark beside a 300x300 PNG
+ * icon, so rasterising it would throw away crisp text and converting nothing
+ * would leave 53 KB of pixels for a 19px square.
+ *
+ * So the payload is resized in place and the SVG is otherwise untouched. The
+ * geometry lives in the `<use>` transform and the `<pattern>`, which are
+ * expressed in proportional units — `patternContentUnits="objectBoundingBox"`
+ * with a `scale()` — so swapping the image for a smaller one of the same aspect
+ * ratio renders identically. That is the crucial difference from the wrapper
+ * case, where the transforms are tied to pixel dimensions and extracting the
+ * payload silently changed the artwork.
+ *
+ * Measured on Trader Joe's at 3x the display size: 77 KB -> 12 KB, mean pixel
+ * difference 0.70/255.
+ */
+async function shrinkEmbeddedRaster(source) {
+  const match = source.match(/data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)/)
+  if (!match) return null
+
+  const payload = Buffer.from(match[2], 'base64')
+  const { width } = await sharp(payload).metadata()
+  if (!width || width <= MAX_EMBEDDED_WIDTH) return null
+
+  const resized = await sharp(payload)
+    .resize({ width: MAX_EMBEDDED_WIDTH, height: MAX_EMBEDDED_WIDTH, fit: 'inside', withoutEnlargement: true })
+    .png({ compressionLevel: 9, palette: true })
+    .toBuffer()
+
+  // Only worth rewriting if it actually helps. A payload that is already
+  // efficiently encoded can come back LARGER from a re-encode.
+  if (resized.length >= payload.length) return null
+
+  return source.replace(match[0], `data:image/png;base64,${resized.toString('base64')}`)
+}
+
 /** Whether this file is a pure raster wrapper and safe to rasterise. */
 function isRasterWrapper(source) {
   if ((source.match(/data:image\/[a-z+]+;base64,/g) ?? []).length !== 1) return false
@@ -76,6 +126,7 @@ async function main() {
   let before = 0
   let after = 0
   const converted = []
+  const shrank = []
   const kept = []
 
   for await (const path of walk(root)) {
@@ -83,9 +134,24 @@ async function main() {
     const source = await readFile(path, 'utf8')
 
     if (!isRasterWrapper(source)) {
+      // Real vector content, so the file stays an SVG — but it may still carry
+      // an oversized raster alongside the vector art.
+      const shrunk = await shrinkEmbeddedRaster(source)
+
+      if (shrunk === null) {
+        before += size
+        after += size
+        kept.push(relative(REPO, path))
+        continue
+      }
+
       before += size
-      after += size
-      kept.push(relative(REPO, path))
+      after += Buffer.byteLength(shrunk)
+      shrank.push({ file: relative(REPO, path), size, out: Buffer.byteLength(shrunk) })
+
+      if (!dryRun) {
+        await writeFile(path, shrunk)
+      }
       continue
     }
 
@@ -118,8 +184,15 @@ async function main() {
     process.stdout.write(`  ${kb(c.size).padStart(9)} -> ${kb(c.out).padStart(8)}  ${c.from}\n`)
   }
 
+  for (const s of shrank.sort((a, b) => b.size - a.size)) {
+    process.stdout.write(
+      `  ${kb(s.size).padStart(9)} -> ${kb(s.out).padStart(8)}  ${s.file}  (embedded raster shrunk)\n`
+    )
+  }
+
   process.stdout.write(
-    `\n${converted.length} wrapper SVGs converted to PNG, ${kept.length} real vectors left alone.\n` +
+    `\n${converted.length} wrapper SVGs converted to PNG, ${shrank.length} embedded rasters shrunk, ` +
+      `${kept.length} real vectors left alone.\n` +
       `Total: ${kb(before)} -> ${kb(after)} (-${Math.round((1 - after / before) * 100)}%)` +
       `${dryRun ? '  [dry run]' : ''}\n`
   )
