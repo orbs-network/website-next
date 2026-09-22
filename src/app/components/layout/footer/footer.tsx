@@ -108,7 +108,15 @@ export async function Footer({ locale }: { locale: Locale }) {
               simply absent when the service cannot be read, rather than
               falling back to a green dot. See `network-status.tsx`.
             */}
-            <li>
+            {/*
+              `empty:hidden` because the indicator renders nothing until a
+              reading arrives, and nothing at all if one never does. Without it
+              this `<li>` stays a flex child of a `gap-x-6` row and leaves a
+              24px hole before TERMS OF USE — on every server render, and
+              permanently whenever the status service is unreachable. An
+              "absent" indicator that still takes up space is not absent.
+            */}
+            <li className="empty:hidden">
               <NetworkStatusIndicator
                 labels={{ label: t('status.label'), good: t('status.good'), degraded: t('status.degraded') }}
                 href={FOOTER_STATUS_URL}
