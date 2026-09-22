@@ -24,9 +24,29 @@ describe('consentState', () => {
     }
   })
 
-  it('grants every storage signal when granted', () => {
-    for (const [signal, value] of Object.entries(consentState('granted'))) {
-      expect(value, signal).toBe('granted')
+  it('grants the measurement signals when granted', () => {
+    const state = consentState('granted')
+
+    for (const signal of ['analytics_storage', 'functionality_storage', 'personalization_storage'] as const) {
+      expect(state[signal], signal).toBe('granted')
+    }
+  })
+
+  it('NEVER grants an advertising signal, whatever the answer', () => {
+    // The banner asks one question, and it is about analytics. An "Accept" is
+    // consent to measurement; reading it as consent to advertising storage is
+    // consent the visitor was never asked for, and contradicts the cookie
+    // policy, which promises these stay denied regardless of the answer.
+    //
+    // This assertion is the whole reason the function takes a choice at all
+    // rather than these three being written inline at the call site: it has to
+    // be checkable that the choice does NOT reach them.
+    for (const choice of ['granted', 'denied'] as const) {
+      const state = consentState(choice)
+
+      for (const signal of ['ad_storage', 'ad_user_data', 'ad_personalization'] as const) {
+        expect(state[signal], `${signal} on ${choice}`).toBe('denied')
+      }
     }
   })
 

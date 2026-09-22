@@ -47,12 +47,23 @@ export type ConsentChoice = 'granted' | 'denied'
  * The advertising signals are here even though the site runs no ad tags. v2
  * requires them to be declared, and a default that omits one is treated as
  * unset rather than denied — which is the opposite of the intent.
+ *
+ * THEY ARE ALWAYS DENIED, and never follow the choice. The banner asks one
+ * question — "Analytics stay off unless you accept" — so an "Accept" is consent
+ * to measurement and nothing else. Passing `choice` through to the three ad
+ * signals turned that single answer into advertising consent the visitor was
+ * never asked for, and contradicted the cookie policy in the same repo, which
+ * states that advertising storage is denied regardless of the answer
+ * (`src/content/legal/cookies.en.md`). The policy was right; this was the bug.
+ *
+ * If the site ever does run an ad tag, this needs a SECOND question in the
+ * banner, not a widened meaning for the existing one.
  */
 export function consentState(choice: ConsentChoice) {
   return {
-    ad_storage: choice,
-    ad_user_data: choice,
-    ad_personalization: choice,
+    ad_storage: 'denied' as const,
+    ad_user_data: 'denied' as const,
+    ad_personalization: 'denied' as const,
     analytics_storage: choice,
     functionality_storage: choice,
     personalization_storage: choice,
