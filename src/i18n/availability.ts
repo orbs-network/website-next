@@ -129,6 +129,19 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // No page-level rule survives that — which is exactly why the page runs every
   // name through `textLang` rather than deciding once. See #103.
   '/smart-contracts': { en: 'translated', ja: 'translated', ko: 'translated' },
+  /*
+    Carried over by #38. Both have a legacy locale directory holding the
+    ENGLISH text — 2 non-Latin characters in `ko/dtwap-dlimit-disclaimer`
+    against 281 words, and 43 in `jp/ORBS-NFT-CONTEST-OFFICIAL-RULES` against
+    1,504. So the routes exist, because those URLs are live and must not start
+    404ing, and they are `placeholder`: noindex, not an hreflang alternate, and
+    `LegalPage` serves the English body with `lang="en"` on it.
+
+    The grant terms have no locale directory at all and are absent from this
+    map, which means English-only.
+  */
+  '/dtwap-dlimit-disclaimer': { en: 'translated', ko: 'placeholder' },
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES': { en: 'translated', ja: 'placeholder' },
   // `jp/notifications` has ZERO non-Latin characters — the English text copied —
   // so Japanese is `placeholder`. Korean is translated, though thinly: 510
   // non-Latin characters against 7,718 for `/pos`, so several strings fall back
@@ -228,7 +241,34 @@ export function isPlaceholder(pathname: string, locale: Locale): boolean {
  * The residual risk is a scheduling one, not a code one — cutting over before
  * Phase 3 finishes. That belongs on the pre-cutover URL audit (#38).
  */
+/**
+ * Pages kept at their URLs for the record, but not advertised.
+ *
+ * The NFT contest ran in 2021 and is over. The rules are not operative, so
+ * nothing should be steered towards them — but deleting the rules of a contest
+ * you actually ran is the kind of thing that is only ever noticed on the day
+ * somebody disputes it. The URL keeps working and stops appearing in search.
+ *
+ * `follow` stays true: the document links to real pages and there is no reason
+ * to strand them.
+ *
+ * Distinct from a `placeholder` locale, which is about a translation that does
+ * not exist. This is about a page whose SUBJECT has expired, in every language.
+ */
+const ARCHIVED_PATHS = new Set(['/ORBS-NFT-CONTEST-OFFICIAL-RULES'])
+
+/** Whether a path is kept for the record rather than advertised. */
+export function isArchived(pathname: string): boolean {
+  return ARCHIVED_PATHS.has(normalize(pathname))
+}
+
 export function placeholderRobots(pathname: string, locale: Locale) {
+  // Archived first: it applies in every locale, including ones where the page
+  // is a real translation and `isPlaceholder` would say nothing.
+  if (isArchived(pathname)) {
+    return { index: false, follow: true }
+  }
+
   if (!isPlaceholder(pathname, locale)) {
     return undefined
   }

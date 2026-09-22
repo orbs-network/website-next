@@ -31,8 +31,23 @@ export function LegalDocument({
   lang?: string
   dir?: 'ltr' | 'rtl'
 }) {
-  // Matched at the start of a line, since `#` occurs mid-sentence in legal text.
-  const hasOwnHeading = /^#\s/m.test(markdown)
+  /*
+    Matched at the start of a line, since `#` occurs mid-sentence in legal text
+    — and the heading must have TEXT after it.
+
+    `/^#\s/m` also matched a bare `#` on its own line, because `\s` includes the
+    newline. The dTWAP disclaimer opens with exactly that, an empty heading left
+    over from the legacy content, so the document was judged to supply its own
+    `h1`, the catalog title was suppressed, and the page rendered an empty `h1`
+    with nothing for heading navigation to land on. The legacy page has the same
+    hole; there is no reason to carry it forward.
+
+    Still ONLY `#`, not `##`. The two terms documents and the grant terms open
+    at `##` and depend on the catalog title for their `h1` — broadening this to
+    any heading level would silently take that away from them, which is a worse
+    bug than the one being fixed.
+  */
+  const hasOwnHeading = /^#[ \t]+\S/m.test(markdown)
 
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">

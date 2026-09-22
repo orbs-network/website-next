@@ -2,7 +2,7 @@ import type { MetadataRoute } from 'next'
 import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
 import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
-import { translatedLocalesFor } from '@/i18n/availability'
+import { isArchived, translatedLocalesFor } from '@/i18n/availability'
 import { MARKETING_PAGE_PATHS } from '@/content/pages'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
@@ -73,15 +73,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Marketing pages, in each locale whose copy is genuinely translated. A
   // locale still rendering the English placeholder is `noindex`, so listing it
   // would advertise a URL we are simultaneously asking crawlers to ignore.
-  const marketingPages: MetadataRoute.Sitemap = MARKETING_PAGE_PATHS.flatMap((path) =>
-    translatedLocalesFor(path).map((locale) => ({
-      url: absoluteUrl(localePath(locale, `${path}/`)),
-      lastModified: lastArchiveChange,
-      changeFrequency: 'monthly' as const,
-      // Product pages are the commercial point of the site, so they rank above
-      // the blog archive but below the home page.
-      priority: 0.9,
-    }))
+  const marketingPages: MetadataRoute.Sitemap = MARKETING_PAGE_PATHS.filter((path) => !isArchived(path)).flatMap(
+    (path) =>
+      translatedLocalesFor(path).map((locale) => ({
+        url: absoluteUrl(localePath(locale, `${path}/`)),
+        lastModified: lastArchiveChange,
+        changeFrequency: 'monthly' as const,
+        // Product pages are the commercial point of the site, so they rank above
+        // the blog archive but below the home page.
+        priority: 0.9,
+      }))
   )
 
   /*

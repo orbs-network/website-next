@@ -1596,6 +1596,24 @@
         "title": "Cookie policy",
         "description": "What this site stores on your device, what each item is for, and how to change or withdraw your choice."
       }
+    },
+    "dtwapDlimitDisclaimer": {
+      "meta": {
+        "title": "dTWAP and dLIMIT disclaimer",
+        "description": "Risk disclaimer for the Orbs dTWAP and dLIMIT protocols."
+      }
+    },
+    "grantProgramTerms": {
+      "meta": {
+        "title": "Orbs Ecosystem Grant Program terms and conditions",
+        "description": "Terms and conditions governing the Orbs Ecosystem Grant Program."
+      }
+    },
+    "nftContestRules": {
+      "meta": {
+        "title": "Orbs NFT Contest #1 official rules",
+        "description": "Official rules for the Orbs NFT Contest #1, which ran in 2021 and has concluded."
+      }
     }
   }
 }

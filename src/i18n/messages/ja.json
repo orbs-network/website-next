@@ -1171,6 +1171,12 @@
       },
       "viewOnEtherscan": "Etherscanで見る",
       "backLink": "Orbsの概要に戻る"
+    },
+    "nftContestRules": {
+      "meta": {
+        "title": "Orbs NFT Contest #1 official rules",
+        "description": "Official rules for the Orbs NFT Contest #1, which ran in 2021 and has concluded."
+      }
     }
   }
 }

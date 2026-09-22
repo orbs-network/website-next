@@ -34,6 +34,15 @@ export const MARKETING_PAGE_PATHS = [
   // behaviour, and a stale translation of that is worse than none.
   '/cookies',
   '/liquidity-hub-terms-of-use',
+  /*
+    Carried over from the legacy site by #38, which found them live with no
+    route here. The disclaimer covers two shipping products and the grant terms
+    a live programme; the contest rules are from 2021 and concluded, so they are
+    archived — the URL works, nothing advertises it.
+  */
+  '/dtwap-dlimit-disclaimer',
+  '/orbs-ecosystem-grant-program-terms-and-conditions',
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES',
   // FAQ. Same markdown-document treatment as the legal pages; `##` is a
   // section and `###` a question.
   '/faq',

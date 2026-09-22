@@ -118,6 +118,28 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
     ),
     namespace: 'pages.liquidityHubTerms',
   },
+  '/dtwap-dlimit-disclaimer': {
+    render: (locale) => (
+      <LegalPage path="/dtwap-dlimit-disclaimer" locale={locale} namespace="pages.dtwapDlimitDisclaimer" />
+    ),
+    namespace: 'pages.dtwapDlimitDisclaimer',
+  },
+  '/orbs-ecosystem-grant-program-terms-and-conditions': {
+    render: (locale) => (
+      <LegalPage
+        path="/orbs-ecosystem-grant-program-terms-and-conditions"
+        locale={locale}
+        namespace="pages.grantProgramTerms"
+      />
+    ),
+    namespace: 'pages.grantProgramTerms',
+  },
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES': {
+    render: (locale) => (
+      <LegalPage path="/ORBS-NFT-CONTEST-OFFICIAL-RULES" locale={locale} namespace="pages.nftContestRules" />
+    ),
+    namespace: 'pages.nftContestRules',
+  },
 
   // Both FAQs share a renderer, as the legal pages do. Each keeps its own
   // namespace, because each needs its own title and description.
