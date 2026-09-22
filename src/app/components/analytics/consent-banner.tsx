@@ -35,34 +35,71 @@ export type ConsentBannerLabels = {
   policyHref: string
 }
 
-/**
- * Subscribers for writes made in THIS tab.
- *
- * The `storage` event only fires in other tabs, so a choice made here would not
- * otherwise notify our own snapshot.
- */
+/** Subscribers in THIS document. `storage` only fires in OTHER tabs. */
 const listeners = new Set<() => void>()
 
-function subscribe(onChange: () => void) {
-  listeners.add(onChange)
-  window.addEventListener('storage', onChange)
+/**
+ * The choice, when it could not be persisted.
+ *
+ * `localStorage.setItem` can fail while `getItem` still works — an exhausted
+ * quota is the usual way. Without this the snapshot would keep reporting
+ * "undecided" after the visitor answered, so the banner would never close and
+ * would come back on every page: a consent dialog that cannot be dismissed,
+ * for someone who has already answered it twice.
+ */
+let inMemoryChoice: string | null = null
 
-  return () => {
-    listeners.delete(onChange)
-    window.removeEventListener('storage', onChange)
+function readStored(): string | null {
+  try {
+    return window.localStorage.getItem(CONSENT_STORAGE_KEY)
+  } catch {
+    // Storage unavailable entirely: cookies blocked, or private mode in some
+    // engines. Nothing can be recorded, so nothing is asked — the banner would
+    // otherwise return on every page load forever, and the default is denied.
+    return 'denied'
   }
 }
 
 /** `null` means undecided — distinct from a recorded `'denied'`. */
 function getSnapshot(): string | null {
-  try {
-    return window.localStorage.getItem(CONSENT_STORAGE_KEY)
-  } catch {
-    // Storage unavailable: a browser with cookies blocked, or private mode in
-    // some engines. Nothing can be recorded, so nothing is asked — without
-    // persistence the banner would return on every page load forever, and the
-    // default is already denied.
-    return 'denied'
+  return inMemoryChoice ?? readStored()
+}
+
+/**
+ * Apply a choice to THIS document's tag.
+ *
+ * Consent Mode state is per document, so a grant recorded in another tab does
+ * not reach this one. Without this, a visitor with two tabs open who accepts in
+ * the first would watch the banner vanish in the second while it quietly stayed
+ * denied until reload — consent given and not honoured, which is the same
+ * shape of failure as the legacy banner, just in the generous direction.
+ */
+function applyToTag(choice: string | null) {
+  if (choice !== 'granted' && choice !== 'denied') return
+
+  window.gtag?.('consent', 'update', consentState(choice))
+}
+
+function subscribe(onChange: () => void) {
+  listeners.add(onChange)
+
+  const onStorage = (event: StorageEvent) => {
+    // `key` is null when storage is cleared wholesale, which also concerns us.
+    if (event.key !== null && event.key !== CONSENT_STORAGE_KEY) return
+
+    // Another tab wrote, so storage is now the authority and any unpersisted
+    // value here is stale. Leaving it would let this tab report `granted` from
+    // a failed write while the tag had just been set to `denied` elsewhere.
+    inMemoryChoice = null
+    applyToTag(readStored())
+    onChange()
+  }
+
+  window.addEventListener('storage', onStorage)
+
+  return () => {
+    listeners.delete(onChange)
+    window.removeEventListener('storage', onStorage)
   }
 }
 
@@ -75,6 +112,17 @@ function getSnapshot(): string | null {
  */
 function getServerSnapshot(): string | null {
   return 'denied'
+}
+
+/**
+ * Clears the unpersisted choice. TEST ONLY.
+ *
+ * `inMemoryChoice` is module state, so it survives between stories in a shared
+ * browser context and would carry one story's answer into the next. Exported
+ * rather than reached around, so the coupling is visible from both sides.
+ */
+export function resetConsentMemoryForTests() {
+  inMemoryChoice = null
 }
 
 export function ConsentBanner({ labels, lang }: { labels: ConsentBannerLabels; lang?: string }) {
@@ -91,16 +139,21 @@ export function ConsentBanner({ labels, lang }: { labels: ConsentBannerLabels; l
   const choice = React.useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot)
 
   function choose(next: ConsentChoice) {
+    // Held in memory FIRST, so the answer sticks for this session even if it
+    // cannot be written. Persistence is what makes it survive a reload; it is
+    // not what makes it take effect.
+    inMemoryChoice = next
+
     try {
       window.localStorage.setItem(CONSENT_STORAGE_KEY, next)
     } catch {
-      // The choice still applies to this page load even if it cannot be kept.
+      // Quota, or a blocked store. The choice still applies to this visit.
     }
 
     // Updated whichever way they answered. A "reject" that only closed the
     // banner would leave the tag in whatever state a previous grant had left
     // it, which is how a consent control becomes decorative.
-    window.gtag?.('consent', 'update', consentState(next))
+    applyToTag(next)
     for (const listener of listeners) listener()
   }
 

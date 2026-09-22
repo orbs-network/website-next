@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
-import { ConsentBanner } from './consent-banner'
+import { ConsentBanner, resetConsentMemoryForTests } from './consent-banner'
 import { CONSENT_STORAGE_KEY, consentState } from './consent'
 
 /**
@@ -42,6 +42,7 @@ let calls: unknown[][] = []
  */
 function prime(stored: string | null) {
   calls = []
+  resetConsentMemoryForTests()
   ;(window as unknown as { gtag: (...args: unknown[]) => void }).gtag = (...args: unknown[]) => {
     calls.push(args)
   }
@@ -119,5 +120,56 @@ export const AlreadyAnswered: Story = {
 
     await expect(canvas.queryByRole('button', { name: 'Accept' })).toBeNull()
     await expect(canvas.queryByRole('button', { name: 'Reject' })).toBeNull()
+  },
+}
+
+export const AnotherTabAccepts: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await waitFor(async () => {
+      await expect(canvas.getByRole('button', { name: 'Accept' })).toBeVisible()
+    })
+
+    // What another tab writing consent looks like from in here.
+    window.localStorage.setItem(CONSENT_STORAGE_KEY, 'granted')
+    window.dispatchEvent(new StorageEvent('storage', { key: CONSENT_STORAGE_KEY, newValue: 'granted' }))
+
+    // Hiding the banner is the easy half. Consent Mode state is per DOCUMENT,
+    // so without the update this tag stays denied until a reload — the visitor
+    // consented and this tab quietly ignored it.
+    await waitFor(async () => {
+      await expect(canvas.queryByRole('button', { name: 'Accept' })).toBeNull()
+    })
+    expect(calls).toContainEqual(['consent', 'update', consentState('granted')])
+  },
+}
+
+export const StorageWriteFails: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const setItem = window.localStorage.setItem.bind(window.localStorage)
+
+    // Reads keep working, writes do not — an exhausted quota, in effect.
+    window.localStorage.setItem = () => {
+      throw new Error('QuotaExceededError')
+    }
+
+    try {
+      await waitFor(async () => {
+        await expect(canvas.getByRole('button', { name: 'Accept' })).toBeVisible()
+      })
+      await userEvent.click(canvas.getByRole('button', { name: 'Accept' }))
+
+      // The choice cannot be kept, but it must still COUNT. Otherwise the
+      // snapshot stays undecided, the banner never closes, and it returns on
+      // every page for someone who has already answered.
+      await waitFor(async () => {
+        await expect(canvas.queryByRole('button', { name: 'Accept' })).toBeNull()
+      })
+      expect(calls).toContainEqual(['consent', 'update', consentState('granted')])
+    } finally {
+      window.localStorage.setItem = setItem
+    }
   },
 }
