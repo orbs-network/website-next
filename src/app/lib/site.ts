@@ -1,27 +1,55 @@
 /**
  * Canonical origin, and whether this deployment should be indexed.
  *
- * Both matter for SEO, in opposite directions:
+ * Both matter for SEO, and they are deliberately different KINDS of value:
  *
- *  - Absolute URLs in the sitemap must point at the canonical domain, not at
- *    whatever ephemeral hostname built them.
- *  - Preview deployments must not be indexed. A crawlable preview is the same
- *    content on a second domain, competing with the real site.
+ *  - The origin is a property of the CONTENT. Every absolute URL — canonical,
+ *    hreflang, sitemap entry, feed link — names the one domain this content is
+ *    authoritative at, whichever host is serving the request. It is a constant.
+ *  - Indexing is a property of the DEPLOYMENT. A preview must not be crawled;
+ *    the same content on a second domain competes with the real site. That has
+ *    to be read at runtime, and `robots.ts` is `force-dynamic` so it is.
+ *
+ * Conflating the two is what #71 was: an origin read from the environment, at
+ * build time, on pages that are prerendered.
  */
 
-const FALLBACK_SITE_URL = 'https://www.orbs.com'
+/**
+ * The one domain this content is canonically served from.
+ *
+ * A CONSTANT, not an environment variable, and that is the fix for #71 rather
+ * than an oversight.
+ *
+ * It used to read `SITE_URL`. Page canonicals and hreflang are emitted by
+ * `generateMetadata`, which runs at BUILD time for prerendered routes, so
+ * whatever origin the build happened to see was frozen into the HTML. Promote a
+ * build artifact between environments — which is exactly what Vercel's "Promote
+ * to Production" does, reusing the artifact rather than rebuilding — and every
+ * canonical keeps naming the environment it was built in. Two domains serving
+ * identical content with canonicals pointing at the wrong one is a real ranking
+ * problem, and nothing about it is visible in a diff or a test run.
+ *
+ * Making it configurable was the bug. A canonical URL is an assertion about
+ * which copy of this content is authoritative, and the answer does not depend
+ * on which host is answering the request: a preview deployment should say
+ * `www.orbs.com` too, because the preview is not the authoritative copy and
+ * must not be indexed as one. `shouldAllowIndexing()` already blocks previews.
+ *
+ * So a value that must be identical in every environment for correctness is not
+ * configuration. `SITE_URL` was unset in every Vercel environment anyway, so
+ * every deployment was already using this exact string — pinning it changes no
+ * output and removes the failure mode.
+ *
+ * Changing the domain is now a code change. That is the point: it cannot drift
+ * per environment, and it goes through review.
+ */
+export const CANONICAL_ORIGIN = 'https://www.orbs.com'
 
 /**
  * Origin without a trailing slash. Paths from `lib/routes` supply their own
  * leading slash, and carry a trailing one to match `trailingSlash: true`.
- *
- * Deliberately NOT prefixed NEXT_PUBLIC_. That prefix is what makes Next inline
- * a value at build time, which would freeze the origin into the prerendered
- * metadata routes — so a build promoted to another environment would keep
- * serving the previous one's URLs. These routes are server-only, so a plain
- * server env var is both correct and read at runtime.
  */
-export const siteUrl = (process.env.SITE_URL || FALLBACK_SITE_URL).replace(/\/+$/, '')
+export const siteUrl = CANONICAL_ORIGIN
 
 /** Hostname only — the robots.txt `Host` directive takes no scheme or path. */
 export const siteHost = new URL(siteUrl).host

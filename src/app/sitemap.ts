@@ -10,11 +10,16 @@ import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 /**
  * Computed per request, matching robots.ts.
  *
- * Under ISR this was prerendered, so absoluteUrl() ran at build time and the
- * origin was frozen in — a build served with a different SITE_URL kept emitting
- * the build-time host in every <loc> while robots.txt correctly switched. Two
- * SEO files disagreeing about the canonical domain is worse than either being
- * stale.
+ * The original reason was the origin: this was prerendered, so `absoluteUrl()`
+ * ran at build time and froze the build host into every `<loc>` while
+ * robots.txt, being dynamic, correctly switched — two SEO files disagreeing
+ * about the canonical domain. #71 removed that failure mode at the source by
+ * making the origin a constant, so it can no longer differ between the two.
+ *
+ * Still dynamic, for the reason that outlives it: a sitemap's job is to list
+ * what exists NOW, and a prerendered one omits every post published since the
+ * last build. Indexing is also a per-deployment decision that has to be read at
+ * runtime, which is why robots.ts stays dynamic regardless.
  *
  * The cost is one Contentful query per request. A sitemap is fetched by
  * crawlers a handful of times a day, so that is not a hot path — and it is one

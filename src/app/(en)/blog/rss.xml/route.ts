@@ -14,11 +14,15 @@ import { absoluteUrl, siteUrl } from '@/app/lib/site'
  * Rendered per request, then cached at the edge by the `Cache-Control` header
  * the handler sets — see `GET`.
  *
- * NOT ISR. The feed embeds `absoluteUrl()` output in `<atom:link rel="self">`
- * and in every item link, so prerendering it would freeze the build-time
- * SITE_URL into a document that advertises its own canonical address — the
- * same defect #71 tracks for canonicals, and the reason `sitemap.ts` is
- * dynamic too. Freshness here is a CDN concern, not a build-time one.
+ * NOT ISR, though the original reason for that has since gone away. It was
+ * dynamic because `absoluteUrl()` read `SITE_URL`, so prerendering would freeze
+ * the build-time origin into a document that advertises its own canonical
+ * address. #71 fixed that at the source: the origin is now a constant, and
+ * prerendering it would be harmless.
+ *
+ * It stays dynamic for the reason that survives — the feed's CONTENT is the
+ * latest posts, and a prerendered feed is stale until something rebuilds it.
+ * Freshness here is a CDN concern, not a build-time one.
  */
 export const dynamic = 'force-dynamic'
 
