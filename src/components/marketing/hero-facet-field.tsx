@@ -250,7 +250,18 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         pointerY = clientY - rect.top
       }
 
-      start()
+      /*
+        Only wake the loop when there is something for it to do — the pointer
+        is in the field, or a fade is still settling.
+
+        This listener is on the WINDOW, so it runs for every mouse move
+        anywhere on the page. Calling `start()` unconditionally meant that once
+        a reader had touched the hero, moving the mouse over the footer
+        scheduled a frame per event for the rest of the visit, each one
+        clearing a 2880x1372 canvas and writing three custom properties to
+        paint nothing.
+      */
+      if (target !== 0 || intensity > 0.002) start()
     }
 
     const onPointerMove = (event: PointerEvent) => {
