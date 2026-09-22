@@ -375,13 +375,24 @@
   /*
     Opacity lives on the container, NOT on the two dot layers.
 
-    The design's dots are 50% white. Put that on each layer and the large dots
-    — which sit on top of the small dot they replace — composite to 75% and
-    read as a different, brighter colour. One opacity over two fully opaque
-    layers is the same 50% everywhere.
+    Put it on each layer instead and the large dots — which sit on top of the
+    small dot they replace — composite against it and read as a brighter
+    colour than the rest. One opacity over two fully opaque layers is the same
+    value everywhere.
+
+    0.3, AND NOT THE 0.5 WRITTEN ON THE DESIGN'S FILL. Figma multiplies
+    opacity down the node chain, and the dots have it in two places: the
+    `Vector` fill is 50%, but the `grid pattern` GROUP that contains it is
+    itself at 60%. 0.6 x 0.5 = 0.3, and reading only the fill shipped dots
+    two-thirds too strong.
+
+    Measured rather than just recomputed, because the same mistake in reverse
+    is easy: sampling the hero's left margin in the composed 3.4 frame gives a
+    page background of 18.7 and a dot peak of 89.7, which is an alpha of
+    exactly 0.300 for white over that background.
   */
   .hero-dot-grid {
-    opacity: 0.5;
+    opacity: 0.3;
   }
 
   /*

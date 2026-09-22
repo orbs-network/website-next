@@ -75,11 +75,19 @@ export const Resting: Story = {
     const largePitch = Number.parseFloat(maskOf(large!).size)
     expect(largePitch).toBeCloseTo(40.5 * 5, 5)
 
-    // Opacity belongs to the container, not the layers: 50% on each would
-    // composite to 75% wherever a large dot covers the small one it replaces.
+    /*
+      Opacity belongs to the container, not the layers: applied to each, the
+      large dots would composite against the small ones they replace and read
+      brighter than the rest of the grid.
+
+      0.3 is the design's EFFECTIVE value, not the 0.5 on its fill — Figma
+      multiplies down the node chain and the `grid pattern` group above the
+      vector is at 0.6. Pinned here because 0.5 is what the file appears to say
+      and is what this shipped first.
+    */
     expect(getComputedStyle(small!).opacity).toBe('1')
     expect(getComputedStyle(large!).opacity).toBe('1')
-    expect(getComputedStyle(canvasElement.querySelector('.hero-dot-grid')!).opacity).toBe('0.5')
+    expect(getComputedStyle(canvasElement.querySelector('.hero-dot-grid')!).opacity).toBe('0.3')
 
     // Nothing here is content.
     expect(canvas.queryByRole('img')).toBeNull()
