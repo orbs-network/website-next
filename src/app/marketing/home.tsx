@@ -363,44 +363,59 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      <Marquee
-        phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
-        pauseLabel={t('marquee.pause')}
-        resumeLabel={t('marquee.resume')}
-        lang={lang('marquee.oneApi')}
-      />
-
       {/*
+        The marquee and the call to action share ONE glowing field.
+
+        In the design they are not separate blocks over separate backgrounds:
+        `Orbs Glow Background` is a single 954px layer that runs behind the
+        signup, the marquee and the CTA together, so the scrolling phrases sit
+        on the tinted upper part of the glow rather than on flat black. Built as
+        two independent sections, the marquee lost that entirely — which is why
+        the band appeared to start abruptly below it.
+
+        The signup is not here yet (#145, deferred), so this covers the two
+        blocks that exist.
+      */}
+      <div className="relative isolate overflow-hidden">
+        <SectionBackdrop variant="glow" />
+
+        <Marquee
+          phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
+          pauseLabel={t('marquee.pause')}
+          resumeLabel={t('marquee.resume')}
+          lang={lang('marquee.oneApi')}
+        />
+
+        {/*
         The design's closing block: three calls to action centred in a glowing
         field, not a bare button row. `CTA Area` is 518px tall around a 174px
         container, so the space around the buttons IS the design.
       */}
-      <section className="relative isolate overflow-hidden px-5 py-44">
-        <SectionBackdrop variant="glow" />
-
-        {/*
+        <section className="px-5 py-44">
+          {/*
           The design's `CTA section Container` is 174px tall; the buttons are
           42px. Reserving that height is what makes the block the size it was
           drawn, rather than padding around a thin row.
         */}
-        <div className="relative flex min-h-[174px] flex-wrap items-center justify-center gap-4">
-          <Button asChild variant="secondary">
-            <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
-              {t('connect.follow')}
-            </a>
-          </Button>
-          <Button asChild variant="secondary">
-            <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
-              {t('connect.community')}
-            </a>
-          </Button>
-          <Button asChild>
-            <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
-              {t('connect.contact')}
-            </Link>
-          </Button>
-        </div>
-      </section>
+          <div className="relative flex min-h-[174px] flex-wrap items-center justify-center gap-4">
+            <Button asChild variant="secondary">
+              <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
+                {t('connect.follow')}
+              </a>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
+                {t('connect.community')}
+              </a>
+            </Button>
+            <Button asChild>
+              <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
+                {t('connect.contact')}
+              </Link>
+            </Button>
+          </div>
+        </section>
+      </div>
     </>
   )
 }
