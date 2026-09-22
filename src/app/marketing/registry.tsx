@@ -108,6 +108,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
     ),
     namespace: 'pages.accessibilityDeclaration',
   },
+  '/cookies': {
+    render: (locale) => <LegalPage path="/cookies" locale={locale} namespace="pages.cookies" />,
+    namespace: 'pages.cookies',
+  },
   '/liquidity-hub-terms-of-use': {
     render: (locale) => (
       <LegalPage path="/liquidity-hub-terms-of-use" locale={locale} namespace="pages.liquidityHubTerms" />

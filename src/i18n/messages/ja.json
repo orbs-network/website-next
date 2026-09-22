@@ -72,7 +72,8 @@
       "contact": "Contact",
       "termsOfUse": "利用規約",
       "privacyPolicy": "プライバシーポリシー",
-      "accessibility": ""
+      "accessibility": "",
+      "cookies": "Cookie"
     },
     "socials": {
       "github": "GitHub",
@@ -81,6 +82,11 @@
       "discord": "Discord",
       "youtube": "YouTube",
       "snapshot": "Snapshot"
+    },
+    "status": {
+      "label": "ネットワーク状況",
+      "good": "正常",
+      "degraded": "低下"
     }
   },
   "languageSelector": {

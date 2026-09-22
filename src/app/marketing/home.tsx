@@ -217,38 +217,48 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section className="container mx-auto border-t border-border px-5 py-section">
-        <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('features.eyebrow')}>
-          {t('features.eyebrow')}
-        </p>
-        <H2 className="mt-6 text-balance" lang={lang('features.title')}>
-          {t('features.title')}
-        </H2>
+      {/*
+        The white band. `bg-surface` rather than `bg-bg` because the design
+        gives this section the brighter of the two light tones — #ffffff
+        against the news run's #f6f6f6 — and the pair inverts with the theme.
+      */}
+      <div className="band-contrast bg-surface">
+        <section className="container mx-auto px-5 py-section">
+          <p
+            className="text-detail font-medium uppercase tracking-widest text-fg-muted"
+            lang={lang('features.eyebrow')}
+          >
+            {t('features.eyebrow')}
+          </p>
+          <H2 className="mt-6 text-balance" lang={lang('features.title')}>
+            {t('features.title')}
+          </H2>
 
-        <FeatureTabs
-          className="mt-16"
-          tabs={HOME_FEATURES.map((id) => ({
-            id,
-            title: t(`features.${id}.title`),
-            panel: t(`features.${id}.panel`),
-            titleLang: lang(`features.${id}.title`),
-            panelLang: lang(`features.${id}.panel`),
-          }))}
-        />
+          <FeatureTabs
+            className="mt-16"
+            tabs={HOME_FEATURES.map((id) => ({
+              id,
+              title: t(`features.${id}.title`),
+              panel: t(`features.${id}.panel`),
+              titleLang: lang(`features.${id}.title`),
+              panelLang: lang(`features.${id}.panel`),
+            }))}
+          />
 
-        <div className="mt-10 flex flex-wrap gap-4">
-          <Button asChild variant="secondary">
-            <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
-              {t('features.cta')}
-            </Link>
-          </Button>
-          <Button asChild variant="secondary">
-            <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer" lang={lang('features.github')}>
-              {t('features.github')}
-            </a>
-          </Button>
-        </div>
-      </section>
+          <div className="mt-10 flex flex-wrap gap-4">
+            <Button asChild variant="secondary">
+              <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
+                {t('features.cta')}
+              </Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer" lang={lang('features.github')}>
+                {t('features.github')}
+              </a>
+            </Button>
+          </div>
+        </section>
+      </div>
 
       <section className="container mx-auto border-t border-border px-5 py-section" lang={lang('network.body')}>
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('network.eyebrow')}>
@@ -283,19 +293,26 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {posts.length > 0 && (
-        <section className="container mx-auto border-t border-border px-5 py-section">
-          <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('news.eyebrow')}>
-            {t('news.eyebrow')}
-          </p>
+      {/*
+        News and Discover share ONE band. The design runs a single #f6f6f6
+        field from the news heading to the end of Discover — closing and
+        reopening the background between them would draw a seam the design
+        does not have.
+      */}
+      <div className="band-contrast bg-bg">
+        {posts.length > 0 && (
+          <section className="container mx-auto px-5 py-section">
+            <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('news.eyebrow')}>
+              {t('news.eyebrow')}
+            </p>
 
-          <div className="mt-6 flex flex-wrap items-center justify-between gap-6">
-            <H2 className="text-balance" lang={lang('news.title')}>
-              {t('news.title')}
-            </H2>
-          </div>
+            <div className="mt-6 flex flex-wrap items-center justify-between gap-6">
+              <H2 className="text-balance" lang={lang('news.title')}>
+                {t('news.title')}
+              </H2>
+            </div>
 
-          {/*
+            {/*
             `lang="en"` on the whole rail. Contentful has a single `en-US`
             locale — there is no Japanese or Korean blog, which is why the
             language selector hides on `/blog` — so every title, excerpt and
@@ -306,44 +323,45 @@ export async function HomePage({ locale }: { locale: Locale }) {
             Without it a screen reader reads English article titles with
             Japanese pronunciation, which is the exact defect #103 is about.
           */}
-          <CardRail
-            className="mt-6"
-            lang="en"
-            label={t('news.title')}
-            previousLabel={t('news.previous')}
-            nextLabel={t('news.next')}
-          >
-            {posts.map((post) => (
-              <NewsCard
-                key={post.slug}
-                post={post}
-                readLabel={t('news.readTime', { minutes: readingMinutes(post.content) })}
-              />
+            <CardRail
+              className="mt-6"
+              lang="en"
+              label={t('news.title')}
+              previousLabel={t('news.previous')}
+              nextLabel={t('news.next')}
+            >
+              {posts.map((post) => (
+                <NewsCard
+                  key={post.slug}
+                  post={post}
+                  readLabel={t('news.readTime', { minutes: readingMinutes(post.content) })}
+                />
+              ))}
+            </CardRail>
+          </section>
+        )}
+
+        <section className="container mx-auto px-5 py-section">
+          <H2 className="text-balance" lang={lang('discover.title')}>
+            {t('discover.title')}
+          </H2>
+
+          <ul className="mt-16 flex flex-col">
+            {HOME_DISCOVER.map((item) => (
+              <li key={item.id}>
+                <Link
+                  href={localeHref(item.href, locale)}
+                  lang={lang(`discover.${item.id}`)}
+                  className="flex items-center justify-between border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                >
+                  {t(`discover.${item.id}`)}
+                  <span aria-hidden="true">&rarr;</span>
+                </Link>
+              </li>
             ))}
-          </CardRail>
+          </ul>
         </section>
-      )}
-
-      <section className="container mx-auto border-t border-border px-5 py-section">
-        <H2 className="text-balance" lang={lang('discover.title')}>
-          {t('discover.title')}
-        </H2>
-
-        <ul className="mt-16 flex flex-col">
-          {HOME_DISCOVER.map((item) => (
-            <li key={item.id}>
-              <Link
-                href={localeHref(item.href, locale)}
-                lang={lang(`discover.${item.id}`)}
-                className="flex items-center justify-between border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-              >
-                {t(`discover.${item.id}`)}
-                <span aria-hidden="true">&rarr;</span>
-              </Link>
-            </li>
-          ))}
-        </ul>
-      </section>
+      </div>
 
       <Marquee
         phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}

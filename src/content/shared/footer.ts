@@ -126,7 +126,15 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
  */
 export const FOOTER_POLICY_LINKS: readonly FooterLinkSpec[] = [
   { key: 'termsOfUse', href: '/terms-of-use' },
+  // 3.4 adds COOKIES here, between terms and privacy, and now there is a page
+  // behind it — the design asked for the link before one existed.
+  { key: 'cookies', href: '/cookies' },
   { key: 'privacyPolicy', href: '/privacy-policy' },
+  /*
+    ACCESSIBILITY stays, and 3.4 drops it. Kept deliberately: it is a published
+    compliance artefact, and removing one because a Figma frame omitted it is
+    not a trade worth making. Sarbloc's call — see #149.
+  */
   { key: 'accessibility', href: '/accessibility-declaration' },
 ]
 
