@@ -218,6 +218,41 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       rect gives the same behaviour and also handles the pointer leaving
       through any edge, including out of the document.
     */
+    /*
+      The pointer's last VIEWPORT position, kept so it can be re-resolved
+      against a moved section. `-1` means "not seen yet", which is different
+      from "at the origin".
+    */
+    let clientX = -1
+    let clientY = -1
+
+    /**
+     * Resolve the remembered viewport position against the section's current
+     * rect.
+     *
+     * Separate from the event handler because SCROLLING MOVES THE SECTION
+     * WITHOUT MOVING THE MOUSE. Hold the cursor still over the hero and use
+     * the wheel: no `pointermove` fires, so a handler that only ran on pointer
+     * events would keep the old local coordinates while the rect slid out from
+     * under them. The field drifts off the cursor, and keeps burning frames
+     * after the hero has scrolled away entirely.
+     */
+    const resolvePointer = () => {
+      if (clientX < 0) return
+
+      const rect = root.getBoundingClientRect()
+      const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
+
+      target = inside ? 1 : 0
+
+      if (inside) {
+        pointerX = clientX - rect.left
+        pointerY = clientY - rect.top
+      }
+
+      start()
+    }
+
     const onPointerMove = (event: PointerEvent) => {
       // Coarse pointers fire this too (a tap is a pointer event), and the
       // field is explicitly desktop-only. `enabled` gates mounting; this gates
@@ -225,21 +260,9 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       // mouse.
       if (event.pointerType !== 'mouse') return
 
-      const rect = root.getBoundingClientRect()
-      const inside =
-        event.clientX >= rect.left &&
-        event.clientX <= rect.right &&
-        event.clientY >= rect.top &&
-        event.clientY <= rect.bottom
-
-      target = inside ? 1 : 0
-
-      if (inside) {
-        pointerX = event.clientX - rect.left
-        pointerY = event.clientY - rect.top
-      }
-
-      start()
+      clientX = event.clientX
+      clientY = event.clientY
+      resolvePointer()
     }
 
     const onPointerLeave = () => {
@@ -259,6 +282,12 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     window.addEventListener('pointermove', onPointerMove, { passive: true })
     document.addEventListener('pointerleave', onPointerLeave)
     window.addEventListener('blur', onPointerLeave)
+    /*
+      `capture` so this still fires when the page is scrolled inside a nested
+      scroller rather than on the document — scroll does not bubble, but it
+      does capture.
+    */
+    window.addEventListener('scroll', resolvePointer, { passive: true, capture: true })
 
     return () => {
       if (frame !== 0) cancelAnimationFrame(frame)
@@ -266,6 +295,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       window.removeEventListener('pointermove', onPointerMove)
       document.removeEventListener('pointerleave', onPointerLeave)
       window.removeEventListener('blur', onPointerLeave)
+      window.removeEventListener('scroll', resolvePointer, { capture: true })
       root.style.removeProperty('--hero-facet-x')
       root.style.removeProperty('--hero-facet-y')
       root.style.removeProperty('--hero-facet-hole')
