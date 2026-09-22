@@ -86,23 +86,40 @@ const MAX_EMBEDDED_WIDTH = 128
  * difference 0.70/255.
  */
 async function shrinkEmbeddedRaster(source) {
-  const match = source.match(/data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)/)
-  if (!match) return null
+  const matches = [...source.matchAll(/data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)/g)]
+  if (matches.length === 0) return null
 
-  const payload = Buffer.from(match[2], 'base64')
-  const { width } = await sharp(payload).metadata()
-  if (!width || width <= MAX_EMBEDDED_WIDTH) return null
+  let next = source
+  let changed = false
 
-  const resized = await sharp(payload)
-    .resize({ width: MAX_EMBEDDED_WIDTH, height: MAX_EMBEDDED_WIDTH, fit: 'inside', withoutEnlargement: true })
-    .png({ compressionLevel: 9, palette: true })
-    .toBuffer()
+  // EVERY payload, not just the first. `asset-weight.test.ts` rejects a file if
+  // ANY of its embedded images is oversized, so a script that fixed only the
+  // first would leave the test failing and its advice — run this script —
+  // useless to whoever hit it. A guard that prescribes a remedy which does not
+  // work is worse than one that only reports.
+  for (const [whole, , data] of matches) {
+    const payload = Buffer.from(data, 'base64')
+    const { width, height } = await sharp(payload).metadata()
 
-  // Only worth rewriting if it actually helps. A payload that is already
-  // efficiently encoded can come back LARGER from a re-encode.
-  if (resized.length >= payload.length) return null
+    // The LONGEST side. A 100x1000 strip is only 100 wide and would slip past a
+    // width-only check while still carrying far more pixels than it needs.
+    const longest = Math.max(width ?? 0, height ?? 0)
+    if (longest <= MAX_EMBEDDED_WIDTH) continue
 
-  return source.replace(match[0], `data:image/png;base64,${resized.toString('base64')}`)
+    const resized = await sharp(payload)
+      .resize({ width: MAX_EMBEDDED_WIDTH, height: MAX_EMBEDDED_WIDTH, fit: 'inside', withoutEnlargement: true })
+      .png({ compressionLevel: 9, palette: true })
+      .toBuffer()
+
+    // Only worth rewriting if it actually helps. A payload that is already
+    // efficiently encoded can come back LARGER from a re-encode.
+    if (resized.length >= payload.length) continue
+
+    next = next.replace(whole, `data:image/png;base64,${resized.toString('base64')}`)
+    changed = true
+  }
+
+  return changed ? next : null
 }
 
 /** Whether this file is a pure raster wrapper and safe to rasterise. */
