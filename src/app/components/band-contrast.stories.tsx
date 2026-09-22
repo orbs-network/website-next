@@ -81,6 +81,13 @@ function Band({ variant }: { variant: 'bg' | 'surface' }) {
       <p data-testid="muted" className="text-fg-muted">
         Muted caption
       </p>
+      {/*
+        The accent, which `FeatureTabs` uses for its SELECTED tab label — the
+        one piece of text in a band that a reader is meant to notice.
+      */}
+      <p data-testid="accent" className="text-accent-primary">
+        Selected tab label
+      </p>
     </div>
   )
 }
@@ -90,11 +97,24 @@ const AA_NORMAL = 4.5
 /** AA for large text, which is what the muted captions sit closest to. */
 const AA_LARGE = 3
 
-function assertReadable(canvas: ReturnType<typeof within>) {
+function assertReadable(canvas: ReturnType<typeof within>, expectDark: boolean) {
+  /*
+    The theme is ASSERTED, not assumed.
+
+    The first version of this file set `globals: { theme: 'dark' }`, which the
+    preview decorator does not read — it keys off the backgrounds toolbar. Both
+    "dark" stories therefore ran in light mode and never touched the
+    `:root.dark .band-contrast` branch they existed to guard. The falsification
+    still passed, because the light branch breaks the same way, so the whole
+    thing looked convincing while proving half of what it claimed.
+  */
+  expect(document.documentElement.classList.contains('dark'), 'dark theme active').toBe(expectDark)
+
   for (const [id, minimum] of [
     ['plain', AA_NORMAL],
     ['link', AA_NORMAL],
     ['muted', AA_LARGE],
+    ['accent', AA_NORMAL],
   ] as const) {
     const el = canvas.getByTestId(id)
     const ratio = contrastRatio(getComputedStyle(el).color, resolvedBackground(el))
@@ -104,25 +124,23 @@ function assertReadable(canvas: ReturnType<typeof within>) {
 }
 
 export const DarkThemeBand: Story = {
-  globals: { theme: 'dark' },
+  globals: { backgrounds: { value: '#121214' } },
   render: () => <Band variant="bg" />,
-  play: async ({ canvasElement }) => assertReadable(within(canvasElement)),
+  play: async ({ canvasElement }) => assertReadable(within(canvasElement), true),
 }
 
 export const DarkThemeSurfaceBand: Story = {
-  globals: { theme: 'dark' },
+  globals: { backgrounds: { value: '#121214' } },
   render: () => <Band variant="surface" />,
-  play: async ({ canvasElement }) => assertReadable(within(canvasElement)),
+  play: async ({ canvasElement }) => assertReadable(within(canvasElement), true),
 }
 
 export const LightThemeBand: Story = {
-  globals: { theme: 'light' },
   render: () => <Band variant="bg" />,
-  play: async ({ canvasElement }) => assertReadable(within(canvasElement)),
+  play: async ({ canvasElement }) => assertReadable(within(canvasElement), false),
 }
 
 export const LightThemeSurfaceBand: Story = {
-  globals: { theme: 'light' },
   render: () => <Band variant="surface" />,
-  play: async ({ canvasElement }) => assertReadable(within(canvasElement)),
+  play: async ({ canvasElement }) => assertReadable(within(canvasElement), false),
 }

@@ -283,6 +283,22 @@
     --muted-foreground: var(--color-neutral-400);
     --border: var(--color-neutral-600);
     --input: var(--color-neutral-600);
+
+    /*
+      The accent has to invert too, and forgetting it was a regression rather
+      than an omission: `indigo-400` reads about 5.9:1 on the light page and
+      2.28:1 on the dark surface this band introduces, so the selected tab label
+      in `FeatureTabs` — the one word in the section a reader is meant to notice
+      — dropped below AA the moment the band went in.
+      These mirror what each theme already does for links: the dark theme
+      reaches for a lighter periwinkle, the light theme for a deeper indigo.
+    */
+    --color-accent-primary: var(--color-periwinkle-300);
+    --color-accent-primary-hover: var(--color-periwinkle-200);
+    --color-link: var(--color-periwinkle-300);
+    --accent: var(--color-periwinkle-300);
+    --primary: var(--color-periwinkle-300);
+    --ring: var(--color-periwinkle-300);
   }
 
   :root.dark .band-contrast {
@@ -300,6 +316,13 @@
     --muted-foreground: var(--color-neutral-500);
     --border: var(--color-neutral-300);
     --input: var(--color-neutral-300);
+
+    --color-accent-primary: var(--color-indigo-500);
+    --color-accent-primary-hover: var(--color-indigo-400);
+    --color-link: var(--color-indigo-500);
+    --accent: var(--color-indigo-500);
+    --primary: var(--color-indigo-500);
+    --ring: var(--color-indigo-500);
   }
 }
 
