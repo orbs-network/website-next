@@ -14,6 +14,7 @@
  *
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem --dry-run
+ *   node scripts/unwrap-raster-svgs.mjs --dir public/marketing/foo --max-width 400
  *
  * RENDERS the SVG rather than extracting its payload. The first version of this
  * script pulled the base64 out and resized it, which is wrong: every one of
@@ -44,8 +45,17 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  */
 const WRAPPER_TAGS = new Set(['svg', 'g', 'defs', 'pattern', 'rect', 'use', 'image', 'style', 'title', 'desc'])
 
-/** Widest any of these logos is displayed, times two for high-DPI. */
-const MAX_WIDTH = 240
+/**
+ * Default raster width, in pixels: the ecosystem logos display at 96px, doubled
+ * for high-DPI.
+ *
+ * Override with `--max-width` for a directory whose assets are shown larger.
+ * The Liquidity Hub partner logos render at about 189 CSS px, so 240 would
+ * under-sample them on any retina display — and the resulting softness is the
+ * kind of thing that looks like "the logo is a bit blurry" rather than like a
+ * decision somebody made.
+ */
+const DEFAULT_MAX_WIDTH = 240
 
 async function* walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -64,6 +74,17 @@ async function* walk(dir) {
  * about 19 CSS px, needing 57px at 3x.
  */
 const MAX_EMBEDDED_WIDTH = 128
+
+/**
+ * Byte budget for one embedded payload, mirroring `asset-weight.test.ts`.
+ *
+ * Dimensions are not the only way a payload gets fat: a noisy or unoptimised
+ * 128x128 PNG can sit under the size cap and still blow the budget. The test
+ * checks BYTES, so this has to as well — otherwise it reports a file as already
+ * small enough while CI keeps failing, and the advice to run this script is a
+ * no-op.
+ */
+const MAX_EMBEDDED_BYTES = 24 * 1024
 
 /**
  * Shrink an oversized raster embedded in an otherwise REAL vector.
@@ -86,7 +107,10 @@ const MAX_EMBEDDED_WIDTH = 128
  * difference 0.70/255.
  */
 async function shrinkEmbeddedRaster(source) {
-  const matches = [...source.matchAll(/data:image\/(png|jpeg|jpg);base64,([A-Za-z0-9+/=]+)/g)]
+  // Every raster format the guard counts, not just the two these files happen
+  // to use today. A WebP payload the test flags and this regex ignored would be
+  // flagged forever with no way to fix it.
+  const matches = [...source.matchAll(/data:image\/(png|jpe?g|webp|avif|gif);base64,([A-Za-z0-9+/=]+)/g)]
   if (matches.length === 0) return null
 
   let next = source
@@ -104,7 +128,10 @@ async function shrinkEmbeddedRaster(source) {
     // The LONGEST side. A 100x1000 strip is only 100 wide and would slip past a
     // width-only check while still carrying far more pixels than it needs.
     const longest = Math.max(width ?? 0, height ?? 0)
-    if (longest <= MAX_EMBEDDED_WIDTH) continue
+    // Re-encode when it is too big EITHER way. A payload already within the
+    // dimension cap can still exceed the byte budget, and skipping it there is
+    // what makes the remediation a no-op.
+    if (longest <= MAX_EMBEDDED_WIDTH && payload.length <= MAX_EMBEDDED_BYTES) continue
 
     const resized = await sharp(payload)
       .resize({ width: MAX_EMBEDDED_WIDTH, height: MAX_EMBEDDED_WIDTH, fit: 'inside', withoutEnlargement: true })
@@ -139,6 +166,8 @@ async function main() {
   const dryRun = argv.includes('--dry-run')
   const dirArg = argv[argv.indexOf('--dir') + 1]
   const root = resolve(REPO, argv.includes('--dir') && dirArg ? dirArg : 'public')
+  const widthArg = argv.includes('--max-width') ? Number(argv[argv.indexOf('--max-width') + 1]) : NaN
+  const maxWidth = Number.isFinite(widthArg) && widthArg > 0 ? widthArg : DEFAULT_MAX_WIDTH
 
   let before = 0
   let after = 0
@@ -175,7 +204,7 @@ async function main() {
     // `density` oversamples before the downscale, so the result is sharp at the
     // cap rather than rendered at the SVG's nominal size and stretched.
     const output = await sharp(path, { density: 288 })
-      .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+      .resize({ width: maxWidth, withoutEnlargement: true })
       .png({ compressionLevel: 9, effort: 10 })
       .toBuffer()
 
