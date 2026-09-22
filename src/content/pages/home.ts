@@ -124,7 +124,6 @@ export const HOME_IMAGES = {
    * The hero's facet cluster. A real vector, so it stays SVG — `next/image`
    * does not optimise SVG, but there is nothing to optimise: it scales.
    */
-  heroFacets: '/marketing/home/hero-facets.svg',
   /**
    * The network diagram. Also SVG, 23 KB, and the reason worth naming: the
    * frame the designer labelled "Place Diagram" is EMPTY — the real artwork is

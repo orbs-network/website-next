@@ -67,17 +67,23 @@ export async function HomePage({ locale }: { locale: Locale }) {
   return (
     <>
       {/*
-        `overflow-hidden` is not decoration. The facet cluster is absolutely
+        `overflow-hidden` is not decoration. The backdrop is absolutely
         positioned against this section, and an absolutely positioned child that
         extends past its container is exactly how #96 put a 390px viewport into
-        401px of horizontal scroll. Clipping here means the graphic can never do
-        that, whatever width it is given.
-      */}
-      {/*
+        401px of horizontal scroll. Clipping here means it can never do that,
+        whatever width it is given.
+
         Taller than the 3.4 frame draws it, deliberately. The design gives the
         hero 555px inside an 810px grid layer; this is ~700, which keeps the
         grid reading as the hero's own backdrop rather than a band that
         outlives it.
+
+        NO STATIC FACET GRAPHIC. A `hero-facets.svg` used to float at the right
+        of this section, taken from the cluster drawn in the design frame — but
+        that cluster is the designer's ILLUSTRATION OF THE HOVER STATE, drawn
+        around a `Cursor` graphic, not a fixed element of the page. It is built
+        for real now, so shipping a frozen copy of it as well left the hero
+        wearing the same motif twice.
       */}
       <section className="relative isolate mx-auto overflow-hidden px-5 pt-32 pb-40">
         {/*
@@ -98,25 +104,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </HeroFacetField>
 
         <div className="container relative mx-auto">
-          {/*
-            Decorative, and positioned behind the words rather than beside
-            them: the design floats it off to the right of a centred column,
-            which is a layer, not a column. `aria-hidden` and empty `alt` —
-            it says nothing the headline does not.
-
-            Hidden below `lg` because at that width it would sit under the
-            copy rather than beside it.
-          */}
-          <Image
-            src={HOME_IMAGES.heroFacets}
-            alt=""
-            aria-hidden="true"
-            width={420}
-            height={420}
-            priority
-            className="pointer-events-none absolute right-0 top-20 hidden w-[22rem] max-w-none opacity-60 xl:block"
-          />
-
           <div className="relative mx-auto max-w-4xl text-center">
             <p
               className="text-detail font-medium uppercase tracking-widest text-accent-primary"

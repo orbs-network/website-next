@@ -137,6 +137,14 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     let frame = 0
     let width = 0
     let height = 0
+    /*
+      Seconds of rotation accumulated while the field has been awake, NOT wall
+      clock. Advanced per frame from the frame timestamp, so the wave picks up
+      where it left off rather than jumping to wherever `performance.now()` had
+      got to while nothing was being drawn.
+    */
+    let elapsed = 0
+    let lastFrameAt = 0
 
     const resize = () => {
       const rect = root.getBoundingClientRect()
@@ -153,7 +161,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       ctx.clearRect(0, 0, width, height)
 
       if (intensity > 0.002) {
-        const facets = facetsAround(pointerX, pointerY, { intensity })
+        const facets = facetsAround(pointerX, pointerY, { intensity, elapsed })
 
         /*
           ONE gradient across the disc, recreated per frame because the disc
@@ -187,7 +195,16 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       root.style.setProperty('--hero-facet-hole', `${hole}px`)
     }
 
-    const tick = () => {
+    const tick = (now: number) => {
+      /*
+        Clamped to 100ms. A backgrounded tab or a long task can hand back a gap
+        of seconds, and advancing the wave by all of it would snap every facet
+        to a new orientation the moment the reader came back.
+      */
+      const delta = lastFrameAt === 0 ? 0 : Math.min((now - lastFrameAt) / 1000, 0.1)
+      lastFrameAt = now
+      elapsed += delta
+
       // Exponential ease toward the target. Frame-rate dependent, which is
       // acceptable for a decorative fade and keeps this to one line; the
       // visible difference between 60Hz and 120Hz is a fade that settles in
@@ -201,14 +218,23 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         intensity = 0
         draw()
         frame = 0
+        lastFrameAt = 0
         return
       }
 
+      /*
+        Keeps running while the pointer is in the field even if it never moves
+        again — unlike the fade, the rotation is not settling toward anything,
+        so there is no idle state to stop at while the field is up.
+      */
       frame = requestAnimationFrame(tick)
     }
 
     const start = () => {
-      if (frame === 0) frame = requestAnimationFrame(tick)
+      if (frame === 0) {
+        lastFrameAt = 0
+        frame = requestAnimationFrame(tick)
+      }
     }
 
     /*

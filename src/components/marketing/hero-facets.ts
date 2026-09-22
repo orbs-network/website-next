@@ -131,48 +131,62 @@ function lerp(from: number, to: number, amount: number): number {
 }
 
 /**
- * Which way a facet's apex points, in radians from the positive x axis.
- *
- * `-Math.PI / 2` is straight up — the Orbs mark's own orientation.
- *
- * THIS WAS RADIAL FIRST, AND THE DESIGN SAYS IT SHOULD NOT BE. Pointing each
- * facet away from the cursor is the obvious reading of "a fan out that follows
- * the mouse", it was built that way, and then measuring the designer's own
- * render of the cluster contradicted it. The method and the numbers, because
- * this is the one place here where the obvious answer is the wrong one:
- *
- * The 192 facets were segmented out of a PNG export of `Grid Pattern Top`,
- * their orientation recovered by maximising the third moment of each shape's
- * pixels (the estimator for a 3-fold symmetric blob), then grouped into eight
- * 45-degree sectors around the cursor. Orientation is only defined mod 120
- * degrees for a triangle, so all of the statistics below use 3*theta.
- *
- *   sector centre   radial predicts   design measures   within-sector R
- *     -157.5             -37.5            -55.9              0.58
- *     -112.5               7.5             39.7              0.82
- *      -67.5              52.5             22.2              0.77
- *      -22.5             -22.5             19.9              0.81
- *       22.5              22.5             39.4              0.81
- *       67.5             -52.5            -54.4              0.60
- *      112.5              -7.5            -21.5              0.73
- *      157.5              37.5            -22.1              0.62
- *
- * Two things follow. The high within-sector concentration says rotation is
- * systematic rather than noise — neighbouring facets agree with each other.
- * But it does not track the angle to the cursor, and no constant offset
- * reconciles the two columns. Scored across the whole field, radial (27.0
- * degrees mean error), constant (27.9) and tangential (29.9) are all
- * indistinguishable from the 30 degrees a uniform random field would give.
- *
- * So the honest position is that the design's rotation has no rule this
- * analysis could recover, and the visible fact is the one to build to: in the
- * design, facets near the cursor all point much the same way and drift slowly
- * — they do not pinwheel. A radial field pinwheels hardest exactly where the
- * cursor is, which is the most looked-at part of the effect.
- *
- * Exported and used in one place so swapping it back is a single line.
+ * The orientation a facet has at zero phase, in radians from the positive x
+ * axis. `-Math.PI / 2` is straight up — the Orbs mark's own orientation.
  */
 export const FACET_ORIENTATION = -Math.PI / 2
+
+/**
+ * How far the rotation lags per pixel of distance from the cursor, in radians.
+ *
+ * THE FACETS ROTATE, AND THE ROTATION TRAVELS OUTWARD. This went through two
+ * wrong answers before the design gave up the right one, which is worth
+ * recording because both were reasonable:
+ *
+ *  1. Facets point radially away from the cursor. The obvious reading of "a
+ *     fan out that follows the mouse". Measured against the design: 27.0
+ *     degrees mean error, where a uniform random field scores 30.
+ *  2. Facets share one fixed orientation. Scored 27.9 — equally useless.
+ *
+ * Both failed because they are STATIC models of an ANIMATION. A Figma frame is
+ * one instant of it, so every facet is caught at a different point in its
+ * turn, and no static rule can fit that. Once orientation is binned against
+ * DISTANCE FROM THE CURSOR rather than angle around it, the structure is
+ * obvious (orientation is mod 120 degrees for a triangle, so these are
+ * circular means on 3*theta):
+ *
+ *   distance   mean orientation   concentration R
+ *    20- 40         49.4               0.81
+ *    40- 60         53.7               0.56
+ *    60- 80         51.9               0.37
+ *    80-100         36.9               0.21
+ *   100-120        -12.9               0.10
+ *   120-140        -29.1               0.33
+ *   140-160        -19.2               0.86
+ *
+ * A phase that slides with distance, not with bearing. Unwrapped across the
+ * stretch where the estimator is most reliable (d = 50 to 130, where the
+ * measurement is not aliasing through a half turn), it runs about -83 degrees
+ * over 80 pixels. Rounded to one degree per pixel: a full 120-degree visual
+ * turn every 120px, which is what makes the rotation read as a wave rolling
+ * out from the pointer rather than as everything spinning at once.
+ *
+ * The low R in the middle bands is the estimator aliasing as the wave crosses
+ * a half turn, not an absence of signal — the bands either side of it are 0.81
+ * and 0.86.
+ */
+export const FACET_STAGGER = Math.PI / 180
+
+/**
+ * Seconds for one 120-degree turn — one full visual cycle, since a triangle at
+ * 120 degrees is indistinguishable from where it started.
+ *
+ * NOT measurable from the design: a still frame carries the stagger, because
+ * that is written across space, but it cannot carry a rate. Chosen slow enough
+ * to read as motion rather than as flicker, and it is the one number here that
+ * is taste rather than measurement.
+ */
+export const FACET_SPIN_SECONDS = 2.6
 
 export type Facet = {
   /** Centre, in the same space as the cursor passed in. */
@@ -204,11 +218,18 @@ export function facetsAround(
     intensity = 1,
     spacing = FACET_SPACING,
     radius = FACET_RADIUS,
-  }: { intensity?: number; spacing?: number; radius?: number } = {}
+    elapsed = 0,
+  }: { intensity?: number; spacing?: number; radius?: number; elapsed?: number } = {}
 ): Facet[] {
   if (intensity <= 0 || spacing <= 0 || radius <= 0) return []
 
   const facets: Facet[] = []
+
+  /*
+    The rotation every facet shares, before its own distance lag is taken off.
+    Computed once rather than per facet: it is the same for all ~200 of them.
+  */
+  const spin = ((elapsed % FACET_SPIN_SECONDS) / FACET_SPIN_SECONDS) * ((2 * Math.PI) / 3)
 
   /*
     Snap to the lattice rather than centring cells on the cursor. The grid is a
@@ -228,7 +249,8 @@ export function facetsAround(
       const y = row * spacing
       const dx = x - cursorX
       const dy = y - cursorY
-      const strength = falloff(Math.hypot(dx, dy), radius)
+      const distance = Math.hypot(dx, dy)
+      const strength = falloff(distance, radius)
 
       if (strength <= 0) continue
 
@@ -239,7 +261,13 @@ export function facetsAround(
         y,
         size: lerp(FACET_SIZE_MIN, FACET_SIZE_MAX, scaled),
         opacity: lerp(FACET_OPACITY_MIN, FACET_OPACITY_MAX, scaled),
-        angle: FACET_ORIENTATION,
+        /*
+          MINUS the lag, so the near facets lead and the far ones follow. The
+          sign is the whole effect: flipped, the wave collapses inward toward
+          the pointer instead of spreading from it, which looks like a drain
+          rather than a bloom.
+        */
+        angle: FACET_ORIENTATION + spin - distance * FACET_STAGGER,
       })
     }
   }

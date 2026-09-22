@@ -5,6 +5,8 @@ import {
   FACET_OPACITY_MAX,
   FACET_OPACITY_MIN,
   FACET_ORIENTATION,
+  FACET_SPIN_SECONDS,
+  FACET_STAGGER,
   FACET_RADIUS,
   FACET_SIZE_MAX,
   FACET_SIZE_MIN,
@@ -106,23 +108,55 @@ describe('facetsAround', () => {
     }
   })
 
-  it('does NOT rotate facets around the cursor', () => {
+  it('staggers rotation outward from the cursor', () => {
     /*
-      Guards a finding rather than a preference, so it is worth the words.
-
-      Pointing each facet away from the pointer is the obvious reading of "a
-      fan out that follows the mouse", and this component did exactly that
-      first. Measuring the designer's own render of the cluster says otherwise:
-      facets near the cursor point much the same way and drift slowly, and a
-      radial field pinwheels hardest precisely where the cursor is. The sector
-      table is in `FACET_ORIENTATION`.
-
-      If this is ever changed back, change it there — the point of the
-      assertion is that it cannot happen by accident.
+      The facet under the pointer leads; everything else lags in proportion to
+      how far out it is. Both halves matter — an unstaggered field spins as one
+      rigid disc, and a field staggered the other way collapses inward.
     */
-    for (const facet of facetsAround(500, 300)) {
-      expect(facet.angle).toBe(FACET_ORIENTATION)
+    const facets = facetsAround(0, 0).sort((a, b) => Math.hypot(a.x, a.y) - Math.hypot(b.x, b.y))
+    const nearest = facets[0]
+    const furthest = facets[facets.length - 1]
+
+    expect(Math.hypot(nearest.x, nearest.y)).toBeCloseTo(0, 10)
+    expect(nearest.angle).toBeCloseTo(FACET_ORIENTATION, 10)
+
+    // Lag is negative, and proportional to distance.
+    for (const facet of facets) {
+      const distance = Math.hypot(facet.x, facet.y)
+
+      expect(facet.angle).toBeCloseTo(FACET_ORIENTATION - distance * FACET_STAGGER, 10)
     }
+
+    expect(furthest.angle).toBeLessThan(nearest.angle)
+  })
+
+  it('turns through exactly one visual cycle per spin period', () => {
+    /*
+      A triangle rotated 120 degrees is indistinguishable from where it
+      started, so the period has to advance by 2pi/3 and not by 2pi. Getting
+      that wrong is invisible in a still and makes the wave run at a third of
+      its intended speed.
+    */
+    const at = (elapsed: number) => facetsAround(0, 0, { elapsed }).find((f) => f.x === 0 && f.y === 0)!.angle
+
+    expect(at(FACET_SPIN_SECONDS / 2) - at(0)).toBeCloseTo(Math.PI / 3, 10)
+
+    /*
+      And it wraps rather than growing without bound, so `elapsed` can run for
+      as long as a reader leaves the page open.
+
+      Compared MOD 120 degrees, which is the point of the test rather than a
+      loosening of it: a triangle at 120 degrees is the same triangle. A first
+      version asserted exact equality after 1000 periods and failed, because
+      2.6 has no exact binary representation — `2600 % 2.6` leaves almost a
+      whole period rather than zero. The facet was drawn identically; only the
+      number differed.
+    */
+    const cycle = (2 * Math.PI) / 3
+    const wrapped = (a: number) => ((a % cycle) + cycle) % cycle
+
+    expect(wrapped(at(FACET_SPIN_SECONDS * 1000))).toBeCloseTo(wrapped(at(0)), 6)
   })
 
   it('is largest and most opaque nearest the cursor', () => {

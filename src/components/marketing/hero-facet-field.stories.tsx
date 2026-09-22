@@ -48,14 +48,38 @@ export const Resting: Story = {
     expect(field).not.toBeNull()
     expect(getComputedStyle(field as Element).pointerEvents).toBe('none')
 
-    // The dots survive to the DOM as a real masked layer rather than as an
+    // The dots survive to the DOM as real masked layers rather than as an
     // empty div waiting for script to fill it.
-    const dots = canvasElement.querySelector('.hero-dot-grid')
-    expect(dots).not.toBeNull()
+    const small = canvasElement.querySelector('.hero-dot-grid-small')
+    const large = canvasElement.querySelector('.hero-dot-grid-large')
+    expect(small).not.toBeNull()
+    expect(large).not.toBeNull()
 
-    const style = getComputedStyle(dots as Element)
-    expect(style.maskImage || style.webkitMaskImage).toContain('url(')
-    expect(style.maskSize || style.webkitMaskSize).toContain('40.5px')
+    const maskOf = (el: Element) => {
+      const s = getComputedStyle(el)
+
+      return { image: s.maskImage || s.webkitMaskImage, size: s.maskSize || s.webkitMaskSize }
+    }
+
+    expect(maskOf(small!).image).toContain('url(')
+    expect(maskOf(small!).size).toContain('40.5px')
+
+    /*
+      The larger dots land on every FIFTH lattice point, so their tile must be
+      exactly five cells across. Asserted as the arithmetic rather than as the
+      literal 202.5, because the relationship is the design fact — a tile at
+      any other multiple still tiles cleanly and still looks like a grid, just
+      not this one.
+    */
+    expect(maskOf(large!).image).toContain('url(')
+    const largePitch = Number.parseFloat(maskOf(large!).size)
+    expect(largePitch).toBeCloseTo(40.5 * 5, 5)
+
+    // Opacity belongs to the container, not the layers: 50% on each would
+    // composite to 75% wherever a large dot covers the small one it replaces.
+    expect(getComputedStyle(small!).opacity).toBe('1')
+    expect(getComputedStyle(large!).opacity).toBe('1')
+    expect(getComputedStyle(canvasElement.querySelector('.hero-dot-grid')!).opacity).toBe('0.5')
 
     // Nothing here is content.
     expect(canvas.queryByRole('img')).toBeNull()

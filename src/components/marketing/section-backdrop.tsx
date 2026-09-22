@@ -118,7 +118,11 @@ export function SectionBackdrop({
             '[mask-image:linear-gradient(to_bottom,black_0%,black_62%,transparent_100%)]'
           )}
         >
-          <div className="hero-dot-grid absolute inset-0" />
+          <div className="hero-dot-grid absolute inset-0">
+            <div className="hero-dot-grid-small absolute inset-0" />
+            {/* Every fifth dot on both axes, at 4.5px against 2px. */}
+            <div className="hero-dot-grid-large absolute inset-0" />
+          </div>
         </div>
       ) : null}
     </div>
