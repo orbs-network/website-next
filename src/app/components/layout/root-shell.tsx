@@ -8,7 +8,6 @@ import { LOCALE_HTML_LANG, type Locale } from '@/i18n/locales'
 import { getTranslations } from 'next-intl/server'
 import { textLang } from '@/i18n/script'
 import { Analytics } from '@/app/components/analytics/analytics'
-import { ConsentBanner } from '@/app/components/analytics/consent-banner'
 import { localeHref } from '@/i18n/availability'
 import { Footer } from './footer/footer'
 import { Header } from './header'
@@ -93,10 +92,10 @@ export async function RootShell({ locale, children }: { locale: Locale; children
             <main>{children}</main>
             <Footer locale={locale} />
             <ScrollToTop label={scrollToTopLabel} lang={textLang(scrollToTopLabel, locale)} />
-            <ConsentBanner labels={consentLabels} lang={textLang(consentLabels.message, locale)} />
           </ThemeProvider>
         </NextIntlClientProvider>
-        <Analytics />
+        {/* Owns the tag AND the consent banner, so the two cannot diverge. */}
+        <Analytics consentLabels={consentLabels} lang={textLang(consentLabels.message, locale)} />
       </body>
     </html>
   )

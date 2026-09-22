@@ -1,6 +1,7 @@
 import Script from 'next/script'
 import { GoogleAnalytics } from '@next/third-parties/google'
 import { GA_MEASUREMENT_ID, consentBootstrapScript } from './consent'
+import { ConsentBanner, type ConsentBannerLabels } from './consent-banner'
 
 /**
  * Whether this deployment should report to the analytics property.
@@ -49,7 +50,18 @@ export function shouldReportAnalytics(): boolean {
  * only honours in a root layout — and `RootShell`, its only caller, is exactly
  * that.
  */
-export function Analytics() {
+export function Analytics({ consentLabels, lang }: { consentLabels: ConsentBannerLabels; lang?: string }) {
+  /*
+    ONE condition for the tag AND the banner, which is why the banner is
+    rendered from here rather than beside it in the shell.
+
+    Split across two call sites they drifted immediately: a preview deployment
+    ships no tag but asked every visitor to make a tracking choice, then wrote a
+    consent key recording an answer to a question that did not apply. A consent
+    prompt is a statement about what the site is doing — making it while doing
+    nothing is its own small dishonesty, and it is the kind that survives review
+    because everything on screen looks right.
+  */
   if (!shouldReportAnalytics()) {
     return null
   }
@@ -60,6 +72,7 @@ export function Analytics() {
         {consentBootstrapScript()}
       </Script>
       <GoogleAnalytics gaId={GA_MEASUREMENT_ID} />
+      <ConsentBanner labels={consentLabels} lang={lang} />
     </>
   )
 }
