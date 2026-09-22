@@ -93,22 +93,30 @@ export type RateLimitResult = {
   firstBlock: boolean
 }
 
-/** Whether this client may send now. Records the attempt when it may. */
-export function withinRateLimit(address: string, now: number): RateLimitResult {
+/**
+ * Whether this client may send now. Records the attempt when it may.
+ *
+ * `scope` separates one endpoint's budget from another's. The map is module
+ * state shared by every route that imports this, so without it a visitor who
+ * sent an enquiry would spend part of their newsletter allowance doing it —
+ * one person, two unrelated actions, one silently shared quota.
+ */
+export function withinRateLimit(scope: string, address: string, now: number): RateLimitResult {
+  const key = `${scope}:${address}`
   const since = now - WINDOW_MS
-  const existing = clients.get(address)
+  const existing = clients.get(key)
   const hits = (existing?.hits ?? []).filter((at) => at > since)
 
   if (hits.length >= LIMIT) {
     const firstBlock = existing?.warned !== true
     // Rewritten even on rejection, so the pruning above is not skipped for a
     // client that keeps hitting the limit and its array cannot grow.
-    clients.set(address, { hits, warned: true })
+    clients.set(key, { hits, warned: true })
     return { allowed: false, firstBlock }
   }
 
   hits.push(now)
-  clients.set(address, { hits, warned: false })
+  clients.set(key, { hits, warned: false })
 
   if (clients.size > MAX_TRACKED) {
     evictStale(since)

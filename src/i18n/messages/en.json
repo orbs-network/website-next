@@ -1462,6 +1462,17 @@
         "follow": "Follow us",
         "community": "Join community",
         "contact": "Talk to the team"
+      },
+      "newsletter": {
+        "heading": "Get updates from our team.",
+        "body": "Get the latest Orbs news and updates straight to your inbox.",
+        "name": "Your name",
+        "email": "Your email address",
+        "submit": "Sign up",
+        "sending": "Signing up…",
+        "success": "You are on the list. Thanks for subscribing.",
+        "failed": "That did not go through. Please try again.",
+        "invalidEmail": "Please enter a valid email address."
       }
     },
     "smartContracts": {

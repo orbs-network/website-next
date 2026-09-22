@@ -8,6 +8,7 @@ import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { Marquee } from '@/components/marketing/marquee'
+import { NewsletterForm } from '@/components/marketing/newsletter-form'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
@@ -44,10 +45,6 @@ import { textLang } from '@/i18n/script'
  *
  * NOT in this page, deliberately:
  *
- *  - **The newsletter block.** The design places a name and email signup here.
- *    There is no list behind it — the legacy endpoint has returned 404 for
- *    years — and shipping a form with no destination is precisely the bug the
- *    contact form fixed. It lands when #145 is decided.
  *  - **The footer restructure.** Five new columns, shared by every page on the
  *    site. Its own change, not a rider on this one.
  */
@@ -373,11 +370,49 @@ export async function HomePage({ locale }: { locale: Locale }) {
         two independent sections, the marquee lost that entirely — which is why
         the band appeared to start abruptly below it.
 
-        The signup is not here yet (#145, deferred), so this covers the two
-        blocks that exist.
+        All three blocks are here now. The signup was deferred while #145 was
+        open; it landed with this change.
       */}
       <div className="relative isolate overflow-hidden">
         <SectionBackdrop variant="glow" />
+
+        {/*
+          The signup, which the design places at the TOP of this glow field —
+          `Signup Area` is 436px inside `Orbs Glow Background`, above the
+          marquee and the call to action.
+          Two columns: the heading and its line on the left, the fields on the
+          right, with a rule beneath the whole thing. Deferred until #145 was
+          answered, because a form with no list behind it is the bug the
+          contact form was built to fix — the legacy one has been posting to a
+          dead Heroku host for years.
+        */}
+        <section className="container mx-auto border-b border-border px-5 py-section">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
+            <div className="lg:border-r lg:border-border lg:pr-16">
+              <H2 className="text-balance text-h3 sm:text-h2" lang={lang('newsletter.heading')}>
+                {t('newsletter.heading')}
+              </H2>
+              <p className="mt-6 text-detail leading-relaxed text-fg-muted" lang={lang('newsletter.body')}>
+                {t('newsletter.body')}
+              </p>
+            </div>
+
+            <NewsletterForm
+              labels={{
+                heading: t('newsletter.heading'),
+                body: t('newsletter.body'),
+                name: t('newsletter.name'),
+                email: t('newsletter.email'),
+                submit: t('newsletter.submit'),
+                sending: t('newsletter.sending'),
+                success: t('newsletter.success'),
+                failed: t('newsletter.failed'),
+                invalidEmail: t('newsletter.invalidEmail'),
+              }}
+              lang={lang('newsletter.heading')}
+            />
+          </div>
+        </section>
 
         <Marquee
           phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
