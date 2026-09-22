@@ -4,6 +4,7 @@ import { OrbsLogo } from '@/components/icons'
 import { FooterLink2 } from '@/components/ui/footer-link'
 import { Prose } from '@/components/marketing/prose'
 import { FOOTER_COLUMNS, FOOTER_EMAIL, FOOTER_POLICY_LINKS, FOOTER_SOCIALS } from '@/content/shared/footer'
+import { NetworkStatusIndicator } from './network-status'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -37,6 +38,9 @@ import { FooterSocials } from './footer-socials'
  * segment and no middleware, next-intl's hooks cannot resolve it from the
  * request and quietly return English.
  */
+/** Where the status indicator links, and where its reading comes from. */
+const FOOTER_STATUS_URL = 'https://status.orbs.network/'
+
 export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
 
@@ -99,6 +103,17 @@ export async function Footer({ locale }: { locale: Locale }) {
       <div className="border-t border-gray-200 dark:border-gray-800">
         <div className="container mx-auto flex flex-col-reverse items-center gap-6 px-5 py-6 sm:flex-row sm:justify-between">
           <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+            {/*
+              The status indicator leads the bar, as 3.4 draws it — and is
+              simply absent when the service cannot be read, rather than
+              falling back to a green dot. See `network-status.tsx`.
+            */}
+            <li>
+              <NetworkStatusIndicator
+                labels={{ label: t('status.label'), good: t('status.good'), degraded: t('status.degraded') }}
+                href={FOOTER_STATUS_URL}
+              />
+            </li>
             {FOOTER_POLICY_LINKS.map((spec) => ({ spec, label: t(`links.${spec.key}`) }))
               // Same empty-label rule as the nav columns: the legacy Japanese
               // footer carries Terms of Use and Privacy Policy but no

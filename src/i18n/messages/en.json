@@ -71,7 +71,8 @@
       "contact": "Contact",
       "termsOfUse": "Terms of Use",
       "privacyPolicy": "Privacy Policy",
-      "accessibility": "Accessibility Declaration"
+      "accessibility": "Accessibility Declaration",
+      "cookies": "Cookies"
     },
     "socials": {
       "github": "GitHub",
@@ -80,6 +81,11 @@
       "discord": "Discord",
       "youtube": "YouTube",
       "snapshot": "Snapshot"
+    },
+    "status": {
+      "label": "Network status",
+      "good": "good",
+      "degraded": "degraded"
     }
   },
   "languageSelector": {
@@ -1573,6 +1579,12 @@
       },
       "viewOnEtherscan": "View on Etherscan",
       "backLink": "Back to Orbs Overview"
+    },
+    "cookies": {
+      "meta": {
+        "title": "Cookie policy",
+        "description": "What this site stores on your device, what each item is for, and how to change or withdraw your choice."
+      }
     }
   }
 }

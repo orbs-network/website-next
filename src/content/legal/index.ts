@@ -82,6 +82,17 @@ const DOCUMENTS = {
   '/liquidity-hub-terms-of-use': {
     body: { en: read('liquidity-hub-terms-of-use.en.md') },
   },
+  /*
+    Written here rather than handed over by a lawyer, which is the exception in
+    this file. It describes mechanics — which key holds the consent choice,
+    which cookies the analytics tag sets and when — so it has to be checked
+    against the code rather than filed. The 3.4 footer asks for a COOKIES link
+    and there was no page behind it; #177 gave the site a consent mechanism
+    worth describing.
+  */
+  '/cookies': {
+    body: { en: read('cookies.en.md') },
+  },
 } as const satisfies Record<string, LegalDocument>
 
 export type LegalPagePath = keyof typeof DOCUMENTS
