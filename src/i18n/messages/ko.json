@@ -72,7 +72,8 @@
       "contact": "문의하기",
       "termsOfUse": "이용 약관",
       "privacyPolicy": "개인정보정책",
-      "accessibility": "Accessibility declaration"
+      "accessibility": "Accessibility declaration",
+      "cookies": "쿠키"
     },
     "socials": {
       "github": "GitHub",
@@ -81,6 +82,11 @@
       "discord": "Discord",
       "youtube": "YouTube",
       "snapshot": "Snapshot"
+    },
+    "status": {
+      "label": "네트워크 상태",
+      "good": "정상",
+      "degraded": "저하"
     }
   },
   "languageSelector": {

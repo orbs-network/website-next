@@ -370,8 +370,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
         two independent sections, the marquee lost that entirely — which is why
         the band appeared to start abruptly below it.
 
-        The signup is not here yet (#145, deferred), so this covers the two
-        blocks that exist.
+        All three blocks are here now. The signup was deferred while #145 was
+        open; it landed with this change.
       */}
       <div className="relative isolate overflow-hidden">
         <SectionBackdrop variant="glow" />
