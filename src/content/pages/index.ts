@@ -30,6 +30,9 @@ export const MARKETING_PAGE_PATHS = [
   '/privacy-policy',
   '/terms-of-use',
   '/accessibility-declaration',
+  // What the site stores and when. English-only: it describes this codebase's
+  // behaviour, and a stale translation of that is worse than none.
+  '/cookies',
   '/liquidity-hub-terms-of-use',
   // FAQ. Same markdown-document treatment as the legal pages; `##` is a
   // section and `###` a question.
