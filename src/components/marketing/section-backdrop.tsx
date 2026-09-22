@@ -88,41 +88,30 @@ export function SectionBackdrop({
     >
       {variant === 'dots' ? (
         /*
-          THREE nested elements, one mask each, and they cannot be collapsed.
+          NO BOTTOM FADE. The grid runs at full strength to the edge of the
+          section and stops.
 
-          The cursor hole is on the root, this element carries the bottom fade,
-          and `.hero-dot-grid` inside carries the dots. Every pair of these is
-          a different `mask-image` on the same property.
+          An earlier version faded it over the bottom third. That was the one
+          thing in this variant not taken from the design — reasoning that
+          `Grid Pattern Top` is 810px and ends flat, but sits behind a shorter
+          hero, so its hard edge lands under later content rather than in the
+          open, and a fade was the safer translation. The section is 810px now,
+          exactly as tall as the grid layer, so there is nothing to translate:
+          the edge falls where the design puts it and the fade was only ever
+          washing out the bottom two hundred pixels of a grid that should be
+          uniform.
 
-          Collapsing the fade onto the dot element is not hypothetical — it is
-          how this was first written, and the result was neither a fade nor
-          dots: the Tailwind arbitrary utility won over the component class,
-          and the `mask-size: 40.5px` meant for the dot tile then tiled the
-          FADE GRADIENT into 40px horizontal stripes across the hero.
+          Removing it also removed an element. Each of these carries exactly
+          one mask — the cursor hole on the root, the dots below — and the fade
+          needed a third in between. Worth remembering if one is ever added
+          back: stacking two `mask-image`s on one element is how this shipped
+          the dot tile's `mask-size: 40.5px` applied to a FADE GRADIENT, tiling
+          it into horizontal stripes across the hero.
         */
-        <div
-          className={cn(
-            'absolute inset-0',
-            /*
-              Faded over the bottom third. A JUDGEMENT CALL, and the only line
-              in this variant that is not measured off the design.
-
-              `Grid Pattern Top` is 810px and ends flat: sampled down the left
-              margin of the composed frame, dots run from y~160 to y~790 and
-              are gone by y=800, with no fade drawn. But that frame is taller
-              than the hero it sits behind, so the cut lands under later
-              content rather than in the open. Ours fills the hero exactly, and
-              a hard edge across the middle of the page is worse than a fade
-              the design did not ask for.
-            */
-            '[mask-image:linear-gradient(to_bottom,black_0%,black_62%,transparent_100%)]'
-          )}
-        >
-          <div className="hero-dot-grid absolute inset-0">
-            <div className="hero-dot-grid-small absolute inset-0" />
-            {/* Every fifth dot on both axes, at 4.5px against 2px. */}
-            <div className="hero-dot-grid-large absolute inset-0" />
-          </div>
+        <div className="hero-dot-grid absolute inset-0">
+          <div className="hero-dot-grid-small absolute inset-0" />
+          {/* Every fifth dot on both axes, at 4.5px against 2px. */}
+          <div className="hero-dot-grid-large absolute inset-0" />
         </div>
       ) : null}
     </div>

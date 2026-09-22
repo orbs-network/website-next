@@ -73,10 +73,20 @@ export async function HomePage({ locale }: { locale: Locale }) {
         401px of horizontal scroll. Clipping here means it can never do that,
         whatever width it is given.
 
-        Taller than the 3.4 frame draws it, deliberately. The design gives the
-        hero 555px inside an 810px grid layer; this is ~700, which keeps the
-        grid reading as the hero's own backdrop rather than a band that
-        outlives it.
+        810px, matching `Grid Pattern Top` exactly — the grid layer and the
+        section it backs are the same height, so the grid neither stops short
+        nor runs past.
+
+        A FLOOR RATHER THAN A FIXED HEIGHT, and the content is top-aligned
+        rather than centred, because that is how the design distributes it.
+        Measured down the centre column of the 3.4 frame, the copy runs from
+        y=230 (eyebrow) to y=570 (buttons) inside a section starting at y=90:
+        roughly 140px above it and 330px below. Centring would split that
+        evenly and lift the headline ~95px.
+
+        `lg:` only. 810px of hero on a 667px phone is a screenful of nothing
+        before the first word, and the 3.4 frame is a 1440 desktop board — the
+        mobile frames are drawn separately and do not say this.
 
         NO STATIC FACET GRAPHIC. A `hero-facets.svg` used to float at the right
         of this section, taken from the cluster drawn in the design frame — but
@@ -85,7 +95,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         for real now, so shipping a frozen copy of it as well left the hero
         wearing the same motif twice.
       */}
-      <section className="relative isolate mx-auto overflow-hidden px-5 pt-32 pb-40">
+      <section className="relative isolate mx-auto overflow-hidden px-5 pt-36 pb-24 lg:min-h-[810px]">
         {/*
           `Grid Pattern Top`: 2px square dots on a 40.5px lattice.
 
