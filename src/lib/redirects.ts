@@ -59,6 +59,52 @@ export const REDIRECTS: readonly Redirect[] = [
     locales: ['en', 'ko'],
     reason: 'Renamed to dPERPS in design 3.4. Same product, same page — see #149.',
   },
+  /*
+    `/powered-by/` is ALREADY a redirect to the home page, and has been for
+    years — `assets/js/powered-by/index.js` on the legacy site is one line:
+
+      window.location.pathname = '/'
+
+    Its React partial renders an empty fragment and its yml carries no title, so
+    a crawler currently sees a blank titled page and a reader pays a full page
+    load to be bounced. This is the same intent, done properly.
+
+    Nothing links to it. An earlier count of 34 inbound links was the phrase
+    appearing in blog slugs like `QuickSwap-integrates-dLIMIT-for-DEXs-powered-
+    by-Orbs`, not links to the path.
+  */
+  {
+    from: '/powered-by',
+    to: '/',
+    locales: ['en', 'ja', 'ko'],
+    reason: 'The legacy page is a client-side redirect to the home page. See #38.',
+  },
+  /*
+    `/accesili/` is not an accessibility page despite the name. It is the Orbs
+    Website Terms of Use, last revised 21 March 2019 — the same document already
+    served at `/terms-of-use/`, 4,261 words against 4,262, same date. A
+    duplicate legal document at a misspelled URL.
+
+    Redirecting it also collapses a duplicate-content pair that has been in the
+    index for years.
+  */
+  {
+    from: '/accesili',
+    to: '/terms-of-use',
+    locales: ['en'],
+    reason: 'A duplicate of the terms of use at a misspelled path. See #38.',
+  },
+  /*
+    The governance blog section is being deleted rather than migrated — plan
+    2.6. Its legacy page carries 29 words and a blog layout, so the archive it
+    pointed at is where a reader should end up.
+  */
+  {
+    from: '/governance-blog',
+    to: '/blog',
+    locales: ['en'],
+    reason: 'Section deleted in the migration; the blog archive replaces it. See #38.',
+  },
 ]
 
 /**
@@ -178,7 +224,15 @@ export function expandedRedirects(): { source: string; destination: string; perm
     ...REDIRECTS.flatMap(({ from, to, locales }) =>
       locales.map((locale) => ({
         source: `${SEGMENTS[locale]}${from}/`,
-        destination: `${SEGMENTS[locale]}${to}/`,
+        /*
+          `to` is written without a trailing slash and this adds it — except
+          for the home page, which IS a slash. Concatenating naively produced
+          `//` for English and `/jp//` for Japanese, neither of which matches
+          anything, so a redirect to the home page silently did nothing.
+          Caught by the trailing-slash test, which is exactly the rule it was
+          written to enforce.
+        */
+        destination: to === '/' ? `${SEGMENTS[locale]}/` : `${SEGMENTS[locale]}${to}/`,
         permanent: true as const,
       }))
     ),

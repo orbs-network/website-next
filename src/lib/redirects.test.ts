@@ -95,8 +95,10 @@ describe('the redirect map', () => {
   it('writes paths in the map without trailing slashes', () => {
     // `expandedRedirects` adds the slash. A path carrying one here would
     // produce `//`, which matches nothing and fails silently.
+    // The home page is the one exception: it has no slashless spelling, and
+    // `expandedRedirects` handles it rather than concatenating a second slash.
     const wrong = REDIRECTS.flatMap(({ from, to }) => [from, to]).filter(
-      (path) => path.endsWith('/') || !path.startsWith('/')
+      (path) => path !== '/' && (path.endsWith('/') || !path.startsWith('/'))
     )
 
     expect(wrong).toEqual([])
@@ -128,11 +130,24 @@ describe('expandedRedirects', () => {
 
         expect(expandedRedirects()).toContainEqual({
           source: `${segment}${from}/`,
-          destination: `${segment}${to}/`,
+          // The home page is already a slash, so it is not given another.
+          destination: to === '/' ? `${segment}/` : `${segment}${to}/`,
           permanent: true,
         })
       }
     }
+  })
+
+  it('sends a redirect to the home page to the right place in each locale', () => {
+    // Named rather than left to the loop above, because the root is the one
+    // destination the naive `${to}/` concatenation gets wrong — it produced
+    // `//` and `/jp//`, which match nothing, so the redirect silently did
+    // nothing at all.
+    const destinations = expandedRedirects()
+      .filter(({ source }) => source.endsWith('/powered-by/'))
+      .map(({ source, destination }) => `${source} -> ${destination}`)
+
+    expect(destinations.sort()).toEqual(['/jp/powered-by/ -> /jp/', '/ko/powered-by/ -> /ko/', '/powered-by/ -> /'])
   })
 
   it('emits one rule per locale the destination exists in, and no more', () => {

@@ -1428,6 +1428,12 @@
       },
       "viewOnEtherscan": "Etherscan에서 보기",
       "backLink": "Orbs 개요로 돌아가기"
+    },
+    "dtwapDlimitDisclaimer": {
+      "meta": {
+        "title": "dTWAP and dLIMIT disclaimer",
+        "description": "Risk disclaimer for the Orbs dTWAP and dLIMIT protocols."
+      }
     }
   }
 }

@@ -82,6 +82,31 @@ const DOCUMENTS = {
   '/liquidity-hub-terms-of-use': {
     body: { en: read('liquidity-hub-terms-of-use.en.md') },
   },
+  /*
+    Three documents carried over from the legacy site, which #38 found live with
+    no route here — they would have 404ed at cutover.
+
+    English only, and that is a finding rather than a shortcut. Legacy has a
+    `ko/dtwap-dlimit-disclaimer` and a `jp/ORBS-NFT-CONTEST-OFFICIAL-RULES`, but
+    both hold the ENGLISH text: 2 and 43 non-Latin characters respectively,
+    against 281 and 1,504 words. Shipping those as separate files would be two
+    copies of English pretending to be translations, so those locales are
+    `placeholder` in the availability map instead and `LegalPage` serves the
+    English body with `lang="en"` on it.
+
+    The URLs keep their legacy spelling, including the shouted one. They are
+    what is indexed, and a prettier path plus a redirect is more moving parts
+    than the ugliness is worth.
+  */
+  '/dtwap-dlimit-disclaimer': {
+    body: { en: read('dtwap-dlimit-disclaimer.en.md') },
+  },
+  '/orbs-ecosystem-grant-program-terms-and-conditions': {
+    body: { en: read('orbs-ecosystem-grant-program-terms-and-conditions.en.md') },
+  },
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES': {
+    body: { en: read('orbs-nft-contest-official-rules.en.md') },
+  },
 } as const satisfies Record<string, LegalDocument>
 
 export type LegalPagePath = keyof typeof DOCUMENTS
