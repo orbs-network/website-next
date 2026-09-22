@@ -47,9 +47,15 @@ const AUDIENCE_ID = setting(process.env.RESEND_AUDIENCE_ID)
  * it, and the browser has already run the same validation, so a real subscriber
  * never reaches this path. The detail goes to the log.
  *
- * It also means this endpoint will not tell a caller whether an address is
- * ALREADY on the list, which would otherwise make it a membership oracle for
- * any address someone cared to try.
+ * It does NOT hide list membership, and an earlier version of this comment
+ * claimed it did. If Resend reports an existing contact as an error then a
+ * duplicate answers 502 where a new address answers 200, which is a membership
+ * oracle for anyone willing to try addresses one at a time.
+ *
+ * That is a real cost and it is the lesser one. The alternative — answering
+ * success on every error — tells people they subscribed when they did not, and
+ * covers a revoked key or an outage just as happily. Worth revisiting if
+ * Resend turns out to upsert, in which case the question never arises.
  */
 function accepted() {
   return NextResponse.json({ ok: true })
@@ -119,14 +125,29 @@ export async function POST(request: Request) {
 
     if (error) {
       /*
-        An address already on the list is NOT an error for the reader — they
-        asked to be subscribed and they are subscribed. Resend reports it as a
-        failure, so it is logged and answered with the same success the first
-        signup gets, rather than showing someone an error for doing nothing
-        wrong.
+        EVERY error is a failure the reader is told about, and the first version
+        of this did the opposite.
+
+        It answered success on any error, reasoning that the realistic case is
+        an address already on the list — someone who asked to be subscribed and
+        is subscribed, who should not see an error for doing nothing wrong.
+
+        That was a guess about a signal I had not identified. Resend's error
+        names are `application_error`, `internal_server_error`,
+        `invalid_access`, `missing_api_key`, `not_found`, `rate_limit_exceeded`,
+        `restricted_api_key`, `security_error` and `validation_error` — there is
+        no duplicate code among them, and the SDK reports network failures the
+        same way rather than throwing. So "probably a duplicate" also covered a
+        revoked key, a wrong audience id and an outage, and each of those would
+        have shown a subscriber "you are on the list" while nothing happened.
+
+        Which is precisely the legacy newsletter's failure: a success screen
+        over a dropped submission, unnoticed for years. Telling a returning
+        subscriber to try again costs far less than telling a new one they
+        succeeded when they did not.
       */
       console.error(`[subscribe] Resend rejected the contact: ${error.name} — ${error.message}`)
-      return accepted()
+      return NextResponse.json({ ok: false }, { status: 502 })
     }
   } catch (cause) {
     console.error(`[subscribe] Resend threw: ${cause instanceof Error ? cause.message : String(cause)}`)
