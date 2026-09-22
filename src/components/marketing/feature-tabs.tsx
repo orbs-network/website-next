@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { OrbsLogo } from '@/components/icons'
 import { cn } from '@/lib/utils'
 
 /**
@@ -121,7 +122,17 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
         tabIndex={0}
         lang={active.panelLang}
         className={cn(
-          'flex min-h-[34rem] min-w-0 items-start rounded-sm p-8 sm:p-12',
+          /*
+            900px, from the design rather than from the type scale: the panel
+            is `Frame 2147223102` at 910x900 inside a 1305px section, and it is
+            the tallest thing in that row. At `34rem` it stopped level with the
+            tab list, which reads as a tile beside a list instead of the full-
+            height field the design draws — and it is why the whole section
+            measured 1083 against 1305.
+            `lg:` because on a phone the list stacks above it and 900px of
+            gradient under eight tabs is a screen and a half of nothing.
+          */
+          'flex min-h-[34rem] min-w-0 flex-col justify-between rounded-sm p-8 sm:p-12 lg:min-h-[900px]',
           // A CSS gradient rather than an exported image: it is a gradient, so
           // it scales to any box at zero bytes and cannot go blurry.
           'bg-gradient-to-br from-periwinkle-200 via-periwinkle-400 to-indigo-600',
@@ -135,6 +146,30 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
           for a longer word than any of these.
         */}
         <p className="max-w-2xl text-balance break-words text-h3 text-neutral-900 sm:text-h2">{active.panel}</p>
+
+        {/*
+          The design puts the Orbs lockup in the bottom-left of the panel
+          (`Logo`, 205x61). `aria-hidden` because it is decoration inside a
+          panel that already has its statement — a second "Orbs" announced
+          after the sentence adds nothing for a screen reader.
+          Hidden until `lg`, where the panel is tall enough to have a bottom
+          worth anchoring; below that the statement fills it.
+          `lg:inline-flex`, not `lg:block`: the lockup is an `inline-flex` row
+          of mark plus wordmark, and `block` won that merge and stacked them.
+          `text-neutral-900` explicitly, for the same reason the statement above
+          does: this panel's gradient is fixed in both themes, while the band
+          around it inverts. `variant="dark"` draws from `currentColor`, so
+          without this the lockup turned near-white on pale periwinkle whenever
+          a reader was in the light theme.
+          `text-[2.75rem]` because `OrbsLogo` sizes its mark in `em` and would
+          otherwise inherit the 16px body size, landing at about 22px against
+          the design's 61px lockup.
+        */}
+        <OrbsLogo
+          variant="dark"
+          aria-hidden
+          className="hidden self-start text-[2.75rem] text-neutral-900 lg:inline-flex"
+        />
       </div>
     </div>
   )

@@ -62,7 +62,16 @@ export function SectionBackdrop({
           */
           '[mask-image:linear-gradient(to_bottom,black,transparent)]',
         ],
-        variant === 'glow' && 'bg-[radial-gradient(ellipse_at_center,rgb(99_102_241/0.25),transparent_70%)]',
+        /*
+          The glow was a single indigo blob at 25% opacity centred in the
+          section — a guess, made before the design's own construction was
+          read. What the design has is three brand-coloured circles sitting
+          below the section with their middle masked out, so the visible result
+          is a wide cyan-blue-pink band along the bottom edge. `bg-orbs-glow`
+          is that, in `tailwind.config.ts`, with the hues and centres taken
+          from the Figma geometry.
+        */
+        variant === 'glow' && 'bg-orbs-glow',
         className
       )}
     />
