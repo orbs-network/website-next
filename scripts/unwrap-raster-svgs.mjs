@@ -14,6 +14,7 @@
  *
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem
  *   node scripts/unwrap-raster-svgs.mjs --dir public/ecosystem --dry-run
+ *   node scripts/unwrap-raster-svgs.mjs --dir public/marketing/foo --max-width 400
  *
  * RENDERS the SVG rather than extracting its payload. The first version of this
  * script pulled the base64 out and resized it, which is wrong: every one of
@@ -44,8 +45,17 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '..')
  */
 const WRAPPER_TAGS = new Set(['svg', 'g', 'defs', 'pattern', 'rect', 'use', 'image', 'style', 'title', 'desc'])
 
-/** Widest any of these logos is displayed, times two for high-DPI. */
-const MAX_WIDTH = 240
+/**
+ * Default raster width, in pixels: the ecosystem logos display at 96px, doubled
+ * for high-DPI.
+ *
+ * Override with `--max-width` for a directory whose assets are shown larger.
+ * The Liquidity Hub partner logos render at about 189 CSS px, so 240 would
+ * under-sample them on any retina display — and the resulting softness is the
+ * kind of thing that looks like "the logo is a bit blurry" rather than like a
+ * decision somebody made.
+ */
+const DEFAULT_MAX_WIDTH = 240
 
 async function* walk(dir) {
   for (const entry of await readdir(dir, { withFileTypes: true })) {
@@ -53,6 +63,90 @@ async function* walk(dir) {
     if (entry.isDirectory()) yield* walk(path)
     else if (extname(entry.name).toLowerCase() === '.svg') yield path
   }
+}
+
+/**
+ * How wide an embedded raster may be before it is worth shrinking.
+ *
+ * These logos are displayed in a 96px box. An embedded square icon usually
+ * occupies a fraction of the SVG's own width, so 128px already covers a 3x
+ * display with room to spare — Trader Joe's icon is 41 of 203 viewBox units,
+ * about 19 CSS px, needing 57px at 3x.
+ */
+const MAX_EMBEDDED_WIDTH = 128
+
+/**
+ * Byte budget for one embedded payload, mirroring `asset-weight.test.ts`.
+ *
+ * Dimensions are not the only way a payload gets fat: a noisy or unoptimised
+ * 128x128 PNG can sit under the size cap and still blow the budget. The test
+ * checks BYTES, so this has to as well — otherwise it reports a file as already
+ * small enough while CI keeps failing, and the advice to run this script is a
+ * no-op.
+ */
+const MAX_EMBEDDED_BYTES = 24 * 1024
+
+/**
+ * Shrink an oversized raster embedded in an otherwise REAL vector.
+ *
+ * The wrapper case above rasterises the whole file, which is only safe when
+ * there is no vector content to lose. A hybrid has both, and both are worth
+ * keeping: Trader Joe's is a genuine `<path>` wordmark beside a 300x300 PNG
+ * icon, so rasterising it would throw away crisp text and converting nothing
+ * would leave 53 KB of pixels for a 19px square.
+ *
+ * So the payload is resized in place and the SVG is otherwise untouched. The
+ * geometry lives in the `<use>` transform and the `<pattern>`, which are
+ * expressed in proportional units — `patternContentUnits="objectBoundingBox"`
+ * with a `scale()` — so swapping the image for a smaller one of the same aspect
+ * ratio renders identically. That is the crucial difference from the wrapper
+ * case, where the transforms are tied to pixel dimensions and extracting the
+ * payload silently changed the artwork.
+ *
+ * Measured on Trader Joe's at 3x the display size: 77 KB -> 12 KB, mean pixel
+ * difference 0.70/255.
+ */
+async function shrinkEmbeddedRaster(source) {
+  // Every raster format the guard counts, not just the two these files happen
+  // to use today. A WebP payload the test flags and this regex ignored would be
+  // flagged forever with no way to fix it.
+  const matches = [...source.matchAll(/data:image\/(png|jpe?g|webp|avif|gif);base64,([A-Za-z0-9+/=]+)/g)]
+  if (matches.length === 0) return null
+
+  let next = source
+  let changed = false
+
+  // EVERY payload, not just the first. `asset-weight.test.ts` rejects a file if
+  // ANY of its embedded images is oversized, so a script that fixed only the
+  // first would leave the test failing and its advice — run this script —
+  // useless to whoever hit it. A guard that prescribes a remedy which does not
+  // work is worse than one that only reports.
+  for (const [whole, , data] of matches) {
+    const payload = Buffer.from(data, 'base64')
+    const { width, height } = await sharp(payload).metadata()
+
+    // The LONGEST side. A 100x1000 strip is only 100 wide and would slip past a
+    // width-only check while still carrying far more pixels than it needs.
+    const longest = Math.max(width ?? 0, height ?? 0)
+    // Re-encode when it is too big EITHER way. A payload already within the
+    // dimension cap can still exceed the byte budget, and skipping it there is
+    // what makes the remediation a no-op.
+    if (longest <= MAX_EMBEDDED_WIDTH && payload.length <= MAX_EMBEDDED_BYTES) continue
+
+    const resized = await sharp(payload)
+      .resize({ width: MAX_EMBEDDED_WIDTH, height: MAX_EMBEDDED_WIDTH, fit: 'inside', withoutEnlargement: true })
+      .png({ compressionLevel: 9, palette: true })
+      .toBuffer()
+
+    // Only worth rewriting if it actually helps. A payload that is already
+    // efficiently encoded can come back LARGER from a re-encode.
+    if (resized.length >= payload.length) continue
+
+    next = next.replace(whole, `data:image/png;base64,${resized.toString('base64')}`)
+    changed = true
+  }
+
+  return changed ? next : null
 }
 
 /** Whether this file is a pure raster wrapper and safe to rasterise. */
@@ -72,10 +166,13 @@ async function main() {
   const dryRun = argv.includes('--dry-run')
   const dirArg = argv[argv.indexOf('--dir') + 1]
   const root = resolve(REPO, argv.includes('--dir') && dirArg ? dirArg : 'public')
+  const widthArg = argv.includes('--max-width') ? Number(argv[argv.indexOf('--max-width') + 1]) : NaN
+  const maxWidth = Number.isFinite(widthArg) && widthArg > 0 ? widthArg : DEFAULT_MAX_WIDTH
 
   let before = 0
   let after = 0
   const converted = []
+  const shrank = []
   const kept = []
 
   for await (const path of walk(root)) {
@@ -83,16 +180,31 @@ async function main() {
     const source = await readFile(path, 'utf8')
 
     if (!isRasterWrapper(source)) {
+      // Real vector content, so the file stays an SVG — but it may still carry
+      // an oversized raster alongside the vector art.
+      const shrunk = await shrinkEmbeddedRaster(source)
+
+      if (shrunk === null) {
+        before += size
+        after += size
+        kept.push(relative(REPO, path))
+        continue
+      }
+
       before += size
-      after += size
-      kept.push(relative(REPO, path))
+      after += Buffer.byteLength(shrunk)
+      shrank.push({ file: relative(REPO, path), size, out: Buffer.byteLength(shrunk) })
+
+      if (!dryRun) {
+        await writeFile(path, shrunk)
+      }
       continue
     }
 
     // `density` oversamples before the downscale, so the result is sharp at the
     // cap rather than rendered at the SVG's nominal size and stretched.
     const output = await sharp(path, { density: 288 })
-      .resize({ width: MAX_WIDTH, withoutEnlargement: true })
+      .resize({ width: maxWidth, withoutEnlargement: true })
       .png({ compressionLevel: 9, effort: 10 })
       .toBuffer()
 
@@ -118,8 +230,15 @@ async function main() {
     process.stdout.write(`  ${kb(c.size).padStart(9)} -> ${kb(c.out).padStart(8)}  ${c.from}\n`)
   }
 
+  for (const s of shrank.sort((a, b) => b.size - a.size)) {
+    process.stdout.write(
+      `  ${kb(s.size).padStart(9)} -> ${kb(s.out).padStart(8)}  ${s.file}  (embedded raster shrunk)\n`
+    )
+  }
+
   process.stdout.write(
-    `\n${converted.length} wrapper SVGs converted to PNG, ${kept.length} real vectors left alone.\n` +
+    `\n${converted.length} wrapper SVGs converted to PNG, ${shrank.length} embedded rasters shrunk, ` +
+      `${kept.length} real vectors left alone.\n` +
       `Total: ${kb(before)} -> ${kb(after)} (-${Math.round((1 - after / before) * 100)}%)` +
       `${dryRun ? '  [dry run]' : ''}\n`
   )
