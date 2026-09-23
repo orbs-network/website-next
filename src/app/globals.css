@@ -152,9 +152,27 @@
     --secondary-foreground: var(--color-neutral-900);
     --muted: var(--color-neutral-300);
     --muted-foreground: var(--color-fg-muted);
-    --accent: var(--color-accent-primary);
-    --accent-foreground: var(--color-neutral-100);
-    --destructive: var(--color-coral-500);
+    /*
+      A hover SURFACE, not the brand colour (#120). See the note on the dark
+      theme's copy of this — the light page has the same defect, where a
+      hovered menu item became a solid indigo block with white text and read as
+      a selection rather than a hover.
+    */
+    --accent: var(--color-neutral-300);
+    --accent-foreground: var(--color-fg);
+    /*
+      Coral/600, not coral/500 — found by the contrast guard, not by eye.
+
+      `--destructive` is only ever TEXT here: the newsletter form's error
+      message, `text-destructive`. `bg-destructive` has no call sites. Coral/500
+      is #cc8788, which reads 2.63:1 on this page's #f6f6f6 — an error message
+      below AA, which is the one string on a form that has to be readable.
+
+      The dark theme keeps coral/500, where the same colour reads well against
+      #121214. Same token, opposite requirement, which is why it is set per
+      theme rather than once.
+    */
+    --destructive: var(--color-coral-600);
     --destructive-foreground: var(--color-neutral-100);
     --border: var(--color-border);
     --input: var(--color-border);
@@ -222,8 +240,29 @@
     --color-fg: var(--color-neutral-200);
     --color-fg-muted: var(--color-neutral-400);
     --color-border: var(--color-neutral-600);
-    --color-accent-primary: var(--color-indigo-400);
-    --color-accent-primary-hover: var(--color-indigo-300);
+    /*
+      Periwinkle, not indigo — taken from the design rather than chosen (#179).
+
+      Indigo/400 is #3346f2, which reads 2.94:1 against this page's #121214 and
+      fails AA at any size. It was inherited from the light theme, where it is
+      correct.
+
+      The 3.4 frame settles it. Its accent TEXT is colour-coded by section and
+      the choice tracks the band underneath: #7A89E9, #DC8AE0 and #2CEDFC on the
+      dark bands, and #3346F2 only ever on the light ones — every one of its
+      thirteen uses sits in the white Features section or the light-grey
+      Resources run. So the design never puts indigo/400 on a dark background,
+      and we were doing it site-wide.
+
+      #7A89E9 is periwinkle/400 and reads 5.86:1 here.
+
+      WHAT THIS DOES NOT CAPTURE: the design varies the accent PER SECTION —
+      pink for derivatives, cyan for venues. One token cannot express that, and
+      pretending otherwise by picking a compromise colour would be worse than
+      picking the one the design uses most. Tracked separately.
+    */
+    --color-accent-primary: var(--color-periwinkle-400);
+    --color-accent-primary-hover: var(--color-periwinkle-300);
     --color-link: var(--color-periwinkle-300);
 
     /* shadcn compatibility shims (dark) */
@@ -233,14 +272,34 @@
     --card-foreground: var(--color-fg);
     --popover: var(--color-surface);
     --popover-foreground: var(--color-fg);
-    --primary: var(--color-accent-primary);
+    /*
+      DELIBERATELY NOT `--color-accent-primary`, which it used to follow.
+
+      `--primary` is a FILLED SURFACE — the solid button — and a colour used as
+      a background has the opposite contrast requirement to one used as text.
+      Moving the accent to periwinkle/400 for legibility would have dragged the
+      button with it, and white on #7A89E9 is 3.09:1: fine for large text,
+      short of AA for a button label. Indigo/400 stays, where white reads
+      6.43:1 on it.
+    */
+    --primary: var(--color-indigo-400);
     --primary-foreground: var(--color-neutral-100);
     --secondary: var(--color-periwinkle-400);
     --secondary-foreground: var(--color-neutral-900);
     --muted: var(--color-neutral-600);
     --muted-foreground: var(--color-fg-muted);
-    --accent: var(--color-accent-primary);
-    --accent-foreground: var(--color-neutral-100);
+    /*
+      A hover SURFACE, not the brand colour (#120).
+
+      shadcn uses `--accent` as the tint behind a hovered or focused menu item,
+      with `--accent-foreground` as the text on it. Pointing it at the brand
+      indigo turned every dropdown hover into a solid blue block with white
+      text — a selected state, not a hover — and in dark it was the same
+      failing 2.94:1 besides. The muted surface is what the token is for, and
+      the foreground is then just the page's.
+    */
+    --accent: var(--color-neutral-600);
+    --accent-foreground: var(--color-fg);
     --destructive: var(--color-coral-500);
     --destructive-foreground: var(--color-neutral-100);
     --border: var(--color-border);
