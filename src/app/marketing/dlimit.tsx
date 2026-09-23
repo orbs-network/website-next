@@ -67,7 +67,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         integrateCta={t('integrations.integrateCta')}
         integrateHref={DLIMIT_LINKS.integrationGuide}
         integrations={DLIMIT_INTEGRATIONS}
-        lang={textLang(t('integrations.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationTabs
@@ -87,7 +87,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
           },
         ]}
         copyLabels={{ copy: t('code.copy'), copied: t('code.copied') }}
-        lang={textLang(t('code.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection

@@ -1,6 +1,8 @@
 import { H1 } from '@/app/components/typography'
 import { cn } from '@/lib/utils'
 import { MarkdownProse } from './markdown-prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * Renders a legal document from markdown.
@@ -12,6 +14,7 @@ import { MarkdownProse } from './markdown-prose'
 export function LegalDocument({
   markdown,
   title,
+  locale,
   lang,
   dir,
 }: {
@@ -27,7 +30,22 @@ export function LegalDocument({
    * document-level heading for search.
    */
   title: string
-  /** Set when the document's language differs from the page it is served on. */
+  /**
+   * The document's locale — the ROUTE's language, used to derive each
+   * catalog string's own `lang`.
+   *
+   * Distinct from `lang` below, and both are needed.
+   */
+  locale: Locale
+  /**
+   * The DOCUMENT's own language, when it differs from the route.
+   *
+   * KEPT, unlike the section-level `lang` props #103 removes elsewhere, and
+   * the difference is the point. Those were a guess about several strings;
+   * this is a fact about one document. The accessibility declaration is
+   * written in Hebrew and served at an English URL, so the article genuinely
+   * is `lang="he" dir="rtl"` — it is not standing in for per-string marking.
+   */
   lang?: string
   dir?: 'ltr' | 'rtl'
 }) {
@@ -58,7 +76,11 @@ export function LegalDocument({
         Hebrew but titled in English. Inside the article it would inherit
         `lang="he" dir="rtl"` and be announced as Hebrew, set right-aligned.
       */}
-      {!hasOwnHeading && <H1 className="mx-auto mb-8 max-w-3xl">{title}</H1>}
+      {!hasOwnHeading && (
+        <H1 className="mx-auto mb-8 max-w-3xl" lang={textLang(title, locale)}>
+          {title}
+        </H1>
+      )}
 
       <article
         lang={lang}
@@ -74,7 +96,14 @@ export function LegalDocument({
           '[&>*+*]:mt-4 [&>h2]:mt-12 [&>h3]:mt-8 [&>h4]:mt-8 [&>h5]:mt-6 [&>h6]:mt-6 [&>ul]:mt-4 [&>ol]:mt-4'
         )}
       >
-        <MarkdownProse>{markdown}</MarkdownProse>
+        {/*
+          `locale` marks each block of the document with its own language.
+          That is additive to the article's `lang` above rather than a
+          replacement: the article says what the document is, and this catches
+          the runs inside it that are not — English defined terms and company
+          names inside Japanese clauses, which the privacy policy is full of.
+        */}
+        <MarkdownProse locale={locale}>{markdown}</MarkdownProse>
       </article>
     </section>
   )

@@ -58,5 +58,5 @@ export async function LegalPage({
 
   const t = await getTranslations({ locale, namespace: `${namespace}.meta` })
 
-  return <LegalDocument markdown={markdown} title={t('title')} lang={lang} dir={document.dir} />
+  return <LegalDocument markdown={markdown} title={t('title')} lang={lang} dir={document.dir} locale={locale} />
 }
