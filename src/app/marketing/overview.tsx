@@ -29,14 +29,14 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
   return (
     <>
       {/*
-        `headlineLang` is stated outright rather than left to `textLang`.
+        This carried a hand-written `headlineLang`, because `ProductHero` used
+        to hang one `lang` on its wrapper derived from the INTRO — so an
+        in-language headline beside an English intro inherited `lang="en"` and
+        was announced with English rules, and the only fix available to the
+        caller was to state the headline's language outright.
 
-        `textLang` returns undefined when a string matches its locale, which is
-        right for a page where everything agrees — but `ProductHero` puts `lang`
-        on the wrapper from the INTRO, so an in-language headline beside an
-        English intro inherits `lang="en"` and is announced with English rules.
-        Falling back to `locale` means the h1 always declares its own language
-        instead of borrowing its neighbour's.
+        Obsolete since #103: the hero derives each string's language from
+        `locale` itself, so the headline can no longer borrow its neighbour's.
       */}
       <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 

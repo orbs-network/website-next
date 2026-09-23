@@ -423,7 +423,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 failed: t('newsletter.failed'),
                 invalidEmail: t('newsletter.invalidEmail'),
               }}
-              lang={lang('newsletter.heading')}
+              locale={locale}
             />
           </div>
         </section>

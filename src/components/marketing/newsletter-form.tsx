@@ -9,6 +9,8 @@ import {
   type SubscribeErrors,
 } from '@/lib/subscribe-message'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * The home page's newsletter signup.
@@ -37,7 +39,7 @@ export type NewsletterLabels = {
 
 type Status = 'idle' | 'sending' | 'sent' | 'failed'
 
-export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lang?: string }) {
+export function NewsletterForm({ labels, locale }: { labels: NewsletterLabels; locale: Locale }) {
   const [errors, setErrors] = React.useState<SubscribeErrors>({})
   const [status, setStatus] = React.useState<Status>('idle')
 
@@ -80,7 +82,7 @@ export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lan
 
   if (status === 'sent') {
     return (
-      <p className="text-p text-fg" role="status" lang={lang}>
+      <p className="text-p text-fg" role="status" lang={textLang(labels.success, locale)}>
         {labels.success}
       </p>
     )
@@ -96,7 +98,7 @@ export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lan
         maxLength={SUBSCRIBE_LIMITS.name}
         autoComplete="name"
         disabled={sending}
-        lang={lang}
+        locale={locale}
       />
       <Field
         name="email"
@@ -106,7 +108,7 @@ export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lan
         autoComplete="email"
         disabled={sending}
         error={errors.email ? labels.invalidEmail : undefined}
-        lang={lang}
+        locale={locale}
       />
 
       {/*
@@ -122,7 +124,12 @@ export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lan
       </div>
 
       <div className="flex items-center gap-4">
-        <Button type="submit" disabled={sending}>
+        {/*
+          Follows whichever label is showing. The two are separate catalog
+          entries, and the button's text is its accessible name — a stale
+          `lang` here is read aloud.
+        */}
+        <Button type="submit" disabled={sending} lang={textLang(sending ? labels.sending : labels.submit, locale)}>
           {sending ? labels.sending : labels.submit}
         </Button>
 
@@ -133,7 +140,7 @@ export function NewsletterForm({ labels, lang }: { labels: NewsletterLabels; lan
           reward for that.
         */}
         {status === 'failed' && (
-          <p role="status" className="text-detail text-fg-muted" lang={lang}>
+          <p role="status" className="text-detail text-fg-muted" lang={textLang(labels.failed, locale)}>
             {labels.failed}
           </p>
         )}
@@ -157,7 +164,7 @@ function Field({
   autoComplete,
   disabled,
   error,
-  lang,
+  locale,
 }: {
   name: string
   label: string
@@ -166,13 +173,18 @@ function Field({
   autoComplete: string
   disabled: boolean
   error?: string
-  lang?: string
+  /** The document's locale. The label and the error derive their own `lang`. */
+  locale: Locale
 }) {
   const id = `newsletter-${name}`
 
   return (
     <div className="flex flex-col gap-2">
-      <label htmlFor={id} className="text-detail font-medium uppercase tracking-wide text-fg-muted" lang={lang}>
+      <label
+        htmlFor={id}
+        className="text-detail font-medium uppercase tracking-wide text-fg-muted"
+        lang={textLang(label, locale)}
+      >
         {label}
       </label>
       <input
@@ -191,7 +203,7 @@ function Field({
         )}
       />
       {error && (
-        <p id={`${id}-error`} className="text-detail text-destructive" lang={lang}>
+        <p id={`${id}-error`} className="text-detail text-destructive" lang={textLang(error, locale)}>
           {error}
         </p>
       )}
