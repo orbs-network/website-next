@@ -10,11 +10,18 @@ import { expect } from 'storybook/test'
  * shipped that way through every screenshot comparison, because a slightly
  * dark blue on near-black still looks like a colour rather than like a bug.
  *
- * The rule each pair is held to depends on what the colour DOES. A token used
- * as text is checked against the surface behind it; a token used as a filled
- * surface is checked against the text that sits on it. Those are opposite
- * requirements, and conflating them is how fixing the accent nearly broke the
- * primary button.
+ * The rule each pair is held to depends on what the colour DOES, not on what
+ * it is called. A token used as text is checked against the surface behind it;
+ * a token used as a filled surface is checked against the text on it. Those
+ * are opposite requirements.
+ *
+ * Going by the NAME is the trap, and it caught the first version of this file
+ * twice. `--primary` and `--secondary` sound like surfaces and are text here —
+ * `bg-primary` has no usages, `text-primary` has five, and this project's
+ * `Button` is outlined rather than filled. `--destructive` likewise. Checking
+ * them as fills reported failures that the site cannot exhibit, against pairs
+ * it never renders, which would have had someone change a colour to satisfy a
+ * test rather than a reader.
  */
 
 /*
