@@ -92,6 +92,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
           <SlideCarousel
             className="mt-12"
             label={t('slider.title')}
+            locale={locale}
             /*
               Every label resolved here, because `SlideCarousel` is a client
               component: a `(index) => string` prop does not cross the boundary
@@ -101,7 +102,6 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
             slides={TON_VOTE_SLIDES.map((slide, index) => ({
               id: slide.id,
               caption: t(`slider.slides.${slide.id}`),
-              captionLang: lang(`slider.slides.${slide.id}`),
               label: t('slider.slideLabel', { number: index + 1 }),
               image: slide.image,
             }))}

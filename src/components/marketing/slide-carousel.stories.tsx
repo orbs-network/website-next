@@ -32,7 +32,7 @@ const SLIDES = [
   },
 ]
 
-const args = { slides: SLIDES, label: 'Customizable themed space pages' }
+const args = { slides: SLIDES, label: 'Customizable themed space pages', locale: 'en' as const }
 
 export const Default: Story = { args }
 
