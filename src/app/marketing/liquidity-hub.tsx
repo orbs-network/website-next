@@ -102,8 +102,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         // the Korean catalog while everything under it is translated, so the
         // title carries its own override and the section takes the language of
         // its body.
-        lang={textLang(t('partners.items.quickswap.subtitle'), locale)}
-        titleLang={textLang(t('partners.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection

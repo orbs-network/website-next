@@ -198,7 +198,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         no visible heading. The heading is kept for assistive technology — the
         marks are `alt=""` wordmarks, so without it the list has no name.
       */}
-      <LogoRow title={t('venues.title')} titleHidden items={HOME_VENUES} titleLang={lang('venues.title')} />
+      <LogoRow title={t('venues.title')} titleHidden items={HOME_VENUES} locale={locale} />
 
       <section className="container mx-auto border-t border-border px-5 py-section">
         <div className="text-center">

@@ -80,7 +80,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         titleLang={textLang(t('tools.title'), locale)}
       />
 
-      <LogoRow title={t('chains.title')} items={AGENTIC_CHAINS} titleLang={textLang(t('chains.title'), locale)} />
+      <LogoRow title={t('chains.title')} items={AGENTIC_CHAINS} locale={locale} />
 
       <NumberedSteps
         title={t('oracle.title')}

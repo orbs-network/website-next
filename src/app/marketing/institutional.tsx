@@ -74,7 +74,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         body={t('trackRecord.body')}
         locale={locale}
       />
-      <LogoRow title={t('venues.title')} items={INSTITUTIONAL_VENUES} />
+      <LogoRow title={t('venues.title')} items={INSTITUTIONAL_VENUES} locale={locale} />
       <FeatureGrid
         title={t('products.title')}
         intro={t('products.intro')}
@@ -92,7 +92,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         body={t('selfCustody.body')}
         locale={locale}
       />
-      <LogoRow title={t('signers.title')} sub={t('signers.sub')} items={INSTITUTIONAL_SIGNERS} />
+      <LogoRow title={t('signers.title')} sub={t('signers.sub')} items={INSTITUTIONAL_SIGNERS} locale={locale} />
       <ArchitectureSection title={t('policyEngine.title')} body={t('policyEngine.body')} locale={locale} />
       <FeatureGrid
         title={t('integrationPaths.title')}
