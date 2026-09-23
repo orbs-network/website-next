@@ -23,18 +23,21 @@ export const H2 = React.forwardRef<HTMLHeadingElement, PolymorphicProps<'h2'>>(
       <Comp
         ref={ref}
         /*
-          `hyphens-auto break-words` because `text-h2` is a fixed 56px with no
-          responsive step: a single long word overflows a phone. "Works with
-          existing security infrastructure" pushed the institutional page's
-          document to 401px inside a 390px viewport, so the whole page scrolled
-          sideways — the same defect class as #96, from a different cause.
+          `hyphens-auto` IS GONE (#108). It was here because `text-h2` was a
+          fixed 56px with no smaller step, so a single long word overflowed a
+          phone and scrolled the whole page sideways. Hyphenating a 56px
+          display heading was always the worse outcome of the two, and it was
+          only ever a stopgap until the scale itself could shrink — which it
+          now does, in `globals.css`.
 
-          Hyphenation rather than a smaller size, because changing the scale is
-          a design-system decision. The real fix is a responsive type scale;
-          `ProductHero` already hand-rolls one for its `h1`, which is the
-          clearest sign the scale is missing something.
+          `break-words` STAYS, and is not the same thing. Hyphenation breaks
+          ordinary words at syllables whenever the line is tight; this only
+          acts on a word that genuinely cannot fit at any break, which is still
+          reachable at 32px for a long URL or a compound. It costs nothing when
+          it is not needed, so it stays as the last resort rather than as a
+          layout strategy.
         */
-        className={cn('text-h2 text-fg font-normal hyphens-auto break-words', className)}
+        className={cn('text-h2 text-fg font-normal break-words', className)}
         {...props}
       />
     )

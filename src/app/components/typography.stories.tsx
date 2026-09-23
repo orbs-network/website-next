@@ -1,4 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect } from 'storybook/test'
 
 import { Detail, FieldInput, H1, H2, H3, H4, H5, P } from './typography'
 
@@ -102,4 +103,52 @@ export const DetailStory: Story = {
 export const FieldInputStory: Story = {
   name: 'FieldInput',
   render: () => <FieldInput>{sample}</FieldInput>,
+}
+
+/**
+ * The heading scale is FLUID, and this is what proves it (#108).
+ *
+ * `text-h1` and `text-h2` were fixed at their desktop sizes with no smaller
+ * step, so one long word could be wider than a phone's content area and
+ * scroll the whole page sideways. They are `clamp()` now, reaching the
+ * design's exact desktop size at 1440px and a safe floor at 390px.
+ *
+ * Asserted as a RANGE rather than a number, because the whole point is that
+ * there is no single number: the runner's viewport sits between the two ends,
+ * so a size strictly inside the range is the evidence of fluidity. Pin either
+ * token back to a fixed value and it lands exactly on the maximum, and these
+ * fail.
+ */
+export const ScaleIsFluid: Story = {
+  name: 'Heading scale is fluid',
+  render: () => (
+    <div>
+      <H1>Works with existing security infrastructure</H1>
+      <H2>Works with existing security infrastructure</H2>
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const size = (sel: string) => parseFloat(getComputedStyle(canvasElement.querySelector(sel)!).fontSize)
+
+    const h1 = size('h1')
+    const h2 = size('h2')
+
+    // Between the floor and the design's desktop size, exclusive at the top.
+    expect(h1).toBeGreaterThanOrEqual(40)
+    expect(h1).toBeLessThan(72)
+    expect(h2).toBeGreaterThanOrEqual(32)
+    expect(h2).toBeLessThan(56)
+
+    // The scale still descends. A clamp typo that crossed two levels over
+    // would keep both in range and still be wrong.
+    expect(h1).toBeGreaterThan(h2)
+
+    /*
+      And no hyphenation. #107 set `hyphens-auto` on H2 as a stopgap for the
+      overflow this replaces; hyphenating a display heading was always the
+      worse of the two outcomes, and leaving it in place would hide a
+      regression in the scale rather than let it show.
+    */
+    expect(getComputedStyle(canvasElement.querySelector('h2')!).hyphens).not.toBe('auto')
+  },
 }
