@@ -4,6 +4,8 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { H2 } from '@/app/components/typography'
 import { CodeBlock, type CopyLabels } from './code-block'
 import { Prose } from './prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type IntegrationTab = {
   id: string
@@ -39,7 +41,7 @@ export function IntegrationTabs({
   title,
   tabs,
   copyLabels,
-  lang,
+  locale,
 }: {
   title: string
   tabs: readonly IntegrationTab[]
@@ -49,21 +51,23 @@ export function IntegrationTabs({
    * to copy it is a worse outcome than a type error.
    */
   copyLabels?: CopyLabels
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   if (tabs.length === 0) {
     return null
   }
 
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center">{title}</H2>
+    <section className="container mx-auto px-5 py-20">
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
+        {title}
+      </H2>
 
       <Tabs defaultValue={tabs[0].id} className="mx-auto mt-12 max-w-3xl">
         <TabsList className="mx-auto">
           {tabs.map((tab) => (
-            <TabsTrigger key={tab.id} value={tab.id}>
+            <TabsTrigger key={tab.id} value={tab.id} lang={textLang(tab.label, locale)}>
               {tab.label}
             </TabsTrigger>
           ))}
@@ -71,7 +75,7 @@ export function IntegrationTabs({
 
         {tabs.map((tab) => (
           <TabsContent key={tab.id} value={tab.id} className="mt-8">
-            <Prose text={tab.body} className="[&_p]:text-lg" />
+            <Prose text={tab.body} locale={locale} className="[&_p]:text-lg" />
             {/*
               One `CodeBlock` per tab rather than one shared block fed the
               selected tab's code. Each gets its own copy state, so switching

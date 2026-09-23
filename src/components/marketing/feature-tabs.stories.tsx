@@ -17,7 +17,7 @@ const TABS = [
   { id: 'mev', title: 'MEV protection', panel: 'MEV protection.' },
 ]
 
-const args = { tabs: TABS }
+const args = { tabs: TABS, locale: 'en' as const }
 
 export const Default: Story = { args }
 

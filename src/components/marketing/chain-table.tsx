@@ -1,4 +1,6 @@
 import { H2 } from '@/app/components/typography'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type ChainRow = {
   /** Chain name. Not translated — a proper noun. */
@@ -23,21 +25,18 @@ export function ChainTable({
   nameHeader,
   idHeader,
   chains,
-  lang,
-  titleLang,
+  locale,
 }: {
   title: string
   nameHeader: string
   idHeader: string
   chains: readonly ChainRow[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
-  /** Set when the heading's language differs from the rest of the section. */
-  titleLang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center" lang={titleLang}>
+    <section className="container mx-auto px-5 py-20">
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
 
@@ -45,10 +44,18 @@ export function ChainTable({
         <table className="w-full border-collapse text-left">
           <thead>
             <tr className="border-b border-border">
-              <th scope="col" className="py-3 text-detail font-semibold uppercase tracking-wide text-fg-muted">
+              <th
+                scope="col"
+                className="py-3 text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                lang={textLang(nameHeader, locale)}
+              >
                 {nameHeader}
               </th>
-              <th scope="col" className="py-3 text-detail font-semibold uppercase tracking-wide text-fg-muted">
+              <th
+                scope="col"
+                className="py-3 text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                lang={textLang(idHeader, locale)}
+              >
                 {idHeader}
               </th>
             </tr>
@@ -56,10 +63,24 @@ export function ChainTable({
           <tbody>
             {chains.map((chain) => (
               <tr key={chain.id} className="border-b border-border/50">
-                {/* `row` scope so each ID is announced against its chain. */}
-                <th scope="row" className="py-3 font-medium text-fg" lang="en">
+                {/*
+                  `row` scope so each ID is announced against its chain.
+
+                  The name was hardcoded `lang="en"` — right in effect, since
+                  chain names are proper nouns, but a claim rather than a
+                  derivation: in an ENGLISH document it emitted a redundant
+                  `lang="en"` on every row. `textLang` returns `undefined`
+                  there and 'en' inside a Japanese or Korean one, which is the
+                  same intent expressed as a rule.
+                */}
+                <th scope="row" className="py-3 font-medium text-fg" lang={textLang(chain.name, locale)}>
                   {chain.name}
                 </th>
+                {/*
+                  NO `lang` on the ID. It is a number — 8453 has no language
+                  to announce, in any document. The compiler made the point
+                  for us: `textLang` takes a string and `chain.id` is not one.
+                */}
                 <td className="py-3 text-muted-foreground">{chain.id}</td>
               </tr>
             ))}

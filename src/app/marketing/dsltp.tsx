@@ -36,7 +36,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -48,7 +48,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       {/*
@@ -60,7 +60,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         width={DSLTP_GRAPH_IMAGE.width}
         height={DSLTP_GRAPH_IMAGE.height}
         imageAlt={t('graph.alt')}
-        lang={textLang(t('graph.alt'), locale)}
+        locale={locale}
       />
 
       <DiagramSection
@@ -69,7 +69,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         width={DSLTP_MAP_IMAGE.width}
         height={DSLTP_MAP_IMAGE.height}
         imageAlt={t('integrations.alt')}
-        lang={textLang(t('integrations.title'), locale)}
+        locale={locale}
       />
 
       {/*
@@ -91,8 +91,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         // way — so deriving the section language from the title marked the
         // whole block English, and the Korean prose and button labels beneath
         // it inherited that. The heading carries its own override instead.
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
+        locale={locale}
       />
     </>
   )

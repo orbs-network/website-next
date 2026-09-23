@@ -1,4 +1,6 @@
 import { H2, H3 } from '@/app/components/typography'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 import { Prose } from './prose'
 
 export type BenefitColumn = {
@@ -24,30 +26,41 @@ export function BenefitColumns({
   title,
   intro,
   columns,
-  lang,
+  locale,
 }: {
   title: string
   intro?: string
   columns: readonly BenefitColumn[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       <div className="mx-auto max-w-3xl text-center">
-        <H2 className="text-balance">{title}</H2>
-        {intro && <Prose text={intro} className="mt-6 [&_p]:text-lg" />}
+        <H2 className="text-balance" lang={textLang(title, locale)}>
+          {title}
+        </H2>
+        {intro && <Prose text={intro} locale={locale} className="mt-6 [&_p]:text-lg" />}
       </div>
 
       <div className="mt-16 grid gap-10 sm:grid-cols-3">
         {columns.map((column) => (
           <div key={column.id}>
-            <H3 weight="medium" className="text-center">
+            <H3 weight="medium" className="text-center" lang={textLang(column.title, locale)}>
               {column.title}
             </H3>
             <ul className="mt-6 space-y-3 text-center text-muted-foreground">
+              {/*
+                Per ITEM, not per list. These columns are parallel audiences
+                and their bullets are translated independently — the Korean
+                Liquidity Hub page has Korean benefit lines sitting beside ones
+                left in English, which is exactly the mix a single `lang` on
+                the `<ul>` would flatten.
+              */}
               {column.items.map((item) => (
-                <li key={item}>{item}</li>
+                <li key={item} lang={textLang(item, locale)}>
+                  {item}
+                </li>
               ))}
             </ul>
           </div>

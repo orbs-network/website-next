@@ -20,7 +20,7 @@ const ITEMS = [
  * decorative — naming it too would give "Ethereum, Ethereum" for every chain.
  */
 export const NamesAreAnnouncedOnce: Story = {
-  args: { title: 'Chains', items: ITEMS },
+  args: { title: 'Chains', items: ITEMS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -30,17 +30,36 @@ export const NamesAreAnnouncedOnce: Story = {
   },
 }
 
-/** Chain names are proper nouns, so they are marked English in any document. */
+/**
+ * Chain names are proper nouns and stay Latin, so inside a Korean document
+ * they are marked English.
+ *
+ * THE LOCALE MUST NOT BE ENGLISH — that is the story, not setup detail.
+ * `textLang` returns 'en' only for Latin text inside a NON-Latin document; in
+ * an English one there is nothing to distinguish Latin from, so it returns
+ * `undefined` and no attribute is emitted.
+ *
+ * This assertion used to pass against a hardcoded `lang="en"` on the name, so
+ * it held at any locale. Derived, running it at 'en' would find nothing.
+ */
 export const NamesAreMarkedEnglish: Story = {
-  args: { title: 'Chains', items: ITEMS },
+  args: { title: '체인', items: ITEMS, locale: 'ko' },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelector('span[lang="en"]')).toBeTruthy()
+
+    // ...and the Korean heading above them is not. One section-level `lang`
+    // had to be wrong about one of these two.
+    await expect(canvasElement.querySelector('h2')).not.toHaveAttribute('lang', 'en')
   },
 }
 
 /** Some rows are names only — the institutional venues carry no logos. */
 export const LogosAreOptional: Story = {
-  args: { title: 'Integrated by leading venues', items: [{ name: 'PancakeSwap' }, { name: 'SushiSwap' }] },
+  args: {
+    title: 'Integrated by leading venues',
+    items: [{ name: 'PancakeSwap' }, { name: 'SushiSwap' }],
+    locale: 'en',
+  },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -56,6 +75,7 @@ export const LogosAreOptional: Story = {
  */
 export const WhiteMarksInvertInLightTheme: Story = {
   args: {
+    locale: 'en',
     title: 'Works with existing security infrastructure',
     items: [
       {

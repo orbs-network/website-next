@@ -21,7 +21,7 @@ const STEPS = [
  * set of facts. That distinction is what a screen reader announces.
  */
 export const StepsAreAnOrderedList: Story = {
-  args: { title: 'Cosigned oracle verification', steps: STEPS },
+  args: { title: 'Cosigned oracle verification', steps: STEPS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -35,7 +35,7 @@ export const StepsAreAnOrderedList: Story = {
  * them would have a screen reader read "1 1. Agent decides".
  */
 export const NumeralsAreNotAnnounced: Story = {
-  args: { title: 'Cosigned oracle verification', steps: STEPS },
+  args: { title: 'Cosigned oracle verification', steps: STEPS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const badges = canvasElement.querySelectorAll('[aria-hidden="true"]')
     await expect(badges.length).toBeGreaterThanOrEqual(3)
@@ -48,6 +48,7 @@ export const StatementSitsOutsideTheList: Story = {
     title: 'Cosigned oracle verification',
     statement: 'Every execution is independently verified.',
     steps: STEPS,
+    locale: 'en',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -62,6 +63,7 @@ export const StepsCanBeTitled: Story = {
   args: {
     title: 'How It Works',
     steps: [{ title: 'Define Intent', body: 'Specify chain, tokens and amount.' }],
+    locale: 'en',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

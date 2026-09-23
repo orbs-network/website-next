@@ -1,5 +1,7 @@
 import Image from 'next/image'
 import { H2 } from '@/app/components/typography'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A full-width diagram, optionally under a heading.
@@ -20,8 +22,7 @@ export function DiagramSection({
   imageAlt,
   width,
   height,
-  lang,
-  titleLang,
+  locale,
 }: {
   title?: string
   image: string
@@ -45,28 +46,34 @@ export function DiagramSection({
    * stops being decorative.
    */
   imageAlt: string
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
   /**
-   * Set when the HEADING's language differs from the rest of the section.
+   * The document's locale. Each string's own `lang` is derived from it.
    *
-   * Several legacy section labels stay English in the Korean catalog — "Tool",
+   * This replaces a section `lang` plus a `titleLang` escape hatch. Several
+   * legacy section labels stay English in the Korean catalog — "Tool",
    * "Chains", "Orbs Agentic Architecture" — while the copy under them is
-   * translated. One section-level `lang` cannot describe both.
+   * translated, and one section-level value could not describe both. The
+   * escape hatch patched the heading and left every other string sharing the
+   * same guess; deriving per string removes the shared value entirely.
    */
-  titleLang?: string
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       {title && (
-        <H2 className="mb-12 text-balance text-center" lang={titleLang}>
+        <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
           {title}
         </H2>
       )}
 
+      {/*
+        The alt IS the content here — these sections are only an image, so it
+        is the one string a screen reader gets, and its language is its own.
+      */}
       <Image
         src={image}
         alt={imageAlt}
+        lang={textLang(imageAlt, locale)}
         width={width}
         height={height}
         sizes="(min-width: 1024px) 896px, 100vw"

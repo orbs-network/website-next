@@ -45,7 +45,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         ctaHref={DLIMIT_HERO.ctaHref}
         repo={DLIMIT_HERO.repo}
         telegram={DLIMIT_HERO.telegram}
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -56,7 +56,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${id}.title`),
           body: t(`benefits.items.${id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationGrid
@@ -67,7 +67,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         integrateCta={t('integrations.integrateCta')}
         integrateHref={DLIMIT_LINKS.integrationGuide}
         integrations={DLIMIT_INTEGRATIONS}
-        lang={textLang(t('integrations.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationTabs
@@ -87,7 +87,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
           },
         ]}
         copyLabels={{ copy: t('code.copy'), copied: t('code.copied') }}
-        lang={textLang(t('code.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -103,7 +103,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
           { label: t('schema.audit'), href: DLIMIT_LINKS.audit },
           { label: t('schema.faq'), href: DLIMIT_LINKS.faq },
         ]}
-        lang={textLang(t('schema.title'), locale)}
+        locale={locale}
       />
     </>
   )

@@ -22,6 +22,7 @@ const args = {
   label: 'In the news',
   previousLabel: 'Previous articles',
   nextLabel: 'More articles',
+  locale: 'en' as const,
 }
 
 export const Default: Story = { args }

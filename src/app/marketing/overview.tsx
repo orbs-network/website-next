@@ -29,28 +29,18 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
   return (
     <>
       {/*
-        `headlineLang` is stated outright rather than left to `textLang`.
+        This carried a hand-written `headlineLang`, because `ProductHero` used
+        to hang one `lang` on its wrapper derived from the INTRO — so an
+        in-language headline beside an English intro inherited `lang="en"` and
+        was announced with English rules, and the only fix available to the
+        caller was to state the headline's language outright.
 
-        `textLang` returns undefined when a string matches its locale, which is
-        right for a page where everything agrees — but `ProductHero` puts `lang`
-        on the wrapper from the INTRO, so an in-language headline beside an
-        English intro inherits `lang="en"` and is announced with English rules.
-        Falling back to `locale` means the h1 always declares its own language
-        instead of borrowing its neighbour's.
+        Obsolete since #103: the hero derives each string's language from
+        `locale` itself, so the headline can no longer borrow its neighbour's.
       */}
-      <ProductHero
-        headline={t('hero.headline')}
-        intro={t('hero.intro')}
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
-      />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
-      <ArchitectureSection
-        title={t('what.title')}
-        body={t('what.body')}
-        titleLang={lang('what.title')}
-        lang={lang('what.body')}
-      />
+      <ArchitectureSection title={t('what.title')} body={t('what.body')} locale={locale} />
 
       {/*
         Pain and solution as a two-card grid. They are a matched pair in the
@@ -70,70 +60,44 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
             body: `**${t('solution.eyebrow')}**\n\n${t('solution.body')}`,
           },
         ]}
-        lang={lang('challenge.body')}
+        locale={locale}
       />
 
-      <ArchitectureSection
-        eyebrow={t('tech.eyebrow')}
-        title={t('tech.title')}
-        body={t('tech.body')}
-        titleLang={lang('tech.title')}
-        lang={lang('tech.body')}
-      />
+      <ArchitectureSection eyebrow={t('tech.eyebrow')} title={t('tech.title')} body={t('tech.body')} locale={locale} />
 
       <FeatureGrid
         title={t('products.title')}
-        titleLang={lang('products.title')}
         features={OVERVIEW_PRODUCTS.map((product) => ({
           id: product.id,
           icon: product.icon,
           href: resolveLocaleLink({ href: product.href }, locale).href,
           title: t(`products.items.${product.id}.title`),
-          // Product names, English in every locale — so they must say so, or a
-          // Korean section announces "dTWAP" with Korean rules.
-          titleLang: textLang(t(`products.items.${product.id}.title`), locale),
           body: t(`products.items.${product.id}.body`),
         }))}
-        lang={lang('products.items.dtwap.body')}
+        locale={locale}
       />
 
-      <ArchitectureSection
-        title={t('why.title')}
-        body={t('why.body')}
-        titleLang={lang('why.title')}
-        lang={lang('why.body')}
-      />
+      <ArchitectureSection title={t('why.title')} body={t('why.body')} locale={locale} />
 
-      <ArchitectureSection
-        title={t('why.howTitle')}
-        body={t('why.howBody')}
-        titleLang={lang('why.howTitle')}
-        lang={lang('why.howBody')}
-      />
+      <ArchitectureSection title={t('why.howTitle')} body={t('why.howBody')} locale={locale} />
 
       {/*
         `title`, not `eyebrow`. Mission is a standalone section, and as an
         eyebrow it rendered as a small <p> label — absent from the heading
         outline, so nothing in the document structure marked where it began.
       */}
-      <ArchitectureSection
-        title={t('mission.title')}
-        body={t('mission.body')}
-        titleLang={lang('mission.title')}
-        lang={lang('mission.body')}
-      />
+      <ArchitectureSection title={t('mission.title')} body={t('mission.body')} locale={locale} />
 
       <FeatureGrid
         title={t('benefits.title')}
         intro={t('benefits.intro')}
-        titleLang={lang('benefits.title')}
         features={OVERVIEW_BENEFITS.map((benefit) => ({
           id: benefit.id,
           icon: benefit.icon,
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={lang('benefits.items.access.body')}
+        locale={locale}
       />
     </>
   )

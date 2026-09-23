@@ -49,7 +49,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         imageAlt=""
         repo={DTWAP_HERO.repo}
         telegram={DTWAP_HERO.telegram}
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -60,7 +60,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${id}.title`),
           body: t(`benefits.items.${id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationGrid
@@ -71,7 +71,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         integrateCta={t('integrations.integrateCta')}
         integrateHref={DTWAP_LINKS.integrationGuide}
         integrations={DTWAP_INTEGRATIONS}
-        lang={textLang(t('integrations.title'), locale)}
+        locale={locale}
       />
 
       <Walkthrough
@@ -80,7 +80,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           ...slide,
           caption: t(`explanation.slides.${slide.id}`),
         }))}
-        lang={textLang(t('explanation.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationTabs
@@ -100,7 +100,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           },
         ]}
         copyLabels={{ copy: t('code.copy'), copied: t('code.copied') }}
-        lang={textLang(t('code.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -116,7 +116,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           { label: t('schema.audit'), href: DTWAP_LINKS.audit },
           { label: t('schema.faq'), href: DTWAP_LINKS.faq },
         ]}
-        lang={textLang(t('schema.title'), locale)}
+        locale={locale}
       />
     </>
   )

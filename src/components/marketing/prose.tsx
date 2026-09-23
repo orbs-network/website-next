@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
 
 /**
@@ -13,13 +15,34 @@ import { cn } from '@/lib/utils'
  * catalog is ever fed from a CMS. Everything below produces React elements from
  * plain text, so there is no HTML injection path.
  */
-export function Prose({ text, className }: { text: string; className?: string }) {
+/**
+ * `locale` marks each PARAGRAPH with its own language (#103).
+ *
+ * Per paragraph rather than once on the wrapper, and that is the whole point.
+ * A single `lang` over the wrapper is the pattern #103 exists to remove: it
+ * hangs one language over several strings and guesses which they share. These
+ * paragraphs come from one catalog entry, so they usually do share — but
+ * "usually" is exactly the assumption that put Korean copy under `lang="en"`
+ * six times, and a block of Korean prose quoting an English sentence is an
+ * ordinary thing for this content to contain.
+ *
+ * Optional, and omitting it produces exactly the previous markup. That mirrors
+ * the deliberate choice already made in `MarkdownProse`: switching every
+ * caller on in one change would alter the rendered output of the legal
+ * documents, the FAQ and the footer, which deserve their own look rather than
+ * riding along with a refactor.
+ */
+export function Prose({ text, className, locale }: { text: string; className?: string; locale?: Locale }) {
   const paragraphs = text.split(/\n{2,}/).filter((p) => p.trim() !== '')
 
   return (
     <div className={cn('space-y-4', className)}>
       {paragraphs.map((paragraph, index) => (
-        <p key={index} className="text-muted-foreground leading-relaxed">
+        <p
+          key={index}
+          className="text-muted-foreground leading-relaxed"
+          lang={locale === undefined ? undefined : textLang(paragraph.trim(), locale)}
+        >
           {renderBold(paragraph.trim())}
         </p>
       ))}

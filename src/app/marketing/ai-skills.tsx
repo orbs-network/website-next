@@ -28,7 +28,7 @@ export async function AiSkillsPage({ locale }: { locale: Locale }) {
         href: resolveLocaleLink({ href: skill.href }, locale).href,
         description: t(`items.${skill.id}.description`),
       }))}
-      lang={textLang(t('intro'), locale)}
+      locale={locale}
     />
   )
 }

@@ -2,6 +2,8 @@ import Link from 'next/link'
 import { H2, H3 } from '@/app/components/typography'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Prose } from './prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type SkillEntry = {
   /** Message key and React key. */
@@ -37,21 +39,23 @@ export function SkillList({
   chainsLabel,
   orderTypesLabel,
   skills,
-  lang,
+  locale,
 }: {
   title: string
   intro?: string
   chainsLabel: string
   orderTypesLabel: string
   skills: readonly ResolvedSkill[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       <div className="mx-auto max-w-3xl text-center">
-        <H2 className="text-balance">{title}</H2>
-        {intro && <Prose text={intro} className="mt-6 [&_p]:text-lg" />}
+        <H2 className="text-balance" lang={textLang(title, locale)}>
+          {title}
+        </H2>
+        {intro && <Prose text={intro} locale={locale} className="mt-6 [&_p]:text-lg" />}
       </div>
 
       <ul className="mx-auto mt-16 grid max-w-4xl gap-8">
@@ -61,9 +65,14 @@ export function SkillList({
             <Card className="relative h-full transition-colors hover:border-accent-primary">
               <CardHeader>
                 <H3 weight="medium">
+                  {/*
+                    Skill names are product identifiers and stay Latin. This
+                    was hardcoded `lang="en"`, which was right in a Japanese or
+                    Korean document and redundant in an English one.
+                  */}
                   <Link
                     href={skill.href}
-                    lang="en"
+                    lang={textLang(skill.name, locale)}
                     className="after:absolute after:inset-0 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   >
                     {skill.name}
@@ -72,20 +81,41 @@ export function SkillList({
               </CardHeader>
 
               <CardContent>
-                <Prose text={skill.description} />
+                <Prose text={skill.description} locale={locale} />
 
+                {/*
+                  The LABELS come from the catalog and are translated; the
+                  VALUES are chain and order-type names and stay Latin. Each
+                  `<dt>`/`<dd>` pair is therefore two languages sitting
+                  together, which is why the values were already hardcoded
+                  `lang="en"` while the labels beside them had nothing.
+                */}
                 <dl className="mt-6 grid gap-3 sm:grid-cols-2">
                   <div>
-                    <dt className="text-detail font-semibold uppercase tracking-wide text-fg-muted">{chainsLabel}</dt>
-                    <dd className="mt-1 text-detail text-muted-foreground" lang="en">
+                    <dt
+                      className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                      lang={textLang(chainsLabel, locale)}
+                    >
+                      {chainsLabel}
+                    </dt>
+                    <dd
+                      className="mt-1 text-detail text-muted-foreground"
+                      lang={textLang(skill.chains.join(', '), locale)}
+                    >
                       {skill.chains.join(', ')}
                     </dd>
                   </div>
                   <div>
-                    <dt className="text-detail font-semibold uppercase tracking-wide text-fg-muted">
+                    <dt
+                      className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                      lang={textLang(orderTypesLabel, locale)}
+                    >
                       {orderTypesLabel}
                     </dt>
-                    <dd className="mt-1 text-detail text-muted-foreground" lang="en">
+                    <dd
+                      className="mt-1 text-detail text-muted-foreground"
+                      lang={textLang(skill.orderTypes.join(', '), locale)}
+                    >
                       {skill.orderTypes.join(', ')}
                     </dd>
                   </div>

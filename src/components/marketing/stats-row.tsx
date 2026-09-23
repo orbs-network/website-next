@@ -1,5 +1,7 @@
 import { H2 } from '@/app/components/typography'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type Stat = {
   /** Message key and React key. */
@@ -26,19 +28,23 @@ export function StatsRow({
   title,
   stats,
   columns = 3,
-  lang,
+  locale,
 }: {
   /** Optional: the institutional page runs these bare, under the hero. */
   title?: string
   stats: readonly Stat[]
   /** How many across on a wide viewport. Three unless told otherwise. */
   columns?: 3 | 5
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
-      {title && <H2 className="mb-12 text-balance text-center">{title}</H2>}
+    <section className="container mx-auto px-5 py-20">
+      {title && (
+        <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
+          {title}
+        </H2>
+      )}
 
       {/*
         Column count is the caller's, because the right answer depends on how
@@ -49,8 +55,21 @@ export function StatsRow({
       <dl className={cn('grid gap-10 text-center', columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3')}>
         {stats.map((stat) => (
           <div key={stat.id} className="flex flex-col-reverse gap-2">
-            <dt className="text-detail font-medium uppercase tracking-wide text-fg-muted">{stat.label}</dt>
-            <dd className="text-h2 font-normal text-fg">{stat.value}</dd>
+            {/*
+              The label and the value are marked SEPARATELY, and this pair is
+              the clearest case on the site for why. "$2.5B+" is Latin in every
+              locale, while "누적 거래량" beside it is Korean — one `lang` over
+              the row has to be wrong about one of them.
+            */}
+            <dt
+              className="text-detail font-medium uppercase tracking-wide text-fg-muted"
+              lang={textLang(stat.label, locale)}
+            >
+              {stat.label}
+            </dt>
+            <dd className="text-h2 font-normal text-fg" lang={textLang(stat.value, locale)}>
+              {stat.value}
+            </dd>
           </div>
         ))}
       </dl>

@@ -3,6 +3,8 @@ import { Card, CardContent } from '@/components/ui/card'
 import { H2, H3 } from '@/app/components/typography'
 import type { Integration } from '@/content/pages/dtwap'
 import Image from 'next/image'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * Partner DEXes that have shipped the protocol, each with a screenshot of it
@@ -24,7 +26,7 @@ export function IntegrationGrid({
   integrateCta,
   integrateHref,
   integrations,
-  lang,
+  locale,
 }: {
   /** Anchor target for the hero's call to action. */
   id?: string
@@ -33,12 +35,12 @@ export function IntegrationGrid({
   integrateCta: string
   integrateHref: string
   integrations: readonly Integration[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
     <section id={id} className="container mx-auto px-5 py-20">
-      <H2 className="text-balance text-center" lang={lang}>
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
 
@@ -70,9 +72,11 @@ export function IntegrationGrid({
               </div>
 
               <CardContent className="flex items-center justify-between gap-4 p-6">
+                {/* This logo's alt IS the partner's name, a proper noun. */}
                 <Image
                   src={integration.logo}
                   alt={integration.name}
+                  lang={textLang(integration.name, locale)}
                   width={120}
                   height={28}
                   className="h-7 w-auto object-contain"
@@ -106,10 +110,12 @@ export function IntegrationGrid({
         ))}
       </ul>
 
-      <div className="mt-16 text-center" lang={lang}>
-        <H3 weight="medium">{integrateTitle}</H3>
+      <div className="mt-16 text-center">
+        <H3 weight="medium" lang={textLang(integrateTitle, locale)}>
+          {integrateTitle}
+        </H3>
         <Button asChild size="lg" className="mt-6">
-          <a href={integrateHref} target="_blank" rel="noopener noreferrer">
+          <a href={integrateHref} lang={textLang(integrateCta, locale)} target="_blank" rel="noopener noreferrer">
             {integrateCta}
           </a>
         </Button>

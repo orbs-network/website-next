@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import Image from 'next/image'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
 
 /**
@@ -27,8 +29,6 @@ import { cn } from '@/lib/utils'
 export type CarouselSlide = {
   id: string
   caption: string
-  /** Language of the caption, from `textLang`. Undefined means the document's. */
-  captionLang?: string
   /**
    * The accessible name for this slide's dot control.
    *
@@ -45,11 +45,20 @@ export type CarouselSlide = {
 export function SlideCarousel({
   slides,
   label,
+  locale,
   className,
 }: {
   slides: readonly CarouselSlide[]
   /** Accessible name for the group, e.g. the section heading. */
   label: string
+  /**
+   * The document's locale. Each string's own `lang` is derived from it.
+   *
+   * This replaces a `captionLang` the caller computed and hung on every slide.
+   * The dot controls were never covered by it: an `aria-label` takes its
+   * language from the element carrying it, and those elements had none.
+   */
+  locale: Locale
   className?: string
 }) {
   const scroller = React.useRef<HTMLUListElement>(null)
@@ -96,6 +105,7 @@ export function SlideCarousel({
         // anyone not using a mouse.
         tabIndex={0}
         aria-label={label}
+        lang={textLang(label, locale)}
         className={cn(
           'flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
@@ -115,7 +125,7 @@ export function SlideCarousel({
                 sizes="(min-width: 1024px) 896px, 100vw"
                 className="h-auto w-full rounded-sm border border-border"
               />
-              <figcaption className="mt-4 text-detail text-fg-muted" lang={slide.captionLang}>
+              <figcaption className="mt-4 text-detail text-fg-muted" lang={textLang(slide.caption, locale)}>
                 {slide.caption}
               </figcaption>
             </figure>
@@ -130,6 +140,7 @@ export function SlideCarousel({
             type="button"
             onClick={() => show(index)}
             aria-label={slide.label}
+            lang={textLang(slide.label, locale)}
             // Which one you are looking at, exposed rather than only coloured
             // in. `aria-current` is the honest primitive here: these are not
             // tabs and they control no panel.

@@ -53,30 +53,29 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={contact.href}
+        locale={locale}
       />
-
       <StatsRow
         stats={INSTITUTIONAL_STATS.map((id) => ({
           id,
           value: t(`stats.items.${id}.value`),
           label: t(`stats.items.${id}.label`),
         }))}
+        locale={locale}
       />
-
       <ArchitectureSection
         eyebrow={t('proofOfWork.eyebrow')}
         title={t('proofOfWork.title')}
         body={t('proofOfWork.body')}
+        locale={locale}
       />
-
       <ArchitectureSection
         eyebrow={t('trackRecord.eyebrow')}
         title={t('trackRecord.title')}
         body={t('trackRecord.body')}
+        locale={locale}
       />
-
-      <LogoRow title={t('venues.title')} items={INSTITUTIONAL_VENUES} />
-
+      <LogoRow title={t('venues.title')} items={INSTITUTIONAL_VENUES} locale={locale} />
       <FeatureGrid
         title={t('products.title')}
         intro={t('products.intro')}
@@ -87,18 +86,16 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`products.items.${product.id}.title`),
           body: t(`products.items.${product.id}.body`),
         }))}
+        locale={locale}
       />
-
       <ArchitectureSection
         eyebrow={t('selfCustody.eyebrow')}
         title={t('selfCustody.title')}
         body={t('selfCustody.body')}
+        locale={locale}
       />
-
-      <LogoRow title={t('signers.title')} sub={t('signers.sub')} items={INSTITUTIONAL_SIGNERS} />
-
-      <ArchitectureSection title={t('policyEngine.title')} body={t('policyEngine.body')} />
-
+      <LogoRow title={t('signers.title')} sub={t('signers.sub')} items={INSTITUTIONAL_SIGNERS} locale={locale} />
+      <ArchitectureSection title={t('policyEngine.title')} body={t('policyEngine.body')} locale={locale} />
       <FeatureGrid
         title={t('integrationPaths.title')}
         features={INSTITUTIONAL_PATHS.map((id) => ({
@@ -106,8 +103,8 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`integrationPaths.items.${id}.title`),
           body: t(`integrationPaths.items.${id}.body`),
         }))}
+        locale={locale}
       />
-
       <FeatureGrid
         eyebrow={t('features.eyebrow')}
         title={t('features.title')}
@@ -116,8 +113,8 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`features.items.${id}.title`),
           body: t(`features.items.${id}.body`),
         }))}
+        locale={locale}
       />
-
       {/*
         Two audiences, each a short list of who they are — the same shape as
         Liquidity Hub's "New DEX Standard", so the same component.
@@ -129,8 +126,8 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`whoFor.items.${id}.title`),
           items: t(`whoFor.items.${id}.list`).split('\n').filter(Boolean),
         }))}
+        locale={locale}
       />
-
       <ArchitectureSection
         title={t('talkToTeam.title')}
         body={t('talkToTeam.body')}
@@ -138,6 +135,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           { label: t('talkToTeam.contact'), href: contact.href },
           { label: t('talkToTeam.github'), href: github.href },
         ]}
+        locale={locale}
       />
     </>
   )

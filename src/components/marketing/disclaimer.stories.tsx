@@ -19,7 +19,7 @@ const TEXT =
  * would be the one choice here with consequences beyond taste.
  */
 export const RendersEveryClause: Story = {
-  args: { text: TEXT },
+  args: { text: TEXT, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -31,10 +31,26 @@ export const RendersEveryClause: Story = {
   },
 }
 
-/** Carries a `lang` override when the copy is English inside another locale. */
-export const CarriesLangOverride: Story = {
-  args: { text: TEXT, lang: 'en' },
+/**
+ * English fine print inside a Korean document is marked per PARAGRAPH, not on
+ * the section (#103).
+ *
+ * This story used to assert the opposite — a `lang` override on the
+ * `<section>` — which is the pattern the issue removes. The section carrying
+ * it meant one guess covering every string beneath, and a disclaimer is the
+ * last place to keep a guess.
+ */
+export const EnglishCopyInAnotherLocale: Story = {
+  args: { text: TEXT, locale: 'ko' },
   play: async ({ canvasElement }) => {
-    await expect(canvasElement.querySelector('section')).toHaveAttribute('lang', 'en')
+    const paragraphs = canvasElement.querySelectorAll('p')
+
+    await expect(paragraphs).toHaveLength(3)
+    for (const paragraph of paragraphs) {
+      await expect(paragraph).toHaveAttribute('lang', 'en')
+    }
+
+    // The wrapper claims nothing about language any more.
+    await expect(canvasElement.querySelector('section')).not.toHaveAttribute('lang')
   },
 }

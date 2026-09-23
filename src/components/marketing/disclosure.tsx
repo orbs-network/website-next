@@ -1,4 +1,6 @@
 import { ChevronDown } from 'lucide-react'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * One collapsed section: a summary line, and content behind it.
@@ -18,21 +20,30 @@ import { ChevronDown } from 'lucide-react'
  */
 export function Disclosure({
   summary,
-  summaryLang,
-  lang,
+  locale,
   children,
 }: {
   summary: string
-  /** Set when the summary's language differs from the page's. */
-  summaryLang?: string
-  /** Set when the content's language differs from the page's. */
-  lang?: string
+  /**
+   * The document's locale. The SUMMARY's `lang` is derived from it.
+   *
+   * The content is not, and cannot be: it is `ReactNode`, so there is no
+   * string here to inspect. That is the right split rather than a gap — the
+   * caller passes `<MarkdownProse locale={...}>`, which marks each paragraph,
+   * list item and heading it renders. Language ends up on the elements
+   * holding the text either way, which is the point of #103.
+   *
+   * It also avoids a wrapper. Hanging a `lang` on the content div would put a
+   * new element inside `space-y-4`, whose spacing comes from direct children —
+   * a silent visual regression on every FAQ answer.
+   */
+  locale: Locale
   children: React.ReactNode
 }) {
   return (
     <details className="group py-4">
       <summary
-        lang={summaryLang}
+        lang={textLang(summary, locale)}
         className={[
           // `list-none` plus the WebKit pseudo-element: the default triangle
           // marker cannot be styled and sits misaligned against a multi-line
@@ -51,9 +62,7 @@ export function Disclosure({
         />
       </summary>
 
-      <div lang={lang} className="mt-3 space-y-4 [&_ol]:mt-3 [&_ul]:mt-3">
-        {children}
-      </div>
+      <div className="mt-3 space-y-4 [&_ol]:mt-3 [&_ul]:mt-3">{children}</div>
     </details>
   )
 }

@@ -22,7 +22,7 @@ const COLUMNS = [
  * the layout, not decoration.
  */
 export const ColumnsAreRealLists: Story = {
-  args: { title: 'New DEX Standard', columns: COLUMNS },
+  args: { title: 'New DEX Standard', columns: COLUMNS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -35,7 +35,7 @@ export const ColumnsAreRealLists: Story = {
 
 /** The intro is optional; without it the heading stands alone. */
 export const IntroIsOptional: Story = {
-  args: { title: 'New DEX Standard', columns: COLUMNS },
+  args: { title: 'New DEX Standard', columns: COLUMNS, locale: 'en' },
   play: async ({ canvasElement }) => {
     await expect(canvasElement.querySelectorAll('p')).toHaveLength(0)
   },

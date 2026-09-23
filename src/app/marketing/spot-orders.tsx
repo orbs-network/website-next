@@ -36,8 +36,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
         ctaLabel={t('hero.cta')}
         ctaHref={SPOT_ORDERS_LINKS.skillSpec}
         repo={SPOT_ORDERS_LINKS.repo}
-        lang={textLang(t('hero.intro'), locale)}
-        headlineLang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -48,8 +47,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`quickstart.items.${id}.title`),
           body: t(`quickstart.items.${id}.body`),
         }))}
-        lang={textLang(t('quickstart.intro'), locale)}
-        titleLang={textLang(t('quickstart.title'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -59,8 +57,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`features.items.${id}.title`),
           body: t(`features.items.${id}.body`),
         }))}
-        lang={textLang(t('features.items.market.body'), locale)}
-        titleLang={textLang(t('features.title'), locale)}
+        locale={locale}
       />
 
       <NumberedSteps
@@ -69,7 +66,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`howItWorks.steps.${id}.title`),
           body: t(`howItWorks.steps.${id}.body`),
         }))}
-        lang={textLang(t('howItWorks.steps.intent.body'), locale)}
+        locale={locale}
       />
 
       <ChainTable
@@ -77,7 +74,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
         nameHeader={t('chains.nameHeader')}
         idHeader={t('chains.idHeader')}
         chains={SPOT_ORDERS_CHAINS}
-        titleLang={textLang(t('chains.title'), locale)}
+        locale={locale}
       />
     </>
   )

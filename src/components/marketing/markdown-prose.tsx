@@ -1,3 +1,4 @@
+import * as React from 'react'
 import Markdown from 'react-markdown'
 import { H1, H2, H3 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
@@ -72,10 +73,30 @@ const COMPONENTS = {
   br: () => <br />,
 }
 
-/** The link's own text, when it is plain — which is every link in this copy. */
-function linkText(children: React.ReactNode): string | undefined {
-  if (typeof children === 'string') return children
-  if (Array.isArray(children) && children.every((child) => typeof child === 'string')) return children.join('')
+/**
+ * The plain text inside a node, flattened.
+ *
+ * Recursive, unlike the version this replaces, which handled a string or an
+ * array of strings and gave up on anything else. That was enough for link
+ * labels — they are plain in this copy — but not for a paragraph, which
+ * routinely contains a `<strong>` or a link and would therefore have returned
+ * `undefined` and gone unlabelled. Since an unlabelled block is precisely the
+ * bug (#103), giving up on the common case would have made this cosmetic.
+ */
+function nodeText(node: React.ReactNode): string | undefined {
+  if (typeof node === 'string') return node
+  if (typeof node === 'number') return String(node)
+  if (Array.isArray(node)) {
+    const parts = node.map(nodeText)
+    return parts.some((part) => part === undefined) ? undefined : parts.join('')
+  }
+  if (React.isValidElement(node)) {
+    return nodeText((node.props as { children?: React.ReactNode }).children)
+  }
+  // `null`, `undefined` and booleans render nothing, so they contribute
+  // nothing rather than defeating the whole extraction.
+  if (node === null || node === undefined || typeof node === 'boolean') return ''
+
   return undefined
 }
 
@@ -103,7 +124,7 @@ function anchor(locale?: Locale) {
     // here rather than in each document, since it is a property of the link.
     const resolved = href && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(href) ? `mailto:${href}` : href
     const external = !resolved?.startsWith('/')
-    const text = locale === undefined ? undefined : linkText(children)
+    const text = locale === undefined ? undefined : nodeText(children)
 
     return (
       <a
@@ -118,10 +139,70 @@ function anchor(locale?: Locale) {
   }
 }
 
+/**
+ * Every block element, marked with the language of its own text.
+ *
+ * NO WRAPPER, and that is the point. Giving this component a `lang` prop would
+ * mean rendering a `<div>` to hang it on, which is (a) the wrapper-scope
+ * pattern #103 exists to remove, one language guessed for a whole document,
+ * and (b) a new element in the middle of `Disclosure`'s `space-y-4`, whose
+ * spacing comes from direct children — a silent visual regression on the FAQ.
+ *
+ * Each paragraph, list item and heading carries its own instead. A legal
+ * document is exactly where this matters: the Japanese privacy policy has
+ * English defined terms and English company names sitting inside Japanese
+ * clauses.
+ */
+function languageAware(locale: Locale) {
+  const marked = <P extends { children?: React.ReactNode }>(render: (props: P, lang?: string) => React.ReactNode) =>
+    function Marked(props: P) {
+      const text = nodeText(props.children)
+
+      return render(props, text === undefined ? undefined : textLang(text, locale))
+    }
+
+  return {
+    ...COMPONENTS,
+    a: anchor(locale),
+    p: marked(({ children }, lang) => (
+      <p className="leading-relaxed text-fg-muted" lang={lang}>
+        {children}
+      </p>
+    )),
+    li: marked(({ children }, lang) => (
+      <li className="leading-relaxed" lang={lang}>
+        {children}
+      </li>
+    )),
+    h1: marked(({ children }, lang) => (
+      <H1 className="mb-8" lang={lang}>
+        {children}
+      </H1>
+    )),
+    h2: marked(({ children }, lang) => <H2 lang={lang}>{children}</H2>),
+    h3: marked(({ children }, lang) => <H3 lang={lang}>{children}</H3>),
+    h4: marked(({ children }, lang) => (
+      <h4 className="text-lg font-semibold text-fg" lang={lang}>
+        {children}
+      </h4>
+    )),
+    h5: marked(({ children }, lang) => (
+      <h5 className="text-base font-semibold text-fg" lang={lang}>
+        {children}
+      </h5>
+    )),
+    h6: marked(({ children }, lang) => (
+      <h6 className="text-base font-semibold text-fg" lang={lang}>
+        {children}
+      </h6>
+    )),
+  }
+}
+
 export function MarkdownProse({ children, locale }: { children: string; locale?: Locale }) {
   // Only build a components object when the caller asked for language-aware
-  // links; otherwise reuse the module-level one.
-  const components = locale === undefined ? COMPONENTS : { ...COMPONENTS, a: anchor(locale) }
+  // output; otherwise reuse the module-level one.
+  const components = locale === undefined ? COMPONENTS : languageAware(locale)
 
   return <Markdown components={components}>{children}</Markdown>
 }

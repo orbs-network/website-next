@@ -35,12 +35,7 @@ export async function PosPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <ProductHero
-        headline={t('hero.headline')}
-        intro={t('hero.intro')}
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
-      />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
       <section className="container mx-auto px-5 py-20">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-2">
@@ -110,12 +105,7 @@ export async function PosPage({ locale }: { locale: Locale }) {
       <section className="container mx-auto px-5 py-20">
         <div className="mx-auto max-w-3xl divide-y divide-border border-y border-border">
           {POS_EXPLAINERS.map((id) => (
-            <Disclosure
-              key={id}
-              summary={t(`items.${id}.title`)}
-              summaryLang={lang(`items.${id}.title`)}
-              lang={lang(`items.${id}.body`)}
-            >
+            <Disclosure key={id} summary={t(`items.${id}.title`)} locale={locale}>
               <MarkdownProse>{t(`items.${id}.body`)}</MarkdownProse>
               {t(`items.${id}.extra`) && (
                 <div className="mt-4">

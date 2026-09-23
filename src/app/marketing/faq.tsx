@@ -40,5 +40,5 @@ export async function FaqPage({
    */
   const lang = translated ? undefined : DEFAULT_LOCALE
 
-  return <FaqDocument markdown={markdown} title={t('title')} lang={lang} />
+  return <FaqDocument markdown={markdown} title={t('title')} locale={locale} />
 }

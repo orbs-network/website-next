@@ -1,4 +1,5 @@
 import { Separator } from '@/components/ui/separator'
+import type { Locale } from '@/i18n/locales'
 import { Prose } from './prose'
 
 /**
@@ -14,12 +15,18 @@ import { Prose } from './prose'
  * collapsed — it is a risk disclosure, and burying it would be the one styling
  * choice with consequences beyond taste.
  */
-export function Disclaimer({ text, lang }: { text: string; lang?: string }) {
+export function Disclaimer({ text, locale }: { text: string; locale: Locale }) {
   return (
-    <section className="container mx-auto px-5 pb-20" lang={lang}>
+    <section className="container mx-auto px-5 pb-20">
       <div className="mx-auto max-w-3xl">
         <Separator className="mb-8" />
-        <Prose text={text} className="[&_p]:text-detail [&_p]:italic" />
+        {/*
+          `Prose` marks each paragraph. A disclaimer is one catalog string, so
+          this is the case where a single section `lang` was least wrong — but
+          it is still a guess, and a risk disclosure is the last place to keep
+          one.
+        */}
+        <Prose text={text} locale={locale} className="[&_p]:text-detail [&_p]:italic" />
       </div>
     </section>
   )

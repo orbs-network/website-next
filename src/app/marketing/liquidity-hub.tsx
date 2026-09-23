@@ -46,7 +46,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
   return (
     <>
       {/* No call to action: the legacy header declares no button. */}
-      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} lang={textLang(t('hero.headline'), locale)} />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
       <FeatureGrid
         intro={t('sources.intro')}
@@ -55,7 +55,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           title: t(`sources.items.${id}.title`),
           body: t(`sources.items.${id}.body`),
         }))}
-        lang={textLang(t('sources.intro'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -64,7 +64,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         imageWidth={LIQUIDITY_HUB_DIAGRAM.width}
         imageHeight={LIQUIDITY_HUB_DIAGRAM.height}
         imageAlt={t('fallback.alt')}
-        lang={textLang(t('fallback.body'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -74,7 +74,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${id}.title`),
           body: t(`benefits.items.${id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       <BenefitColumns
@@ -87,7 +87,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           // counting keys — the items are short labels, not prose.
           items: t(`audiences.items.${id}.list`).split('\n').filter(Boolean),
         }))}
-        lang={textLang(t('audiences.title'), locale)}
+        locale={locale}
       />
 
       <PartnerShowcase
@@ -102,16 +102,14 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         // the Korean catalog while everything under it is translated, so the
         // title carries its own override and the section takes the language of
         // its body.
-        lang={textLang(t('partners.items.quickswap.subtitle'), locale)}
-        titleLang={textLang(t('partners.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
         title={t('decentralization.title')}
         body={t('decentralization.body')}
         links={[{ label: t('decentralization.terms'), href: terms.href }]}
-        lang={textLang(t('decentralization.body'), locale)}
-        titleLang={textLang(t('decentralization.title'), locale)}
+        locale={locale}
       />
     </>
   )

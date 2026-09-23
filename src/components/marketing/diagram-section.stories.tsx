@@ -17,7 +17,7 @@ const SIZE = { width: 2666, height: 978 }
 const ALT = 'A candlestick price chart with a take-profit level above the entry price and a stop-loss below it.'
 
 export const WithTitle: Story = {
-  args: { title: 'Recent and Ongoing Integrations', image: IMAGE, imageAlt: ALT, ...SIZE },
+  args: { title: 'Recent and Ongoing Integrations', image: IMAGE, imageAlt: ALT, ...SIZE, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -31,7 +31,7 @@ export const WithTitle: Story = {
  * the diagram alone — no heading element at all rather than an empty one.
  */
 export const WithoutTitle: Story = {
-  args: { image: IMAGE, imageAlt: ALT, ...SIZE },
+  args: { image: IMAGE, imageAlt: ALT, ...SIZE, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -46,7 +46,7 @@ export const WithoutTitle: Story = {
  * screen reader gets. It must be exposed, not empty.
  */
 export const ImageCarriesItsOwnDescription: Story = {
-  args: { image: IMAGE, imageAlt: ALT, ...SIZE },
+  args: { image: IMAGE, imageAlt: ALT, ...SIZE, locale: 'en' },
   play: async ({ canvasElement }) => {
     const image = canvasElement.querySelector('img')
 
@@ -60,7 +60,7 @@ export const ImageCarriesItsOwnDescription: Story = {
  * diagrams into a 16:9 box and left roughly a third of its height blank.
  */
 export const SizedFromTheAssetsOwnRatio: Story = {
-  args: { image: IMAGE, imageAlt: ALT, ...SIZE },
+  args: { image: IMAGE, imageAlt: ALT, ...SIZE, locale: 'en' },
   play: async ({ canvasElement }) => {
     const image = canvasElement.querySelector('img')
 

@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { H2 } from '@/app/components/typography'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type LogoRowItem = {
   /** Brand or chain name. Not translated — a proper noun. */
@@ -68,8 +70,7 @@ export function LogoRow({
   titleHidden = false,
   sub,
   items,
-  lang,
-  titleLang,
+  locale,
 }: {
   title: string
   /**
@@ -84,18 +85,20 @@ export function LogoRow({
   /** Optional line under the heading. */
   sub?: string
   items: readonly LogoRowItem[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
-  /** Set when the heading's language differs from the rest of the section. */
-  titleLang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className={cn('text-balance text-center', titleHidden && 'sr-only')} lang={titleLang}>
+    <section className="container mx-auto px-5 py-20">
+      <H2 className={cn('text-balance text-center', titleHidden && 'sr-only')} lang={textLang(title, locale)}>
         {title}
       </H2>
 
-      {sub && <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground">{sub}</p>}
+      {sub && (
+        <p className="mx-auto mt-4 max-w-2xl text-center text-muted-foreground" lang={textLang(sub, locale)}>
+          {sub}
+        </p>
+      )}
 
       <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
         {items.map((item) => (
@@ -128,7 +131,15 @@ export function LogoRow({
                 'text-detail font-medium uppercase tracking-wide text-fg-muted',
                 item.wordmark && 'sr-only'
               )}
-              lang="en"
+              /*
+                Partner and chain names are proper nouns — "Ethereum" is
+                "Ethereum" in every locale — so this was hardcoded `lang="en"`.
+                Right in effect, but a claim rather than a rule, and in an
+                ENGLISH document it emitted a redundant attribute on every
+                item. Derived now: `undefined` in English, 'en' inside a
+                Japanese or Korean document.
+              */
+              lang={textLang(item.name, locale)}
             >
               {item.name}
             </span>

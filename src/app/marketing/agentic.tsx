@@ -53,8 +53,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         repo={AGENTIC_HERO.repo}
         // From the intro, not the headline: the headline is the product name,
         // English in every locale, while the intro and CTA are translated.
-        lang={textLang(t('hero.intro'), locale)}
-        headlineLang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -65,7 +64,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`breaks.items.${card.id}.title`),
           body: t(`breaks.items.${card.id}.body`),
         }))}
-        lang={textLang(t('breaks.intro'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -76,17 +75,16 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`tools.items.${id}.title`),
           body: t(`tools.items.${id}.body`),
         }))}
-        lang={textLang(t('tools.intro'), locale)}
-        titleLang={textLang(t('tools.title'), locale)}
+        locale={locale}
       />
 
-      <LogoRow title={t('chains.title')} items={AGENTIC_CHAINS} titleLang={textLang(t('chains.title'), locale)} />
+      <LogoRow title={t('chains.title')} items={AGENTIC_CHAINS} locale={locale} />
 
       <NumberedSteps
         title={t('oracle.title')}
         statement={t('oracle.statement')}
         steps={AGENTIC_ORACLE_STEPS.map((id) => ({ body: t(`oracle.steps.${id}`) }))}
-        lang={textLang(t('oracle.statement'), locale)}
+        locale={locale}
       />
 
       <DiagramSection
@@ -95,16 +93,10 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         width={AGENTIC_DIAGRAM.width}
         height={AGENTIC_DIAGRAM.height}
         imageAlt={t('architecture.alt')}
-        lang={textLang(t('architecture.alt'), locale)}
-        titleLang={textLang(t('architecture.title'), locale)}
+        locale={locale}
       />
 
-      <ArchitectureSection
-        title={t('poweredBy.title')}
-        body={t('poweredBy.body')}
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
-      />
+      <ArchitectureSection title={t('poweredBy.title')} body={t('poweredBy.body')} locale={locale} />
 
       <FeatureGrid
         title={t('getStarted.title')}
@@ -115,10 +107,10 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`getStarted.items.${card.id}.title`),
           body: t(`getStarted.items.${card.id}.body`),
         }))}
-        lang={textLang(t('getStarted.title'), locale)}
+        locale={locale}
       />
 
-      <Disclaimer text={t('disclaimer')} lang={textLang(t('disclaimer'), locale)} />
+      <Disclaimer text={t('disclaimer')} locale={locale} />
     </>
   )
 }

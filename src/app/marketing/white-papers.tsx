@@ -20,7 +20,6 @@ export async function WhitePapersPage({ locale }: { locale: Locale }) {
   const groups = WHITE_PAPER_CATEGORIES.map((category) => ({
     key: category.key,
     title: t(`categories.${category.key}`),
-    titleLang: textLang(t(`categories.${category.key}`), locale),
     papers: category.papers.map((paper) => {
       const title = t(`items.${paper.slug}.title`)
       const abstract = t(`items.${paper.slug}.abstract`)
@@ -35,14 +34,12 @@ export async function WhitePapersPage({ locale }: { locale: Locale }) {
          */
         href: `/white-papers/${paper.slug}/`,
         title,
-        titleLang: textLang(title, locale),
         abstract,
-        abstractLang: textLang(abstract, locale),
         date: paper.date,
         image: paper.image,
       }
     }),
   }))
 
-  return <WhitePaperList title={t('meta.title')} groups={groups} />
+  return <WhitePaperList title={t('meta.title')} groups={groups} locale={locale} />
 }

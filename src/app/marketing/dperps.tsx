@@ -48,7 +48,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -59,7 +59,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       {/* Heading, prose and a diagram — nothing to click, hence no `links`. */}
@@ -70,8 +70,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         imageWidth={DPERPS_DIAGRAM.width}
         imageHeight={DPERPS_DIAGRAM.height}
         imageAlt={t('integrate.alt')}
-        lang={textLang(t('integrate.body'), locale)}
-        titleLang={textLang(t('integrate.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -81,8 +80,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         imageWidth={DPERPS_PARTNERS_IMAGE.width}
         imageHeight={DPERPS_PARTNERS_IMAGE.height}
         imageAlt={t('partners.alt')}
-        lang={textLang(t('partners.body'), locale)}
-        titleLang={textLang(t('partners.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -95,11 +93,10 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         // Body, not title: "Powered by Orbs Network" stays English in the
         // Korean catalog, so deriving the section language from it would mark
         // the Korean prose English — the bug #99 fixed.
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
+        locale={locale}
       />
 
-      <Disclaimer text={t('disclaimer')} lang={textLang(t('disclaimer'), locale)} />
+      <Disclaimer text={t('disclaimer')} locale={locale} />
     </>
   )
 }

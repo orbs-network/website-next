@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { H2, H3 } from '@/app/components/typography'
 import { Button } from '@/components/ui/button'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type Partner = {
   /** Message key and React key. */
@@ -34,27 +36,24 @@ export type ResolvedPartner = Partner & {
 export function PartnerShowcase({
   title,
   partners,
-  lang,
-  titleLang,
+  locale,
 }: {
   title: string
   partners: readonly ResolvedPartner[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
   /**
-   * Set when the HEADING's language differs from the rest of the section.
+   * The document's locale. Each string's own `lang` is derived from it.
    *
+   * This replaces a section `lang` plus a `titleLang` escape hatch.
    * "Partners" stays English in the Korean catalog — the legacy page leaves it
    * that way — while the subtitles, lists and calls to action beneath it are
-   * Korean. Deriving one section language from the title marked all of that
-   * Korean copy English, the same defect `ArchitectureSection` carries a
-   * `titleLang` to avoid.
+   * Korean. The escape hatch patched the heading and left every other string
+   * sharing one guess; there is no shared value left to get wrong now.
    */
-  titleLang?: string
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
-      <H2 className="text-balance text-center" lang={titleLang}>
+    <section className="container mx-auto px-5 py-20">
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
 
@@ -62,20 +61,34 @@ export function PartnerShowcase({
         {partners.map((partner) => (
           <div key={partner.id} className="grid items-center gap-10 lg:grid-cols-2">
             <div>
-              <Image src={partner.logo} alt={partner.name} width={160} height={40} className="h-10 w-auto" />
+              {/*
+                This logo's alt IS the partner's name — unlike the screenshot
+                below it, which is decorative. A proper noun, so it stays Latin
+                and gets marked inside a non-Latin document.
+              */}
+              <Image
+                src={partner.logo}
+                alt={partner.name}
+                lang={textLang(partner.name, locale)}
+                width={160}
+                height={40}
+                className="h-10 w-auto"
+              />
 
-              <H3 weight="medium" className="mt-6">
+              <H3 weight="medium" className="mt-6" lang={textLang(partner.subtitle, locale)}>
                 {partner.subtitle}
               </H3>
 
               <ul className="mt-6 space-y-3 text-muted-foreground">
                 {partner.items.map((item) => (
-                  <li key={item}>{item}</li>
+                  <li key={item} lang={textLang(item, locale)}>
+                    {item}
+                  </li>
                 ))}
               </ul>
 
               <Button asChild variant="secondary" className="mt-8">
-                <a href={partner.href} target="_blank" rel="noopener noreferrer">
+                <a href={partner.href} lang={textLang(partner.cta, locale)} target="_blank" rel="noopener noreferrer">
                   {partner.cta}
                 </a>
               </Button>
