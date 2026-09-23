@@ -1,6 +1,8 @@
 import { H1, H2 } from '@/app/components/typography'
 import { Disclosure } from './disclosure'
 import { MarkdownProse } from './markdown-prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A FAQ page: sections of questions, each answer collapsed until opened.
@@ -51,42 +53,57 @@ export function parseFaq(markdown: string): FaqSection[] {
 export function FaqDocument({
   markdown,
   title,
-  lang,
+  locale,
 }: {
   markdown: string
   title: string
   /**
-   * Set when the questions and answers are in a different language from the
-   * route — i.e. when an untranslated locale falls back to English.
+   * The document's locale. Each string's own `lang` is derived from it.
    *
-   * The title is excluded from it: that comes from the message catalog and IS
-   * in the route's language, so it stays outside the tagged container. Same
-   * split as the legal pages.
+   * This replaces a `lang` the caller set on a container wrapping every
+   * question and answer, for when an untranslated locale falls back to
+   * English. It had to exclude the title — that comes from the catalog and IS
+   * in the route's language — which is the tell: the moment a wrapper needs an
+   * exception carved out of it, it is describing several languages at once.
+   *
+   * Fallback is also not all-or-nothing. A partially translated FAQ has
+   * translated questions with English answers, and the container could not say
+   * so. Each string asks for itself now, so a section that gets translated
+   * later stops being marked English with no code change.
    */
-  lang?: string
+  locale: Locale
 }) {
   const sections = parseFaq(markdown)
 
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
       <div className="mx-auto max-w-3xl">
-        <H1 className="mb-12">{title}</H1>
+        <H1 className="mb-12" lang={textLang(title, locale)}>
+          {title}
+        </H1>
 
-        <div lang={lang}>
-          {sections.map((section) => (
-            <div key={section.title} className="mt-12 first:mt-0">
-              <H2 className="mb-6">{section.title}</H2>
+        {sections.map((section) => (
+          <div key={section.title} className="mt-12 first:mt-0">
+            <H2 className="mb-6" lang={textLang(section.title, locale)}>
+              {section.title}
+            </H2>
 
-              <div className="divide-y divide-border border-y border-border">
-                {section.questions.map(({ question, answer }) => (
-                  <Disclosure key={question} summary={question}>
-                    <MarkdownProse>{answer}</MarkdownProse>
-                  </Disclosure>
-                ))}
-              </div>
+            <div className="divide-y divide-border border-y border-border">
+              {section.questions.map(({ question, answer }) => (
+                /*
+                  The question is a string and is marked here; the answer is
+                  markdown and marks its own blocks — `MarkdownProse` puts a
+                  `lang` on each paragraph, list item and heading, so no
+                  wrapper is needed inside the disclosure and its `space-y-4`
+                  is left alone.
+                */
+                <Disclosure key={question} summary={question} locale={locale}>
+                  <MarkdownProse locale={locale}>{answer}</MarkdownProse>
+                </Disclosure>
+              ))}
             </div>
-          ))}
-        </div>
+          </div>
+        ))}
       </div>
     </section>
   )

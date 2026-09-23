@@ -88,7 +88,7 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
               // "this is the Japanese page, mark nothing" is right, and both
               // are the mistake #103 is about. `textLang` inspects the script
               // of each name and is the only thing that gets this correct.
-              summaryLang={lang(`contracts.${id}.name`)}
+              locale={locale}
             >
               {/*
                 Each field carries its OWN language, and `Disclosure` is given
