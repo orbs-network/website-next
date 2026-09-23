@@ -80,14 +80,51 @@
     --color-accent-primary-hover: var(--color-indigo-500);
     --color-link: var(--color-indigo-400);
 
-    /* Typography scale */
-    --font-size-h1: 4.5rem; /* 72px */
+    /*
+      Typography scale.
+
+      THE HEADING SIZES ARE FLUID, and that is the fix for #108 rather than a
+      flourish. They were fixed at their desktop values with no smaller step,
+      so one long word could be wider than a phone's content area: "Works with
+      existing security infrastructure" on `/institutional/` measured 381px at
+      56px type against a 350px content area, took the document to 401px inside
+      a 390px viewport, and scrolled the whole page sideways.
+
+      Fluid rather than a breakpoint step, for two reasons. A step leaves a
+      visible jump — h1 would snap 40px to 72px as the viewport crosses one
+      width — and more importantly it only protects the widths the author
+      thought of. `clamp()` is correct at every width in between, including the
+      360-400px band where this class of bug actually lives.
+
+      Each is expressed so the maximum is EXACTLY the design's desktop size at
+      1440px, which is where the 3.4 frames are drawn, reaching its floor at
+      390px:
+
+        level   390px    1440px
+        h1        40   ->   72
+        h2        32   ->   56
+        h3        24   ->   32
+        h4        20   ->   22
+
+      The middle term keeps a `rem` component rather than being pure `vw`. A
+      pure-viewport font size does not respond to the reader's own text-size
+      setting, which fails WCAG 1.4.4; with a rem term it still scales on zoom.
+
+      h5, p, detail and field are deliberately NOT fluid. They are 14px, 18px,
+      11px and 20px — body and label sizes that are already comfortable on a
+      phone, and shrinking them would cost legibility to solve a problem only
+      display type has.
+
+      Line heights are unitless ratios, so they follow the size down on their
+      own and need no responsive step of their own.
+    */
+    --font-size-h1: clamp(2.5rem, 1.7571rem + 3.0476vw, 4.5rem); /* 40px -> 72px */
     --line-height-h1: 1.111; /* 80/72 */
-    --font-size-h2: 3.5rem; /* 56px */
+    --font-size-h2: clamp(2rem, 1.4429rem + 2.2857vw, 3.5rem); /* 32px -> 56px */
     --line-height-h2: 1.143; /* 64/56 */
-    --font-size-h3: 2rem; /* 32px */
+    --font-size-h3: clamp(1.5rem, 1.3143rem + 0.7619vw, 2rem); /* 24px -> 32px */
     --line-height-h3: 1.25; /* 40/32 */
-    --font-size-h4: 1.375rem; /* 22px */
+    --font-size-h4: clamp(1.25rem, 1.2036rem + 0.1905vw, 1.375rem); /* 20px -> 22px */
     --line-height-h4: 1.364; /* 30/22 */
     --font-size-h5: 0.875rem; /* 14px */
     --line-height-h5: 1.429; /* 20/14 */
