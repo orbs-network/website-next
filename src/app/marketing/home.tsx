@@ -346,6 +346,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                   key={post.slug}
                   post={post}
                   readLabel={t('news.readTime', { minutes: readingMinutes(post.content) })}
+                  locale={locale}
                 />
               ))}
             </CardRail>
@@ -544,7 +545,25 @@ function HighlightCard({
  * Reading time IS derived, because it is a function of the body rather than a
  * new fact about the post.
  */
-function NewsCard({ post, readLabel }: { post: BlogPostFields & { slug: string }; readLabel: string }) {
+function NewsCard({
+  post,
+  readLabel,
+  locale,
+}: {
+  post: BlogPostFields & { slug: string }
+  readLabel: string
+  /**
+   * The document's locale, so each post field can declare its own language.
+   *
+   * These fields come from Contentful, which has ONE locale (`en-US`), so on
+   * `/ja` and `/ko` they are English text inside a non-English document and
+   * must say so. `CardRail` used to carry a rail-level `lang="en"` that
+   * covered them; removing it (#103) was right — the rail's own arrow labels
+   * are catalog strings and ARE translated — but the cards then inherited the
+   * page language instead, which is the same bug pointing the other way.
+   */
+  locale: Locale
+}) {
   const image = getAssetUrl(post.heroImage)
   const author = getAuthorInfo(post.author)
 
@@ -571,18 +590,31 @@ function NewsCard({ post, readLabel }: { post: BlogPostFields & { slug: string }
 
         <p className="mt-4 flex flex-wrap gap-x-3 text-detail uppercase tracking-widest text-fg-muted">
           {/* A person's name — English in any document. */}
-          {author && <span lang="en">{author.name}</span>}
-          <time dateTime={post.date}>
+          {author && <span lang={textLang(author.name, locale)}>{author.name}</span>}
+          {/*
+            Formatted `en-GB` unconditionally, so the rendered text is English
+            ("23 Sep 2026") whatever the route's language. Marked as such
+            rather than derived, because the format string decides it here.
+          */}
+          <time dateTime={post.date} lang={locale === 'en' ? undefined : 'en'}>
             {new Date(post.date).toLocaleDateString('en-GB', { day: 'numeric', month: 'short', year: 'numeric' })}
           </time>
-          <span>{readLabel}</span>
+          {/* This one IS a catalog string, unlike its neighbours. */}
+          <span lang={textLang(readLabel, locale)}>{readLabel}</span>
         </p>
 
-        <H4 className="mt-3 text-balance transition-colors group-hover:text-accent-primary group-focus-visible:text-accent-primary">
+        <H4
+          className="mt-3 text-balance transition-colors group-hover:text-accent-primary group-focus-visible:text-accent-primary"
+          lang={textLang(post.title, locale)}
+        >
           {post.title}
         </H4>
 
-        {post.shortDescription && <p className="mt-3 text-detail text-fg-muted">{post.shortDescription}</p>}
+        {post.shortDescription && (
+          <p className="mt-3 text-detail text-fg-muted" lang={textLang(post.shortDescription, locale)}>
+            {post.shortDescription}
+          </p>
+        )}
       </Link>
     </li>
   )
