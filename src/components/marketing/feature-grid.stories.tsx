@@ -21,7 +21,7 @@ const FEATURES = [
  * jumps `h1` straight to `h3` and heading navigation hits a gap.
  */
 export const HeadingLevelFollowsTheSectionTitle: Story = {
-  args: { title: 'Benefits', features: FEATURES },
+  args: { title: 'Benefits', features: FEATURES, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -31,7 +31,7 @@ export const HeadingLevelFollowsTheSectionTitle: Story = {
 }
 
 export const CardsBecomeH2WithoutASectionTitle: Story = {
-  args: { features: FEATURES },
+  args: { features: FEATURES, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -51,6 +51,7 @@ export const LinkedCardsAreNamedByTheirTitle: Story = {
       { id: 'docs', title: 'Read the Docs', body: 'Understand the tools.', href: 'https://example.com/docs' },
       { id: 'call', title: 'Make your first call', body: 'One line of code.', href: '/dtwap' },
     ],
+    locale: 'en',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -66,7 +67,7 @@ export const LinkedCardsAreNamedByTheirTitle: Story = {
 
 /** Cards without an href stay inert — most grids describe rather than link. */
 export const UnlinkedCardsAreNotLinks: Story = {
-  args: { title: 'Benefits', features: FEATURES },
+  args: { title: 'Benefits', features: FEATURES, locale: 'en' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryAllByRole('link')).toHaveLength(0)
   },

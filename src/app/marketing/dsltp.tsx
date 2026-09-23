@@ -48,7 +48,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       {/*

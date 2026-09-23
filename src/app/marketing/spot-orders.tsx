@@ -47,8 +47,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`quickstart.items.${id}.title`),
           body: t(`quickstart.items.${id}.body`),
         }))}
-        lang={textLang(t('quickstart.intro'), locale)}
-        titleLang={textLang(t('quickstart.title'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -58,8 +57,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`features.items.${id}.title`),
           body: t(`features.items.${id}.body`),
         }))}
-        lang={textLang(t('features.items.market.body'), locale)}
-        titleLang={textLang(t('features.title'), locale)}
+        locale={locale}
       />
 
       <NumberedSteps

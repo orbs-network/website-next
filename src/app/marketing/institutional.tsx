@@ -86,6 +86,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`products.items.${product.id}.title`),
           body: t(`products.items.${product.id}.body`),
         }))}
+        locale={locale}
       />
       <ArchitectureSection
         eyebrow={t('selfCustody.eyebrow')}
@@ -102,6 +103,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`integrationPaths.items.${id}.title`),
           body: t(`integrationPaths.items.${id}.body`),
         }))}
+        locale={locale}
       />
       <FeatureGrid
         eyebrow={t('features.eyebrow')}
@@ -111,6 +113,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`features.items.${id}.title`),
           body: t(`features.items.${id}.body`),
         }))}
+        locale={locale}
       />
       {/*
         Two audiences, each a short list of who they are — the same shape as

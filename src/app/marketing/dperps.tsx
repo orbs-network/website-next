@@ -59,7 +59,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       {/* Heading, prose and a diagram — nothing to click, hence no `links`. */}

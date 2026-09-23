@@ -3,6 +3,8 @@
 import * as React from 'react'
 import { OrbsLogo } from '@/components/icons'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A vertical list of features, each revealing a statement panel.
@@ -33,11 +35,24 @@ export type FeatureTab = {
   title: string
   /** The statement revealed when it is selected. */
   panel: string
-  titleLang?: string
-  panelLang?: string
 }
 
-export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; className?: string }) {
+export function FeatureTabs({
+  tabs,
+  locale,
+  className,
+}: {
+  tabs: readonly FeatureTab[]
+  /**
+   * The document's locale. Each string's own `lang` is derived from it.
+   *
+   * This replaces a `titleLang` AND a `panelLang` the caller computed for
+   * every tab — two props per tab for one question, and a tab's label and its
+   * panel are separate catalog entries that need not share a language.
+   */
+  locale: Locale
+  className?: string
+}) {
   const [selected, setSelected] = React.useState(0)
   const refs = React.useRef<(HTMLButtonElement | null)[]>([])
   const baseId = React.useId()
@@ -100,7 +115,7 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
             tabIndex={index === selected ? 0 : -1}
             onClick={() => setSelected(index)}
             onKeyDown={(event) => onKeyDown(event, index)}
-            lang={tab.titleLang}
+            lang={textLang(tab.title, locale)}
             className={cn(
               'border-b border-border py-6 text-start text-h4 transition-colors',
               'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
@@ -120,7 +135,7 @@ export function FeatureTabs({ tabs, className }: { tabs: readonly FeatureTab[]; 
         // straight into the panel it just revealed, which is where the content
         // they asked for actually is.
         tabIndex={0}
-        lang={active.panelLang}
+        lang={textLang(active.panel, locale)}
         className={cn(
           /*
             900px, from the design rather than from the type scale: the panel

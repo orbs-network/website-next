@@ -64,7 +64,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`breaks.items.${card.id}.title`),
           body: t(`breaks.items.${card.id}.body`),
         }))}
-        lang={textLang(t('breaks.intro'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -75,8 +75,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`tools.items.${id}.title`),
           body: t(`tools.items.${id}.body`),
         }))}
-        lang={textLang(t('tools.intro'), locale)}
-        titleLang={textLang(t('tools.title'), locale)}
+        locale={locale}
       />
 
       <LogoRow title={t('chains.title')} items={AGENTIC_CHAINS} locale={locale} />
@@ -108,7 +107,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
           title: t(`getStarted.items.${card.id}.title`),
           body: t(`getStarted.items.${card.id}.body`),
         }))}
-        lang={textLang(t('getStarted.title'), locale)}
+        locale={locale}
       />
 
       <Disclaimer text={t('disclaimer')} locale={locale} />

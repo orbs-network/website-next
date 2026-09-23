@@ -55,7 +55,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           title: t(`sources.items.${id}.title`),
           body: t(`sources.items.${id}.body`),
         }))}
-        lang={textLang(t('sources.intro'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -74,7 +74,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${id}.title`),
           body: t(`benefits.items.${id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       <BenefitColumns

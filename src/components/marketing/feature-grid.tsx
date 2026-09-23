@@ -4,20 +4,12 @@ import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { H2, H3 } from '@/app/components/typography'
 import { Prose } from './prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type Feature = {
   id: string
   title: string
-  /**
-   * Set when THIS CARD's title is in a different language from the grid.
-   *
-   * The grid's `lang` covers the section, which is right when everything in it
-   * agrees. It is not: the overview's product cards are named dTWAP, dLIMIT,
-   * Liquidity Hub and Perpetual Hub in every locale, so on the Korean page four
-   * English product names sat inside a Korean section and were announced with
-   * Korean pronunciation rules.
-   */
-  titleLang?: string
   body: string
   /**
    * Makes the whole card a link.
@@ -68,8 +60,7 @@ export function FeatureGrid({
   title,
   intro,
   features,
-  lang,
-  titleLang,
+  locale,
   eyebrow,
 }: {
   /**
@@ -80,16 +71,17 @@ export function FeatureGrid({
   title?: string
   intro?: string
   features: readonly Feature[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
   /**
-   * Set when the HEADING's language differs from the rest of the section.
+   * The document's locale. Each string's own `lang` is derived from it.
    *
-   * Several legacy section labels stay English in the Korean catalog — "Tool",
-   * "Chains", "Orbs Agentic Architecture" — while the copy under them is
-   * translated. One section-level `lang` cannot describe both.
+   * This replaces a section `lang`, a `titleLang` escape hatch for the
+   * heading, AND a per-card `titleLang` the caller had to compute for every
+   * feature. Three props for one question. The card case is the sharpest: the
+   * overview's products are named dTWAP, dLIMIT, Liquidity Hub and Perpetual
+   * Hub in every locale, so on the Korean page four English product names sat
+   * inside a Korean section.
    */
-  titleLang?: string
+  locale: Locale
   /**
    * A short bracketed label above the heading — "[KEY FEATURES & BENEFITS]".
    *
@@ -100,9 +92,16 @@ export function FeatureGrid({
   eyebrow?: string
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       <div className="mx-auto max-w-3xl text-center">
-        {eyebrow && <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>}
+        {eyebrow && (
+          <p
+            className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted"
+            lang={textLang(eyebrow, locale)}
+          >
+            {eyebrow}
+          </p>
+        )}
         {/*
           `whitespace-pre-line`: two of these titles are authored with a line
           break — "ORBS infrastructure / powers four main protocols" — and the
@@ -111,11 +110,11 @@ export function FeatureGrid({
           and wraps on viewport width instead.
         */}
         {title && (
-          <H2 className="whitespace-pre-line text-balance" lang={titleLang}>
+          <H2 className="whitespace-pre-line text-balance" lang={textLang(title, locale)}>
             {title}
           </H2>
         )}
-        {intro && <Prose text={intro} className={cn('[&_p]:text-lg', title && 'mt-6')} />}
+        {intro && <Prose text={intro} locale={locale} className={cn('[&_p]:text-lg', title && 'mt-6')} />}
       </div>
 
       <div className="mt-16 grid gap-8 md:grid-cols-2">
@@ -146,18 +145,18 @@ export function FeatureGrid({
               */}
               <H3 asChild weight="medium">
                 {title ? (
-                  <h3 lang={feature.titleLang}>
+                  <h3 lang={textLang(feature.title, locale)}>
                     {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
                   </h3>
                 ) : (
-                  <h2 lang={feature.titleLang}>
+                  <h2 lang={textLang(feature.title, locale)}>
                     {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
                   </h2>
                 )}
               </H3>
             </CardHeader>
             <CardContent>
-              <Prose text={feature.body} />
+              <Prose text={feature.body} locale={locale} />
             </CardContent>
           </Card>
         ))}

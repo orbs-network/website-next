@@ -60,7 +60,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           title: t(`benefits.items.${id}.title`),
           body: t(`benefits.items.${id}.body`),
         }))}
-        lang={textLang(t('benefits.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationGrid

@@ -252,9 +252,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
               id,
               title: t(`features.${id}.title`),
               panel: t(`features.${id}.panel`),
-              titleLang: lang(`features.${id}.title`),
-              panelLang: lang(`features.${id}.panel`),
             }))}
+            locale={locale}
           />
 
           <div className="mt-10 flex flex-wrap gap-4">

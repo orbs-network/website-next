@@ -60,25 +60,21 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
             body: `**${t('solution.eyebrow')}**\n\n${t('solution.body')}`,
           },
         ]}
-        lang={lang('challenge.body')}
+        locale={locale}
       />
 
       <ArchitectureSection eyebrow={t('tech.eyebrow')} title={t('tech.title')} body={t('tech.body')} locale={locale} />
 
       <FeatureGrid
         title={t('products.title')}
-        titleLang={lang('products.title')}
         features={OVERVIEW_PRODUCTS.map((product) => ({
           id: product.id,
           icon: product.icon,
           href: resolveLocaleLink({ href: product.href }, locale).href,
           title: t(`products.items.${product.id}.title`),
-          // Product names, English in every locale — so they must say so, or a
-          // Korean section announces "dTWAP" with Korean rules.
-          titleLang: textLang(t(`products.items.${product.id}.title`), locale),
           body: t(`products.items.${product.id}.body`),
         }))}
-        lang={lang('products.items.dtwap.body')}
+        locale={locale}
       />
 
       <ArchitectureSection title={t('why.title')} body={t('why.body')} locale={locale} />
@@ -95,14 +91,13 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
       <FeatureGrid
         title={t('benefits.title')}
         intro={t('benefits.intro')}
-        titleLang={lang('benefits.title')}
         features={OVERVIEW_BENEFITS.map((benefit) => ({
           id: benefit.id,
           icon: benefit.icon,
           title: t(`benefits.items.${benefit.id}.title`),
           body: t(`benefits.items.${benefit.id}.body`),
         }))}
-        lang={lang('benefits.items.access.body')}
+        locale={locale}
       />
     </>
   )
