@@ -21,7 +21,7 @@ const STATS = [
  * rather than two loose strings whose relationship is only visual.
  */
 export const IsADescriptionList: Story = {
-  args: { stats: STATS },
+  args: { stats: STATS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
@@ -37,7 +37,7 @@ export const IsADescriptionList: Story = {
  * the design's emphasis without inverting the reading order in the markup.
  */
 export const LabelPrecedesValueInTheMarkup: Story = {
-  args: { stats: STATS },
+  args: { stats: STATS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const first = canvasElement.querySelector('dl > div')
 
@@ -48,7 +48,7 @@ export const LabelPrecedesValueInTheMarkup: Story = {
 
 /** The title is optional — the institutional page runs these bare. */
 export const TitleIsOptional: Story = {
-  args: { stats: STATS },
+  args: { stats: STATS, locale: 'en' },
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole('heading')).not.toBeInTheDocument()
   },

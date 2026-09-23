@@ -158,7 +158,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           value: t(`stats.${id}.value`),
           label: t(`stats.${id}.label`),
         }))}
-        lang={lang('stats.processed.label')}
+        locale={locale}
       />
 
       <section className="container mx-auto border-t border-border px-5 py-section">

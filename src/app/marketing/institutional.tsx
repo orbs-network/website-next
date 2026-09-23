@@ -60,6 +60,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           value: t(`stats.items.${id}.value`),
           label: t(`stats.items.${id}.label`),
         }))}
+        locale={locale}
       />
       <ArchitectureSection
         eyebrow={t('proofOfWork.eyebrow')}
@@ -121,6 +122,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           title: t(`whoFor.items.${id}.title`),
           items: t(`whoFor.items.${id}.list`).split('\n').filter(Boolean),
         }))}
+        locale={locale}
       />
       <ArchitectureSection
         title={t('talkToTeam.title')}

@@ -80,7 +80,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           ...slide,
           caption: t(`explanation.slides.${slide.id}`),
         }))}
-        lang={textLang(t('explanation.title'), locale)}
+        locale={locale}
       />
 
       <IntegrationTabs

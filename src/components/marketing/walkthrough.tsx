@@ -1,5 +1,7 @@
 import { H2 } from '@/app/components/typography'
 import Image from 'next/image'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 export type WalkthroughStep = {
   id: string
@@ -19,16 +21,16 @@ export type WalkthroughStep = {
 export function Walkthrough({
   title,
   steps,
-  lang,
+  locale,
 }: {
   title: string
   steps: readonly WalkthroughStep[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
     <section className="container mx-auto px-5 py-20">
-      <H2 className="text-balance text-center" lang={lang}>
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
 
@@ -49,7 +51,14 @@ export function Walkthrough({
                 className="object-cover object-top"
               />
             </div>
-            <p className="mt-4 text-muted-foreground leading-relaxed">{step.caption}</p>
+            {/*
+              Per caption. Each screenshot is annotated independently, and the
+              Korean walkthrough leaves interface labels in English inside
+              otherwise-translated captions.
+            */}
+            <p className="mt-4 text-muted-foreground leading-relaxed" lang={textLang(step.caption, locale)}>
+              {step.caption}
+            </p>
           </li>
         ))}
       </ol>

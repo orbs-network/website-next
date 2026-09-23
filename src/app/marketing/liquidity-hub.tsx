@@ -87,7 +87,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
           // counting keys — the items are short labels, not prose.
           items: t(`audiences.items.${id}.list`).split('\n').filter(Boolean),
         }))}
-        lang={textLang(t('audiences.title'), locale)}
+        locale={locale}
       />
 
       <PartnerShowcase
