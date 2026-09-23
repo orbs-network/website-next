@@ -69,7 +69,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
           title: t(`howItWorks.steps.${id}.title`),
           body: t(`howItWorks.steps.${id}.body`),
         }))}
-        lang={textLang(t('howItWorks.steps.intent.body'), locale)}
+        locale={locale}
       />
 
       <ChainTable

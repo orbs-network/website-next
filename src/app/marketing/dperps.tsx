@@ -96,7 +96,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <Disclaimer text={t('disclaimer')} lang={textLang(t('disclaimer'), locale)} />
+      <Disclaimer text={t('disclaimer')} locale={locale} />
     </>
   )
 }

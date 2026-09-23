@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A horizontal strip of cards, several visible at once.
@@ -23,7 +25,7 @@ export function CardRail({
   label,
   previousLabel,
   nextLabel,
-  lang,
+  locale,
   className,
 }: {
   children: React.ReactNode
@@ -32,13 +34,21 @@ export function CardRail({
   previousLabel: string
   nextLabel: string
   /**
-   * Language of everything inside, when it differs from the document.
+   * The document's locale. This component's OWN strings derive their `lang`
+   * from it, per string.
    *
-   * The news rail is English in all three locales — Contentful has a single
-   * `en-US` locale — so the caller marks the whole rail rather than each title,
-   * date and arrow label separately.
+   * The comment this replaces said the caller should mark the whole rail,
+   * because the news cards inside are English in all three locales —
+   * Contentful has a single `en-US` locale. Half of that is true and it is the
+   * wrong half to build on: the cards are English, but `label`,
+   * `previousLabel` and `nextLabel` are CATALOG strings and are translated, so
+   * one `lang` over the rail announced the Korean arrow labels as English.
+   *
+   * The children stay the caller's responsibility, which is where the
+   * knowledge actually lives — only the caller knows they came from
+   * Contentful rather than from the catalog.
    */
-  lang?: string
+  locale: Locale
   className?: string
 }) {
   const scroller = React.useRef<HTMLUListElement>(null)
@@ -83,13 +93,14 @@ export function CardRail({
   const arrow = 'rounded-sm p-2 transition-colors hover:text-accent-primary disabled:opacity-40'
 
   return (
-    <div className={className} lang={lang}>
+    <div className={className}>
       <div className="flex justify-end gap-2">
         <button
           type="button"
           onClick={() => nudge(-1)}
           disabled={atStart}
           aria-label={previousLabel}
+          lang={textLang(previousLabel, locale)}
           className={cn(arrow, 'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring')}
         >
           <Arrow className="rotate-180" />
@@ -99,6 +110,7 @@ export function CardRail({
           onClick={() => nudge(1)}
           disabled={atEnd}
           aria-label={nextLabel}
+          lang={textLang(nextLabel, locale)}
           className={cn(arrow, 'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring')}
         >
           <Arrow />
@@ -111,6 +123,8 @@ export function CardRail({
         // focus cannot be scrolled from the keyboard.
         tabIndex={0}
         aria-label={label}
+        // An accessible name takes its language from the element carrying it.
+        lang={textLang(label, locale)}
         className={cn(
           'mt-6 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'

@@ -337,10 +337,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
           */}
             <CardRail
               className="mt-6"
-              lang="en"
               label={t('news.title')}
               previousLabel={t('news.previous')}
               nextLabel={t('news.next')}
+              locale={locale}
             >
               {posts.map((post) => (
                 <NewsCard

@@ -86,7 +86,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         title={t('oracle.title')}
         statement={t('oracle.statement')}
         steps={AGENTIC_ORACLE_STEPS.map((id) => ({ body: t(`oracle.steps.${id}`) }))}
-        lang={textLang(t('oracle.statement'), locale)}
+        locale={locale}
       />
 
       <DiagramSection
@@ -113,7 +113,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         lang={textLang(t('getStarted.title'), locale)}
       />
 
-      <Disclaimer text={t('disclaimer')} lang={textLang(t('disclaimer'), locale)} />
+      <Disclaimer text={t('disclaimer')} locale={locale} />
     </>
   )
 }

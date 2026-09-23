@@ -1,5 +1,7 @@
 import { H2 } from '@/app/components/typography'
 import { Prose } from './prose'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A sequence, numbered because the order is the content.
@@ -22,7 +24,7 @@ export function NumberedSteps({
   title,
   statement,
   steps,
-  lang,
+  locale,
 }: {
   title: string
   statement?: string
@@ -33,17 +35,19 @@ export function NumberedSteps({
    * from its explanation.
    */
   steps: readonly Step[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       <div className="mx-auto max-w-3xl">
-        <H2 className="text-balance text-center">{title}</H2>
+        <H2 className="text-balance text-center" lang={textLang(title, locale)}>
+          {title}
+        </H2>
 
         {statement && (
           <blockquote className="mt-8 border-l-2 border-accent-primary pl-6">
-            <Prose text={statement} className="[&_p]:text-lg" />
+            <Prose text={statement} locale={locale} className="[&_p]:text-lg" />
           </blockquote>
         )}
 
@@ -57,8 +61,19 @@ export function NumberedSteps({
                 {index + 1}
               </span>
               <span className="leading-relaxed">
-                {step.title && <span className="font-medium text-fg">{step.title}. </span>}
-                <span className="text-muted-foreground">{step.body}</span>
+                {/*
+                  A step's name and its explanation are separate strings and
+                  are translated separately — the AI skill page keeps names
+                  like "Sign & Submit" in English beside a translated body.
+                */}
+                {step.title && (
+                  <span className="font-medium text-fg" lang={textLang(step.title, locale)}>
+                    {step.title}.{' '}
+                  </span>
+                )}
+                <span className="text-muted-foreground" lang={textLang(step.body, locale)}>
+                  {step.body}
+                </span>
               </span>
             </li>
           ))}
