@@ -91,8 +91,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         // way — so deriving the section language from the title marked the
         // whole block English, and the Korean prose and button labels beneath
         // it inherited that. The heading carries its own override instead.
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
+        locale={locale}
       />
     </>
   )

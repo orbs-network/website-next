@@ -2,6 +2,8 @@ import { Button } from '@/components/ui/button'
 import { H2 } from '@/app/components/typography'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 import { Prose } from './prose'
 
 export type ArchitectureLink = {
@@ -44,6 +46,15 @@ type SectionImage =
  * block is this shape without one: a heading, prose and a row of links. Adding
  * a decorative diagram there to satisfy a required prop would be inventing
  * content.
+ *
+ * Language is derived per string from `locale`, so a mixed-language section
+ * cannot be mislabelled. It used to arrive as a section-level `lang` the caller
+ * computed once, plus a `titleLang` escape hatch for the heading — and that
+ * still assumed the rest of the section shared one language. dSLTP's closing
+ * block is the case that broke it: "Powered by Orbs Network" is English in the
+ * Korean catalog too, because the legacy page leaves it that way, while the
+ * prose and button labels beneath it are Korean. Every string here now asks
+ * `textLang` about itself, so there is no shared value left to get wrong.
  */
 export function ArchitectureSection({
   title,
@@ -53,8 +64,7 @@ export function ArchitectureSection({
   imageWidth,
   imageHeight,
   links,
-  lang,
-  titleLang,
+  locale,
   eyebrow,
 }: SectionImage & {
   /**
@@ -69,18 +79,8 @@ export function ArchitectureSection({
    * caller working around the type rather than describing the section.
    */
   links?: readonly ArchitectureLink[]
-  /** Set when this copy is English inside a non-English document. */
-  lang?: string
-  /**
-   * Set when the HEADING's language differs from the rest of the section.
-   *
-   * A section-level `lang` alone assumes every string in it shares a language,
-   * and dSLTP's closing block is the case that breaks: "Powered by Orbs
-   * Network" is English in the Korean catalog too — the legacy page leaves it
-   * that way — while the prose and button labels beneath it are Korean.
-   * Deriving one value from the title marked the Korean copy English.
-   */
-  titleLang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
   /**
    * A short bracketed label above the heading — "[PROOF OF WORK]".
    *
@@ -93,21 +93,32 @@ export function ArchitectureSection({
   const visibleLinks = (links ?? []).filter((link) => link.label.trim() !== '')
 
   return (
-    <section className="container mx-auto px-5 py-20" lang={lang}>
+    <section className="container mx-auto px-5 py-20">
       {eyebrow && (
-        <p className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>
+        <p
+          className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted"
+          lang={textLang(eyebrow, locale)}
+        >
+          {eyebrow}
+        </p>
       )}
 
       {title && (
-        <H2 className="text-balance text-center" lang={titleLang}>
+        <H2 className="text-balance text-center" lang={textLang(title, locale)}>
           {title}
         </H2>
       )}
 
       {image && (
+        /*
+          `alt` is the string being labelled here, not the image. An empty alt
+          is a decorative image with no text at all, and `textLang` returns
+          `undefined` for it rather than claiming a language.
+        */
         <Image
           src={image}
           alt={imageAlt}
+          lang={textLang(imageAlt, locale)}
           width={imageWidth}
           height={imageHeight}
           sizes="(min-width: 1024px) 896px, 100vw"
@@ -115,16 +126,24 @@ export function ArchitectureSection({
         />
       )}
 
-      <Prose text={body} className="mx-auto mt-12 max-w-3xl" />
+      <Prose text={body} locale={locale} className="mx-auto mt-12 max-w-3xl" />
 
       {visibleLinks.length > 0 && (
         <div className="mt-12 flex flex-wrap justify-center gap-4">
           {visibleLinks.map((link) => (
             <Button key={link.href} asChild variant="secondary">
+              {/*
+                Per link, not per row. A label is an accessible name and takes
+                its language from the element carrying it — and this row is
+                exactly where that bites: the Korean dSLTP page keeps "Orbs
+                Docs" in English next to a translated one.
+              */}
               {link.href.startsWith('/') ? (
-                <Link href={link.href}>{link.label}</Link>
+                <Link href={link.href} lang={textLang(link.label, locale)}>
+                  {link.label}
+                </Link>
               ) : (
-                <a href={link.href} target="_blank" rel="noopener noreferrer">
+                <a href={link.href} lang={textLang(link.label, locale)} target="_blank" rel="noopener noreferrer">
                   {link.label}
                 </a>
               )}

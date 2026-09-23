@@ -45,5 +45,23 @@ export function textLang(value: string, locale: Locale): 'en' | undefined {
     return undefined
   }
 
+  /*
+    An empty string has no language, and saying it is English is a claim.
+
+    Without this, `textLang('', 'ko')` returns `'en'` — the script test finds
+    no Hangul in nothing and concludes Latin. That was harmless while callers
+    derived one value from one known-present catalog string, and stops being
+    harmless the moment derivation moves per string (#103): every optional or
+    absent string starts carrying `lang="en"`. The case that surfaced it is a
+    decorative hero image, where `alt=""` is deliberate and correct — stamping
+    `lang="en"` on it labels the language of a thing with no text at all.
+
+    Fixed here rather than guarded at each call site, because there are
+    hundreds of call sites after #103 and exactly one of these.
+  */
+  if (value.trim() === '') {
+    return undefined
+  }
+
   return script.test(value) ? undefined : 'en'
 }

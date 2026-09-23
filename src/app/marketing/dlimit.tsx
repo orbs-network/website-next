@@ -103,7 +103,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
           { label: t('schema.audit'), href: DLIMIT_LINKS.audit },
           { label: t('schema.faq'), href: DLIMIT_LINKS.faq },
         ]}
-        lang={textLang(t('schema.title'), locale)}
+        locale={locale}
       />
     </>
   )

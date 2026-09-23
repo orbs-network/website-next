@@ -99,12 +99,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         titleLang={textLang(t('architecture.title'), locale)}
       />
 
-      <ArchitectureSection
-        title={t('poweredBy.title')}
-        body={t('poweredBy.body')}
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
-      />
+      <ArchitectureSection title={t('poweredBy.title')} body={t('poweredBy.body')} locale={locale} />
 
       <FeatureGrid
         title={t('getStarted.title')}

@@ -64,7 +64,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         imageWidth={LIQUIDITY_HUB_DIAGRAM.width}
         imageHeight={LIQUIDITY_HUB_DIAGRAM.height}
         imageAlt={t('fallback.alt')}
-        lang={textLang(t('fallback.body'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
@@ -110,8 +110,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         title={t('decentralization.title')}
         body={t('decentralization.body')}
         links={[{ label: t('decentralization.terms'), href: terms.href }]}
-        lang={textLang(t('decentralization.body'), locale)}
-        titleLang={textLang(t('decentralization.title'), locale)}
+        locale={locale}
       />
     </>
   )

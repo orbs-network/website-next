@@ -116,7 +116,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
           { label: t('schema.audit'), href: DTWAP_LINKS.audit },
           { label: t('schema.faq'), href: DTWAP_LINKS.faq },
         ]}
-        lang={textLang(t('schema.title'), locale)}
+        locale={locale}
       />
     </>
   )

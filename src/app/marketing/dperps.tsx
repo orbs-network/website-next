@@ -70,8 +70,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         imageWidth={DPERPS_DIAGRAM.width}
         imageHeight={DPERPS_DIAGRAM.height}
         imageAlt={t('integrate.alt')}
-        lang={textLang(t('integrate.body'), locale)}
-        titleLang={textLang(t('integrate.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -81,8 +80,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         imageWidth={DPERPS_PARTNERS_IMAGE.width}
         imageHeight={DPERPS_PARTNERS_IMAGE.height}
         imageAlt={t('partners.alt')}
-        lang={textLang(t('partners.body'), locale)}
-        titleLang={textLang(t('partners.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection
@@ -95,8 +93,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         // Body, not title: "Powered by Orbs Network" stays English in the
         // Korean catalog, so deriving the section language from it would mark
         // the Korean prose English — the bug #99 fixed.
-        lang={textLang(t('poweredBy.body'), locale)}
-        titleLang={textLang(t('poweredBy.title'), locale)}
+        locale={locale}
       />
 
       <Disclaimer text={t('disclaimer')} lang={textLang(t('disclaimer'), locale)} />

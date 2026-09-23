@@ -45,12 +45,7 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         lang={lang('hero.intro')}
       />
 
-      <ArchitectureSection
-        title={t('what.title')}
-        body={t('what.body')}
-        titleLang={lang('what.title')}
-        lang={lang('what.body')}
-      />
+      <ArchitectureSection title={t('what.title')} body={t('what.body')} locale={locale} />
 
       {/*
         Pain and solution as a two-card grid. They are a matched pair in the
@@ -73,13 +68,7 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         lang={lang('challenge.body')}
       />
 
-      <ArchitectureSection
-        eyebrow={t('tech.eyebrow')}
-        title={t('tech.title')}
-        body={t('tech.body')}
-        titleLang={lang('tech.title')}
-        lang={lang('tech.body')}
-      />
+      <ArchitectureSection eyebrow={t('tech.eyebrow')} title={t('tech.title')} body={t('tech.body')} locale={locale} />
 
       <FeatureGrid
         title={t('products.title')}
@@ -97,31 +86,16 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         lang={lang('products.items.dtwap.body')}
       />
 
-      <ArchitectureSection
-        title={t('why.title')}
-        body={t('why.body')}
-        titleLang={lang('why.title')}
-        lang={lang('why.body')}
-      />
+      <ArchitectureSection title={t('why.title')} body={t('why.body')} locale={locale} />
 
-      <ArchitectureSection
-        title={t('why.howTitle')}
-        body={t('why.howBody')}
-        titleLang={lang('why.howTitle')}
-        lang={lang('why.howBody')}
-      />
+      <ArchitectureSection title={t('why.howTitle')} body={t('why.howBody')} locale={locale} />
 
       {/*
         `title`, not `eyebrow`. Mission is a standalone section, and as an
         eyebrow it rendered as a small <p> label — absent from the heading
         outline, so nothing in the document structure marked where it began.
       */}
-      <ArchitectureSection
-        title={t('mission.title')}
-        body={t('mission.body')}
-        titleLang={lang('mission.title')}
-        lang={lang('mission.body')}
-      />
+      <ArchitectureSection title={t('mission.title')} body={t('mission.body')} locale={locale} />
 
       <FeatureGrid
         title={t('benefits.title')}
