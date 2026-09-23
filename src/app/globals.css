@@ -334,3 +334,121 @@
     @apply bg-background text-foreground;
   }
 }
+
+@layer components {
+  /*
+    The hero's dot grid, and the hole the facet field punches in it.
+
+    Measured off `Grid Pattern Top` on the 3.4 Home page: 2px SQUARE dots on a
+    40.5px lattice, white at 50%. See `hero-facets.ts` for how those numbers
+    were taken and why the facet lattice is a different pitch.
+
+    Two elements rather than one, which is worth explaining because it looks
+    like a wrapper that could be deleted. Each carries exactly ONE mask:
+    `.hero-dot-field` masks the hole, `.hero-dot-grid` masks the dots out of a
+    flat colour. Doing both on one element needs `mask-composite: intersect`,
+    which is the kind of property that works in every browser this was tested
+    in and then does something else in one it was not.
+  */
+  .hero-dot-field {
+    /*
+      `--hero-facet-hole` is set by `HeroFacetField` on an ancestor and read
+      here by inheritance. It defaults to 0px, at which the radial gradient is
+      its last stop everywhere — fully opaque, so the grid is untouched. That
+      default is what makes this correct with no JavaScript rather than
+      merely harmless.
+    */
+    -webkit-mask-image: radial-gradient(
+      circle var(--hero-facet-hole, 0px) at var(--hero-facet-x, 50%) var(--hero-facet-y, 50%),
+      transparent 0%,
+      transparent 55%,
+      #000 100%
+    );
+    mask-image: radial-gradient(
+      circle var(--hero-facet-hole, 0px) at var(--hero-facet-x, 50%) var(--hero-facet-y, 50%),
+      transparent 0%,
+      transparent 55%,
+      #000 100%
+    );
+  }
+
+  /*
+    Opacity lives on the container, NOT on the two dot layers.
+
+    Put it on each layer instead and the large dots — which sit on top of the
+    small dot they replace — composite against it and read as a brighter
+    colour than the rest. One opacity over two fully opaque layers is the same
+    value everywhere.
+
+    0.3, AND NOT THE 0.5 WRITTEN ON THE DESIGN'S FILL. Figma multiplies
+    opacity down the node chain, and the dots have it in two places: the
+    `Vector` fill is 50%, but the `grid pattern` GROUP that contains it is
+    itself at 60%. 0.6 x 0.5 = 0.3, and reading only the fill shipped dots
+    two-thirds too strong.
+
+    Measured rather than just recomputed, because the same mistake in reverse
+    is easy: sampling the hero's left margin in the composed 3.4 frame gives a
+    page background of 18.7 and a dot peak of 89.7, which is an alpha of
+    exactly 0.300 for white over that background.
+  */
+  .hero-dot-grid {
+    opacity: 0.3;
+  }
+
+  /*
+    The dots are a MASK over a themed colour, not a coloured background image.
+    A data URI cannot read a CSS custom property, so painting them directly
+    would hard-code white — correct on the dark design and invisible on the
+    light theme, which is the failure the contrast bands already taught this
+    repo once.
+
+    Both tiles use units at twice the rendered size so the SVG carries no
+    fractional lengths: `width='40.5'` is legal but rounds differently across
+    engines, and half a pixel on a 2px dot is a quarter of it.
+  */
+  .hero-dot-grid-small,
+  .hero-dot-grid-large {
+    background-color: var(--color-fg);
+    -webkit-mask-repeat: repeat;
+    mask-repeat: repeat;
+  }
+
+  /* 2px dots on the 40.5px lattice. An 81-unit tile holding a 4x4 rect. */
+  .hero-dot-grid-small {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='81' height='81'%3E%3Crect width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='81' height='81'%3E%3Crect width='4' height='4' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-size: 40.5px 40.5px;
+    mask-size: 40.5px 40.5px;
+  }
+
+  /*
+    Every FIFTH dot, on both axes, is larger — 4.5px against 2px.
+
+    Measured, after it was missed the first time: segmenting the isolated
+    `Grid Pattern Top` export into 656 individual dots and indexing them
+    against the lattice puts the wide ones at rows 3, 8, 13, 18 and columns
+    0, 5, 10, 15, 20, 25, 30, 35. A clean 5x5 super-lattice, 31 of them, width
+    4.5px in 27 cases. It went unnoticed because the first pass measured a
+    single narrow strip and summed it by column, which averages the big dots
+    away into their neighbours.
+
+    A second layer rather than a 25-rect tile: one tile would need every small
+    dot drawn too, and this keeps each element carrying exactly one mask. The
+    405-unit tile renders at 202.5px — five 40.5px cells — with a 9x9 rect for
+    the 4.5px dot.
+
+    Placed on the tile's MIDDLE cell, at 159.5, and not at its origin. The
+    small dot in cell k spans 0-4 from 81k, so its centre is at 81k+2; a large
+    dot centred on the same lattice point therefore starts 4.5 units earlier,
+    which at the origin cell is -2.5 — outside the viewport, where the SVG
+    clips it. A repeating tile does not wrap the clipped half back round, so
+    every large dot would have lost its top-left quarter. Cell 2 centres at
+    164, and 164 - 4.5 = 159.5 sits well inside.
+  */
+  .hero-dot-grid-large {
+    -webkit-mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='405' height='405'%3E%3Crect x='159.5' y='159.5' width='9' height='9' fill='%23000'/%3E%3C/svg%3E");
+    mask-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='405' height='405'%3E%3Crect x='159.5' y='159.5' width='9' height='9' fill='%23000'/%3E%3C/svg%3E");
+    -webkit-mask-size: 202.5px 202.5px;
+    mask-size: 202.5px 202.5px;
+  }
+}
