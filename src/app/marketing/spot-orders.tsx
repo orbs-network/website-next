@@ -77,7 +77,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
         nameHeader={t('chains.nameHeader')}
         idHeader={t('chains.idHeader')}
         chains={SPOT_ORDERS_CHAINS}
-        titleLang={textLang(t('chains.title'), locale)}
+        locale={locale}
       />
     </>
   )

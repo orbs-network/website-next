@@ -13,7 +13,7 @@ type Story = StoryObj<typeof meta>
 
 const PHRASES = ['One API.', 'Every on-chain order type.', 'Institutional-grade execution.']
 
-const args = { phrases: PHRASES, pauseLabel: 'Pause', resumeLabel: 'Resume' }
+const args = { phrases: PHRASES, pauseLabel: 'Pause', resumeLabel: 'Resume', locale: 'en' as const }
 
 export const Default: Story = { args }
 

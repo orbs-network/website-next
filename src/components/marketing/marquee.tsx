@@ -2,6 +2,8 @@
 
 import * as React from 'react'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * A horizontally scrolling band of phrases, with a pause control.
@@ -36,7 +38,7 @@ export function Marquee({
   phrases,
   pauseLabel,
   resumeLabel,
-  lang,
+  locale,
   className,
 }: {
   phrases: readonly string[]
@@ -49,7 +51,8 @@ export function Marquee({
    */
   pauseLabel: string
   resumeLabel: string
-  lang?: string
+  /** The document's locale. Each string's own `lang` is derived from it. */
+  locale: Locale
   className?: string
 }) {
   const [paused, setPaused] = React.useState(false)
@@ -57,7 +60,12 @@ export function Marquee({
   const track = (
     <ul className="flex shrink-0 items-center gap-16 px-8">
       {phrases.map((phrase) => (
-        <li key={phrase} className="whitespace-nowrap text-h3 text-fg sm:text-h2">
+        /*
+          Per phrase. The home marquee is a list of independent slogans, and
+          they are translated one at a time — "One API" stays English in the
+          Korean catalog while the phrase beside it does not.
+        */
+        <li key={phrase} className="whitespace-nowrap text-h3 text-fg sm:text-h2" lang={textLang(phrase, locale)}>
           {phrase}
         </li>
       ))}
@@ -66,7 +74,6 @@ export function Marquee({
 
   return (
     <div
-      lang={lang}
       className={cn(
         'relative overflow-hidden py-16',
         'bg-gradient-to-r from-cyan-500/40 via-periwinkle-500/40 to-lilac-500/40',
@@ -100,6 +107,13 @@ export function Marquee({
         type="button"
         onClick={() => setPaused((current) => !current)}
         aria-pressed={paused}
+        /*
+          Follows the label that is actually showing. The two states are
+          separate catalog entries and need not share a language — and the
+          button's text IS its accessible name, so a stale `lang` here is read
+          aloud rather than merely sitting in the markup.
+        */
+        lang={textLang(paused ? resumeLabel : pauseLabel, locale)}
         className={cn(
           'absolute bottom-4 right-4 rounded-sm border border-fg/30 bg-bg/70 px-3 py-1',
           'text-detail font-medium uppercase tracking-widest text-fg transition-colors hover:border-fg',

@@ -433,7 +433,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
           pauseLabel={t('marquee.pause')}
           resumeLabel={t('marquee.resume')}
-          lang={lang('marquee.oneApi')}
+          locale={locale}
         />
 
         {/*
