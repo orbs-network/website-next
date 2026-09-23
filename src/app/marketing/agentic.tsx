@@ -95,8 +95,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         width={AGENTIC_DIAGRAM.width}
         height={AGENTIC_DIAGRAM.height}
         imageAlt={t('architecture.alt')}
-        lang={textLang(t('architecture.alt'), locale)}
-        titleLang={textLang(t('architecture.title'), locale)}
+        locale={locale}
       />
 
       <ArchitectureSection title={t('poweredBy.title')} body={t('poweredBy.body')} locale={locale} />

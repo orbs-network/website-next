@@ -60,7 +60,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         width={DSLTP_GRAPH_IMAGE.width}
         height={DSLTP_GRAPH_IMAGE.height}
         imageAlt={t('graph.alt')}
-        lang={textLang(t('graph.alt'), locale)}
+        locale={locale}
       />
 
       <DiagramSection
@@ -69,7 +69,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         width={DSLTP_MAP_IMAGE.width}
         height={DSLTP_MAP_IMAGE.height}
         imageAlt={t('integrations.alt')}
-        lang={textLang(t('integrations.title'), locale)}
+        locale={locale}
       />
 
       {/*

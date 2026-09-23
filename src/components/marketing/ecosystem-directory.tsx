@@ -7,18 +7,12 @@ export type EcosystemCard = {
   logo?: string
 }
 
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
+
 export type EcosystemGroup = {
   key: string
   title: string
-  /**
-   * Set when the category title is in a different language from the route.
-   *
-   * It always is, outside English: the legacy `jp/` and `ko/` ecosystem
-   * directories hold the English category titles verbatim, so every heading on
-   * /jp/ecosystem and /ko/ecosystem is English inside a Japanese or Korean
-   * document and has to say so.
-   */
-  titleLang?: string
   entries: readonly EcosystemCard[]
 }
 
@@ -35,21 +29,40 @@ export type EcosystemGroup = {
  * alone, which is why the name is always present rather than being replaced by
  * the image.
  */
-export function EcosystemDirectory({ title, groups }: { title: string; groups: readonly EcosystemGroup[] }) {
+export function EcosystemDirectory({
+  title,
+  groups,
+  locale,
+}: {
+  title: string
+  groups: readonly EcosystemGroup[]
+  /**
+   * The document's locale. Each string's own `lang` is derived from it.
+   *
+   * This replaces a `titleLang` carried on every GROUP, which the page had to
+   * compute and set per category. Outside English it was always 'en' — the
+   * legacy `jp/` and `ko/` directories hold the English category titles
+   * verbatim. Deriving it here says the same thing without the caller having
+   * to know, and covers the project names too, which had no `lang` at all.
+   */
+  locale: Locale
+}) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
-      <H1 className="mb-16">{title}</H1>
+      <H1 className="mb-16" lang={textLang(title, locale)}>
+        {title}
+      </H1>
 
       {groups.map((group) => (
         <div key={group.key} className="mt-16 first:mt-0">
-          <H2 className="mb-8" lang={group.titleLang}>
+          <H2 className="mb-8" lang={textLang(group.title, locale)}>
             {group.title}
           </H2>
 
           <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
             {group.entries.map((entry) => (
               <li key={`${group.key}-${entry.name}`}>
-                <EcosystemTile entry={entry} />
+                <EcosystemTile entry={entry} locale={locale} />
               </li>
             ))}
           </ul>
@@ -68,7 +81,7 @@ export function EcosystemDirectory({ title, groups }: { title: string; groups: r
  * /ecosystem/ in a new tab. A card with no destination should not look or
  * behave like one: no anchor, no hover affordance, no tab stop.
  */
-function EcosystemTile({ entry }: { entry: EcosystemCard }) {
+function EcosystemTile({ entry, locale }: { entry: EcosystemCard; locale: Locale }) {
   const tile = 'flex h-full flex-col items-center justify-center gap-3 rounded-sm border border-border p-5 text-center'
 
   const body = (
@@ -87,7 +100,15 @@ function EcosystemTile({ entry }: { entry: EcosystemCard }) {
           className="h-10 w-auto max-w-[6rem] object-contain"
         />
       )}
-      <span className="text-detail font-medium">{entry.name}</span>
+      {/*
+        The name is the accessible label — the logo beside it is `alt=""` — so
+        this is what gets announced. Project names are proper nouns and stay
+        Latin in every locale, which is exactly what `textLang` marks. It had
+        no `lang` at all before, inheriting whatever the page had guessed.
+      */}
+      <span className="text-detail font-medium" lang={textLang(entry.name, locale)}>
+        {entry.name}
+      </span>
     </>
   )
 

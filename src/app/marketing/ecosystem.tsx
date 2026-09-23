@@ -21,9 +21,8 @@ export async function EcosystemPage({ locale }: { locale: Locale }) {
   const groups = ECOSYSTEM_CATEGORIES.map((category) => ({
     key: category.key,
     title: t(`categories.${category.key}`),
-    titleLang: textLang(t(`categories.${category.key}`), locale),
     entries: category.entries,
   }))
 
-  return <EcosystemDirectory title={t('meta.title')} groups={groups} />
+  return <EcosystemDirectory title={t('meta.title')} groups={groups} locale={locale} />
 }
