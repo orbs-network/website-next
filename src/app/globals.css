@@ -148,7 +148,17 @@
     --popover-foreground: var(--color-fg);
     --primary: var(--color-accent-primary);
     --primary-foreground: var(--color-neutral-100);
-    --secondary: var(--color-periwinkle-400);
+    /*
+      Periwinkle/600, not /400 — the light page's copy of the same defect.
+
+      `--secondary` is TEXT here: `hover:text-secondary` on the Contentful post
+      links. Periwinkle/400 is #7a89e9, which reads 2.95:1 on #f6f6f6, so
+      hovering a link made it HARDER to read than before the pointer arrived.
+
+      Dark keeps /400, where it reads 5.86:1. Same token, opposite direction,
+      set per theme for the same reason `--destructive` is.
+    */
+    --secondary: var(--color-periwinkle-600);
     --secondary-foreground: var(--color-neutral-900);
     --muted: var(--color-neutral-300);
     --muted-foreground: var(--color-fg-muted);
@@ -273,16 +283,21 @@
     --popover: var(--color-surface);
     --popover-foreground: var(--color-fg);
     /*
-      DELIBERATELY NOT `--color-accent-primary`, which it used to follow.
+      Follows the accent, because `--primary` is TEXT here.
 
-      `--primary` is a FILLED SURFACE — the solid button — and a colour used as
-      a background has the opposite contrast requirement to one used as text.
-      Moving the accent to periwinkle/400 for legibility would have dragged the
-      button with it, and white on #7A89E9 is 3.09:1: fine for large text,
-      short of AA for a button label. Indigo/400 stays, where white reads
-      6.43:1 on it.
+      An earlier version of this change pinned it to indigo/400 on the
+      reasoning that `--primary` is the solid button's fill, where the contrast
+      requirement runs the other way. That reasoning was wrong and the call
+      sites say so: `bg-primary` has NO usages anywhere, `text-primary` has
+      five — the links on the Contentful post pages — and this project's
+      `Button` is outlined rather than filled (`border-fg text-fg
+      hover:text-accent-primary`), so it never touches this token at all.
+
+      Pinned to indigo/400 those links would have been 2.94:1 in dark: not a
+      regression I introduced, but one I would have cemented while claiming to
+      fix the accent.
     */
-    --primary: var(--color-indigo-400);
+    --primary: var(--color-accent-primary);
     --primary-foreground: var(--color-neutral-100);
     --secondary: var(--color-periwinkle-400);
     --secondary-foreground: var(--color-neutral-900);

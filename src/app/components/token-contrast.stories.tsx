@@ -93,16 +93,24 @@ const TEXT_ON_SURFACE = [
     renders would have had someone change a colour to satisfy it.
   */
   ['--destructive', '--color-bg'],
+  /*
+    `--primary` and `--secondary` are TEXT in this codebase, not fills.
+    `bg-primary` has no usages at all; `text-primary` has five, the links on
+    the Contentful post pages, with `hover:text-secondary` beside them. The
+    `Button` is outlined rather than filled and touches neither.
+
+    Checked here rather than in TEXT_ON_FILL below for that reason — their
+    names suggest surfaces and their use is text, which is exactly the
+    assumption that nearly shipped indigo/400 links at 2.94:1 in dark.
+  */
+  ['--primary', '--color-bg'],
+  ['--secondary', '--color-bg'],
 ] as const
 
 /**
  * Filled surfaces, checked against the text ON them — the opposite direction.
  */
-const TEXT_ON_FILL = [
-  ['--primary-foreground', '--primary'],
-  ['--secondary-foreground', '--secondary'],
-  ['--accent-foreground', '--accent'],
-] as const
+const TEXT_ON_FILL = [['--accent-foreground', '--accent']] as const
 
 function check(root: HTMLElement, theme: string) {
   const failures: string[] = []
