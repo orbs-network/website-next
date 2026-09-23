@@ -22,13 +22,16 @@ export type HomeCard = {
   /**
    * Product mark, where the card has one.
    *
-   * The dSPOT and dPERPS marks are NOT here yet. Figma's image endpoint started
-   * returning 429 partway through exporting this page's assets, and a path to a
-   * file that does not exist is worse than no path — `next/image` throws at
-   * build rather than degrading. They land in a follow-up; the cards read
-   * correctly without them because the heading names the product.
+   * CARRIES ITS OWN DIMENSIONS rather than being a bare path, because the marks
+   * are not square and not the same shape as each other — dSPOT is 47.7x45.4
+   * and dPERPS 41.7x50.2. The card renders them at a fixed HEIGHT with the
+   * width left to follow, so a wider mark stays wider. Sizing both to a square
+   * box, which is what a path alone invites, squashes dPERPS by 17%.
+   *
+   * Decorative in every case: the heading next to it names the product, so the
+   * mark repeats rather than adds, and it is rendered `alt=""`.
    */
-  icon?: string
+  icon?: { src: string; width: number; height: number }
 }
 
 /**
@@ -42,9 +45,21 @@ export type HomeCard = {
  * `dPERPS` is the rename of Perpetual Hub. `/perpetual-hub` now permanently
  * redirects here — see `src/lib/redirects.ts`.
  */
+/*
+  The marks are the mark ONLY, not the lockup.
+
+  #152 named two node ids to export, and both turn out to be the full lockup —
+  `dSPOT/Variant2` and `dPERPS/Variant3` each pair the mark with a live TEXT
+  node carrying the wordmark. Exporting those would have put a picture of the
+  word "dSPOT" next to a heading that already reads dSPOT, as an image, at
+  32px, in a font the page does not otherwise use. The mark groups inside them
+  (`2141:133216` and `2141:133227`) are what this wants.
+
+  Dimensions are the marks' own, from Figma. See `HomeCard['icon']`.
+*/
 export const HOME_STACK: readonly HomeCard[] = [
-  { id: 'dspot', href: '/dspot' },
-  { id: 'dperps', href: '/dperps' },
+  { id: 'dspot', href: '/dspot', icon: { src: '/marketing/home/icons/dspot.svg', width: 48, height: 46 } },
+  { id: 'dperps', href: '/dperps', icon: { src: '/marketing/home/icons/dperps.svg', width: 42, height: 51 } },
 ]
 
 /** [SOLUTIONS] — three audience cards. */

@@ -500,7 +500,23 @@ function HighlightCard({
       <p className="text-detail font-medium uppercase tracking-widest text-accent-primary">{eyebrow}</p>
 
       <div className="mt-6 flex items-center gap-3">
-        {card.icon && <Image src={card.icon} alt="" width={32} height={32} sizes="32px" className="size-8" />}
+        {card.icon && (
+          /*
+            Fixed HEIGHT, width follows. `size-8` forced both marks into the
+            same square box, and they are different shapes — dSPOT is wider
+            than tall, dPERPS taller than wide, so a square squashed one of
+            them. `h-8 w-auto` with the real intrinsic dimensions keeps each
+            at its own proportions on one optical baseline.
+          */
+          <Image
+            src={card.icon.src}
+            alt=""
+            aria-hidden="true"
+            width={card.icon.width}
+            height={card.icon.height}
+            className="h-8 w-auto"
+          />
+        )}
         <H4>{title}</H4>
       </div>
 
