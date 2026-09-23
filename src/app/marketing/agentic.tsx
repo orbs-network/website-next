@@ -53,8 +53,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         repo={AGENTIC_HERO.repo}
         // From the intro, not the headline: the headline is the product name,
         // English in every locale, while the intro and CTA are translated.
-        lang={textLang(t('hero.intro'), locale)}
-        headlineLang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid

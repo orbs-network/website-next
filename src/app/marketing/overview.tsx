@@ -38,12 +38,7 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         Falling back to `locale` means the h1 always declares its own language
         instead of borrowing its neighbour's.
       */}
-      <ProductHero
-        headline={t('hero.headline')}
-        intro={t('hero.intro')}
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
-      />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
       <ArchitectureSection title={t('what.title')} body={t('what.body')} locale={locale} />
 

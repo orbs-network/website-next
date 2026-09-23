@@ -53,6 +53,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={contact.href}
+        locale={locale}
       />
       <StatsRow
         stats={INSTITUTIONAL_STATS.map((id) => ({

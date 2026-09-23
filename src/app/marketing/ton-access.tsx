@@ -49,8 +49,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         ctaHref={`#${TON_ACCESS_EXAMPLE_ID}`}
         image={TON_ACCESS_IMAGES.hero}
         imageAlt=""
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
+        locale={locale}
       />
 
       <section className="container mx-auto px-5 py-20">

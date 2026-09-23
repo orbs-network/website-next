@@ -4,6 +4,8 @@ import { GithubIcon, TelegramIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
 import Image from 'next/image'
 import Link from 'next/link'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
 
 /**
  * Either both or neither.
@@ -63,8 +65,7 @@ export function ProductHero({
   imageAlt,
   repo,
   telegram,
-  lang,
-  headlineLang,
+  locale,
   eyebrow,
 }: HeroImage &
   HeroCta &
@@ -73,17 +74,16 @@ export function ProductHero({
     intro: string
     repo?: string
     telegram?: string
-    /** Set when this copy is English inside a non-English document. */
-    lang?: string
     /**
-     * Set when the HEADLINE's language differs from the rest of the hero.
+     * The document's locale. Each string's own `lang` is derived from it.
      *
-     * Orbs Agentic's headline is the product name, English in the Korean
-     * catalog, while the intro and call to action beneath it are Korean.
-     * Deriving one language for the whole block from the headline marked all of
-     * that Korean copy English.
+     * This replaces a block `lang` plus a `headlineLang` escape hatch. Orbs
+     * Agentic's headline is the product name, English in the Korean catalog,
+     * while the intro and call to action beneath it are Korean — one language
+     * for the whole hero marked all of that Korean copy English. The escape
+     * hatch fixed the headline and left everything else sharing one guess.
      */
-    headlineLang?: string
+    locale: Locale
     /** A short bracketed label above the headline — "[ORBS INSTITUTIONAL]". */
     eyebrow?: string
   }) {
@@ -96,11 +96,18 @@ export function ProductHero({
         without it.
       */}
       <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
-        <div lang={lang}>
-          {eyebrow && <p className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted">{eyebrow}</p>}
+        <div>
+          {eyebrow && (
+            <p
+              className="mb-4 text-detail font-medium uppercase tracking-widest text-fg-muted"
+              lang={textLang(eyebrow, locale)}
+            >
+              {eyebrow}
+            </p>
+          )}
 
           <h1
-            lang={headlineLang}
+            lang={textLang(headline, locale)}
             className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl"
           >
             {headline}
@@ -113,18 +120,22 @@ export function ProductHero({
             product page's intro is a single paragraph, so this changes nothing
             for them.
           */}
-          <Prose text={intro} className="mt-6 max-w-xl [&_p]:text-lg" />
+          <Prose text={intro} locale={locale} className="mt-6 max-w-xl [&_p]:text-lg" />
 
           <div className="mt-10 flex flex-wrap items-center gap-4 empty:mt-0">
             {ctaLabel && (
               <Button asChild size="lg">
-                <Link href={ctaHref}>{ctaLabel}</Link>
+                <Link href={ctaHref} lang={textLang(ctaLabel, locale)}>
+                  {ctaLabel}
+                </Link>
               </Button>
             )}
 
             {secondaryCtaLabel && (
               <Button asChild size="lg" variant="secondary">
-                <Link href={secondaryCtaHref}>{secondaryCtaLabel}</Link>
+                <Link href={secondaryCtaHref} lang={textLang(secondaryCtaLabel, locale)}>
+                  {secondaryCtaLabel}
+                </Link>
               </Button>
             )}
 
@@ -162,6 +173,7 @@ export function ProductHero({
             <Image
               src={image}
               alt={imageAlt}
+              lang={textLang(imageAlt, locale)}
               fill
               priority
               sizes="(min-width: 1024px) 50vw, 100vw"

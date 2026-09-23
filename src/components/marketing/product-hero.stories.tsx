@@ -15,6 +15,7 @@ const BASE = {
   intro: 'A decentralized on-chain protocol for price-efficient and reliable execution of limit orders.',
   ctaLabel: 'GET STARTED',
   ctaHref: '#get-started',
+  locale: 'en' as const,
 }
 
 export const WithImage: Story = {
@@ -22,6 +23,7 @@ export const WithImage: Story = {
     ...BASE,
     image: '/marketing/dtwap/hero.svg',
     imageAlt: '',
+    locale: 'en',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
@@ -72,6 +74,7 @@ export const SourceLinksAreLabelledOnce: Story = {
     ...BASE,
     repo: 'https://github.com/orbs-network/twap',
     telegram: 'https://t.me/dTWAPSupportGroup',
+    locale: 'en',
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)

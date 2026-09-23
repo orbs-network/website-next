@@ -36,7 +36,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid

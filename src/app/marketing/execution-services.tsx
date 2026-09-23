@@ -36,7 +36,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
         the same sentence twice in succession, in every locale. The legacy page
         has a bare title here too.
       */}
-      <ProductHero headline={t('hero.headline')} intro="" headlineLang={lang('hero.headline') ?? locale} />
+      <ProductHero headline={t('hero.headline')} intro="" locale={locale} />
 
       {EXECUTION_SERVICES_PRODUCTS.map((product) => (
         <section key={product.id} className="container mx-auto px-5 py-20" lang={lang(`${product.id}.body`)}>

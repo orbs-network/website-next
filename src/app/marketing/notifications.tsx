@@ -37,8 +37,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         ctaHref={NOTIFICATION_APPS.github}
         image={NOTIFICATION_IMAGES.hero}
         imageAlt=""
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
+        locale={locale}
       />
 
       <section className="container mx-auto px-5 py-20" lang={lang('contribute.title')}>

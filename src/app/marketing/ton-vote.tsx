@@ -52,8 +52,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
         telegram={TON_VOTE_LINKS.telegram}
         image={TON_VOTE_IMAGES.hero}
         imageAlt=""
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
+        locale={locale}
       />
 
       <section className="container mx-auto px-5 py-20">

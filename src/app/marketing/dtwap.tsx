@@ -49,7 +49,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         imageAlt=""
         repo={DTWAP_HERO.repo}
         telegram={DTWAP_HERO.telegram}
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid

@@ -36,8 +36,7 @@ export async function SpotOrdersPage({ locale }: { locale: Locale }) {
         ctaLabel={t('hero.cta')}
         ctaHref={SPOT_ORDERS_LINKS.skillSpec}
         repo={SPOT_ORDERS_LINKS.repo}
-        lang={textLang(t('hero.intro'), locale)}
-        headlineLang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid

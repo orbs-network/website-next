@@ -64,12 +64,7 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      <ProductHero
-        headline={t('hero.headline')}
-        intro={t('hero.intro')}
-        headlineLang={lang('hero.headline') ?? locale}
-        lang={lang('hero.intro')}
-      />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
       <section className="container mx-auto px-5 py-20">
         <div className="mx-auto max-w-3xl divide-y divide-border border-y border-border">

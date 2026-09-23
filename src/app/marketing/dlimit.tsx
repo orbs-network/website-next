@@ -45,7 +45,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         ctaHref={DLIMIT_HERO.ctaHref}
         repo={DLIMIT_HERO.repo}
         telegram={DLIMIT_HERO.telegram}
-        lang={textLang(t('hero.headline'), locale)}
+        locale={locale}
       />
 
       <FeatureGrid
