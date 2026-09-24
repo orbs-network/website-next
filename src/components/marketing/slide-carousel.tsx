@@ -133,7 +133,21 @@ export function SlideCarousel({
         ))}
       </ul>
 
-      <div className="mt-2 flex justify-center gap-3">
+      {/*
+        The BUTTON is 24px; the DOT inside it is 10px (WCAG 2.5.8).
+
+        These were the dots themselves — 10x10 buttons with 12px between them,
+        the only tap targets on the site that fail 2.5.8 at AA. Measured across
+        every route at 390px with the spacing exception applied properly: 45 of
+        the 46 undersized targets pass because nothing else is within reach of
+        them, and these three fail because they are each other's neighbours.
+        A 24px circle round one dot takes in the next.
+
+        So the hit area and the thing you see are separated. The dot stays the
+        size the design draws; the button around it is the size a finger needs.
+        The pitch goes from 22px to 24px, which is not a visible change.
+      */}
+      <div className="mt-2 flex justify-center">
         {slides.map((slide, index) => (
           <button
             key={slide.id}
@@ -146,11 +160,18 @@ export function SlideCarousel({
             // tabs and they control no panel.
             aria-current={index === current ? 'true' : undefined}
             className={cn(
-              'size-2.5 rounded-full border border-fg-muted transition-colors',
-              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-2',
-              index === current ? 'bg-fg-muted' : 'bg-transparent hover:bg-fg-muted/40'
+              'group flex size-6 items-center justify-center rounded-full',
+              'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
             )}
-          />
+          >
+            <span
+              aria-hidden="true"
+              className={cn(
+                'size-2.5 rounded-full border border-fg-muted transition-colors',
+                index === current ? 'bg-fg-muted' : 'bg-transparent group-hover:bg-fg-muted/40'
+              )}
+            />
+          </button>
         ))}
       </div>
     </div>

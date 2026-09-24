@@ -113,3 +113,29 @@ export const ImagesDeferToTheirCaptions: Story = {
     await expect(canvasElement.querySelectorAll('figcaption')).toHaveLength(3)
   },
 }
+
+/**
+ * Each dot is a 24px target, though the dot you see is 10px (WCAG 2.5.8).
+ *
+ * The dots were the only tap targets on the site failing 2.5.8 at AA: 10x10
+ * buttons 12px apart, so a 24px circle round one took in its neighbour. The
+ * hit area and the visible dot are now separate elements, and this asserts
+ * both halves — that the target is big enough, and that the design's small
+ * dot survived the change rather than being scaled up to match.
+ */
+export const DotsAreFingerSized: Story = {
+  args,
+  play: async ({ canvasElement }) => {
+    const buttons = [...canvasElement.querySelectorAll('button[aria-label^="Show slide"]')] as HTMLElement[]
+    expect(buttons).toHaveLength(3)
+
+    for (const button of buttons) {
+      const box = button.getBoundingClientRect()
+      expect(box.width, `${button.getAttribute('aria-label')} width`).toBeGreaterThanOrEqual(24)
+      expect(box.height, `${button.getAttribute('aria-label')} height`).toBeGreaterThanOrEqual(24)
+
+      const dot = button.querySelector('span') as HTMLElement
+      expect(dot.getBoundingClientRect().width).toBeLessThan(12)
+    }
+  },
+}
