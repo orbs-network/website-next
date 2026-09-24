@@ -14,7 +14,24 @@ const TabsList = React.forwardRef<
   <TabsPrimitive.List
     ref={ref}
     className={cn(
-      'inline-flex h-9 items-center justify-center rounded-lg bg-muted p-1 text-muted-foreground',
+      /*
+        Scrolls sideways when the triggers do not fit, rather than widening the
+        page (#189). The triggers are `whitespace-nowrap`, correctly — a tab
+        label split over two lines is harder to read than one scrolled to — so
+        the list itself has to absorb the overflow. On dTWAP and dLIMIT the
+        English labels come to 346px, which fits at 390px and pushed a 360px
+        phone to 366. The Korean labels are shorter, which is why only the
+        English and Japanese pages broke.
+
+        `justify-start`, NOT the shadcn default `justify-center`, and the
+        change is load-bearing. A centred flex row that overflows spills off
+        BOTH ends, and the part past the left edge cannot be scrolled to at
+        all — the first tab is simply lost. Start-aligned, the overflow goes
+        right, where scrolling reaches it. When the tabs do fit, the list
+        shrink-wraps to them and there is no free space for `justify-content`
+        to distribute, so nothing moves on a wide screen.
+      */
+      'inline-flex h-9 max-w-full items-center justify-start overflow-x-auto rounded-lg bg-muted p-1 text-muted-foreground',
       className
     )}
     {...props}

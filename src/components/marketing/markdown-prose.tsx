@@ -34,6 +34,28 @@ export function internalHref(href: string): string {
   return `${path}/${rest.join('')}`
 }
 
+/**
+ * Lets an unbreakable run — a raw URL, a long identifier — wrap anywhere
+ * rather than widen its column (#189).
+ *
+ * A white-paper abstract quotes `https://ieeexplore.ieee.org/document/8486415.`
+ * as plain text: 374px with no break opportunity, in a 350px column, which took
+ * `/white-papers/` to 394px on a 390px phone and scrolled the page sideways.
+ *
+ * `anywhere` and not Tailwind's `break-words` (`overflow-wrap: break-word`),
+ * and the difference is the whole fix. Both break a long word that overflows
+ * its line — but only `anywhere` also shrinks the element's MIN-CONTENT width.
+ * The abstract sits in a flex row beside its thumbnail, and a flex item will
+ * not shrink below its min-content; under `break-word` the column still
+ * insists on being as wide as the URL, and the overflow moves up a level
+ * instead of going away. Ordinary words fit their lines, so this changes
+ * nothing about how normal prose sets.
+ *
+ * Shared by both component maps below, which each define `p` and `li` — two
+ * copies of a class list is two places for this to be forgotten.
+ */
+const WRAP = '[overflow-wrap:anywhere]'
+
 const COMPONENTS = {
   h1: ({ children }: { children?: React.ReactNode }) => <H1 className="mb-8">{children}</H1>,
   h2: ({ children }: { children?: React.ReactNode }) => <H2>{children}</H2>,
@@ -55,7 +77,9 @@ const COMPONENTS = {
   h4: ({ children }: { children?: React.ReactNode }) => <h4 className="text-lg font-semibold text-fg">{children}</h4>,
   h5: ({ children }: { children?: React.ReactNode }) => <h5 className="text-base font-semibold text-fg">{children}</h5>,
   h6: ({ children }: { children?: React.ReactNode }) => <h6 className="text-base font-semibold text-fg">{children}</h6>,
-  p: ({ children }: { children?: React.ReactNode }) => <p className="leading-relaxed text-fg-muted">{children}</p>,
+  p: ({ children }: { children?: React.ReactNode }) => (
+    <p className={`leading-relaxed text-fg-muted ${WRAP}`}>{children}</p>
+  ),
   // `ps-6` rather than `pl-6`, so the marker indent follows `dir`.
   ul: ({ children }: { children?: React.ReactNode }) => (
     <ul className="list-disc space-y-2 ps-6 text-fg-muted">{children}</ul>
@@ -63,7 +87,7 @@ const COMPONENTS = {
   ol: ({ children }: { children?: React.ReactNode }) => (
     <ol className="list-decimal space-y-2 ps-6 text-fg-muted">{children}</ol>
   ),
-  li: ({ children }: { children?: React.ReactNode }) => <li className="leading-relaxed">{children}</li>,
+  li: ({ children }: { children?: React.ReactNode }) => <li className={`leading-relaxed ${WRAP}`}>{children}</li>,
   strong: ({ children }: { children?: React.ReactNode }) => (
     <strong className="font-semibold text-fg">{children}</strong>
   ),
@@ -165,12 +189,12 @@ function languageAware(locale: Locale) {
     ...COMPONENTS,
     a: anchor(locale),
     p: marked(({ children }, lang) => (
-      <p className="leading-relaxed text-fg-muted" lang={lang}>
+      <p className={`leading-relaxed text-fg-muted ${WRAP}`} lang={lang}>
         {children}
       </p>
     )),
     li: marked(({ children }, lang) => (
-      <li className="leading-relaxed" lang={lang}>
+      <li className={`leading-relaxed ${WRAP}`} lang={lang}>
         {children}
       </li>
     )),
