@@ -15,7 +15,8 @@
     "storybook": "storybook dev -p 6006",
     "build-storybook": "storybook build",
     "visual-review": "node scripts/visual-review.mjs",
-    "optimize-images": "node scripts/optimize-images.mjs"
+    "optimize-images": "node scripts/optimize-images.mjs",
+    "check:overflow": "node scripts/check-overflow.mjs"
   },
   "dependencies": {
     "@contentful/rich-text-react-renderer": "^16.1.6",

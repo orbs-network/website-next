@@ -23,7 +23,20 @@ import { cn } from '@/lib/utils'
  */
 const buttonVariants = cva(
   [
-    'inline-flex items-center justify-center gap-2 whitespace-nowrap',
+    /*
+      The label WRAPS rather than overflowing (#189). This was `whitespace-nowrap`,
+      which is the shadcn default and is fine for "Submit" — and on a 390px
+      phone a label that does not fit one line then pushes the whole document
+      sideways. "Contribute your notification" on `/notifications/` did exactly
+      that: 449px of button in a 350px column, the page scrolling horizontally.
+
+      `max-w-full` caps it at its container so there is a width to wrap
+      against; `text-center` keeps a wrapped label centred rather than ragged
+      left. A label that fits on one line is unaffected — wrapping only
+      happens when there is nothing else to do, so desktop buttons do not
+      change.
+    */
+    'inline-flex max-w-full items-center justify-center gap-2 text-center',
     'font-semibold uppercase tracking-wide',
     'border transition-colors',
     'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
