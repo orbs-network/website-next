@@ -77,6 +77,7 @@ export const MARKETING_PAGE_PATHS = [
   // new with the redesign and exists in no other language.
   '/sdk',
   '/venues',
+  '/dspot',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

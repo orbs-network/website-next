@@ -1684,6 +1684,72 @@
         "uiKit": "Explore the UI kit",
         "contact": "Talk to the team"
       }
+    },
+    "dspot": {
+      "meta": {
+        "title": "dSPOT",
+        "description": "Limit, TWAP, stop-loss/take-profit and best-price liquidity aggregation — one non-custodial execution stack powered by Orbs L3."
+      },
+      "hero": {
+        "eyebrow": "[ADVANCED ORDER EXECUTION]",
+        "headline": "dSPOT",
+        "intro": "Limit, TWAP, stop-loss/take-profit and best-price liquidity aggregation — one non-custodial execution stack powered by Orbs L3.",
+        "cta": "Discover order types"
+      },
+      "modules": {
+        "eyebrow": "[dSPOT MODULES]",
+        "heading": "Advanced orders and best-price liquidity in one execution stack.",
+        "body": "dSPOT combines advanced order types with Liquidity Hub, giving traders more control over execution while venues access additional liquidity routes and competitive pricing.",
+        "dlimit": {
+          "name": "dLIMIT",
+          "body": "Place orders at a target price or better.",
+          "cta": "Discover dLIMIT"
+        },
+        "dtwap": {
+          "name": "dTWAP",
+          "body": "Split larger trades over time to reduce price impact.",
+          "cta": "Discover dTWAP"
+        },
+        "dsltp": {
+          "name": "dSLTP",
+          "body": "Automate stop-loss and take-profit orders on spot markets.",
+          "cta": "Discover dSLTP"
+        },
+        "liquidityHub": {
+          "name": "Liquidity Hub",
+          "body": "Let DEXs tap external liquidity sources for better prices on swaps.",
+          "cta": "Discover Liquidity Hub"
+        }
+      },
+      "execution": {
+        "eyebrow": "[BEST EXECUTION]",
+        "heading": "Built for best execution.",
+        "body": "Access additional liquidity routes and competing quotes while retaining custody until execution. Orbs L3 reduces onchain overhead, with swap settlement remaining onchain.",
+        "points": {
+          "pricing": "Competitive pricing — additional liquidity routes and competing quotes",
+          "custody": "Non-custodial by design — assets remain in the user’s wallet until execution",
+          "settlement": "Onchain settlement — swaps settle transparently onchain"
+        }
+      },
+      "band": "Advanced execution without giving up custody.",
+      "network": {
+        "eyebrow": "[NETWORK]",
+        "heading": "Powered by Orbs L3.",
+        "body": "Orbs L3 provides the execution infrastructure behind dSPOT, reducing onchain overhead while keeping settlement transparent and verifiable onchain.",
+        "cta": "Read the docs"
+      },
+      "marquee": {
+        "control": "Trade with more control.",
+        "liquidity": "Access aggregated liquidity.",
+        "custody": "Keep custody until execution.",
+        "pause": "Pause",
+        "resume": "Resume"
+      },
+      "closing": {
+        "follow": "Follow us",
+        "community": "Join Community",
+        "contact": "Talk to the team"
+      }
     }
   }
 }

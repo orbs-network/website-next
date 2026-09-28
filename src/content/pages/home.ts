@@ -5,10 +5,9 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
  *
  * Data only — every string lives in the message catalogs under `pages.home`.
  *
- * Several destinations here do not exist yet: `/dspot`, `/sdk`, `/venues` and
- * `/ai-agents` are all being written. They are listed in
- * `link-integrity.test.ts`'s `PENDING`, which means the guard knows about them
- * and will fail the moment one ships without its line being deleted. That is
+ * One destination here does not exist yet: `/ai-agents`. It is listed in
+ * `link-integrity.test.ts`'s `PENDING`, which means the guard knows about it
+ * and will fail the moment it ships without its line being deleted. That is
  * deliberate debt with a deadline rather than a broken link nobody is counting.
  */
 

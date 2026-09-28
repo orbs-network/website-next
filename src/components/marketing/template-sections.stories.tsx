@@ -1,8 +1,11 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
+import { DLimit, LiquidityHub } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { ClosingCta } from './closing-cta'
 import { GraphicSplit } from './graphic-split'
+import { ModuleCards } from './module-cards'
+import { CtaButton } from './section-parts'
 import { SplitHero } from './split-hero'
 import { SplitStatement } from './split-statement'
 import { StatementBand } from './statement-band'
@@ -211,6 +214,92 @@ export const BandTextIsDarkInDarkMode: Story = {
     } finally {
       document.documentElement.classList.remove('dark')
     }
+  },
+}
+
+const MODULES = (
+  <ModuleCards
+    id="modules"
+    eyebrow="[dSPOT MODULES]"
+    heading="Advanced orders and best-price liquidity in one execution stack."
+    body="dSPOT combines advanced order types with Liquidity Hub."
+    cards={[
+      {
+        id: 'dlimit',
+        eyebrow: 'dLIMIT',
+        accentClassName: 'text-indigo-400',
+        mark: <DLimit />,
+        body: 'Place orders at a target price or better.',
+        link: { label: 'Discover dLIMIT', href: '/dlimit' },
+      },
+      {
+        id: 'liquidityHub',
+        eyebrow: 'Liquidity Hub',
+        accentClassName: 'text-cyan-600 dark:text-cyan-400',
+        mark: <LiquidityHub />,
+        body: 'Let DEXs tap external liquidity sources for better prices on swaps.',
+        link: { label: 'Discover Liquidity Hub', href: '/liquidity-hub' },
+      },
+    ]}
+    locale="en"
+  />
+)
+
+/**
+ * Each module card is headed by its product's lockup, and the coloured name
+ * above it — the same word again — is hidden from assistive technology.
+ */
+export const ModuleCardsAreNamedOnce: Story = {
+  render: () => MODULES,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const headings = canvas.getAllByRole('heading', { level: 3 })
+
+    await expect(headings.map((h) => h.textContent)).toEqual(['dLIMIT', 'Liquidity Hub'])
+    for (const card of canvasElement.querySelectorAll('li')) {
+      await expect(card.querySelector('p')?.getAttribute('aria-hidden')).toBe('true')
+    }
+  },
+}
+
+/** Cards link down to the product pages; the hero's anchor lands on the grid. */
+export const ModuleCardsLinkDown: Story = {
+  render: () => MODULES,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByRole('link', { name: /discover dlimit/i }).getAttribute('href')).toBe('/dlimit/')
+    await expect(canvasElement.querySelector('section')?.id).toBe('modules')
+  },
+}
+
+/** An in-page anchor stays a fragment: `localeHref` would make it a path. */
+export const AnchorCtaStaysOnPage: Story = {
+  render: () => <CtaButton link={{ label: 'Discover order types', href: '#modules' }} locale="ko" />,
+  play: async ({ canvasElement }) => {
+    const link = within(canvasElement).getByRole('link')
+
+    await expect(link.getAttribute('href')).toBe('#modules')
+    await expect(link.getAttribute('target')).toBeNull()
+  },
+}
+
+/** dSPOT's numbered points are a real ordered list, after the body. */
+export const StatementPointsAreAnOrderedList: Story = {
+  render: () => (
+    <SplitStatement
+      eyebrow="[BEST EXECUTION]"
+      heading="Built for best execution."
+      body="Access additional liquidity routes."
+      points={['Competitive pricing', 'Non-custodial by design', 'Onchain settlement']}
+      locale="en"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const items = within(canvasElement).getAllByRole('listitem')
+
+    await expect(items).toHaveLength(3)
+    await expect(items[0].closest('ol')).not.toBeNull()
   },
 }
 

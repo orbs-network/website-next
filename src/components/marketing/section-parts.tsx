@@ -48,14 +48,30 @@ export function Eyebrow({ text, locale, className }: { text: string; locale: Loc
  * `localeHref`, for the same reason: a section rendered on a Korean page must
  * send the reader to `/ko/contact/`, not drop them back into English, and a
  * caller that forgets is invisible on the English page everyone checks.
+ *
+ * In-page anchors (`#modules`) are neither: a plain same-tab `<a>`, because
+ * `localeHref` would turn the fragment into a path.
  */
-export function CtaButton({ link, locale }: { link: SectionLink; locale: Locale }) {
+export function CtaButton({
+  link,
+  locale,
+  variant,
+}: {
+  link: SectionLink
+  locale: Locale
+  /** The closing block's social links are secondary beside "Talk to the team". */
+  variant?: 'secondary'
+}) {
   const lang = textLang(link.label, locale)
 
   return (
-    <Button asChild>
+    <Button asChild variant={variant}>
       {isExternal(link.href) ? (
         <a href={link.href} target="_blank" rel="noopener noreferrer" lang={lang}>
+          {link.label}
+        </a>
+      ) : link.href.startsWith('#') ? (
+        <a href={link.href} lang={lang}>
           {link.label}
         </a>
       ) : (
