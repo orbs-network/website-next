@@ -1,3 +1,4 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n/locales'
@@ -62,4 +63,53 @@ export function CtaButton({ link, locale }: { link: SectionLink; locale: Locale 
 
 export function isExternal(href: string) {
   return /^[a-z][a-z0-9+.-]*:/i.test(href)
+}
+
+/**
+ * A section's illustration, in both themes.
+ *
+ * Figma exports these for the dark board, so their dots and guide lines are
+ * hard-coded `white` — on the light theme they vanish and leave the gradient
+ * strokes floating on nothing. An SVG loaded through `<img>` cannot see the
+ * page's `.dark` class, so it cannot switch colour itself; the light variant
+ * is a second file with the whites turned to `#121214`, and CSS shows the one
+ * that matches.
+ *
+ * Both are required. A graphic with only the dark file is exactly the bug this
+ * exists to prevent, and it looks fine on the board the designer checks.
+ */
+export type SectionGraphic = {
+  /** As exported: for the dark theme. */
+  src: string
+  /** The same art with its whites darkened, for the light theme. */
+  lightSrc: string
+  width: number
+  height: number
+}
+
+export function ThemedGraphic({
+  graphic,
+  priority = false,
+  sizes,
+  className,
+}: {
+  graphic: SectionGraphic
+  /**
+   * For the hero, where the graphic is the LCP candidate on a wide screen.
+   * Both variants are then preloaded — the theme is not known on the server —
+   * which costs one extra ~10 KB SVG.
+   */
+  priority?: boolean
+  sizes: string
+  className?: string
+}) {
+  // Decorative everywhere it is used: the copy beside it carries the meaning.
+  const common = { alt: '', width: graphic.width, height: graphic.height, priority, sizes }
+
+  return (
+    <>
+      <Image src={graphic.src} {...common} className={cn('hidden dark:block', className)} />
+      <Image src={graphic.lightSrc} {...common} className={cn('dark:hidden', className)} />
+    </>
+  )
 }

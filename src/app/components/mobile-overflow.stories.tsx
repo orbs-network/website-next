@@ -137,7 +137,12 @@ export const TemplateSectionsFit: Story = {
         headline="One API and SDK for spot and perpetuals"
         intro="Connect your application to Orbs’ multichain execution infrastructure."
         cta={{ label: 'Developer docs', href: 'https://docs.orbs.network/' }}
-        graphic={{ src: '/marketing/home/network-diagram.svg', width: 1016, height: 622 }}
+        graphic={{
+          src: '/marketing/home/network-diagram.svg',
+          lightSrc: '/marketing/home/network-diagram.svg',
+          width: 1016,
+          height: 622,
+        }}
         locale="en"
       />
       <SplitStatement
@@ -152,7 +157,12 @@ export const TemplateSectionsFit: Story = {
         heading="Your frontend, powered by Orbs"
         body="Customizable React components fit your existing design."
         cta={{ label: 'Explore the UI kit', href: '/brand-assets/' }}
-        graphic={{ src: '/marketing/home/network-diagram.svg', width: 1016, height: 622 }}
+        graphic={{
+          src: '/marketing/home/network-diagram.svg',
+          lightSrc: '/marketing/home/network-diagram.svg',
+          width: 1016,
+          height: 622,
+        }}
         locale="en"
       />
     </Column>

@@ -1,10 +1,7 @@
-import Image from 'next/image'
 import { H1 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { CtaButton, Eyebrow, type SectionLink } from './section-parts'
-
-export type SectionGraphic = { src: string; width: number; height: number }
+import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
  * `01 / Hero / Split 50-50`: a graphic on the left, the page's title on the
@@ -66,11 +63,8 @@ export function SplitHero({
             fold, so it is the LCP candidate and lazy-loading it would delay the
             metric it defines.
           */}
-          <Image
-            src={graphic.src}
-            alt=""
-            width={graphic.width}
-            height={graphic.height}
+          <ThemedGraphic
+            graphic={graphic}
             priority
             sizes="(min-width: 1024px) 50vw, 28rem"
             className="size-full object-contain"
