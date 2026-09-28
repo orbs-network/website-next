@@ -14,11 +14,25 @@ export const SDK_LINKS = {
   contact: '/contact',
 } as const
 
+/**
+ * Exported from the template frame, 2026-09-28. The hero composes the hexagon
+ * group and the API icon onto the design's 696px square at their Figma
+ * offsets, so the slot is the size the frame draws.
+ *
+ * `*-light.svg` is the same file with `fill`/`stroke="white"` turned to
+ * `#121214` — everywhere EXCEPT inside `<mask>`, where white is luminance and
+ * darkening it blanks the whole graphic. See `ThemedGraphic`.
+ */
 export const SDK_GRAPHICS = {
   /** The hexagon network with the API mark at its centre. */
-  hero: { src: '/marketing/sdk/hero.svg', width: 696, height: 696 },
+  hero: { src: '/marketing/sdk/hero.svg', lightSrc: '/marketing/sdk/hero-light.svg', width: 696, height: 696 },
   /** The sphere network, shared with Venues' frontend section. */
-  integration: { src: '/marketing/shared/network-sphere.svg', width: 676, height: 659 },
+  integration: {
+    src: '/marketing/shared/network-sphere.svg',
+    lightSrc: '/marketing/shared/network-sphere-light.svg',
+    width: 677,
+    height: 660,
+  },
 } as const
 
 /** The closing block's scrolling phrases, in design order. */

@@ -14,11 +14,17 @@ export const VENUES_LINKS = {
   contact: '/contact',
 } as const
 
+/** Exported and themed the same way as the SDK page's — see `SDK_GRAPHICS`. */
 export const VENUES_GRAPHICS = {
   /** The orbital ellipses. */
-  hero: { src: '/marketing/venues/hero.svg', width: 672, height: 672 },
+  hero: { src: '/marketing/venues/hero.svg', lightSrc: '/marketing/venues/hero-light.svg', width: 672, height: 672 },
   /** The sphere network, shared with the SDK page's integration section. */
-  frontend: { src: '/marketing/shared/network-sphere.svg', width: 676, height: 659 },
+  frontend: {
+    src: '/marketing/shared/network-sphere.svg',
+    lightSrc: '/marketing/shared/network-sphere-light.svg',
+    width: 677,
+    height: 660,
+  },
 } as const
 
 /** The closing block's scrolling phrases, in design order. */
