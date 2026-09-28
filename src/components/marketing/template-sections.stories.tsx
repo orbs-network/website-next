@@ -22,7 +22,12 @@ const meta = {
 export default meta
 type Story = StoryObj<typeof meta>
 
-const GRAPHIC = { src: '/marketing/home/network-diagram.svg', width: 1016, height: 622 }
+const GRAPHIC = {
+  src: '/marketing/home/network-diagram.svg',
+  lightSrc: '/marketing/home/network-diagram.svg',
+  width: 1016,
+  height: 622,
+}
 const DOCS = { label: 'Developer docs', href: 'https://docs.orbs.network/' }
 const CONTACT = { label: 'Talk to the team', href: '/contact/' }
 
@@ -97,14 +102,42 @@ export const HeroCopyPrecedesGraphic: Story = {
   },
 }
 
-/** Brand illustration, not information: both graphics are `alt=""`. */
+/** Brand illustration, not information: every graphic image is `alt=""`. */
 export const GraphicsAreDecorative: Story = {
   ...Page,
   play: async ({ canvasElement }) => {
     const images = [...canvasElement.querySelectorAll('img')]
 
-    await expect(images).toHaveLength(2)
+    // Two graphics, each shipped as a dark and a light file.
+    await expect(images).toHaveLength(4)
     for (const image of images) await expect(image.getAttribute('alt')).toBe('')
+  },
+}
+
+/**
+ * Exactly one variant of each graphic shows, and it is the one for the theme.
+ *
+ * The exports hard-code white dots and guide lines. Shown on the light theme
+ * they disappear, which is how the legacy product pages ended up with art
+ * that only works in one theme; this is the guard against repeating it.
+ */
+export const OneGraphicVariantPerTheme: Story = {
+  ...Page,
+  play: async ({ canvasElement }) => {
+    const shown = () =>
+      [...canvasElement.querySelectorAll('img')].filter((image) => getComputedStyle(image).display !== 'none')
+
+    const html = document.documentElement
+    const wasDark = html.classList.contains('dark')
+    try {
+      html.classList.remove('dark')
+      await expect(shown()).toHaveLength(2)
+
+      html.classList.add('dark')
+      await expect(shown()).toHaveLength(2)
+    } finally {
+      html.classList.toggle('dark', wasDark)
+    }
   },
 }
 

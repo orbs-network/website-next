@@ -1,9 +1,7 @@
-import Image from 'next/image'
 import { H2 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { CtaButton, Eyebrow, type SectionLink } from './section-parts'
-import type { SectionGraphic } from './split-hero'
+import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
  * `06 / Split / Text + Graphic`: eyebrow at the top of the left column, the
@@ -50,14 +48,7 @@ export function GraphicSplit({
         </div>
 
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <Image
-            src={graphic.src}
-            alt=""
-            width={graphic.width}
-            height={graphic.height}
-            sizes="(min-width: 1024px) 60vw, 28rem"
-            className="h-auto w-full"
-          />
+          <ThemedGraphic graphic={graphic} sizes="(min-width: 1024px) 60vw, 28rem" className="h-auto w-full" />
         </div>
       </div>
     </section>
