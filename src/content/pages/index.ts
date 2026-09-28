@@ -73,6 +73,10 @@ export const MARKETING_PAGE_PATHS = [
   '/ton-access',
   // The TON.Vote DAO governance tool.
   '/ton-vote',
+  // 3.4 pages, composed from the section library. English only: the copy is
+  // new with the redesign and exists in no other language.
+  '/sdk',
+  '/venues',
 ] as const
 
 export type MarketingPagePath = (typeof MARKETING_PAGE_PATHS)[number]

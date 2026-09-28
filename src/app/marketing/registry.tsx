@@ -23,6 +23,8 @@ import { LiquidityHubPage } from './liquidity-hub'
 import { DperpsPage } from './dperps'
 import { SpotOrdersPage } from './spot-orders'
 import { DtwapPage } from './dtwap'
+import { SdkPage } from './sdk'
+import { VenuesPage } from './venues'
 
 /**
  * Renders a page for a locale.
@@ -196,6 +198,8 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
     render: (locale) => <TonVotePage locale={locale} />,
     namespace: 'pages.tonVote',
   },
+  '/sdk': { render: (locale) => <SdkPage locale={locale} />, namespace: 'pages.sdk' },
+  '/venues': { render: (locale) => <VenuesPage locale={locale} />, namespace: 'pages.venues' },
 }
 
 /**
