@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
+import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
@@ -42,6 +43,11 @@ export function Eyebrow({ text, locale, className }: { text: string; locale: Loc
  * client-side. Deciding that here rather than per caller is the point: a page
  * that forgets `rel` on one external link is a page with a reverse-tabnabbing
  * hole in it.
+ *
+ * Internal hrefs are locale-free (`/contact`) and resolved here through
+ * `localeHref`, for the same reason: a section rendered on a Korean page must
+ * send the reader to `/ko/contact/`, not drop them back into English, and a
+ * caller that forgets is invisible on the English page everyone checks.
  */
 export function CtaButton({ link, locale }: { link: SectionLink; locale: Locale }) {
   const lang = textLang(link.label, locale)
@@ -53,7 +59,7 @@ export function CtaButton({ link, locale }: { link: SectionLink; locale: Locale 
           {link.label}
         </a>
       ) : (
-        <Link href={link.href} lang={lang}>
+        <Link href={localeHref(link.href, locale)} lang={lang}>
           {link.label}
         </Link>
       )}
