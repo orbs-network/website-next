@@ -3,6 +3,10 @@ import { expect } from 'storybook/test'
 import { Button } from '@/components/ui/button'
 import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
+import { GraphicSplit } from '@/components/marketing/graphic-split'
+import { SplitHero } from '@/components/marketing/split-hero'
+import { SplitStatement } from '@/components/marketing/split-statement'
+import { StatementBand } from '@/components/marketing/statement-band'
 
 /**
  * Nothing may be wider than a phone's content column (#189).
@@ -105,6 +109,66 @@ export const LongTabListScrollsInPlace: Story = {
     expect(list.scrollWidth).toBeGreaterThan(list.clientWidth)
     // ...and the overflow went right, where scrolling can reach it.
     expect(first.getBoundingClientRect().left).toBeGreaterThanOrEqual(list.getBoundingClientRect().left - 0.5)
+  },
+}
+
+/**
+ * The 3.4 section library at phone width. These are wide-screen layouts — two
+ * columns, a 33% indent — and each has to collapse to one column without
+ * anything keeping its desktop width.
+ *
+ * **At a 360px VIEWPORT, not only in a 320px column.** The stories above are
+ * components with no breakpoints, so a narrow box is enough. These switch
+ * layout on `lg:`, a media query, which reads the viewport — rendered in a
+ * narrow box inside a desktop-width runner, they keep their two-column desktop
+ * layout and the story tests a page nobody sees. The vitest addon resizes the
+ * browser from `globals.viewport` — verified by breaking it: an unprefixed
+ * `ml-[400px]` fails this story, the same margin behind `sm:` does not.
+ */
+export const TemplateSectionsFit: Story = {
+  parameters: {
+    viewport: { options: { phone360: { name: 'Phone 360', styles: { width: '360px', height: '800px' } } } },
+  },
+  globals: { viewport: { value: 'phone360' } },
+  render: () => (
+    <Column>
+      <SplitHero
+        eyebrow="[SDK / API]"
+        headline="One API and SDK for spot and perpetuals"
+        intro="Connect your application to Orbs’ multichain execution infrastructure."
+        cta={{ label: 'Developer docs', href: 'https://docs.orbs.network/' }}
+        graphic={{
+          src: '/marketing/home/network-diagram.svg',
+          lightSrc: '/marketing/home/network-diagram.svg',
+          width: 1016,
+          height: 622,
+        }}
+        locale="en"
+      />
+      <SplitStatement
+        eyebrow="[CAPABILITIES]"
+        heading="Extend your DEX’s trading capabilities"
+        body={'Give traders more control.\n\nAdvanced orders extend the trading experience.'}
+        locale="en"
+      />
+      <StatementBand text="Your brand and user experience." locale="en" />
+      <GraphicSplit
+        eyebrow="[FRONTEND]"
+        heading="Your frontend, powered by Orbs"
+        body="Customizable React components fit your existing design."
+        cta={{ label: 'Explore the UI kit', href: '/brand-assets/' }}
+        graphic={{
+          src: '/marketing/home/network-diagram.svg',
+          lightSrc: '/marketing/home/network-diagram.svg',
+          width: 1016,
+          height: 622,
+        }}
+        locale="en"
+      />
+    </Column>
+  ),
+  play: async ({ canvasElement }) => {
+    assertFits(canvasElement)
   },
 }
 

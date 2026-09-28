@@ -7,10 +7,10 @@ import { CardRail } from '@/components/marketing/card-rail'
 import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
-import { Marquee } from '@/components/marketing/marquee'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
 import { HeroFacetField } from '@/components/marketing/hero-facet-field'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
+import { ClosingCta } from '@/components/marketing/closing-cta'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
@@ -385,12 +385,34 @@ export async function HomePage({ locale }: { locale: Locale }) {
         two independent sections, the marquee lost that entirely — which is why
         the band appeared to start abruptly below it.
 
-        All three blocks are here now. The signup was deferred while #145 was
-        open; it landed with this change.
+        `ClosingCta` owns that field and the two lower blocks, shared with the
+        product pages; the signup is passed in and renders at the top of it.
       */}
-      <div className="relative isolate overflow-hidden">
-        <SectionBackdrop variant="glow" />
-
+      <ClosingCta
+        phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
+        pauseLabel={t('marquee.pause')}
+        resumeLabel={t('marquee.resume')}
+        locale={locale}
+        actions={
+          <>
+            <Button asChild variant="secondary">
+              <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
+                {t('connect.follow')}
+              </a>
+            </Button>
+            <Button asChild variant="secondary">
+              <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
+                {t('connect.community')}
+              </a>
+            </Button>
+            <Button asChild>
+              <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
+                {t('connect.contact')}
+              </Link>
+            </Button>
+          </>
+        }
+      >
         {/*
           The signup, which the design places at the TOP of this glow field —
           `Signup Area` is 436px inside `Orbs Glow Background`, above the
@@ -428,44 +450,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             />
           </div>
         </section>
-
-        <Marquee
-          phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
-          pauseLabel={t('marquee.pause')}
-          resumeLabel={t('marquee.resume')}
-          locale={locale}
-        />
-
-        {/*
-        The design's closing block: three calls to action centred in a glowing
-        field, not a bare button row. `CTA Area` is 518px tall around a 174px
-        container, so the space around the buttons IS the design.
-      */}
-        <section className="px-5 py-44">
-          {/*
-          The design's `CTA section Container` is 174px tall; the buttons are
-          42px. Reserving that height is what makes the block the size it was
-          drawn, rather than padding around a thin row.
-        */}
-          <div className="relative flex min-h-[174px] flex-wrap items-center justify-center gap-4">
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
-                {t('connect.follow')}
-              </a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
-                {t('connect.community')}
-              </a>
-            </Button>
-            <Button asChild>
-              <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
-                {t('connect.contact')}
-              </Link>
-            </Button>
-          </div>
-        </section>
-      </div>
+      </ClosingCta>
     </>
   )
 }

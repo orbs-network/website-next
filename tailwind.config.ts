@@ -95,6 +95,30 @@ const config: Config = {
           'radial-gradient(90% 150% at 80% 118%, rgb(220 138 224 / 0.50), transparent 72%)',
           'radial-gradient(85% 150% at 18% 118%, rgb(44 237 252 / 0.55), transparent 72%)',
         ].join(', '),
+        /*
+          The statement band (`Gradient Background #8`), from its layer stack.
+
+          Bottom layer: a 2359px circle centred on the band, rotated 30deg,
+          filled with a linear gradient indigo #3346F2 -> pink #DC8AE0 (at 47%)
+          -> cyan #2CEDFC. The band only shows the middle of that circle, so the
+          stops are re-projected onto the band's own gradient line: at 30deg a
+          1440x719 box has a 1343px line against the circle's 2359, which moves
+          the stops to -37.8%, 44.7% and 137.8%. Outside 0-100 is valid CSS and
+          is what keeps the hues where the design has them.
+
+          Middle: a #E9F3FF rectangle whose top edge sits two thirds of the way
+          down, blurred by 400 — the pale lavender floor. A blur that size is a
+          ramp, so it is drawn as one, centred on that edge.
+
+          Top: grain. The design overlays two tiled noise images; a
+          feTurbulence tile is the same texture in a few hundred bytes of CSS
+          rather than two raster downloads.
+        */
+        'statement-band': [
+          `url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 0 0 0 .22 0'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E")`,
+          'linear-gradient(to bottom, rgb(233 243 255 / 0) 38%, rgb(233 243 255 / 0.55) 66%, rgb(233 243 255 / 0.95) 100%)',
+          'linear-gradient(30deg, #3346f2 -37.8%, #dc8ae0 44.7%, #2cedfc 137.8%)',
+        ].join(', '),
       },
       keyframes: {
         marquee: {
