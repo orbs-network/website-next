@@ -110,12 +110,12 @@ export function ThemedGraphic({
   className?: string
 }) {
   // Decorative everywhere it is used: the copy beside it carries the meaning.
-  const common = { alt: '', width: graphic.width, height: graphic.height, priority, sizes }
+  const common = { width: graphic.width, height: graphic.height, priority, sizes }
 
   return (
     <>
-      <Image src={graphic.src} {...common} className={cn('hidden dark:block', className)} />
-      <Image src={graphic.lightSrc} {...common} className={cn('dark:hidden', className)} />
+      <Image src={graphic.src} alt="" {...common} className={cn('hidden dark:block', className)} />
+      <Image src={graphic.lightSrc} alt="" {...common} className={cn('dark:hidden', className)} />
     </>
   )
 }
