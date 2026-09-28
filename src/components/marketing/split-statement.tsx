@@ -16,16 +16,22 @@ import { Prose } from './prose'
  * The gap between the eyebrow and the columns is most of the section. That is
  * the design, not slack: the frame is 600px around ~180px of content, and
  * closing it up turns a statement into a paragraph.
+ *
+ * `points` is dSPOT's numbered list under the body. An `<ol>` rather than
+ * paragraphs with digits typed in: the numbers are drawn, and a screen reader
+ * announces the count.
  */
 export function SplitStatement({
   eyebrow,
   heading,
   body,
+  points,
   locale,
 }: {
   eyebrow: string
   heading: string
   body: string
+  points?: readonly string[]
   locale: Locale
 }) {
   return (
@@ -36,7 +42,21 @@ export function SplitStatement({
         <H2 className="text-balance" lang={textLang(heading, locale)}>
           {heading}
         </H2>
-        <Prose text={body} locale={locale} className="max-w-2xl [&_p]:text-p [&_p]:text-fg" />
+        <div className="max-w-2xl">
+          <Prose text={body} locale={locale} className="[&_p]:text-p [&_p]:text-fg" />
+          {points && points.length > 0 && (
+            <ol className="mt-12 space-y-4">
+              {points.map((point, index) => (
+                <li key={point} className="flex gap-6 text-p text-fg" lang={textLang(point, locale)}>
+                  <span aria-hidden="true" className="w-4 shrink-0 font-semibold">
+                    {index + 1}
+                  </span>
+                  <span>{point}</span>
+                </li>
+              ))}
+            </ol>
+          )}
+        </div>
       </div>
     </section>
   )

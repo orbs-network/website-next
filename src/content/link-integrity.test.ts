@@ -46,7 +46,7 @@ const CONTENT = join(REPO, 'src/content')
  * in the same diff. The debt is counted down in the repository rather than in
  * someone's memory.
  */
-const PENDING: readonly string[] = ['/dspot', '/ai-agents']
+const PENDING: readonly string[] = ['/ai-agents']
 
 /**
  * Blog posts referenced from marketing copy, by slug.

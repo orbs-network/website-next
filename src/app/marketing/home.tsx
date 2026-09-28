@@ -40,9 +40,9 @@ import { textLang } from '@/i18n/script'
  * is what they already were. `textLang` marks each string English inside those
  * documents rather than a single `lang` on the page.
  *
- * Several destinations are not built yet (`/dspot`, `/dperps`, `/venues`,
- * `/ai-agents`). They are in `link-integrity.test.ts`'s `PENDING`, so the guard
- * knows and will fail the moment one ships without its line being removed.
+ * One destination is not built yet (`/ai-agents`). It is in
+ * `link-integrity.test.ts`'s `PENDING`, so the guard knows and will fail the
+ * moment it ships without its line being removed.
  *
  * NOT in this page, deliberately:
  *
