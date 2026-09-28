@@ -29,7 +29,7 @@ const GRAPHIC = {
   height: 622,
 }
 const DOCS = { label: 'Developer docs', href: 'https://docs.orbs.network/' }
-const CONTACT = { label: 'Talk to the team', href: '/contact/' }
+const CONTACT = { label: 'Talk to the team', href: '/contact' }
 
 export const Page: Story = {
   render: () => (
@@ -156,6 +156,27 @@ export const ExternalLinksAreIsolated: Story = {
 
     const contact = canvas.getByRole('link', { name: /talk to the team/i })
     await expect(contact.getAttribute('target')).toBeNull()
+  },
+}
+
+/**
+ * Internal destinations follow the page's locale. Callers pass `/contact`;
+ * on a Korean page that has to land on `/ko/contact/`, not English.
+ */
+export const InternalLinksKeepTheLocale: Story = {
+  render: () => (
+    <GraphicSplit
+      eyebrow="[통합]"
+      heading="테스트에서 프로덕션까지"
+      body="개발자 문서"
+      cta={CONTACT}
+      graphic={GRAPHIC}
+      locale="ko"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const link = within(canvasElement).getByRole('link', { name: /talk to the team/i })
+    await expect(link.getAttribute('href')).toBe('/ko/contact/')
   },
 }
 
