@@ -1,14 +1,15 @@
 'use client'
 
-import { MenuIcon } from 'lucide-react'
+import { ArrowRight, MenuIcon } from 'lucide-react'
 import Link from 'next/link'
-import { useState } from 'react'
-import { Separator } from '@/components/ui/separator'
-import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { useId, useState } from 'react'
+import { Button } from '@/components/ui/button'
 import { MenuItemW } from '@/components/ui/menu-item'
-import { textLang } from '@/i18n/script'
+import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
 import type { Locale } from '@/i18n/locales'
-import { GLYPHS, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-client'
+import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
+import { hasIcons, rowIcon, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-client'
 
 /**
  * The navigation for viewports too narrow for the dropdown bar.
@@ -18,13 +19,17 @@ import { GLYPHS, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-
  * wider than the viewport — at 390px the page laid out at 880px and every page
  * scrolled sideways (#96).
  *
- * Structure follows the legacy mobile menu rather than inventing one: a panel
- * with a close control and the groups listed OPEN, not as accordions. The
- * legacy site made that choice with ~29 links; with twelve there is even less
- * reason to make someone tap twice to see a destination.
+ * Structure follows the `Mobile / Menu` design: a `[Menu]` label, one large row
+ * per group and per top-level link, each with an arrow, then "Talk to the
+ * team". The design does not show what a group row opens; with no landing page
+ * behind "Products" (see `resolveNavigation`), it opens the group's links in
+ * place, and its arrow turns down to say so. Collapsed by default — twenty
+ * links listed open would push the call to action off the first screen, which
+ * is what the design keeps on it.
  *
- * It renders from the same `ResolvedNavGroup` data as the desktop menu, so the
- * two cannot drift — a link added to `NAV_GROUPS` appears in both or neither.
+ * It renders from the same resolved data as the desktop menu, so the two cannot
+ * drift — a link added to `NAV_GROUPS` appears in both or neither. The featured
+ * post is the one thing it leaves out: the design has no room for it.
  *
  * `Sheet` (Radix Dialog) rather than a hand-rolled panel: an overlay nav needs
  * a focus trap, Escape to close, background scroll lock and `aria-modal`, and
@@ -41,26 +46,30 @@ export function MobileNav({
   label,
   title,
   closeLabel,
+  cta,
 }: {
   groups: readonly ResolvedNavGroup[]
   topLevel: readonly ResolvedNavLink[]
   /**
    * Needed to decide each label's `lang`.
    *
-   * These three strings go through the same per-string rule as the menu rows:
-   * they are English in the Japanese catalog (as almost all Japanese chrome is)
-   * and translated in Korean, so a blanket document `lang` would have a screen
+   * These strings go through the same per-string rule as the menu rows: they
+   * are English in the Japanese catalog (as almost all Japanese chrome is) and
+   * translated in Korean, so a blanket document `lang` would have a screen
    * reader pronounce "Open menu" with Japanese rules.
    */
   locale: Locale
   /** Accessible name for the trigger — the button shows only an icon. */
   label: string
-  /** Required by Radix Dialog: names the panel for assistive tech. */
+  /** Required by Radix Dialog: names the panel, and is its visible `[Menu]` label. */
   title: string
   /** Accessible name for the panel's close control. */
   closeLabel: string
+  /** The header's call to action, repeated in the panel where the header hides it. */
+  cta: { label: string; href: string }
 }) {
   const [open, setOpen] = useState(false)
+  const close = () => setOpen(false)
 
   return (
     <Sheet open={open} onOpenChange={setOpen}>
@@ -74,63 +83,105 @@ export function MobileNav({
 
       <SheetContent
         side="right"
-        className="w-[min(22rem,90vw)] overflow-y-auto"
+        className="w-[min(24rem,100vw)] overflow-y-auto"
         closeLabel={closeLabel}
         closeLang={textLang(closeLabel, locale)}
       >
         {/*
-          Radix warns — and screen readers suffer — without a title on a dialog.
-          It is visually hidden because the panel's own heading is the groups
-          themselves; a visible "Menu" above them would be noise.
+          Radix requires a title on a dialog, and the design has one: the
+          bracketed `[Menu]` above the rows. The brackets are the design's
+          typographic treatment, not part of the word, so they are drawn here.
         */}
-        <SheetTitle className="sr-only" lang={textLang(title, locale)}>
+        <SheetTitle
+          className="text-detail font-medium uppercase tracking-widest text-fg"
+          lang={textLang(title, locale)}
+        >
+          {/* Drawn, not spoken: the dialog is named "Menu", not "left bracket Menu". */}
+          <span aria-hidden="true">[</span>
           {title}
+          <span aria-hidden="true">]</span>
         </SheetTitle>
 
-        <nav className="mt-8 flex flex-col gap-6">
-          {groups.map((group, groupIndex) => (
-            <div key={group.key}>
-              {groupIndex > 0 && <Separator className="mb-6" />}
-
-              <h2 lang={group.lang} className="text-detail font-semibold uppercase tracking-widest text-fg-muted">
-                {group.label}
-              </h2>
-
-              {group.sections.map((section, sectionIndex) => (
-                <div key={section.key ?? `section-${sectionIndex}`} className="mt-4">
-                  {section.label && (
-                    <h3 lang={section.labelLang} className="mb-2 text-detail uppercase tracking-widest text-fg-muted">
-                      [{section.label}]
-                    </h3>
-                  )}
-
-                  <ul className="space-y-1">
-                    {section.links.map((link) => (
-                      <li key={link.key}>
-                        <MobileNavRow link={link} onNavigate={() => setOpen(false)} />
-                      </li>
-                    ))}
-                  </ul>
-                </div>
+        <nav className="mt-4">
+          <ul>
+            {groups.map((group) => (
+              <li key={group.key} className="border-b border-border">
+                <MobileGroup group={group} onNavigate={close} />
+              </li>
+            ))}
+            {topLevel
+              .filter((link) => !link.desktopOnly)
+              .map((link) => (
+                <li key={link.key} className="border-b border-border">
+                  <NavLinkElement link={link} onNavigate={close} className={cn(TOP_ROW, 'hover:text-accent-primary')}>
+                    <span lang={link.lang}>{link.label}</span>
+                    <ArrowRight className="size-4 shrink-0" aria-hidden="true" />
+                  </NavLinkElement>
+                </li>
               ))}
-            </div>
-          ))}
+          </ul>
+        </nav>
 
-          {topLevel.length > 0 && (
-            <>
-              <Separator />
-              <ul className="space-y-1">
-                {topLevel.map((link) => (
-                  <li key={link.key}>
-                    <MobileNavRow link={link} onNavigate={() => setOpen(false)} />
+        <Button asChild size="sm" className="mt-10">
+          <Link href={cta.href} onClick={close} lang={textLang(cta.label, locale)}>
+            {cta.label}
+          </Link>
+        </Button>
+      </SheetContent>
+    </Sheet>
+  )
+}
+
+/** A top-level row: 20px, full width, the arrow at the far end. */
+const TOP_ROW = 'flex w-full items-center justify-between gap-4 py-3 text-field text-fg transition-colors'
+
+/**
+ * A group row, and the links it opens.
+ *
+ * A real `<button>` with `aria-expanded` and `aria-controls`: the row does not
+ * go anywhere, so it must not look like a link to assistive technology.
+ */
+function MobileGroup({ group, onNavigate }: { group: ResolvedNavGroup; onNavigate: () => void }) {
+  const [expanded, setExpanded] = useState(false)
+  const panelId = useId()
+  const reserve = hasIcons(group.links)
+
+  return (
+    <>
+      <button
+        type="button"
+        aria-expanded={expanded}
+        aria-controls={panelId}
+        onClick={() => setExpanded((value) => !value)}
+        className={cn(
+          TOP_ROW,
+          'hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+        )}
+      >
+        <span lang={group.lang}>{group.label}</span>
+        <ArrowRight
+          aria-hidden="true"
+          className={cn('size-4 shrink-0 transition-transform', expanded && 'rotate-90')}
+        />
+      </button>
+
+      <ul id={panelId} hidden={!expanded} className="pb-4">
+        {group.links.map((link) => (
+          <li key={link.key}>
+            <MobileNavRow link={link} icon={rowIcon(link, reserve)} onNavigate={onNavigate} />
+            {link.children && link.children.length > 0 && (
+              <ul className="mb-1 pl-[3.125rem]">
+                {link.children.map((child) => (
+                  <li key={child.key}>
+                    <MobileNavRow link={child} nested onNavigate={onNavigate} />
                   </li>
                 ))}
               </ul>
-            </>
-          )}
-        </nav>
-      </SheetContent>
-    </Sheet>
+            )}
+          </li>
+        ))}
+      </ul>
+    </>
   )
 }
 
@@ -143,37 +194,58 @@ export function MobileNav({
  * so the panel is closed for the same reason — this tab did not go anywhere, but
  * leaving a menu open over it is still wrong.
  */
-function MobileNavRow({ link, onNavigate }: { link: ResolvedNavLink; onNavigate: () => void }) {
-  // No hover background, matching the desktop rows — see the note on `NavRow`
-  // in nav-menu-client.tsx. `--accent` is the brand indigo here rather than
-  // shadcn's subtle neutral, so `hover:bg-accent` filled the row with saturated
-  // blue; hover is the accent text colour, which `MenuItemW` already applies.
-  const className = '-mx-2 flex w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:no-underline'
-  // Same map as the desktop rows: a product shows the same mark in both navs.
-  const Glyph = link.icon ? GLYPHS[link.icon] : undefined
-  const icon = Glyph ? <Glyph className="size-5" /> : undefined
-
+function NavLinkElement({
+  link,
+  onNavigate,
+  className,
+  children,
+}: {
+  link: ResolvedNavLink
+  onNavigate: () => void
+  className?: string
+  children: React.ReactNode
+}) {
   if (link.external) {
     return (
-      <MenuItemW
-        href={link.href}
-        target="_blank"
-        rel="noopener noreferrer"
-        lang={link.lang}
-        icon={icon}
-        className={className}
-        onClick={onNavigate}
-      >
-        {link.label}
-      </MenuItemW>
+      <a href={link.href} target="_blank" rel="noopener noreferrer" onClick={onNavigate} className={className}>
+        {children}
+      </a>
     )
   }
 
   return (
-    <MenuItemW asChild lang={link.lang} icon={icon} className={className}>
-      <Link href={link.href} onClick={onNavigate}>
+    <Link href={link.href} onClick={onNavigate} className={className}>
+      {children}
+    </Link>
+  )
+}
+
+function MobileNavRow({
+  link,
+  icon,
+  nested = false,
+  onNavigate,
+}: {
+  link: ResolvedNavLink
+  icon?: React.ReactNode
+  nested?: boolean
+  onNavigate: () => void
+}) {
+  // No hover background, matching the desktop rows — see the note on `NavRow`
+  // in nav-menu-client.tsx.
+  return (
+    <MenuItemW
+      asChild
+      lang={link.lang}
+      icon={icon}
+      className={cn(
+        '-mx-2 flex w-full gap-2 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
+        nested ? 'py-1.5 text-fg-muted' : 'py-2.5'
+      )}
+    >
+      <NavLinkElement link={link} onNavigate={onNavigate}>
         {link.label}
-      </Link>
+      </NavLinkElement>
     </MenuItemW>
   )
 }

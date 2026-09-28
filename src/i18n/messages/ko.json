@@ -3,37 +3,36 @@
   "nav": {
     "groups": {
       "products": "Products",
-      "resources": "Resources",
-      "developers": "Developers"
-    },
-    "sections": {
-      "infrastructure": "Infrastructure",
-      "advancedTrading": "Advanced Trading Tools",
-      "tools": "Tools"
+      "solutions": "Solutions",
+      "network": "Network"
     },
     "links": {
+      "sdk": "Execution SDK/API",
+      "dspot": "dSPOT",
+      "dtwap": "dTWAP",
+      "dlimit": "dLIMIT",
+      "dsltp": "dSLTP",
       "liquidityHub": "유동성 허브",
-      "perpetualHub": "dPERPS",
-      "dlimit": "dLIMIT 프로토콜",
-      "dtwap": "dTWAP 프로토콜",
-      "dsltp": "dSLTP 프로토콜",
-      "blog": "블로그",
-      "whitePapers": "백서 및 개발문서",
-      "faq": "FAQ",
-      "tetraWallet": "Tetra Wallet",
-      "stakingCalculator": "Staking Calculator",
-      "developerDocs": "Developer Docs",
-      "notifications": "DeFi 알림 프로토콜",
-      "tonVote": "TON Vote",
-      "tonAccess": "TON 액세스",
-      "media": "미디어"
+      "dperps": "dPERPS",
+      "agentic": "Agentic",
+      "venues": "For Exchanges & Wallets",
+      "institutions": "For Institutions",
+      "pos": "Proof of Stake & Staking",
+      "executionServices": "Execution Services",
+      "status": "Status",
+      "github": "GitHub",
+      "docs": "Docs",
+      "ecosystem": "Ecosystem",
+      "blog": "블로그"
     },
+    "featuredPost": "Featured Post",
+    "featuredPostCta": "Learn More",
     "menuLabel": "메뉴 열기",
     "menuTitle": "메뉴",
     "menuClose": "닫기"
   },
   "header": {
-    "getInTouch": "문의하기",
+    "talkToTheTeam": "문의하기",
     "homeLink": "Orbs 홈",
     "scrollToTop": "맨 위로"
   },

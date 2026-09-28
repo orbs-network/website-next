@@ -80,3 +80,26 @@ export function DSltpGlyph(props: IconBaseProps) {
     </Glyph>
   )
 }
+
+/**
+ * The dSPOT mark: four rounded triangles turning around a centre. The same
+ * paths as `public/marketing/home/icons/dspot.svg` (Figma `2141:133216`), with
+ * the one triangle defined once and placed four times.
+ *
+ * Its own viewBox, not the shared 24-unit one: the paths come from Figma at
+ * their native size, and rescaling them by hand is how a mark ends up subtly
+ * not the brand's.
+ */
+export function DSpotGlyph(props: IconBaseProps) {
+  const triangle =
+    'M17.81 14.48C18.29 15.02 18.08 15.52 17.36 15.59L1.02 17.24C.3 17.32-.14 16.81.04 16.12L4.13.61C4.32-.08 4.84-.2 5.32.33L17.81 14.48Z'
+
+  return (
+    <Glyph viewBox="0 0 47.72 45.37" {...props}>
+      <path fill="#3346F2" d={triangle} transform="matrix(0.747 0.665 -0.665 0.747 17.345 0)" />
+      <path fill="#3346F2" d={triangle} transform="matrix(0.747 0.665 -0.665 0.747 34.221 0)" />
+      <path fill="#3346F2" d={triangle} transform="matrix(-0.747 -0.665 0.665 -0.747 30.377 45.371)" />
+      <path fill="#3346F2" d={triangle} transform="matrix(-0.747 -0.665 0.665 -0.747 13.502 45.371)" />
+    </Glyph>
+  )
+}

@@ -14,35 +14,44 @@ type Story = StoryObj<typeof meta>
 const PRODUCTS: ResolvedNavGroup = {
   key: 'products',
   label: 'Products',
-  sections: [
+  links: [
+    { key: 'sdk', href: '/sdk/', external: false, label: 'Execution SDK/API' },
     {
-      key: 'infrastructure',
-      label: 'Infrastructure',
-      links: [{ key: 'liquidityHub', href: '/liquidity-hub/', external: false, label: 'Liquidity Hub' }],
+      key: 'dspot',
+      href: '/dspot/',
+      external: false,
+      label: 'dSPOT',
+      icon: 'dspot',
+      children: [{ key: 'dtwap', href: '/dtwap/', external: false, label: 'dTWAP' }],
     },
   ],
 }
 
-const RESOURCES: ResolvedNavGroup = {
-  key: 'resources',
-  label: 'Resources',
-  sections: [
-    { links: [{ key: 'blog', href: '/blog/', external: false, label: 'Blog' }] },
-    {
-      key: 'tools',
-      label: 'Tools',
-      links: [{ key: 'tetraWallet', href: 'https://staking.orbs.network/', external: true, label: 'Tetra Wallet' }],
-    },
+const NETWORK: ResolvedNavGroup = {
+  key: 'network',
+  label: 'Network',
+  links: [
+    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake & Staking' },
+    { key: 'status', href: 'https://status.orbs.network/', external: true, label: 'Status' },
   ],
 }
 
 const BASE = {
-  groups: [PRODUCTS, RESOURCES],
-  topLevel: [{ key: 'media', href: '/news/', external: false, label: 'Media' }],
+  groups: [PRODUCTS, NETWORK],
+  topLevel: [
+    { key: 'blog', href: '/blog/', external: false, label: 'Blog' },
+    { key: 'docs', href: 'https://docs.orbs.network/', external: true, label: 'Docs', desktopOnly: true as const },
+  ],
   locale: 'en' as const,
   label: 'Open menu',
   title: 'Menu',
   closeLabel: 'Close',
+  cta: { label: 'Talk to the team', href: '/contact/' },
+}
+
+async function openPanel(canvasElement: HTMLElement) {
+  await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
+  return waitFor(() => within(document.body).getByRole('dialog'))
 }
 
 /** Nothing is in the DOM until asked for — the trigger is the only control. */
@@ -52,39 +61,69 @@ export const ClosedByDefault: Story = {
     const canvas = within(canvasElement)
 
     await expect(canvas.getByRole('button', { name: 'Open menu' })).toBeInTheDocument()
-    await expect(canvas.queryByRole('link', { name: 'Liquidity Hub' })).not.toBeInTheDocument()
+    await expect(canvas.queryByRole('link', { name: 'dSPOT' })).not.toBeInTheDocument()
   },
 }
 
 /**
- * Groups render OPEN rather than as accordions, matching the legacy mobile
- * menu — with twelve links there is no reason to make someone tap twice to see
- * a destination.
+ * The design's first screen: one row per group, the plain links, and the call
+ * to action. A group's links stay folded until its row is pressed.
  */
-export const OpensWithEveryGroupExpanded: Story = {
+export const GroupsStartFolded: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
+    const panel = within(await openPanel(canvasElement))
 
-    // The panel portals out of the canvas, so query the document.
-    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
-    const panel = within(dialog)
+    const products = panel.getByRole('button', { name: 'Products' })
+    await expect(products).toHaveAttribute('aria-expanded', 'false')
+    await expect(panel.queryByRole('link', { name: 'dSPOT' })).not.toBeInTheDocument()
 
-    await expect(panel.getByRole('link', { name: 'Liquidity Hub' })).toBeInTheDocument()
     await expect(panel.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
-    await expect(panel.getByRole('link', { name: 'Tetra Wallet' })).toBeInTheDocument()
-    await expect(panel.getByRole('link', { name: 'Media' })).toBeInTheDocument()
+    await expect(panel.getByRole('link', { name: /Talk to the team/ })).toHaveAttribute('href', '/contact/')
   },
 }
 
-/** The dialog carries an accessible name even though its title is visually hidden. */
-export const PanelIsNamed: Story = {
+/** A group row is a disclosure: it says what it controls, and opens it in place. */
+export const GroupRowDisclosesItsLinks: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
-    await waitFor(async () => {
-      await expect(within(document.body).getByRole('dialog', { name: 'Menu' })).toBeInTheDocument()
-    })
+    const panel = within(await openPanel(canvasElement))
+    const products = panel.getByRole('button', { name: 'Products' })
+
+    await userEvent.click(products)
+
+    await expect(products).toHaveAttribute('aria-expanded', 'true')
+    const controlled = document.getElementById(products.getAttribute('aria-controls') ?? '')
+    await expect(controlled).not.toBeNull()
+    await expect(within(controlled as HTMLElement).getByRole('link', { name: 'dSPOT' })).toBeVisible()
+    // Only the one pressed.
+    await expect(panel.getByRole('button', { name: 'Network' })).toHaveAttribute('aria-expanded', 'false')
+  },
+}
+
+/** dSPOT's order types are a list nested under dSPOT, not siblings of it. */
+export const OrderTypesNestUnderDspot: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+    await userEvent.click(panel.getByRole('button', { name: 'Products' }))
+
+    const dspot = panel.getByRole('link', { name: 'dSPOT' })
+    const dtwap = panel.getByRole('link', { name: 'dTWAP' })
+    await expect(dspot.closest('li')?.contains(dtwap)).toBe(true)
+  },
+}
+
+/**
+ * Docs and GitHub are in the Network list, so the mobile design leaves them
+ * out of its top level. The desktop bar still repeats them.
+ */
+export const DesktopOnlyLinksAreLeftOut: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+
+    await expect(panel.queryByRole('link', { name: 'Docs' })).not.toBeInTheDocument()
   },
 }
 
@@ -96,9 +135,7 @@ export const PanelIsNamed: Story = {
 export const ClosesWhenALinkIsFollowed: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
-
-    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
+    const dialog = await openPanel(canvasElement)
     await userEvent.click(within(dialog).getByRole('link', { name: 'Blog' }))
 
     await waitFor(async () => {
@@ -111,8 +148,7 @@ export const ClosesWhenALinkIsFollowed: Story = {
 export const ClosesOnEscape: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
-    await waitFor(() => within(document.body).getByRole('dialog'))
+    await openPanel(canvasElement)
 
     await userEvent.keyboard('{Escape}')
 
@@ -126,13 +162,22 @@ export const ClosesOnEscape: Story = {
 export const ExternalRowsOpenSafely: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
+    const panel = within(await openPanel(canvasElement))
+    await userEvent.click(panel.getByRole('button', { name: 'Network' }))
 
-    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
-    const external = within(dialog).getByRole('link', { name: 'Tetra Wallet' })
-
+    const external = panel.getByRole('link', { name: 'Status' })
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+  },
+}
+
+/** The visible `[Menu]` names the dialog, without its brackets. */
+export const PanelIsNamed: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    await openPanel(canvasElement)
+
+    await expect(within(document.body).getByRole('dialog', { name: 'Menu' })).toBeInTheDocument()
   },
 }
 
@@ -145,13 +190,10 @@ export const ExternalRowsOpenSafely: Story = {
 export const LabelsCarryPerStringLang: Story = {
   args: { ...BASE, locale: 'ko', label: 'Open menu', closeLabel: '닫기' },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
-    const trigger = canvas.getByRole('button', { name: 'Open menu' })
-
+    const trigger = within(canvasElement).getByRole('button', { name: 'Open menu' })
     await expect(trigger).toHaveAttribute('lang', 'en')
 
-    await userEvent.click(trigger)
-    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
+    const dialog = await openPanel(canvasElement)
 
     // Korean close label is genuinely Korean, so it carries no override.
     await expect(within(dialog).getByText('닫기')).not.toHaveAttribute('lang')
@@ -162,9 +204,8 @@ export const LabelsCarryPerStringLang: Story = {
 export const CloseControlIsTranslated: Story = {
   args: { ...BASE, locale: 'ko', closeLabel: '닫기' },
   play: async ({ canvasElement }) => {
-    await userEvent.click(within(canvasElement).getByRole('button', { name: 'Open menu' }))
+    const dialog = await openPanel(canvasElement)
 
-    const dialog = await waitFor(() => within(document.body).getByRole('dialog'))
     await expect(within(dialog).getByRole('button', { name: '닫기' })).toBeInTheDocument()
     await expect(within(dialog).queryByRole('button', { name: 'Close' })).not.toBeInTheDocument()
   },

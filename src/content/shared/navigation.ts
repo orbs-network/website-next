@@ -1,11 +1,10 @@
 /**
- * The header menu's structure, from the dropdown designs.
+ * The header menu's structure, from the 3.4 designs (`Main Menu / Product`,
+ * `/ Solutions`, `/ Network`, and the header bar on `3.4 Home`, #153).
  *
- * Deliberately NOT the legacy navbar. That menu has three groups — Overview,
- * Resources, Community — carrying ~29 links including several the migration is
- * retiring. The designs replace it with Products / Resources / Developers and a
- * much shorter list per group, so this follows the designs and the legacy menu
- * is not ported wholesale.
+ * Products / Solutions / Network dropdowns, then plain links. This replaced the
+ * Products / Resources / Developers menu; resources that no longer have a place
+ * in the header (white papers, FAQ, the TON tools) are still in the footer.
  *
  * Same split as `footer.ts`: structure here, labels in the message catalogs
  * under `nav.*`, keyed by the `key` fields. Internal `href`s are
@@ -25,103 +24,89 @@ export type NavLinkSpec = {
   /**
    * Which product glyph precedes the label, if any.
    *
-   * Only the Products group has designed icons. Resources and Developers show
-   * placeholder squares in the mockups, so their rows ship without one rather
-   * than inventing marks — an invented icon is harder to remove later than a
-   * missing one is to add.
+   * Only the Products panel has designed icons. Solutions and Network repeat
+   * one placeholder mark on every row in the mockups, so they ship without,
+   * rather than inventing marks — an invented icon is harder to remove later
+   * than a missing one is to add.
+   *
+   * SDK/API and Agentic DO have designed icons, but the Figma file could not
+   * be exported when this was built. They have no key here yet; the row keeps
+   * the icon's slot so its label lines up with its neighbours'.
    */
-  icon?: 'liquidityHub' | 'perpetualHub' | 'dlimit' | 'dtwap' | 'dsltp'
-}
-
-/**
- * A labelled run of links inside a group.
- *
- * `key` is optional because the designs show both forms: Products has two
- * labelled runs (`[INFRASTRUCTURE]`, `[ADVANCED TRADING TOOLS]`), while
- * Resources and Developers open with an unlabelled run before `[TOOLS]`. A
- * section with no key renders its links with no heading, and the divider
- * between sections carries the grouping on its own.
- */
-export type NavSectionSpec = {
-  /** Message key under `nav.sections`, or absent for an unlabelled run. */
-  key?: string
-  links: readonly NavLinkSpec[]
+  icon?: 'dspot' | 'perpetualHub'
+  /**
+   * Links nested under this one. dSPOT is a product AND the family of order
+   * types it bundles, so the design lists those beneath it, indented and
+   * muted, with no icons of their own.
+   */
+  children?: readonly NavLinkSpec[]
+  /**
+   * Shown in the desktop bar only. The mobile menu design drops Docs and
+   * GitHub from its top level because the Network list already carries both;
+   * the desktop bar repeats them because a dropdown hides them.
+   */
+  desktopOnly?: true
 }
 
 export type NavGroupSpec = {
   /** Message key under `nav.groups`. Also the dropdown's accessible name. */
   key: string
-  sections: readonly NavSectionSpec[]
+  links: readonly NavLinkSpec[]
 }
 
 /**
- * The three dropdowns, in the order the designs show them.
+ * The three dropdowns, in design order.
  *
- * Most of these paths do not exist yet — only `/dtwap`, `/dlimit`, `/blog` and
- * `/news` are built, so the rest 404 until Phase 3 lands them (#31, #32). Same
- * deliberate call as the footer in #83: full parity now beats a menu that fills
- * in over months, nothing is user-visible while DNS still points at the legacy
- * site (#39), and #38's pre-cutover URL audit is the gate.
+ * Omitted until their pages exist, rather than linked to a 404: AI Agents
+ * (Solutions), Governance (Network). Add them here when they are built — the
+ * link-integrity test fails on a menu link to a route that does not exist.
+ *
+ * The Network design also opens with "What is Orbs L3", overlapping the next
+ * row in the frame; read as a leftover, not a row.
  */
 export const NAV_GROUPS: readonly NavGroupSpec[] = [
   {
     key: 'products',
-    sections: [
+    links: [
+      { key: 'sdk', href: '/sdk' },
       {
-        key: 'infrastructure',
-        links: [
-          { key: 'liquidityHub', href: '/liquidity-hub', icon: 'liquidityHub' },
-          { key: 'perpetualHub', href: '/dperps', icon: 'perpetualHub' },
+        key: 'dspot',
+        href: '/dspot',
+        icon: 'dspot',
+        children: [
+          { key: 'dtwap', href: '/dtwap' },
+          { key: 'dlimit', href: '/dlimit' },
+          { key: 'dsltp', href: '/dsltp' },
+          { key: 'liquidityHub', href: '/liquidity-hub' },
         ],
       },
-      {
-        key: 'advancedTrading',
-        links: [
-          { key: 'dlimit', href: '/dlimit', icon: 'dlimit' },
-          { key: 'dtwap', href: '/dtwap', icon: 'dtwap' },
-          { key: 'dsltp', href: '/dsltp', icon: 'dsltp' },
-        ],
-      },
+      { key: 'dperps', href: '/dperps', icon: 'perpetualHub' },
+      { key: 'agentic', href: '/agentic' },
     ],
   },
   {
-    key: 'resources',
-    sections: [
-      {
-        links: [
-          { key: 'blog', href: '/blog' },
-          { key: 'whitePapers', href: '/white-papers' },
-          { key: 'faq', href: '/faq' },
-        ],
-      },
-      {
-        key: 'tools',
-        links: [
-          { key: 'tetraWallet', href: 'https://staking.orbs.network/' },
-          { key: 'stakingCalculator', href: 'https://www.stakingrewards.com/earn/orbs' },
-        ],
-      },
+    key: 'solutions',
+    links: [
+      { key: 'venues', href: '/venues' },
+      { key: 'institutions', href: '/institutional' },
     ],
   },
   {
-    key: 'developers',
-    sections: [
-      {
-        links: [
-          { key: 'developerDocs', href: 'https://docs.orbs.network/' },
-          { key: 'notifications', href: '/notifications' },
-          { key: 'tonVote', href: '/ton-vote' },
-          { key: 'tonAccess', href: '/ton-access' },
-        ],
-      },
+    key: 'network',
+    links: [
+      { key: 'pos', href: '/pos' },
+      { key: 'executionServices', href: '/execution-services' },
+      { key: 'status', href: 'https://status.orbs.network/' },
+      { key: 'github', href: 'https://github.com/orbs-network' },
+      { key: 'docs', href: 'https://docs.orbs.network/' },
     ],
   },
 ]
 
-/**
- * Top-level links that sit beside the dropdowns rather than inside one.
- *
- * `/news` is the legacy URL for press coverage and is labelled "Media" — it
- * must not move.
- */
-export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [{ key: 'media', href: '/news' }]
+/** The plain links after the dropdowns, in design order. */
+export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
+  { key: 'ecosystem', href: '/ecosystem' },
+  { key: 'blog', href: '/blog' },
+  { key: 'docs', href: 'https://docs.orbs.network/', desktopOnly: true },
+  { key: 'github', href: 'https://github.com/orbs-network', desktopOnly: true },
+]
