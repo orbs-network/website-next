@@ -6,7 +6,6 @@ import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatementBand } from '@/components/marketing/statement-band'
 import { SDK_GRAPHICS, SDK_LINKS, SDK_MARQUEE } from '@/content/pages/sdk'
-import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 
 /**
@@ -57,10 +56,7 @@ export async function SdkPage({ locale }: { locale: Locale }) {
         actions={
           <>
             <CtaButton link={docs(t('closing.docs'))} locale={locale} />
-            <CtaButton
-              link={{ label: t('closing.contact'), href: localeHref(SDK_LINKS.contact, locale) }}
-              locale={locale}
-            />
+            <CtaButton link={{ label: t('closing.contact'), href: SDK_LINKS.contact }} locale={locale} />
           </>
         }
       />

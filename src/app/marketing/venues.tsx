@@ -6,7 +6,6 @@ import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatementBand } from '@/components/marketing/statement-band'
 import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE } from '@/content/pages/venues'
-import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 
 /**
@@ -18,7 +17,7 @@ import type { Locale } from '@/i18n/locales'
 export async function VenuesPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.venues' })
 
-  const uiKit = (label: string) => ({ label, href: localeHref(VENUES_LINKS.uiKit, locale) })
+  const uiKit = (label: string) => ({ label, href: VENUES_LINKS.uiKit })
 
   return (
     <>
@@ -57,10 +56,7 @@ export async function VenuesPage({ locale }: { locale: Locale }) {
         actions={
           <>
             <CtaButton link={uiKit(t('closing.uiKit'))} locale={locale} />
-            <CtaButton
-              link={{ label: t('closing.contact'), href: localeHref(VENUES_LINKS.contact, locale) }}
-              locale={locale}
-            />
+            <CtaButton link={{ label: t('closing.contact'), href: VENUES_LINKS.contact }} locale={locale} />
           </>
         }
       />
