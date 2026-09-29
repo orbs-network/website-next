@@ -11,6 +11,10 @@ import type { SectionGraphic } from '@/components/marketing/section-parts'
  * never rescales the art. Re-slice from a fresh export rather than editing the
  * files by hand — they are generated, and a hand edit is lost the next time.
  *
+ * One hand edit stands: `dspot/hero-light.svg` had five dashed guides left
+ * `white` in the export, invisible on the light theme; they are `#121214` like
+ * every other light file's. A re-slice must repeat it until the source is fixed.
+ *
  * `width`/`height` are the crop box, rounded. `ThemedGraphic` lays them out
  * `object-contain` in a square, so they only set the aspect ratio.
  *

@@ -226,11 +226,11 @@
 <stop offset="0.9999" stop-color="#2CEDFC"></stop>
 </linearGradient>
 </defs>
-<path opacity="0.14" d="M1187.96 1528V2168" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
-<path opacity="0.14" d="M1292.45 1528V2168" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
-<path opacity="0.14" d="M1410 1528V2168" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
-<path opacity="0.14" d="M1527.55 1528V2168" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
-<path opacity="0.14" d="M1632.04 1528V2168" stroke="white" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
+<path opacity="0.14" d="M1187.96 1528V2168" stroke="#121214" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
+<path opacity="0.14" d="M1292.45 1528V2168" stroke="#121214" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
+<path opacity="0.14" d="M1410 1528V2168" stroke="#121214" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
+<path opacity="0.14" d="M1527.55 1528V2168" stroke="#121214" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
+<path opacity="0.14" d="M1632.04 1528V2168" stroke="#121214" stroke-linecap="round" stroke-linejoin="round" stroke-dasharray="1.96 5.88"></path>
 <path opacity="0.75" d="M1410 1585.14L1537.35 1632.49L1410 1679.84L1282.65 1632.49L1410 1585.14Z" stroke="url(#paint145_linear_2271_1682)" stroke-linecap="round" stroke-linejoin="round"></path>
 <path opacity="0.6" d="M1410 1715.75L1537.35 1763.1L1410 1810.45L1282.65 1763.1L1410 1715.75Z" stroke="url(#paint146_linear_2271_1682)" stroke-linecap="round" stroke-linejoin="round"></path>
 <path opacity="0.48" d="M1410 1846.37L1537.35 1893.71L1410 1941.06L1282.65 1893.71L1410 1846.37Z" stroke="url(#paint147_linear_2271_1682)" stroke-linecap="round" stroke-linejoin="round"></path>
