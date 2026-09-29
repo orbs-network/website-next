@@ -1,3 +1,5 @@
+import { SDK_DOCS_URL } from './sdk'
+
 /**
  * The header menu's structure, from the 3.4 designs (`Main Menu / Product`,
  * `/ Solutions`, `/ Network`, and the header bar on `3.4 Home`, #153).
@@ -68,7 +70,8 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
   {
     key: 'products',
     links: [
-      { key: 'sdk', href: '/sdk' },
+      // No SDK page on this site — see `SDK_DOCS_URL`.
+      { key: 'sdk', href: SDK_DOCS_URL },
       {
         key: 'dspot',
         href: '/dspot',

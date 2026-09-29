@@ -33,11 +33,17 @@ export type DspotModuleId = (typeof DSPOT_MODULES)[number]['id']
 /** The "Built for best execution" list, in design order. */
 export const DSPOT_POINTS = ['pricing', 'custody', 'settlement'] as const
 
-/** Exported and themed the same way as the SDK page's — see `SDK_GRAPHICS`. */
+/**
+ * Exported from the template frame.
+ *
+ * `*-light.svg` is the same file with `fill`/`stroke="white"` turned to
+ * `#121214` — everywhere EXCEPT inside `<mask>`, where white is luminance and
+ * darkening it blanks the whole graphic. See `ThemedGraphic`.
+ */
 export const DSPOT_GRAPHICS = {
   /** The stacked hexagon planes with the order-type marks. */
   hero: { src: '/marketing/dspot/hero.svg', lightSrc: '/marketing/dspot/hero-light.svg', width: 464, height: 650 },
-  /** The sphere network, shared with SDK and Venues. */
+  /** The sphere network, shared with Venues. */
   network: {
     src: '/marketing/shared/network-sphere.svg',
     lightSrc: '/marketing/shared/network-sphere-light.svg',

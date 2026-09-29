@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import type { SectionLink } from './section-parts'
 
 /**
  * Either both or neither.
@@ -67,6 +68,7 @@ export function ProductHero({
   telegram,
   locale,
   eyebrow,
+  devLink,
 }: HeroImage &
   HeroCta &
   HeroSecondaryCta & {
@@ -86,6 +88,12 @@ export function ProductHero({
     locale: Locale
     /** A short bracketed label above the headline — "[ORBS INSTITUTIONAL]". */
     eyebrow?: string
+    /**
+     * The developer link — "SDK", "API" or "Skill" — into this product's part
+     * of the docs. Opens in a new tab: it leaves the site. The mapping lives in
+     * `PRODUCT_DEV_DOCS`; resolve it with `getDevDocsLink`.
+     */
+    devLink?: SectionLink
   }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
@@ -136,6 +144,14 @@ export function ProductHero({
                 <Link href={secondaryCtaHref} lang={textLang(secondaryCtaLabel, locale)}>
                   {secondaryCtaLabel}
                 </Link>
+              </Button>
+            )}
+
+            {devLink && (
+              <Button asChild size="lg" variant="secondary">
+                <a href={devLink.href} target="_blank" rel="noopener noreferrer" lang={textLang(devLink.label, locale)}>
+                  {devLink.label}
+                </a>
               </Button>
             )}
 

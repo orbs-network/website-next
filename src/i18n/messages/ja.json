@@ -1176,5 +1176,10 @@
         "description": "Official rules for the Orbs NFT Contest #1, which ran in 2021 and has concluded."
       }
     }
+  },
+  "devDocs": {
+    "sdk": "SDK",
+    "api": "API",
+    "skill": "Skill"
   }
 }

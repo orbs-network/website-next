@@ -4,6 +4,7 @@ import { BenefitColumns } from '@/components/marketing/benefit-columns'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { PartnerShowcase } from '@/components/marketing/partner-showcase'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { getDevDocsLink } from './dev-docs'
 import {
   LIQUIDITY_HUB_AUDIENCES,
   LIQUIDITY_HUB_BENEFITS,
@@ -40,13 +41,14 @@ import { textLang } from '@/i18n/script'
  */
 export async function LiquidityHubPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.liquidityHub' })
+  const devDocs = await getDevDocsLink('liquidityHub', locale)
 
   const terms = resolveLocaleLink(LIQUIDITY_HUB_LINKS.terms, locale)
 
   return (
     <>
       {/* No call to action: the legacy header declares no button. */}
-      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} devLink={devDocs} locale={locale} />
 
       <FeatureGrid
         intro={t('sources.intro')}

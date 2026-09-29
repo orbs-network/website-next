@@ -75,7 +75,6 @@ export const MARKETING_PAGE_PATHS = [
   '/ton-vote',
   // 3.4 pages, composed from the section library. English only: the copy is
   // new with the redesign and exists in no other language.
-  '/sdk',
   '/venues',
   '/dspot',
 ] as const

@@ -5,6 +5,7 @@ import { IntegrationGrid } from '@/components/marketing/integration-grid'
 import { IntegrationTabs } from '@/components/marketing/integration-tabs'
 import { PRODUCT_SNIPPETS } from '@/content/pages/product-snippets'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { getDevDocsLink } from './dev-docs'
 import {
   DLIMIT_BENEFITS,
   DLIMIT_HERO,
@@ -35,6 +36,7 @@ import { textLang } from '@/i18n/script'
  */
 export async function DlimitPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dlimit' })
+  const devDocs = await getDevDocsLink('dlimit', locale)
 
   return (
     <>
@@ -45,6 +47,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         ctaHref={DLIMIT_HERO.ctaHref}
         repo={DLIMIT_HERO.repo}
         telegram={DLIMIT_HERO.telegram}
+        devLink={devDocs}
         locale={locale}
       />
 
