@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { PRODUCT_DEV_DOCS } from '@/content/shared/sdk'
 import { ProductHero } from './product-hero'
 
@@ -34,9 +35,28 @@ export const WithImage: Story = {
 }
 
 /**
- * dLIMIT ships without one: the asset its legacy page points at has never
- * existed. The section must still render, and must not leave an empty image
- * column where the illustration would be.
+ * The 3.x illustration: two files, one per theme, and only the one matching
+ * the theme shows. Storybook renders the light theme, so the light file is the
+ * visible one and the dark file is in the DOM but hidden.
+ */
+export const WithThemedGraphic: Story = {
+  args: { ...BASE, graphic: HERO_GRAPHICS.dlimit },
+  play: async ({ canvasElement }) => {
+    const [dark, light] = canvasElement.querySelectorAll('img')
+
+    await expect(canvasElement.querySelectorAll('img')).toHaveLength(2)
+    await expect(dark.getAttribute('src')).toContain('hero.svg')
+    await expect(dark).not.toBeVisible()
+    await expect(light.getAttribute('src')).toContain('hero-light.svg')
+    await expect(light).toBeVisible()
+    // Decorative: the headline beside it carries the meaning.
+    await expect(light).toHaveAttribute('alt', '')
+  },
+}
+
+/**
+ * Pages without an illustration must still render, and must not leave an
+ * empty image column where the illustration would be.
  */
 export const WithoutImage: Story = {
   args: BASE,

@@ -12,7 +12,6 @@
  */
 
 export const DSLTP_HERO = {
-  image: '/marketing/dsltp/hero.png',
   /**
    * The hero's call to action is a link to the announcement post, not an
    * in-page anchor as dTWAP and dLIMIT use. That post is real and already

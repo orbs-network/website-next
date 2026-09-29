@@ -4,6 +4,7 @@ import { BenefitColumns } from '@/components/marketing/benefit-columns'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { StatsRow } from '@/components/marketing/stats-row'
 import {
   INSTITUTIONAL_FEATURES,
@@ -53,6 +54,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={contact.href}
+        graphic={HERO_GRAPHICS.institutional}
         locale={locale}
       />
       <StatsRow

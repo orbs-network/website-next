@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 import { ArchitectureSection } from '@/components/marketing/architecture-section'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { OVERVIEW_BENEFITS, OVERVIEW_PRODUCTS } from '@/content/pages/overview'
 import { resolveLocaleLink } from '@/content/shared/link'
 import type { Locale } from '@/i18n/locales'
@@ -38,7 +39,12 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         Obsolete since #103: the hero derives each string's language from
         `locale` itself, so the headline can no longer borrow its neighbour's.
       */}
-      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
+      <ProductHero
+        headline={t('hero.headline')}
+        intro={t('hero.intro')}
+        graphic={HERO_GRAPHICS.overview}
+        locale={locale}
+      />
 
       <ArchitectureSection title={t('what.title')} body={t('what.body')} locale={locale} />
 

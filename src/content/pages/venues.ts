@@ -9,6 +9,8 @@
  * is a slip in the design, and it renders with the standard arrow here.
  */
 
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
+
 export const VENUES_LINKS = {
   uiKit: '/brand-assets',
   contact: '/contact',
@@ -16,8 +18,8 @@ export const VENUES_LINKS = {
 
 /** Exported and themed like dSPOT's — see `DSPOT_GRAPHICS`. */
 export const VENUES_GRAPHICS = {
-  /** The orbital ellipses. */
-  hero: { src: '/marketing/venues/hero.svg', lightSrc: '/marketing/venues/hero-light.svg', width: 672, height: 672 },
+  /** The bow-tie of order routes through one venue. */
+  hero: HERO_GRAPHICS.venues,
   /** The sphere network, shared with dSPOT. */
   frontend: {
     src: '/marketing/shared/network-sphere.svg',

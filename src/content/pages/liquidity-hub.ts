@@ -6,9 +6,7 @@ import type { Partner } from '@/components/marketing/partner-showcase'
  *
  * The page opens without a call to action: the legacy header declares no
  * button, unlike every other product page, so `ProductHero` takes its CTA
- * optionally. It has no hero illustration either — `hero.svg` exists in the
- * legacy assets but the header never references it, and inventing a use for an
- * unreferenced file would be guessing at a design decision.
+ * optionally. Its illustration is the 3.x one (`HERO_GRAPHICS.liquidityHub`).
  */
 
 /** The two liquidity sources, in legacy order. Copy is `boxes.items.<id>`. */

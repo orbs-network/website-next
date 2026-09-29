@@ -11,7 +11,6 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
  */
 
 export const AGENTIC_HERO = {
-  image: { src: '/marketing/agentic/hero.png', width: 964, height: 468 },
   /** Announcement post — real, and already prerendered from Contentful. */
   announcement: { href: '/Introducing-Orbs-Agentic' },
   getStarted: { href: '/ai/skills/spot-advanced-swap-orders' },

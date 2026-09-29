@@ -16,6 +16,7 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { getTranslations } from 'next-intl/server'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { getDevDocsLink } from './dev-docs'
 
 /**
@@ -45,10 +46,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={DTWAP_HERO.ctaHref}
-        image={DTWAP_HERO.image}
-        // The illustration restates the headline visually; the headline is
-        // already the page's h1, so describing it again would duplicate it.
-        imageAlt=""
+        graphic={HERO_GRAPHICS.dtwap}
         repo={DTWAP_HERO.repo}
         telegram={DTWAP_HERO.telegram}
         devLink={devDocs}

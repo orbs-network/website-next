@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import type { SectionLink } from './section-parts'
+import { ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
  * Either both or neither.
@@ -15,7 +15,10 @@ import type { SectionLink } from './section-parts'
  * a caller that thinks it set one. Expressing the pair as a union makes both
  * mistakes a type error rather than something to catch in review.
  */
-type HeroImage = { image: string; imageAlt: string } | { image?: undefined; imageAlt?: undefined }
+type HeroImage =
+  | { image: string; imageAlt: string; graphic?: undefined }
+  | { graphic: SectionGraphic; image?: undefined; imageAlt?: undefined }
+  | { image?: undefined; imageAlt?: undefined; graphic?: undefined }
 
 /**
  * Both or neither, like the image.
@@ -48,12 +51,13 @@ type HeroSecondaryCta =
  * typographic decision about how the phrase splits, and they differ per
  * language — Korean breaks it into three quite different lines.
  *
- * The image is optional because not every product has one. dLIMIT's hero asset
- * is referenced by the legacy page but has never existed — `/assets/img/dlimit/
- * hero.svg` is a 404 on production — so that page ships without one rather than
- * borrowing dTWAP's illustration and implying an asset that was never designed.
- * Without an image the text runs to a single centred column instead of leaving
- * a half-width hole where the illustration would be.
+ * The image is optional because not every page has one. Without an image the
+ * text runs to a single centred column instead of leaving a half-width hole
+ * where the illustration would be.
+ *
+ * `graphic` is the 3.x illustration, which comes in a dark and a light file
+ * (see `ThemedGraphic`); `image` is a single legacy raster or SVG that looks
+ * the same in both themes. A hero takes one or the other.
  */
 export function ProductHero({
   headline,
@@ -64,6 +68,7 @@ export function ProductHero({
   secondaryCtaHref,
   image,
   imageAlt,
+  graphic,
   repo,
   telegram,
   locale,
@@ -103,7 +108,9 @@ export function ProductHero({
         which reads as a hero that lost its image rather than one designed
         without it.
       */}
-      <div className={cn('grid gap-12', image ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}>
+      <div
+        className={cn('grid gap-12', image || graphic ? 'lg:grid-cols-[3fr_2fr] lg:items-center' : 'mx-auto max-w-3xl')}
+      >
         <div>
           {eyebrow && (
             <p
@@ -194,6 +201,20 @@ export function ProductHero({
               priority
               sizes="(min-width: 1024px) 50vw, 100vw"
               className="object-contain"
+            />
+          </div>
+        )}
+
+        {graphic && (
+          // Square, like `SplitHero`'s: the illustrations are drawn to roughly
+          // square frames, and a fixed box keeps the text column from jumping
+          // when the theme swaps one file for the other.
+          <div className="relative mx-auto aspect-square w-full max-w-md lg:max-w-none">
+            <ThemedGraphic
+              graphic={graphic}
+              priority
+              sizes="(min-width: 1024px) 40vw, 28rem"
+              className="size-full object-contain"
             />
           </div>
         )}

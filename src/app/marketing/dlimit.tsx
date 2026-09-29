@@ -5,6 +5,7 @@ import { IntegrationGrid } from '@/components/marketing/integration-grid'
 import { IntegrationTabs } from '@/components/marketing/integration-tabs'
 import { PRODUCT_SNIPPETS } from '@/content/pages/product-snippets'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { getDevDocsLink } from './dev-docs'
 import {
   DLIMIT_BENEFITS,
@@ -26,8 +27,6 @@ import { textLang } from '@/i18n/script'
  *  - **No `Walkthrough`.** The legacy dLIMIT page has no explanation slider;
  *    its `index.md` lists header, cards, integrations, code examples and schema
  *    only. Adding one would be inventing a section.
- *  - **No hero image.** See `DLIMIT_HERO` — the asset the legacy page points at
- *    404s in production.
  *  - **Five benefit cards** rather than dTWAP's two.
  *
  * Every string comes from `pages.dlimit` in the catalogs and every path and URL
@@ -47,6 +46,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         ctaHref={DLIMIT_HERO.ctaHref}
         repo={DLIMIT_HERO.repo}
         telegram={DLIMIT_HERO.telegram}
+        graphic={HERO_GRAPHICS.dlimit}
         devLink={devDocs}
         locale={locale}
       />
