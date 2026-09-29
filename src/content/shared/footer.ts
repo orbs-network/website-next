@@ -163,3 +163,12 @@ export const FOOTER_SOCIALS: readonly FooterSocialSpec[] = [
   { key: 'youtube', icon: 'youtube', href: 'https://www.youtube.com/channel/UCfpV4z-MGxeiabFkht1LNPQ/featured' },
   { key: 'snapshot', icon: 'snapshot', href: 'https://snapshot.org/#/orbs-network.eth' },
 ]
+
+/**
+ * The contact address. 3.4 draws it in the mobile menu's footer area, not in
+ * the page footer, where `/contact` is one column away.
+ */
+export const FOOTER_EMAIL = 'hello@orbs.com'
+
+/** Where the network status indicator links, wherever it is shown. */
+export const FOOTER_STATUS_URL = 'https://status.orbs.network/'

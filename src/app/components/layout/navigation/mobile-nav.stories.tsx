@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, userEvent, waitFor, within } from 'storybook/test'
+import { FOOTER_EMAIL, FOOTER_SOCIALS } from '@/content/shared/footer'
 import { MobileNav } from './mobile-nav'
 import type { ResolvedNavGroup } from './nav-menu-client'
 
@@ -47,6 +48,11 @@ const BASE = {
   title: 'Menu',
   closeLabel: 'Close',
   cta: { label: 'Talk to the team', href: '/contact/' },
+  footer: {
+    status: { label: 'Network status', good: 'good', degraded: 'degraded' },
+    contactLabel: 'Contact',
+    socialLabels: Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, social.key])),
+  },
 }
 
 async function openPanel(canvasElement: HTMLElement) {
@@ -208,5 +214,76 @@ export const CloseControlIsTranslated: Story = {
 
     await expect(within(dialog).getByRole('button', { name: '닫기' })).toBeInTheDocument()
     await expect(within(dialog).queryByRole('button', { name: 'Close' })).not.toBeInTheDocument()
+  },
+}
+
+/**
+ * The design's footer area under the call to action: the contact address as a
+ * `mailto:` link, and one named, safely-opened link per social account.
+ */
+export const FooterAreaReachesContactAndSocials: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+
+    await expect(panel.getByRole('link', { name: FOOTER_EMAIL })).toHaveAttribute('href', `mailto:${FOOTER_EMAIL}`)
+    await expect(panel.getByRole('link', { name: FOOTER_EMAIL })).toHaveAttribute('lang', 'en')
+    for (const social of FOOTER_SOCIALS) {
+      const link = panel.getByRole('link', { name: social.key })
+      await expect(link).toHaveAttribute('href', social.href)
+      await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    }
+  },
+}
+
+/**
+ * No reading, no band. The status service is unreachable here, so the
+ * indicator renders nothing — and its band must collapse with it rather than
+ * leave an empty strip between two rules.
+ */
+export const UnreadableStatusLeavesNoBand: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+    const email = panel.getByRole('link', { name: FOOTER_EMAIL })
+    const band = email.parentElement?.previousElementSibling as HTMLElement
+
+    await expect(panel.queryByRole('link', { name: /network status/i })).not.toBeInTheDocument()
+    await expect(getComputedStyle(band).display).toBe('none')
+  },
+}
+
+/** A reading arrives, the band shows it, linked to the status page. */
+export const ReadableStatusShows: Story = {
+  args: BASE,
+  beforeEach: () => {
+    const original = window.fetch
+    window.fetch = async (input, init) =>
+      String(input).includes('/api/network-status')
+        ? new Response(JSON.stringify({ status: 'good' }))
+        : original(input, init)
+    return () => {
+      window.fetch = original
+    }
+  },
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+    const status = await panel.findByRole('link', { name: 'Network status: good' })
+
+    await expect(status).toHaveAttribute('href', 'https://status.orbs.network/')
+  },
+}
+
+/** A footer-area link closes the panel like every other link in it. */
+export const FooterLinksClose: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const dialog = await openPanel(canvasElement)
+    const x = within(dialog).getByRole('link', { name: 'x' })
+    // Keep the test in this tab: the link opens a new one.
+    x.addEventListener('click', (event) => event.preventDefault(), { once: true })
+
+    await userEvent.click(x)
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
   },
 }

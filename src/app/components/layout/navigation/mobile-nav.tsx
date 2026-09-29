@@ -6,10 +6,22 @@ import { useId, useState } from 'react'
 import { Button } from '@/components/ui/button'
 import { MenuItemW } from '@/components/ui/menu-item'
 import { Sheet, SheetContent, SheetTitle, SheetTrigger } from '@/components/ui/sheet'
+import { FOOTER_EMAIL, FOOTER_STATUS_URL } from '@/content/shared/footer'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
+import { FooterSocials } from '../footer/footer-socials'
+import { NetworkStatusIndicator, type NetworkStatusLabels } from '../footer/network-status'
 import { hasIcons, rowIcon, type ResolvedNavGroup, type ResolvedNavLink } from './nav-menu-client'
+
+/** The footer-catalog strings the panel's footer area shows, already resolved. */
+export type MobileNavFooter = {
+  status: NetworkStatusLabels
+  /** Visible label above the email address, e.g. "Contact". */
+  contactLabel: string
+  /** Accessible names for the icon-only social links, keyed as in `FOOTER_SOCIALS`. */
+  socialLabels: Record<string, string>
+}
 
 /**
  * The navigation for viewports too narrow for the dropdown bar.
@@ -47,6 +59,7 @@ export function MobileNav({
   title,
   closeLabel,
   cta,
+  footer,
 }: {
   groups: readonly ResolvedNavGroup[]
   topLevel: readonly ResolvedNavLink[]
@@ -67,6 +80,7 @@ export function MobileNav({
   closeLabel: string
   /** The header's call to action, repeated in the panel where the header hides it. */
   cta: { label: string; href: string }
+  footer: MobileNavFooter
 }) {
   const [open, setOpen] = useState(false)
   const close = () => setOpen(false)
@@ -127,8 +141,66 @@ export function MobileNav({
             {cta.label}
           </Link>
         </Button>
+
+        <MobileNavFooterArea footer={footer} locale={locale} onNavigate={close} />
       </SheetContent>
     </Sheet>
+  )
+}
+
+/**
+ * `Mobile / Menu` → `Footer Area`: three bands, each under a rule.
+ *
+ * The status band carries `empty:hidden` for the same reason as the footer's
+ * `<li>`: the indicator renders nothing until it has a reading, and nothing at
+ * all if the service cannot be read. Without it that is an empty band between
+ * two rules — a gap that looks like something failed to load, because it did.
+ *
+ * The email is a `mailto:` link rather than text: on a phone, which is where
+ * this panel is, tapping it opens the mail app.
+ *
+ * Every link here closes the panel, per the rule on `NavLinkElement`. One
+ * delegated handler rather than an `onNavigate` threaded through the page
+ * footer's components, which have no panel to close.
+ */
+function MobileNavFooterArea({
+  footer,
+  locale,
+  onNavigate,
+}: {
+  footer: MobileNavFooter
+  locale: Locale
+  onNavigate: () => void
+}) {
+  return (
+    <div
+      className="mt-10"
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest('a')) onNavigate()
+      }}
+    >
+      <div className="border-t border-border py-1.5 empty:hidden">
+        <NetworkStatusIndicator labels={footer.status} href={FOOTER_STATUS_URL} />
+      </div>
+
+      <div className="border-t border-border py-4">
+        <p className="text-base leading-[1.625rem] text-fg" lang={textLang(footer.contactLabel, locale)}>
+          {footer.contactLabel}
+        </p>
+        {/* English in every locale, like the socials' names — marked so a Japanese or Korean document does not read it with its own rules. */}
+        <a
+          href={`mailto:${FOOTER_EMAIL}`}
+          lang="en"
+          className="inline-flex py-2 text-detail font-medium uppercase tracking-wide text-fg transition-colors hover:text-link"
+        >
+          {FOOTER_EMAIL}
+        </a>
+      </div>
+
+      <div className="border-t border-border pt-4">
+        <FooterSocials labels={footer.socialLabels} className="justify-between" />
+      </div>
+    </div>
   )
 }
 

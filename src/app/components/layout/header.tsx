@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { OrbsLogo } from '@/components/icons'
+import { FOOTER_SOCIALS } from '@/content/shared/footer'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -27,10 +28,18 @@ import { resolveNavigation } from './navigation/nav-menu'
 export async function Header({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'header' })
   const nav = await getTranslations({ locale, namespace: 'nav' })
+  const footerT = await getTranslations({ locale, namespace: 'footer' })
   // Resolved once and handed to both navs, so the desktop bar and the mobile
   // panel cannot list different things.
   const { groups, topLevel, featured, featuredCopy } = await resolveNavigation(locale)
   const cta = { label: t('talkToTheTeam'), href: localeHref('/contact', locale) }
+  // The mobile panel's footer area repeats the page footer's status, contact
+  // and socials, so it reads the page footer's strings rather than copies.
+  const mobileFooter = {
+    status: { label: footerT('status.label'), good: footerT('status.good'), degraded: footerT('status.degraded') },
+    contactLabel: footerT('links.contact'),
+    socialLabels: Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, footerT(`socials.${social.key}`)])),
+  }
 
   return (
     <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
@@ -89,6 +98,7 @@ export async function Header({ locale }: { locale: Locale }) {
                 title={nav('menuTitle')}
                 closeLabel={nav('menuClose')}
                 cta={cta}
+                footer={mobileFooter}
               />
             </div>
           </div>

@@ -2,16 +2,13 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { OrbsLogo } from '@/components/icons'
 import { FooterLink2 } from '@/components/ui/footer-link'
-import { FOOTER_COLUMNS, FOOTER_POLICY_LINKS, FOOTER_SOCIALS } from '@/content/shared/footer'
+import { FOOTER_COLUMNS, FOOTER_POLICY_LINKS, FOOTER_SOCIALS, FOOTER_STATUS_URL } from '@/content/shared/footer'
 import { NetworkStatusIndicator } from './network-status'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { FooterNavColumn } from './footer-nav'
 import { FooterSocials } from './footer-socials'
-
-/** Where the status indicator links, and where its reading comes from. */
-const FOOTER_STATUS_URL = 'https://status.orbs.network/'
 
 /**
  * The site footer, from the 3.4 `Footer` component in Figma.
@@ -34,8 +31,8 @@ const FOOTER_STATUS_URL = 'https://status.orbs.network/'
  *
  * Left out, on purpose:
  *  - **Subscribe** and **latest tweets** from the legacy footer — #145 and #33.
- *  - **The contact email.** 3.4 drops it from the footer; it moves to the
- *    mobile menu, and `/contact` is one column away.
+ *  - **The contact email.** 3.4 moves it to the mobile menu (`MobileNav`), and
+ *    `/contact` is one column away.
  */
 export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
