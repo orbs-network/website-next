@@ -227,6 +227,7 @@ export const FooterAreaReachesContactAndSocials: Story = {
     const panel = within(await openPanel(canvasElement))
 
     await expect(panel.getByRole('link', { name: FOOTER_EMAIL })).toHaveAttribute('href', `mailto:${FOOTER_EMAIL}`)
+    await expect(panel.getByRole('link', { name: FOOTER_EMAIL })).toHaveAttribute('lang', 'en')
     for (const social of FOOTER_SOCIALS) {
       const link = panel.getByRole('link', { name: social.key })
       await expect(link).toHaveAttribute('href', social.href)

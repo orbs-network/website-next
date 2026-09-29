@@ -170,8 +170,10 @@ function MobileNavFooterArea({ footer, locale }: { footer: MobileNavFooter; loca
         <p className="text-base leading-[1.625rem] text-fg" lang={textLang(footer.contactLabel, locale)}>
           {footer.contactLabel}
         </p>
+        {/* English in every locale, like the socials' names — marked so a Japanese or Korean document does not read it with its own rules. */}
         <a
           href={`mailto:${FOOTER_EMAIL}`}
+          lang="en"
           className="inline-flex py-2 text-detail font-medium uppercase tracking-wide text-fg transition-colors hover:text-link"
         >
           {FOOTER_EMAIL}
