@@ -142,7 +142,7 @@ export function MobileNav({
           </Link>
         </Button>
 
-        <MobileNavFooterArea footer={footer} locale={locale} />
+        <MobileNavFooterArea footer={footer} locale={locale} onNavigate={close} />
       </SheetContent>
     </Sheet>
   )
@@ -158,10 +158,27 @@ export function MobileNav({
  *
  * The email is a `mailto:` link rather than text: on a phone, which is where
  * this panel is, tapping it opens the mail app.
+ *
+ * Every link here closes the panel, per the rule on `NavLinkElement`. One
+ * delegated handler rather than an `onNavigate` threaded through the page
+ * footer's components, which have no panel to close.
  */
-function MobileNavFooterArea({ footer, locale }: { footer: MobileNavFooter; locale: Locale }) {
+function MobileNavFooterArea({
+  footer,
+  locale,
+  onNavigate,
+}: {
+  footer: MobileNavFooter
+  locale: Locale
+  onNavigate: () => void
+}) {
   return (
-    <div className="mt-10">
+    <div
+      className="mt-10"
+      onClick={(event) => {
+        if (event.target instanceof Element && event.target.closest('a')) onNavigate()
+      }}
+    >
       <div className="border-t border-border py-1.5 empty:hidden">
         <NetworkStatusIndicator labels={footer.status} href={FOOTER_STATUS_URL} />
       </div>

@@ -273,3 +273,17 @@ export const ReadableStatusShows: Story = {
     await expect(status).toHaveAttribute('href', 'https://status.orbs.network/')
   },
 }
+
+/** A footer-area link closes the panel like every other link in it. */
+export const FooterLinksClose: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const dialog = await openPanel(canvasElement)
+    const x = within(dialog).getByRole('link', { name: 'x' })
+    // Keep the test in this tab: the link opens a new one.
+    x.addEventListener('click', (event) => event.preventDefault(), { once: true })
+
+    await userEvent.click(x)
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
+  },
+}
