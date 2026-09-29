@@ -40,13 +40,14 @@ import { textLang } from '@/i18n/script'
  */
 export async function LiquidityHubPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.liquidityHub' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   const terms = resolveLocaleLink(LIQUIDITY_HUB_LINKS.terms, locale)
 
   return (
     <>
       {/* No call to action: the legacy header declares no button. */}
-      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
+      <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} sdkLabel={sdk('heroLink')} locale={locale} />
 
       <FeatureGrid
         intro={t('sources.intro')}

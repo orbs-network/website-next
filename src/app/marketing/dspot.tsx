@@ -1,4 +1,5 @@
 import { getTranslations } from 'next-intl/server'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import { DLimit, DSltp, DTwap, LiquidityHub } from '@/components/icons'
 import { ClosingCta } from '@/components/marketing/closing-cta'
 import { GraphicSplit } from '@/components/marketing/graphic-split'
@@ -35,12 +36,13 @@ const MODULE_PRESENTATION: Record<DspotModuleId, { mark: React.ReactNode; accent
 /**
  * The dSPOT page (#155), from the 3.4 `Desktop / Products / dSPOT` frame.
  *
- * The SDK page's skeleton with a card grid of the four order-type products
- * after the hero, and a numbered list under the execution statement. English
- * only, like SDK and Venues: the copy is new with 3.4.
+ * Venues' skeleton with a card grid of the four order-type products after the
+ * hero, and a numbered list under the execution statement. English only, like
+ * Venues: the copy is new with 3.4.
  */
 export async function DspotPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dspot' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   return (
     <>
@@ -49,6 +51,7 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         headline={t('hero.headline')}
         intro={t('hero.intro')}
         cta={{ label: t('hero.cta'), href: DSPOT_LINKS.modules }}
+        secondaryCta={{ label: sdk('heroLink'), href: SDK_DOCS_URL }}
         graphic={DSPOT_GRAPHICS.hero}
         locale={locale}
       />

@@ -11,8 +11,8 @@ import type { Locale } from '@/i18n/locales'
 /**
  * The Venues page (#157), from the 3.4 `Desktop / Solutions / Venues` frame.
  *
- * The SDK page's skeleton with venue-facing copy. English only, for the same
- * reason: the copy is new with 3.4.
+ * The 3.4 section library: hero, statement, gradient band, graphic split,
+ * closing block. English only: the copy is new with 3.4.
  */
 export async function VenuesPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.venues' })

@@ -24,6 +24,7 @@ import { textLang } from '@/i18n/script'
  */
 export async function DsltpPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dsltp' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   return (
     <>
@@ -36,6 +37,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
+        sdkLabel={sdk('heroLink')}
         locale={locale}
       />
 

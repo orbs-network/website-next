@@ -14,7 +14,7 @@ const PRODUCTS: ResolvedNavGroup = {
   key: 'products',
   label: 'Products',
   links: [
-    { key: 'sdk', href: '/sdk/', external: false, label: 'Execution SDK/API' },
+    { key: 'sdk', href: 'https://docs.orbs.com/', external: true, label: 'Execution SDK/API' },
     {
       key: 'dspot',
       href: '/dspot/',

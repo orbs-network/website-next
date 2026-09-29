@@ -1613,41 +1613,6 @@
         "description": "Official rules for the Orbs NFT Contest #1, which ran in 2021 and has concluded."
       }
     },
-    "sdk": {
-      "meta": {
-        "title": "SDK / API",
-        "description": "One API and SDK for spot and perpetuals. Connect your application to Orbs’ multichain execution infrastructure, from liquidity aggregation and advanced spot orders to perpetual trading."
-      },
-      "hero": {
-        "eyebrow": "[SDK / API]",
-        "headline": "One API and SDK for spot and perpetuals",
-        "intro": "Connect your application to Orbs’ multichain execution infrastructure, from liquidity aggregation and advanced spot orders to perpetual trading.",
-        "cta": "Developer docs"
-      },
-      "infrastructure": {
-        "eyebrow": "[INFRASTRUCTURE]",
-        "heading": "Built on production infrastructure",
-        "body": "Access the same execution technology already powering trading across DEXs, directly through your own application.\n\nA single API and SDK brings liquidity aggregation, advanced spot orders and perpetual trading together for teams building across spot and perpetuals."
-      },
-      "band": "Build, test and launch.",
-      "integration": {
-        "eyebrow": "[INTEGRATION]",
-        "heading": "From testing to production",
-        "body": "Developer documentation, a sandbox, uptime SLAs and named integration support help teams build, test and launch.",
-        "cta": "Developer docs"
-      },
-      "marquee": {
-        "oneApi": "One API.",
-        "spotAndPerps": "Spot and perpetuals.",
-        "buildTestLaunch": "Build, test and launch.",
-        "pause": "Pause",
-        "resume": "Resume"
-      },
-      "closing": {
-        "docs": "Developer docs",
-        "contact": "Talk to the team"
-      }
-    },
     "venues": {
       "meta": {
         "title": "Venues",
@@ -1749,5 +1714,8 @@
         "contact": "Talk to the team"
       }
     }
+  },
+  "sdk": {
+    "heroLink": "SDK/API/Skill"
   }
 }

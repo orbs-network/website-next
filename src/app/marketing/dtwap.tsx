@@ -35,6 +35,7 @@ import { ProductHero } from '@/components/marketing/product-hero'
  */
 export async function DtwapPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dtwap' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   return (
     <>
@@ -49,6 +50,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         imageAlt=""
         repo={DTWAP_HERO.repo}
         telegram={DTWAP_HERO.telegram}
+        sdkLabel={sdk('heroLink')}
         locale={locale}
       />
 

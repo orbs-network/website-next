@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import { ProductHero } from './product-hero'
 
 const meta = {
@@ -95,5 +96,39 @@ export const SourceLinksAreOptional: Story = {
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     await expect(canvas.getAllByRole('link')).toHaveLength(1)
+  },
+}
+
+/**
+ * The SDK link sits in the call-to-action row, goes to the SDK docs — the one
+ * destination for everything SDK-related — and opens safely in a new tab.
+ */
+export const SdkLinkGoesToTheDocs: Story = {
+  args: { ...BASE, sdkLabel: 'SDK/API/Skill' },
+  play: async ({ canvasElement }) => {
+    const link = within(canvasElement).getByRole('link', { name: 'SDK/API/Skill' })
+
+    await expect(link).toHaveAttribute('href', SDK_DOCS_URL)
+    await expect(link).toHaveAttribute('target', '_blank')
+    await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+    await expect(link.parentElement).toBe(
+      within(canvasElement).getByRole('link', { name: 'GET STARTED' }).parentElement
+    )
+  },
+}
+
+/** Only products the SDK exposes carry it: no label, no link. */
+export const SdkLinkIsOptIn: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).queryByRole('link', { name: /sdk/i })).not.toBeInTheDocument()
+  },
+}
+
+/** The label is English in every catalog, so a Korean page marks it. */
+export const SdkLinkIsMarkedEnglishInKorean: Story = {
+  args: { ...BASE, headline: '탈중앙화 거래소', intro: '지정가 주문', locale: 'ko', sdkLabel: 'SDK/API/Skill' },
+  play: async ({ canvasElement }) => {
+    await expect(within(canvasElement).getByRole('link', { name: 'SDK/API/Skill' })).toHaveAttribute('lang', 'en')
   },
 }

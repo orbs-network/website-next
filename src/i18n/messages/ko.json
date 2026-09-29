@@ -1450,5 +1450,8 @@
         "description": "Risk disclaimer for the Orbs dTWAP and dLIMIT protocols."
       }
     }
+  },
+  "sdk": {
+    "heroLink": "SDK/API/Skill"
   }
 }

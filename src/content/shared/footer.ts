@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/locales'
+import { SDK_DOCS_URL } from './sdk'
 
 /**
  * The footer's link structure: the 3.4 `Footer` component in Figma, which
@@ -64,7 +65,8 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
   {
     key: 'products',
     links: [
-      { key: 'sdk', href: '/sdk' },
+      // No SDK page on this site — see `SDK_DOCS_URL`.
+      { key: 'sdk', href: SDK_DOCS_URL },
       { key: 'dspot', href: '/dspot' },
       { key: 'dperps', href: '/dperps' },
       { key: 'agentic', href: '/agentic' },

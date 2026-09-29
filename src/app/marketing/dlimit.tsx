@@ -35,6 +35,7 @@ import { textLang } from '@/i18n/script'
  */
 export async function DlimitPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dlimit' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   return (
     <>
@@ -45,6 +46,7 @@ export async function DlimitPage({ locale }: { locale: Locale }) {
         ctaHref={DLIMIT_HERO.ctaHref}
         repo={DLIMIT_HERO.repo}
         telegram={DLIMIT_HERO.telegram}
+        sdkLabel={sdk('heroLink')}
         locale={locale}
       />
 

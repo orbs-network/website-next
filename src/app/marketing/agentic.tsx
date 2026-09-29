@@ -37,6 +37,7 @@ import { textLang } from '@/i18n/script'
  */
 export async function AgenticPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.agentic' })
+  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   const getStarted = resolveLocaleLink(AGENTIC_HERO.getStarted, locale)
 
@@ -53,6 +54,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         repo={AGENTIC_HERO.repo}
         // From the intro, not the headline: the headline is the product name,
         // English in every locale, while the intro and CTA are translated.
+        sdkLabel={sdk('heroLink')}
         locale={locale}
       />
 

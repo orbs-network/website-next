@@ -14,11 +14,11 @@ export const VENUES_LINKS = {
   contact: '/contact',
 } as const
 
-/** Exported and themed the same way as the SDK page's — see `SDK_GRAPHICS`. */
+/** Exported and themed like dSPOT's — see `DSPOT_GRAPHICS`. */
 export const VENUES_GRAPHICS = {
   /** The orbital ellipses. */
   hero: { src: '/marketing/venues/hero.svg', lightSrc: '/marketing/venues/hero-light.svg', width: 672, height: 672 },
-  /** The sphere network, shared with the SDK page's integration section. */
+  /** The sphere network, shared with dSPOT. */
   frontend: {
     src: '/marketing/shared/network-sphere.svg',
     lightSrc: '/marketing/shared/network-sphere-light.svg',

@@ -6,6 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 
 /**
  * Either both or neither.
@@ -67,6 +68,7 @@ export function ProductHero({
   telegram,
   locale,
   eyebrow,
+  sdkLabel,
 }: HeroImage &
   HeroCta &
   HeroSecondaryCta & {
@@ -86,6 +88,12 @@ export function ProductHero({
     locale: Locale
     /** A short bracketed label above the headline — "[ORBS INSTITUTIONAL]". */
     eyebrow?: string
+    /**
+     * Label for the link to the SDK docs, on the pages of products the SDK
+     * exposes. The destination is fixed — `SDK_DOCS_URL` — so the caller
+     * cannot point one product's hero at a different copy of the docs.
+     */
+    sdkLabel?: string
   }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
@@ -136,6 +144,14 @@ export function ProductHero({
                 <Link href={secondaryCtaHref} lang={textLang(secondaryCtaLabel, locale)}>
                   {secondaryCtaLabel}
                 </Link>
+              </Button>
+            )}
+
+            {sdkLabel && (
+              <Button asChild size="lg" variant="secondary">
+                <a href={SDK_DOCS_URL} target="_blank" rel="noopener noreferrer" lang={textLang(sdkLabel, locale)}>
+                  {sdkLabel}
+                </a>
               </Button>
             )}
 
