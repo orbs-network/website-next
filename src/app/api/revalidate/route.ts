@@ -1,4 +1,4 @@
-import { revalidatePath } from 'next/cache'
+import { revalidatePath, revalidateTag } from 'next/cache'
 import { NextRequest, NextResponse } from 'next/server'
 import {
   BLOG_INDEX_PATH,
@@ -9,6 +9,7 @@ import {
   postPath,
   encodedPostPath,
 } from '@/app/lib/routes'
+import { FEATURED_POST_TAG } from '@/app/lib/api'
 import { secretMatches } from '@/app/lib/secrets'
 
 /**
@@ -109,6 +110,16 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ revalidated: [NEWS_INDEX_PATH, NEWS_PAGE_ROUTE], topic })
   }
 
+  // Every remaining case can change which post the header features: a publish
+  // may be the newest post, a removal may take the featured one away, and an
+  // asset or author change may be its image. The featured post is a data-cache
+  // entry, not a path, so no `revalidatePath` below reaches it.
+  //
+  // `expire: 0` rather than `'max'`: stale-while-revalidate would let the
+  // pages this regenerates read the OLD post once more and then keep it, since
+  // nothing invalidates them a second time. A blocking miss costs one request.
+  revalidateTag(FEATURED_POST_TAG, { expire: 0 })
+
   // Narrowing on `!slug` directly (rather than via a derived boolean) is what
   // lets TypeScript treat `slug` as a string below.
   if (isRemoval || !isBlogPost || !slug) {
@@ -121,7 +132,7 @@ export async function POST(request: NextRequest) {
         : 'blogPost publish with no slug'
 
     console.info(`[revalidate] ${topic} ${entryId} (${reason}) -> swept all paths`)
-    return NextResponse.json({ revalidated: ['layout'], topic, reason })
+    return NextResponse.json({ revalidated: ['layout'], tags: [FEATURED_POST_TAG], topic, reason })
   }
 
   // The slug is deliberately NOT shape-checked here. It only ever reaches
@@ -151,7 +162,7 @@ export async function POST(request: NextRequest) {
 
   const revalidated = [...paths, BLOG_PAGE_ROUTE]
   console.info(`[revalidate] ${topic} ${entryId} -> ${revalidated.join(', ')}`)
-  return NextResponse.json({ revalidated, topic })
+  return NextResponse.json({ revalidated, tags: [FEATURED_POST_TAG], topic })
 }
 
 /*

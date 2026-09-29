@@ -1,5 +1,6 @@
 import { Button } from '@/components/ui/button'
 import { OrbsLogo } from '@/components/icons'
+import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { getTranslations } from 'next-intl/server'
@@ -28,7 +29,8 @@ export async function Header({ locale }: { locale: Locale }) {
   const nav = await getTranslations({ locale, namespace: 'nav' })
   // Resolved once and handed to both navs, so the desktop bar and the mobile
   // panel cannot list different things.
-  const { groups, topLevel } = await resolveNavigation(locale)
+  const { groups, topLevel, featured, featuredCopy } = await resolveNavigation(locale)
+  const cta = { label: t('talkToTheTeam'), href: localeHref('/contact', locale) }
 
   return (
     <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
@@ -52,24 +54,33 @@ export async function Header({ locale }: { locale: Locale }) {
           </Link>
 
           {/*
-            The dropdown bar needs roughly 900px before it starts pushing the
-            header wider than the viewport, so it is hidden below `lg` and the
-            panel takes over. Without this the document laid out at 880px inside
-            a 390px viewport and every page scrolled sideways (#96).
+            The dropdown bar needs roughly 1,100px beside the logo and the call
+            to action — seven entries since 3.4 — so it is hidden below `xl`
+            and the panel takes over. At `lg` it fitted only by wrapping "Talk
+            to the team" onto three lines. Without the panel at all, the
+            document once laid out at 880px inside a 390px viewport and every
+            page scrolled sideways (#96).
           */}
-          <div className="hidden lg:block">
-            <NavMenuClient groups={groups} topLevel={topLevel} />
+          <div className="hidden xl:block">
+            <NavMenuClient groups={groups} topLevel={topLevel} featured={featured} featuredCopy={featuredCopy} />
           </div>
 
           <div className="flex items-center gap-4">
             <ThemeToggle />
             <LanguageSelector />
-            <Button size="sm" className="hidden sm:inline-flex" lang={textLang(t('getInTouch'), locale)}>
-              {t('getInTouch')}
+            {/*
+              A link, not a button: it goes somewhere. It was a bare
+              `<Button>` with no handler, so it looked like the site's main
+              call to action and did nothing when pressed.
+            */}
+            <Button asChild size="sm" className="hidden whitespace-nowrap sm:inline-flex">
+              <Link href={cta.href} lang={textLang(cta.label, locale)}>
+                {cta.label}
+              </Link>
             </Button>
 
-            {/* Counterpart to the dropdown bar's `hidden lg:block` above. */}
-            <div className="lg:hidden">
+            {/* Counterpart to the dropdown bar's `hidden xl:block` above. */}
+            <div className="xl:hidden">
               <MobileNav
                 groups={groups}
                 topLevel={topLevel}
@@ -77,6 +88,7 @@ export async function Header({ locale }: { locale: Locale }) {
                 label={nav('menuLabel')}
                 title={nav('menuTitle')}
                 closeLabel={nav('menuClose')}
+                cta={cta}
               />
             </div>
           </div>

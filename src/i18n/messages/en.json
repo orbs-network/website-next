@@ -2,37 +2,36 @@
   "nav": {
     "groups": {
       "products": "Products",
-      "resources": "Resources",
-      "developers": "Developers"
-    },
-    "sections": {
-      "infrastructure": "Infrastructure",
-      "advancedTrading": "Advanced Trading Tools",
-      "tools": "Tools"
+      "solutions": "Solutions",
+      "network": "Network"
     },
     "links": {
+      "sdk": "Execution SDK/API",
+      "dspot": "dSPOT",
+      "dtwap": "dTWAP",
+      "dlimit": "dLIMIT",
+      "dsltp": "dSLTP",
       "liquidityHub": "Liquidity Hub",
-      "perpetualHub": "dPERPS",
-      "dlimit": "dLIMIT Protocol",
-      "dtwap": "dTWAP Protocol",
-      "dsltp": "dSLTP Protocol",
-      "blog": "Blog",
-      "whitePapers": "Whitepapers",
-      "faq": "FAQ",
-      "tetraWallet": "Tetra Wallet",
-      "stakingCalculator": "Staking Calculator",
-      "developerDocs": "Developer Docs",
-      "notifications": "Notification Protocol",
-      "tonVote": "TON Vote",
-      "tonAccess": "TON Access",
-      "media": "Media"
+      "dperps": "dPERPS",
+      "agentic": "Agentic",
+      "venues": "For Exchanges & Wallets",
+      "institutions": "For Institutions",
+      "pos": "Proof of Stake & Staking",
+      "executionServices": "Execution Services",
+      "status": "Status",
+      "github": "GitHub",
+      "docs": "Docs",
+      "ecosystem": "Ecosystem",
+      "blog": "Blog"
     },
+    "featuredPost": "Featured Post",
+    "featuredPostCta": "Learn More",
     "menuLabel": "Open menu",
     "menuTitle": "Menu",
     "menuClose": "Close"
   },
   "header": {
-    "getInTouch": "Get in Touch",
+    "talkToTheTeam": "Talk to the team",
     "homeLink": "Orbs home",
     "scrollToTop": "Back to top"
   },

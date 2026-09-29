@@ -1,7 +1,10 @@
 'use client'
 
+import Image from 'next/image'
 import Link from 'next/link'
-import { DLimitGlyph, DSltpGlyph, DTwapGlyph, LiquidityHubGlyph, PerpetualHubGlyph } from '@/components/icons'
+import { ArrowRight } from 'lucide-react'
+import { DSpotGlyph, PerpetualHubGlyph } from '@/components/icons'
+import { buttonVariants } from '@/components/ui/button'
 import { MenuItem, MenuItemW } from '@/components/ui/menu-item'
 import {
   NavigationMenu,
@@ -11,8 +14,9 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import { Separator } from '@/components/ui/separator'
+import type { FeaturedPost } from '@/app/lib/api'
 import type { NavLinkSpec } from '@/content/shared/navigation'
+import { cn } from '@/lib/utils'
 
 /**
  * Icon components cannot cross the server/client boundary, so the server passes
@@ -23,11 +27,8 @@ import type { NavLinkSpec } from '@/content/shared/navigation'
  * same marks; a second copy of this map is a second thing to update.
  */
 export const GLYPHS: Record<NonNullable<NavLinkSpec['icon']>, React.ComponentType<{ className?: string }>> = {
-  liquidityHub: LiquidityHubGlyph,
+  dspot: DSpotGlyph,
   perpetualHub: PerpetualHubGlyph,
-  dlimit: DLimitGlyph,
-  dtwap: DTwapGlyph,
-  dsltp: DSltpGlyph,
 }
 
 /** A link with its label and destination already resolved on the server. */
@@ -39,21 +40,45 @@ export type ResolvedNavLink = {
   /** Set when the label is English inside a non-English document. */
   lang?: string
   icon?: NavLinkSpec['icon']
-}
-
-export type ResolvedNavSection = {
-  key?: string
-  /** Absent for the unlabelled run the designs open Resources and Developers with. */
-  label?: string
-  labelLang?: string
-  links: readonly ResolvedNavLink[]
+  children?: readonly ResolvedNavLink[]
+  desktopOnly?: true
 }
 
 export type ResolvedNavGroup = {
   key: string
   label: string
   lang?: string
-  sections: readonly ResolvedNavSection[]
+  links: readonly ResolvedNavLink[]
+}
+
+/** The post, plus its title's `lang` — decided on the server, where the locale is. */
+export type ResolvedFeaturedPost = FeaturedPost & { titleLang?: string }
+
+/** The featured-post column's two catalog strings, resolved on the server like every other label. */
+export type FeaturedCopy = {
+  label: string
+  labelLang?: string
+  cta: string
+  ctaLang?: string
+}
+
+/**
+ * Whether a list's rows should keep a column for an icon.
+ *
+ * Products has marks on some rows and (for now) none on SDK/API and Agentic —
+ * see `NavLinkSpec['icon']`. Without a reserved column their labels would sit
+ * 33px left of their neighbours'. Solutions and Network have no marks at all,
+ * so there it would be 33px of nothing.
+ */
+export function hasIcons(links: readonly ResolvedNavLink[]) {
+  return links.some((link) => link.icon !== undefined)
+}
+
+/** The mark, or an empty box of the same size when the list keeps an icon column. */
+export function rowIcon(link: ResolvedNavLink, reserve: boolean) {
+  const Glyph = link.icon ? GLYPHS[link.icon] : undefined
+  if (Glyph) return <Glyph className="size-6" />
+  return reserve ? <span aria-hidden="true" className="size-6" /> : undefined
 }
 
 /**
@@ -69,13 +94,22 @@ export type ResolvedNavGroup = {
  * Everything is a prop because this is a client component: resolving labels
  * here would mean shipping the whole `nav` namespace in the RSC payload of all
  * 456 prerendered pages.
+ *
+ * Each panel is the design's two columns: the group's links, and the newest
+ * blog post. The post is the same in all three panels. Without one — a
+ * degraded build, an empty space — the panel is the links column alone rather
+ * than a column with a hole in it.
  */
 export function NavMenuClient({
   groups,
   topLevel,
+  featured,
+  featuredCopy,
 }: {
   groups: readonly ResolvedNavGroup[]
   topLevel: readonly ResolvedNavLink[]
+  featured: ResolvedFeaturedPost | null
+  featuredCopy: FeaturedCopy
 }) {
   return (
     <NavigationMenu>
@@ -91,47 +125,16 @@ export function NavMenuClient({
               chrome.
             */}
             <NavigationMenuTrigger
-              className="uppercase text-xs tracking-widest bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent hover:text-accent-primary focus:text-accent-primary data-[state=open]:text-accent-primary"
+              className="px-2.5 uppercase text-xs tracking-widest bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent hover:text-accent-primary focus:text-accent-primary data-[state=open]:text-accent-primary"
               lang={group.lang}
             >
               {group.label}
             </NavigationMenuTrigger>
 
             <NavigationMenuContent>
-              {/*
-                The panel is deliberately roomy. The previous menu was a single
-                `p-4` box of bare links with no per-item padding, so rows ran
-                together and it was not clear where one item ended — the row
-                padding and the section dividers below are what separate them.
-              */}
-              <div className="w-80 p-6">
-                {group.sections.map((section, index) => (
-                  <div key={section.key ?? `section-${index}`}>
-                    {index > 0 && <Separator className="my-5" />}
-
-                    {section.label && (
-                      <h3
-                        lang={section.labelLang}
-                        className="mb-3 text-detail font-medium uppercase tracking-widest text-fg-muted"
-                      >
-                        {/*
-                          The brackets are the design's typographic treatment,
-                          not part of the words, so they live here rather than
-                          in every catalog entry for a translator to reproduce.
-                        */}
-                        [{section.label}]
-                      </h3>
-                    )}
-
-                    <ul className="space-y-1">
-                      {section.links.map((link) => (
-                        <li key={link.key}>
-                          <NavRow link={link} />
-                        </li>
-                      ))}
-                    </ul>
-                  </div>
-                ))}
+              <div className="flex">
+                <NavLinks links={group.links} />
+                {featured && <FeaturedPostCard post={featured} copy={featuredCopy} />}
               </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
@@ -140,8 +143,14 @@ export function NavMenuClient({
         {topLevel.map((link) => (
           <NavigationMenuItem key={link.key}>
             <NavigationMenuLink asChild>
-              <MenuItem asChild className="h-9 px-4 text-xs tracking-widest" lang={link.lang}>
-                <Link href={link.href}>{link.label}</Link>
+              <MenuItem asChild className="h-9 px-2.5 text-xs tracking-widest" lang={link.lang}>
+                {link.external ? (
+                  <a href={link.href} target="_blank" rel="noopener noreferrer">
+                    {link.label}
+                  </a>
+                ) : (
+                  <Link href={link.href}>{link.label}</Link>
+                )}
               </MenuItem>
             </NavigationMenuLink>
           </NavigationMenuItem>
@@ -152,55 +161,125 @@ export function NavMenuClient({
 }
 
 /**
+ * The links column. 348px wide in the design, whatever the labels.
+ *
+ * dSPOT's order types are a nested list under the dSPOT row — indented to the
+ * design's 50px, muted, no marks — so the structure a sighted reader gets from
+ * the indent is the structure a screen reader announces too.
+ */
+function NavLinks({ links }: { links: readonly ResolvedNavLink[] }) {
+  const reserve = hasIcons(links)
+
+  return (
+    <ul className="w-[21.75rem] shrink-0 px-[1.125rem] pb-8 pt-7">
+      {links.map((link) => (
+        <li key={link.key}>
+          <NavRow link={link} icon={rowIcon(link, reserve)} />
+          {link.children && link.children.length > 0 && (
+            <ul className="mb-2 pl-[3.125rem]">
+              {link.children.map((child) => (
+                <li key={child.key}>
+                  <NavRow link={child} nested />
+                </li>
+              ))}
+            </ul>
+          )}
+        </li>
+      ))}
+    </ul>
+  )
+}
+
+/**
  * One row inside a dropdown.
  *
- * `-mx-2 px-2 py-2.5` makes the hover and focus target the full width of the
- * panel rather than just the text, which is the other half of "it is not clear
- * what a single item is".
+ * `-mx-2 px-2` makes the hover and focus target the full width of the column
+ * rather than just the text, so it is clear what a single item is.
  */
-function NavRow({ link }: { link: ResolvedNavLink }) {
-  const Glyph = link.icon ? GLYPHS[link.icon] : undefined
-
-  const content = (
-    <MenuItemW
-      asChild
-      lang={link.lang}
-      // `size-5`, not `size-4`: the marks sit at opposite corners of a 24-unit
-      // box with a lot of empty space between them, so at 16px they read as
-      // specks rather than as the paired triangles the design shows.
-      icon={Glyph ? <Glyph className="size-5" /> : undefined}
-      // `MenuItemW` defaults to `text-field` (20px), which is the design
-      // system's FORM-FIELD size and reads as oversized in a menu — measured
-      // against the mockup, its rows are ~13-14px. The scale steps 14 -> 18 ->
-      // 20 with nothing between, so `h5` (14px) is the closest fit. Its
-      // `tracking-wider` is meant for uppercase headings and is reset here,
-      // since these rows are title-case.
-      //
-      // Overridden at the call site rather than changed on `MenuItemW`, whose
-      // default is a design-system decision rather than this PR's to make.
-      //
-      // No hover background. This carried `hover:bg-accent`, which reads as a
-      // subtle tint in stock shadcn but not here: `--accent` is mapped to
-      // `--color-accent-primary` (indigo-400) in globals.css, so the row filled
-      // with saturated brand blue. Hover is the accent TEXT colour instead —
-      // `MenuItemW` already does that by default, so removing the background is
-      // the whole fix. The row's extent still comes from `-mx-2 px-2 py-2.5`,
-      // which is what makes the target full-width and the item legible as one
-      // thing; that was never the background's job.
-      //
-      // Same mapping bites `pagination.tsx` and the `dropdown-menu` primitive —
-      // see #120, which is about the token rather than its call sites.
-      className="-mx-2 w-full rounded-sm px-2 py-2.5 text-h5 tracking-normal hover:no-underline"
-    >
-      {link.external ? (
-        <a href={link.href} target="_blank" rel="noopener noreferrer">
-          {link.label}
-        </a>
-      ) : (
-        <Link href={link.href}>{link.label}</Link>
-      )}
-    </MenuItemW>
+function NavRow({ link, icon, nested = false }: { link: ResolvedNavLink; icon?: React.ReactNode; nested?: boolean }) {
+  return (
+    <NavigationMenuLink asChild>
+      <MenuItemW
+        asChild
+        lang={link.lang}
+        icon={icon}
+        // `MenuItemW` defaults to `text-field` (20px), the design system's
+        // FORM-FIELD size. The menu design sets rows at 15px regular; the
+        // scale steps 14 -> 18 with nothing between, so `h5` (14px) it is, with
+        // its heading `tracking-wider` reset because these rows are title-case.
+        //
+        // No hover background: `--accent` is the brand indigo here, not
+        // shadcn's subtle neutral, so `hover:bg-accent` filled the row with
+        // saturated blue. Hover is the accent TEXT colour `MenuItemW` already
+        // applies. Same token bites elsewhere — see #120.
+        className={cn(
+          '-mx-2 w-full gap-2 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
+          // The order types sit tighter under their parent, and at 70% in the
+          // design — `fg-muted` is the token for that.
+          nested ? 'py-1 text-fg-muted' : 'py-2.5'
+        )}
+      >
+        {link.external ? (
+          <a href={link.href} target="_blank" rel="noopener noreferrer">
+            {link.label}
+          </a>
+        ) : (
+          <Link href={link.href}>{link.label}</Link>
+        )}
+      </MenuItemW>
+    </NavigationMenuLink>
   )
+}
 
-  return <NavigationMenuLink asChild>{content}</NavigationMenuLink>
+/**
+ * The second column: the newest blog post, as one link.
+ *
+ * One link, not an image link, a title link and a "Learn more" link to the
+ * same place — three tab stops to one destination. The title is the link's
+ * accessible name; the image is decorative and the button-shaped "Learn more"
+ * is hidden from assistive technology, since "Learn more" as a name says
+ * nothing about where it goes.
+ */
+function FeaturedPostCard({ post, copy }: { post: ResolvedFeaturedPost; copy: FeaturedCopy }) {
+  return (
+    <div className="w-[30.125rem] shrink-0 p-[1.125rem]">
+      <p className="text-detail font-medium uppercase tracking-widest text-fg" lang={copy.labelLang}>
+        [{copy.label}]
+      </p>
+
+      <NavigationMenuLink asChild>
+        <Link href={post.href} className="group mt-3.5 block focus-visible:outline-none">
+          <Image
+            src={post.image ?? '/blog/placeholder.png'}
+            alt=""
+            width={446}
+            height={294}
+            sizes="446px"
+            className="aspect-[446/294] w-full rounded-sm object-cover"
+          />
+          <span className="mt-5 flex items-center justify-between gap-6">
+            <span
+              className="text-h5 tracking-normal text-fg transition-colors group-hover:text-accent-primary group-focus-visible:text-accent-primary"
+              lang={post.titleLang}
+            >
+              {post.title}
+            </span>
+            <span
+              aria-hidden="true"
+              lang={copy.ctaLang}
+              // The button's look without a second interactive element: it
+              // follows the card's hover and focus rather than its own.
+              className={cn(
+                buttonVariants({ size: 'sm' }),
+                'shrink-0 group-hover:border-accent-primary group-hover:text-accent-primary group-focus-visible:border-accent-primary group-focus-visible:text-accent-primary'
+              )}
+            >
+              {copy.cta}
+              <ArrowRight className="size-3" />
+            </span>
+          </span>
+        </Link>
+      </NavigationMenuLink>
+    </div>
+  )
 }

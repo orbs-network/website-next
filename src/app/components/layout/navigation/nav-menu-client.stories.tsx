@@ -13,58 +13,65 @@ type Story = StoryObj<typeof meta>
 const PRODUCTS: ResolvedNavGroup = {
   key: 'products',
   label: 'Products',
-  sections: [
+  links: [
+    { key: 'sdk', href: '/sdk/', external: false, label: 'Execution SDK/API' },
     {
-      key: 'infrastructure',
-      label: 'Infrastructure',
-      links: [
-        { key: 'liquidityHub', href: '/liquidity-hub/', external: false, label: 'Liquidity Hub', icon: 'liquidityHub' },
-        { key: 'perpetualHub', href: '/dperps/', external: false, label: 'Perpetual Hub', icon: 'perpetualHub' },
+      key: 'dspot',
+      href: '/dspot/',
+      external: false,
+      label: 'dSPOT',
+      icon: 'dspot',
+      children: [
+        { key: 'dtwap', href: '/dtwap/', external: false, label: 'dTWAP' },
+        { key: 'liquidityHub', href: '/liquidity-hub/', external: false, label: 'Liquidity Hub' },
       ],
     },
-    {
-      key: 'advancedTrading',
-      label: 'Advanced Trading Tools',
-      links: [{ key: 'dtwap', href: '/dtwap/', external: false, label: 'dTWAP Protocol', icon: 'dtwap' }],
-    },
+    { key: 'dperps', href: '/dperps/', external: false, label: 'dPERPS', icon: 'perpetualHub' },
   ],
 }
 
-const RESOURCES: ResolvedNavGroup = {
-  key: 'resources',
-  label: 'Resources',
-  sections: [
-    // The designs open Resources with an unlabelled run before [TOOLS].
-    { links: [{ key: 'blog', href: '/blog/', external: false, label: 'Blog' }] },
-    {
-      key: 'tools',
-      label: 'Tools',
-      links: [{ key: 'tetraWallet', href: 'https://staking.orbs.network/', external: true, label: 'Tetra Wallet' }],
-    },
+const NETWORK: ResolvedNavGroup = {
+  key: 'network',
+  label: 'Network',
+  links: [
+    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake & Staking' },
+    { key: 'status', href: 'https://status.orbs.network/', external: true, label: 'Status' },
   ],
 }
 
-const TOP_LEVEL = [{ key: 'media', href: '/news/', external: false, label: 'Media' }]
+const BASE = {
+  groups: [PRODUCTS, NETWORK],
+  topLevel: [
+    { key: 'ecosystem', href: '/ecosystem/', external: false, label: 'Ecosystem' },
+    {
+      key: 'github',
+      href: 'https://github.com/orbs-network',
+      external: true,
+      label: 'GitHub',
+      desktopOnly: true as const,
+    },
+  ],
+  featured: { title: 'Introducing dSPOT', href: '/introducing-dspot/', image: null },
+  featuredCopy: { label: 'Featured Post', cta: 'Learn More' },
+}
 
-const BASE = { groups: [PRODUCTS, RESOURCES], topLevel: TOP_LEVEL }
+async function openGroup(canvasElement: HTMLElement, name: RegExp) {
+  const canvas = within(canvasElement)
+  await userEvent.click(canvas.getByRole('button', { name }))
+  return canvas
+}
 
-/** The panels are closed until asked for, so only triggers and top-level links show. */
 export const ClosedByDefault: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
     await expect(canvas.getByRole('button', { name: /Products/ })).toBeInTheDocument()
-    await expect(canvas.getByRole('link', { name: 'Media' })).toHaveAttribute('href', '/news/')
-    await expect(canvas.queryByRole('link', { name: 'Liquidity Hub' })).not.toBeInTheDocument()
+    await expect(canvas.getByRole('link', { name: 'Ecosystem' })).toHaveAttribute('href', '/ecosystem/')
+    await expect(canvas.queryByRole('link', { name: 'dSPOT' })).not.toBeInTheDocument()
   },
 }
 
-/**
- * The regression that matters most here. The previous menu was a CSS
- * `group-hover` panel, so it could not be opened by keyboard at all and every
- * dropdown destination was unreachable without a mouse.
- */
 export const OpensFromTheKeyboard: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
@@ -75,27 +82,20 @@ export const OpensFromTheKeyboard: Story = {
     await userEvent.keyboard('{Enter}')
 
     await waitFor(async () => {
-      await expect(canvas.getByRole('link', { name: 'Liquidity Hub' })).toBeInTheDocument()
+      await expect(canvas.getByRole('link', { name: 'dSPOT' })).toBeInTheDocument()
     })
     await expect(trigger).toHaveAttribute('aria-expanded', 'true')
   },
 }
 
-/**
- * `MenuItemW` composes the glyph and the label through Radix `Slottable`, so
- * the row must come out as ONE anchor containing both — not an anchor beside a
- * detached icon, and not a nested link.
- */
 export const IconRowsAreASingleLink: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = await openGroup(canvasElement, /Products/)
 
-    await userEvent.click(canvas.getByRole('button', { name: /Products/ }))
+    const link = await waitFor(() => canvas.getByRole('link', { name: 'dSPOT' }))
 
-    const link = await waitFor(() => canvas.getByRole('link', { name: 'Liquidity Hub' }))
-
-    await expect(link).toHaveAttribute('href', '/liquidity-hub/')
+    await expect(link).toHaveAttribute('href', '/dspot/')
     // The glyph is inside the anchor, and decorative — it must not add a name.
     await expect(link.querySelector('svg')).toBeTruthy()
     await expect(link.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
@@ -103,54 +103,78 @@ export const IconRowsAreASingleLink: Story = {
   },
 }
 
-/** External entries open off-site with a safe rel; internal ones do not. */
+/**
+ * A row with no mark yet keeps the mark's column when its neighbours have one,
+ * so every label in the list starts at the same x. Where no row has a mark
+ * there is no column to keep.
+ */
+export const LabelsAlignWithOrWithoutAMark: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const canvas = await openGroup(canvasElement, /Products/)
+
+    const labelX = (name: string) =>
+      (canvas.getByRole('link', { name }).lastElementChild as HTMLElement).getBoundingClientRect().left
+    await waitFor(() => canvas.getByRole('link', { name: 'Execution SDK/API' }))
+    await expect(labelX('Execution SDK/API')).toBe(labelX('dSPOT'))
+  },
+}
+
+/** dSPOT's order types are a list nested under dSPOT, indented past its label. */
+export const OrderTypesNestUnderDspot: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const canvas = await openGroup(canvasElement, /Products/)
+
+    const dspot = await waitFor(() => canvas.getByRole('link', { name: 'dSPOT' }))
+    const dtwap = canvas.getByRole('link', { name: 'dTWAP' })
+
+    await expect(dspot.closest('li')?.contains(dtwap)).toBe(true)
+    await expect(dtwap.getBoundingClientRect().left).toBeGreaterThan(dspot.getBoundingClientRect().left)
+  },
+}
+
 export const ExternalRowsOpenSafely: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = await openGroup(canvasElement, /Network/)
 
-    await userEvent.click(canvas.getByRole('button', { name: /Resources/ }))
-
-    const external = await waitFor(() => canvas.getByRole('link', { name: 'Tetra Wallet' }))
+    const external = await waitFor(() => canvas.getByRole('link', { name: 'Status' }))
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
 
-    const internal = canvas.getByRole('link', { name: 'Blog' })
-    await expect(internal).not.toHaveAttribute('target')
+    await expect(canvas.getByRole('link', { name: 'Proof of Stake & Staking' })).not.toHaveAttribute('target')
+    // Top-level external links too.
+    await expect(canvas.getByRole('link', { name: 'GitHub' })).toHaveAttribute('rel', 'noopener noreferrer')
   },
 }
 
 /**
- * A section label is rendered with the design's brackets around it, and the
- * brackets come from the component rather than the catalog — a translator
- * supplies the word, not the punctuation.
+ * The featured post is ONE link named by its title. "Learn More" looks like a
+ * button but is part of the same link and hidden from assistive technology —
+ * three tab stops to one destination, one of them named "Learn More", is what
+ * it replaces.
  */
-export const SectionLabelsAreBracketed: Story = {
+export const FeaturedPostIsOneLinkNamedByItsTitle: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = await openGroup(canvasElement, /Products/)
 
-    await userEvent.click(canvas.getByRole('button', { name: /Products/ }))
-
-    await waitFor(async () => {
-      await expect(canvas.getByRole('heading', { name: '[Infrastructure]' })).toBeInTheDocument()
-    })
-    await expect(canvas.getByRole('heading', { name: '[Advanced Trading Tools]' })).toBeInTheDocument()
+    const post = await waitFor(() => canvas.getByRole('link', { name: 'Introducing dSPOT' }))
+    await expect(post).toHaveAttribute('href', '/introducing-dspot/')
+    await expect(within(post).getByText('Learn More').closest('[aria-hidden="true"]')).not.toBeNull()
+    await expect(canvas.queryByRole('link', { name: /Learn More/ })).not.toBeInTheDocument()
+    await expect(post.querySelector('img')?.getAttribute('alt')).toBe('')
   },
 }
 
-/** An unlabelled run renders its links with no heading above them. */
-export const UnlabelledSectionHasNoHeading: Story = {
-  args: BASE,
+/** No post — a degraded build, an empty space — means no column, not an empty one. */
+export const NoFeaturedPostNoColumn: Story = {
+  args: { ...BASE, featured: null },
   play: async ({ canvasElement }) => {
-    const canvas = within(canvasElement)
+    const canvas = await openGroup(canvasElement, /Products/)
 
-    await userEvent.click(canvas.getByRole('button', { name: /Resources/ }))
-
-    await waitFor(async () => {
-      await expect(canvas.getByRole('link', { name: 'Blog' })).toBeInTheDocument()
-    })
-    // Only [Tools] is labelled in this group.
-    await expect(canvas.getAllByRole('heading')).toHaveLength(1)
+    await waitFor(() => canvas.getByRole('link', { name: 'dSPOT' }))
+    await expect(canvas.queryByText('Featured Post')).not.toBeInTheDocument()
   },
 }
