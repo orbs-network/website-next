@@ -8,12 +8,12 @@ import type { SectionGraphic } from '@/components/marketing/section-parts'
  * two flat sheets, not one file per illustration, so these were sliced from
  * the sheets by card: each card's caption and background dropped, and both
  * variants cropped to the SAME box (the union of the two), so switching theme
- * never rescales the art. Re-slice from a fresh export rather than editing the
- * files by hand — they are generated, and a hand edit is lost the next time.
+ * never rescales the art. The slicing was a one-off script, not kept: when the
+ * art changes, ask for one SVG per illustration rather than the sheet.
  *
- * One hand edit stands: `dspot/hero-light.svg` had five dashed guides left
- * `white` in the export, invisible on the light theme; they are `#121214` like
- * every other light file's. A re-slice must repeat it until the source is fixed.
+ * One hand edit: `dspot/hero-light.svg` had five dashed guides left `white` in
+ * the export, invisible on the light theme; they are `#121214` like every
+ * other light file's.
  *
  * `width`/`height` are the crop box, rounded. `ThemedGraphic` lays them out
  * `object-contain` in a square, so they only set the aspect ratio.
