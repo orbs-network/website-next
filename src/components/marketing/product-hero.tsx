@@ -139,7 +139,7 @@ export function ProductHero({
 
           <div className="mt-10 flex flex-wrap items-center gap-4 empty:mt-0">
             {ctaLabel && (
-              <Button asChild size="lg">
+              <Button asChild>
                 <Link href={ctaHref} lang={textLang(ctaLabel, locale)}>
                   {ctaLabel}
                 </Link>
@@ -147,7 +147,7 @@ export function ProductHero({
             )}
 
             {secondaryCtaLabel && (
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild variant="secondary">
                 <Link href={secondaryCtaHref} lang={textLang(secondaryCtaLabel, locale)}>
                   {secondaryCtaLabel}
                 </Link>
@@ -155,7 +155,7 @@ export function ProductHero({
             )}
 
             {devLink && (
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild variant="secondary">
                 <a href={devLink.href} target="_blank" rel="noopener noreferrer" lang={textLang(devLink.label, locale)}>
                   {devLink.label}
                 </a>
@@ -163,6 +163,9 @@ export function ProductHero({
             )}
 
             {/*
+              Default-size buttons, as the 3.4 heroes (`SplitHero`) use — this
+              hero was `lg`, a size step above every other hero on the site.
+
               The icons are hidden because `IconLink` labels the anchor itself.
               Every social icon component sets its own `role="img"` and
               `aria-label`, which would otherwise be a second accessible name
@@ -234,7 +237,7 @@ function IconLink({ href, label, icon }: { href: string; label: string; icon: Re
       // no translated equivalent in the legacy content to draw from.
       lang="en"
       className={cn(
-        'inline-flex size-10 items-center justify-center rounded-md border border-border text-fg',
+        'inline-flex size-[2.625rem] items-center justify-center rounded-md border border-border text-fg',
         'transition-colors hover:text-accent-primary hover:border-accent-primary',
         'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
       )}
