@@ -33,7 +33,6 @@ export type Integration = {
 }
 
 export const DTWAP_HERO = {
-  image: '/marketing/dtwap/hero.svg',
   repo: 'https://github.com/orbs-network/twap',
   telegram: 'https://t.me/dTWAPSupportGroup',
   /** In-page anchor to the integrations section. */

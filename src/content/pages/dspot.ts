@@ -9,6 +9,7 @@
  * their URLs and their translations (#149). No redirects.
  */
 
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { HOME_LINKS } from './home'
 
 export const DSPOT_LINKS = {
@@ -42,7 +43,7 @@ export const DSPOT_POINTS = ['pricing', 'custody', 'settlement'] as const
  */
 export const DSPOT_GRAPHICS = {
   /** The stacked hexagon planes with the order-type marks. */
-  hero: { src: '/marketing/dspot/hero.svg', lightSrc: '/marketing/dspot/hero-light.svg', width: 464, height: 650 },
+  hero: HERO_GRAPHICS.dspot,
   /** The sphere network, shared with Venues. */
   network: {
     src: '/marketing/shared/network-sphere.svg',

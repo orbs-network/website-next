@@ -3,6 +3,7 @@ import { ArchitectureSection } from '@/components/marketing/architecture-section
 import { DiagramSection } from '@/components/marketing/diagram-section'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { getDevDocsLink } from './dev-docs'
 import { DSLTP_BENEFITS, DSLTP_GRAPH_IMAGE, DSLTP_HERO, DSLTP_LINKS, DSLTP_MAP_IMAGE } from '@/content/pages/dsltp'
 import type { Locale } from '@/i18n/locales'
@@ -34,10 +35,7 @@ export async function DsltpPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={DSLTP_HERO.ctaHref}
-        image={DSLTP_HERO.image}
-        // The illustration restates the headline visually, and the headline is
-        // already the page's h1.
-        imageAlt=""
+        graphic={HERO_GRAPHICS.dsltp}
         devLink={devDocs}
         locale={locale}
       />

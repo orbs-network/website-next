@@ -11,7 +11,6 @@
  */
 
 export const DPERPS_HERO = {
-  image: { src: '/marketing/perpetual-hub/hero.png', width: 1000, height: 1006 },
   /**
    * Links to the announcement post rather than an in-page anchor, as dSLTP's
    * does. The post is real and already prerendered from Contentful.

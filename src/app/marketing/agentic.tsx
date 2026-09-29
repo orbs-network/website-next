@@ -6,6 +6,7 @@ import { Disclaimer } from '@/components/marketing/disclaimer'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { NumberedSteps } from '@/components/marketing/numbered-steps'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { getDevDocsLink } from './dev-docs'
 import {
   AGENTIC_BREAKS,
@@ -49,9 +50,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={getStarted.href}
-        image={AGENTIC_HERO.image.src}
-        // The illustration restates the headline visually.
-        imageAlt=""
+        graphic={HERO_GRAPHICS.agentic}
         repo={AGENTIC_HERO.repo}
         // From the intro, not the headline: the headline is the product name,
         // English in every locale, while the intro and CTA are translated.

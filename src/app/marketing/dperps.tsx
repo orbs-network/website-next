@@ -3,6 +3,7 @@ import { ArchitectureSection } from '@/components/marketing/architecture-section
 import { Disclaimer } from '@/components/marketing/disclaimer'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import {
   DPERPS_BENEFITS,
   DPERPS_DIAGRAM,
@@ -44,10 +45,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         intro={t('hero.intro')}
         ctaLabel={t('hero.cta')}
         ctaHref={cta.href}
-        image={DPERPS_HERO.image.src}
-        // The illustration restates the headline visually, and the headline is
-        // already the page's h1.
-        imageAlt=""
+        graphic={HERO_GRAPHICS.dperps}
         locale={locale}
       />
 

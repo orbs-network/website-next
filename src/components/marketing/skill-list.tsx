@@ -4,6 +4,7 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Prose } from './prose'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { ThemedGraphic, type SectionGraphic } from './section-parts'
 
 export type SkillEntry = {
   /** Message key and React key. */
@@ -40,6 +41,7 @@ export function SkillList({
   orderTypesLabel,
   skills,
   locale,
+  graphic,
 }: {
   title: string
   intro?: string
@@ -48,10 +50,20 @@ export function SkillList({
   skills: readonly ResolvedSkill[]
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
+  /**
+   * The index's hero illustration, centred above the title. Only the index
+   * carries one; the skill pages under it do not.
+   */
+  graphic?: SectionGraphic
 }) {
   return (
     <section className="container mx-auto px-5 py-20">
       <div className="mx-auto max-w-3xl text-center">
+        {graphic && (
+          <div className="relative mx-auto mb-10 aspect-[5/4] w-full max-w-sm">
+            <ThemedGraphic graphic={graphic} priority sizes="24rem" className="size-full object-contain" />
+          </div>
+        )}
         <H2 className="text-balance" lang={textLang(title, locale)}>
           {title}
         </H2>

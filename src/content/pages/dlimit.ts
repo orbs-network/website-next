@@ -11,13 +11,8 @@ import type { Integration } from './dtwap'
  */
 
 /**
- * No hero image, deliberately.
- *
- * The legacy page points at `/assets/img/dlimit/hero.svg`, which has never
- * existed — it is a 404 on production today, so the live dLIMIT page renders a
- * broken image. Borrowing dTWAP's illustration would imply a dLIMIT asset that
- * was never designed, so `ProductHero` treats the image as optional and this
- * page ships without one until design supplies a real asset (#88).
+ * The hero illustration is the 3.x one, `HERO_GRAPHICS.dlimit`. The legacy page
+ * pointed at `/assets/img/dlimit/hero.svg`, which never existed (#88).
  */
 export const DLIMIT_HERO = {
   /** Shared with dTWAP: one repo backs both protocols. */

@@ -1,6 +1,7 @@
 import { getTranslations } from 'next-intl/server'
 import { SkillList } from '@/components/marketing/skill-list'
 import { AI_SKILLS } from '@/content/pages/ai-skills'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { resolveLocaleLink } from '@/content/shared/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -28,6 +29,7 @@ export async function AiSkillsPage({ locale }: { locale: Locale }) {
         href: resolveLocaleLink({ href: skill.href }, locale).href,
         description: t(`items.${skill.id}.description`),
       }))}
+      graphic={HERO_GRAPHICS.aiSkills}
       locale={locale}
     />
   )
