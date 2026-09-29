@@ -8,6 +8,7 @@ import {
   YoutubeIcon,
 } from '@/components/icons'
 import { FOOTER_SOCIALS, type FooterSocialSpec } from '@/content/shared/footer'
+import { cn } from '@/lib/utils'
 
 /**
  * Named rather than resolved by string at render, so a typo in the data file is
@@ -23,7 +24,7 @@ const ICONS: Record<FooterSocialSpec['icon'], React.ComponentType<IconBaseProps>
 }
 
 /**
- * The social row in the bottom bar.
+ * The social row, under the Company column.
  *
  * Each link needs an accessible name from the catalog because its only content
  * is an SVG — without one a screen reader announces six unlabelled links. The
@@ -32,9 +33,9 @@ const ICONS: Record<FooterSocialSpec['icon'], React.ComponentType<IconBaseProps>
  * which they are anything but English, and marking them per-string would be the
  * same answer every time.
  */
-export function FooterSocials({ labels }: { labels: Record<string, string> }) {
+export function FooterSocials({ labels, className }: { labels: Record<string, string>; className?: string }) {
   return (
-    <ul className="flex items-center gap-5">
+    <ul className={cn('flex items-center gap-3', className)}>
       {FOOTER_SOCIALS.map((social) => {
         const Icon = ICONS[social.icon]
 
@@ -46,7 +47,7 @@ export function FooterSocials({ labels }: { labels: Record<string, string> }) {
               rel="noopener noreferrer"
               aria-label={labels[social.key]}
               lang="en"
-              className="inline-flex text-fg-muted transition-colors hover:text-link"
+              className="inline-flex text-fg transition-colors hover:text-link"
             >
               {/*
                 Every icon component sets its own `role="img"` and `aria-label`.
@@ -54,7 +55,7 @@ export function FooterSocials({ labels }: { labels: Record<string, string> }) {
                 glyph is hidden and the link keeps the single accessible name
                 the catalog gives it.
               */}
-              <Icon className="size-5" aria-hidden focusable="false" />
+              <Icon className="size-6" aria-hidden focusable="false" />
             </a>
           </li>
         )

@@ -2,8 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { OrbsLogo } from '@/components/icons'
 import { FooterLink2 } from '@/components/ui/footer-link'
-import { Prose } from '@/components/marketing/prose'
-import { FOOTER_COLUMNS, FOOTER_EMAIL, FOOTER_POLICY_LINKS, FOOTER_SOCIALS } from '@/content/shared/footer'
+import { FOOTER_COLUMNS, FOOTER_POLICY_LINKS, FOOTER_SOCIALS } from '@/content/shared/footer'
 import { NetworkStatusIndicator } from './network-status'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
@@ -11,110 +10,96 @@ import { textLang } from '@/i18n/script'
 import { FooterNavColumn } from './footer-nav'
 import { FooterSocials } from './footer-socials'
 
+/** Where the status indicator links, and where its reading comes from. */
+const FOOTER_STATUS_URL = 'https://status.orbs.network/'
+
 /**
- * The site footer, ported from the legacy `partials/footer/`.
+ * The site footer, from the 3.4 `Footer` component in Figma.
  *
- * Two of the legacy sections are deliberately not here:
+ * Laid out as the design draws it: the logo and blurb across the top, then a
+ * band between two rules, split by a vertical one. Left of it, four sitemap
+ * columns over the bottom bar; right of it, Company over the social row. That
+ * band is a two-by-two grid rather than two flex columns so the bottom bar and
+ * the socials share a row and stay level whatever either column's height.
  *
- *  - **Subscribe.** A popup form posting to a mailing-list backend that returns
- *    404 — the Heroku service behind it is gone, so there is no list to add
- *    anyone to. Porting the markup without a destination would ship a form that
- *    silently does nothing, which is the bug the contact form (#35) existed to
- *    fix. Whether there should be a newsletter at all is #145.
- *  - **Latest tweets.** An embedded Twitter widget — a third-party script in the
- *    chrome of all 456 prerendered pages. That is #33 (interactive widgets),
- *    where its cost can be weighed on its own.
- *
- * The legacy "Latest Blog Posts" block is absent too. Unlike the other two it
- * has no ticket, because it is not a port: it needs a Contentful fetch, and
- * putting one in a component that renders on every page is a decision about the
- * whole site's data flow rather than about the footer. Left for a follow-up.
+ * The DOM order is the reading order on every width — four columns, Company,
+ * the bottom bar, socials — so below `lg` the grid simply stacks.
  *
  * Every `t()` call in the footer tree happens here. The children take resolved
- * strings, which is what keeps them synchronous and gives them stories — the
- * repo's only test surface.
+ * strings, which is what keeps them synchronous and gives them stories.
  *
  * The locale is a prop for the same reason as in `Header`: with no `[locale]`
  * segment and no middleware, next-intl's hooks cannot resolve it from the
  * request and quietly return English.
+ *
+ * Left out, on purpose:
+ *  - **Subscribe** and **latest tweets** from the legacy footer — #145 and #33.
+ *  - **The contact email.** 3.4 drops it from the footer; it moves to the
+ *    mobile menu, and `/contact` is one column away.
  */
-/** Where the status indicator links, and where its reading comes from. */
-const FOOTER_STATUS_URL = 'https://status.orbs.network/'
-
 export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
 
   const socialLabels = Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, t(`socials.${social.key}`)]))
+  const columns = FOOTER_COLUMNS.map((column) => (
+    <FooterNavColumn
+      key={column.key}
+      id={`footer-${column.key}`}
+      title={t(`columns.${column.key}`)}
+      items={column.links.map((spec) => ({ spec, label: t(`links.${spec.key}`) }))}
+      locale={locale}
+    />
+  ))
+  const sitemap = columns.slice(0, -1)
+  const company = columns.at(-1)
+  const blurb = t('blurb')
 
   return (
-    <footer className="mt-20 border-t border-gray-200 dark:border-gray-800">
-      <div className="container mx-auto px-5 py-12">
-        <div className="grid gap-12 lg:grid-cols-[minmax(0,20rem)_1fr]">
-          <section>
-            <Link
-              href={localePath(locale, '/')}
-              aria-label={t('homeLink')}
-              // Same per-string rule as the header logo: `homeLink` is the
-              // English "Orbs home" in Japanese but "Orbs 홈" in Korean, so only
-              // one of them needs marking. Without it the Japanese document's
-              // `lang` applies Japanese pronunciation to an English name.
-              lang={textLang(t('homeLink'), locale)}
-              className="inline-flex"
-            >
-              {/*
-                Hidden for the same reason as in the header: the lockup's own
-                wordmark would be a second piece of content inside a link that
-                is already labelled.
-              */}
-              <OrbsLogo className="text-xl" aria-hidden />
-            </Link>
+    <footer className="mt-20 py-16 lg:py-[5.625rem]">
+      <div className="container mx-auto px-5">
+        <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-[5.4375rem]">
+          <Link
+            href={localePath(locale, '/')}
+            aria-label={t('homeLink')}
+            // Same per-string rule as the header logo: `homeLink` is the
+            // English "Orbs home" in Japanese but "Orbs 홈" in Korean, so only
+            // one of them needs marking.
+            lang={textLang(t('homeLink'), locale)}
+            className="inline-flex shrink-0"
+          >
+            {/* Hidden: the lockup's wordmark would be a second name inside a link that is already labelled. */}
+            <OrbsLogo className="text-[1.875rem]" aria-hidden />
+          </Link>
 
-            {/*
-              `Prose` renders paragraphs and bold, not links. The legacy blurb
-              links dLIMIT, dTWAP and Liquidity Hub inline; all three sit in the
-              Powered by Orbs column a few inches away, so the catalog copy drops
-              the inline markup rather than teaching the renderer link syntax for
-              a duplicate of an adjacent link.
-            */}
-            <Prose text={t('blurb')} className="mt-6 text-detail" />
-
-            <a
-              href={`mailto:${FOOTER_EMAIL}`}
-              className="mt-6 inline-flex text-detail font-medium text-fg-muted transition-colors hover:text-link"
-            >
-              {FOOTER_EMAIL}
-            </a>
-          </section>
-
-          <div className="grid grid-cols-2 gap-x-8 gap-y-10 sm:grid-cols-4">
-            {FOOTER_COLUMNS.map((column) => (
-              <FooterNavColumn
-                key={column.key}
-                id={`footer-${column.key}`}
-                title={t(`columns.${column.key}`)}
-                items={column.links.map((spec) => ({ spec, label: t(`links.${spec.key}`) }))}
-                locale={locale}
-              />
-            ))}
-          </div>
+          <p
+            lang={textLang(blurb, locale)}
+            className="max-w-[41.75rem] text-[0.9375rem] leading-[1.4375rem] tracking-[-0.033em] text-fg lg:p-2.5"
+          >
+            {blurb}
+          </p>
         </div>
-      </div>
 
-      <div className="border-t border-gray-200 dark:border-gray-800">
-        <div className="container mx-auto flex flex-col-reverse items-center gap-6 px-5 py-6 sm:flex-row sm:justify-between">
-          <ul className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2">
+        {/*
+          The rules are `neutral-500` in both themes, as drawn — not `border`,
+          which is a quieter grey in each and loses the band on the light theme.
+        */}
+        <div className="mt-5 grid border-y border-neutral-500 lg:grid-cols-[minmax(0,1fr)_20.625rem]">
+          <div className="grid grid-cols-2 gap-x-[1.125rem] gap-y-10 pt-[3.75rem] md:grid-cols-4 lg:pr-4">
+            {sitemap}
+          </div>
+
+          <div className="pt-10 lg:border-l lg:border-neutral-500 lg:pl-6 lg:pt-[3.75rem]">{company}</div>
+
+          <ul className="flex flex-wrap items-center gap-x-8 gap-y-2 pb-7 pt-12 lg:row-start-2 lg:pt-[3.625rem]">
             {/*
-              The status indicator leads the bar, as 3.4 draws it — and is
-              simply absent when the service cannot be read, rather than
-              falling back to a green dot. See `network-status.tsx`.
-            */}
-            {/*
+              The status indicator leads the bar, as 3.4 draws it, and is absent
+              when the service cannot be read rather than falling back to a
+              green dot. See `network-status.tsx`.
+
               `empty:hidden` because the indicator renders nothing until a
               reading arrives, and nothing at all if one never does. Without it
-              this `<li>` stays a flex child of a `gap-x-6` row and leaves a
-              24px hole before TERMS OF USE — on every server render, and
-              permanently whenever the status service is unreachable. An
-              "absent" indicator that still takes up space is not absent.
+              this `<li>` stays a flex child of a gapped row and leaves a hole
+              before TERMS OF USE.
             */}
             <li className="empty:hidden">
               <NetworkStatusIndicator
@@ -123,9 +108,8 @@ export async function Footer({ locale }: { locale: Locale }) {
               />
             </li>
             {FOOTER_POLICY_LINKS.map((spec) => ({ spec, label: t(`links.${spec.key}`) }))
-              // Same empty-label rule as the nav columns: the legacy Japanese
-              // footer carries Terms of Use and Privacy Policy but no
-              // accessibility declaration.
+              // Same empty-label rule as the nav columns: the Japanese footer
+              // carries no accessibility declaration.
               .filter(({ label }) => label.trim() !== '')
               .map(({ spec, label }) => (
                 <li key={spec.key}>
@@ -136,7 +120,9 @@ export async function Footer({ locale }: { locale: Locale }) {
               ))}
           </ul>
 
-          <FooterSocials labels={socialLabels} />
+          <div className="flex items-center pb-7 lg:row-start-2 lg:border-l lg:border-neutral-500 lg:pl-6 lg:pt-[3.625rem]">
+            <FooterSocials labels={socialLabels} />
+          </div>
         </div>
       </div>
     </footer>
