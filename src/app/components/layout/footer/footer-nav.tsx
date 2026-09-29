@@ -58,17 +58,23 @@ export function resolveFooterHref(spec: FooterLinkSpec, locale: Locale): { href:
 export function FooterNavLink({ label, locale, spec }: FooterNavItem & { locale: Locale }) {
   const { href, external } = resolveFooterHref(spec, locale)
   const lang = textLang(label, locale)
+  /*
+    3.4 sets the column links at full foreground, 11/18 with a 30px row; the
+    muted grey `FooterLink1` defaults to is the bottom bar's colour. The
+    padding makes the row the target, not just the cap height of the word.
+  */
+  const className = 'py-1.5 leading-[1.125rem] text-fg'
 
   if (external) {
     return (
-      <FooterLink1 href={href} target="_blank" rel="noopener noreferrer" lang={lang}>
+      <FooterLink1 href={href} target="_blank" rel="noopener noreferrer" lang={lang} className={className}>
         {label}
       </FooterLink1>
     )
   }
 
   return (
-    <FooterLink1 asChild lang={lang}>
+    <FooterLink1 asChild lang={lang} className={className}>
       <Link href={href}>{label}</Link>
     </FooterLink1>
   )
@@ -77,10 +83,13 @@ export function FooterNavLink({ label, locale, spec }: FooterNavItem & { locale:
 /**
  * A titled column of links.
  *
- * The column headings stay English in every locale because the legacy site left
- * them that way — `title: POWERED BY ORBS` is identical in the Japanese and
- * Korean footer files. They are still catalog entries rather than literals, so
- * translating them later is a catalog edit and not a code change.
+ * The column headings are English in every locale for now: 3.4 renamed all
+ * five, and the translations are #202. They are catalog entries rather than
+ * literals, so translating them is a catalog edit and not a code change.
+ *
+ * Headings are sentence case at 20px, the one place in the footer that is not
+ * uppercase — the design sets them apart from the links by size and case
+ * rather than by weight.
  *
  * An item whose label is empty is dropped. That is how this codebase expresses
  * "this locale omits the link" (see `ArchitectureSection`): the Japanese footer
@@ -103,11 +112,15 @@ export function FooterNavColumn({
 
   return (
     <nav aria-labelledby={id}>
-      <h2 id={id} lang={textLang(title, locale)} className="text-detail font-semibold uppercase tracking-wide text-fg">
+      <h2
+        id={id}
+        lang={textLang(title, locale)}
+        className="text-field font-normal leading-[1.625rem] tracking-[-0.0375em] text-fg"
+      >
         {title}
       </h2>
 
-      <ul className="mt-4 space-y-3">
+      <ul className="mt-[0.9375rem]">
         {visible.map((item) => (
           <li key={item.spec.key}>
             <FooterNavLink {...item} locale={locale} />

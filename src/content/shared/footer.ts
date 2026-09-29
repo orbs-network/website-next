@@ -1,8 +1,8 @@
 import type { Locale } from '@/i18n/locales'
 
 /**
- * The footer's link structure, ported from the legacy `content/_shared/footer/`
- * tree (four `navigation/<column>/index.md` files plus one file per link).
+ * The footer's link structure: the 3.4 `Footer` component in Figma, which
+ * replaced the port of the legacy `content/_shared/footer/` tree.
  *
  * Data only, and deliberately so: the labels live in the message catalogs under
  * `footer.*`, keyed by the `key` fields here. The legacy site expressed the same
@@ -45,52 +45,45 @@ export type FooterColumnSpec = {
 }
 
 /**
- * The four navigation columns, in the legacy order.
+ * The five navigation columns, in the 3.4 design's order.
  *
- * Most of these paths do not exist yet — only `/dtwap`, `/blog` and `/news` are
- * built, so the rest 404 until Phase 3 lands them (#31, #32). That is deliberate
- * and was decided explicitly: the footer ships at full legacy parity rather than
- * hiding links behind a "is it built yet" check, because the alternative is a
- * near-empty footer for the length of Phase 3 and a component API that has to be
- * unpicked afterwards. Nothing is user-visible in the meantime — DNS still
- * points at the legacy site (#39) — and the pre-cutover URL audit (#38) is the
- * gate that catches any that are still dead.
+ * The design draws Company apart from the other four, across a vertical rule
+ * and above the social row. That is a layout decision made in `Footer`; here it
+ * is simply the last column, so the reading order and the data agree.
+ *
+ * Links in the design that are NOT here, because nothing exists behind them:
+ * AI AGENTS (#158), GOVERNANCE, TEAM and AUDITS. Same rule as the nav — ship
+ * the page, then the link — rather than four more `PENDING` entries in the
+ * chrome of every page. Each is a one-line addition when its page lands.
+ *
+ * The legacy footer also carried Tetra, Staking Calculator, DeFi.org,
+ * Developers and White Papers. 3.4 dropped them, and that was confirmed as
+ * deliberate (#154) rather than lost in a redraw.
  */
 export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
   {
-    key: 'overview',
+    key: 'products',
     links: [
-      { key: 'whatIsOrbs', href: '/overview' },
-      { key: 'proofOfStake', href: '/pos' },
+      { key: 'sdk', href: '/sdk' },
+      { key: 'dspot', href: '/dspot' },
+      { key: 'dperps', href: '/dperps' },
+      { key: 'agentic', href: '/agentic' },
+    ],
+  },
+  {
+    key: 'solutions',
+    links: [
+      { key: 'venues', href: '/venues' },
+      { key: 'institutions', href: '/institutional' },
+    ],
+  },
+  {
+    key: 'network',
+    links: [
+      { key: 'overview', href: '/overview' },
+      { key: 'pos', href: '/pos' },
       { key: 'executionServices', href: '/execution-services' },
-      { key: 'whitePapers', href: '/white-papers' },
-      { key: 'faq', href: '/faq' },
-    ],
-  },
-  {
-    key: 'poweredBy',
-    links: [
-      { key: 'liquidityHub', href: '/liquidity-hub' },
-      { key: 'perpetualHub', href: '/dperps' },
-      { key: 'dtwap', href: '/dtwap' },
-      { key: 'dlimit', href: '/dlimit' },
-      { key: 'dsltp', href: '/dsltp' },
-      { key: 'notifications', href: '/notifications' },
-      { key: 'tonAccess', href: '/ton-access' },
-      { key: 'tonVote', href: '/ton-vote' },
-    ],
-  },
-  {
-    key: 'resources',
-    links: [
-      { key: 'tetra', href: 'https://staking.orbs.network/' },
-      { key: 'stakingCalculator', href: 'https://www.stakingrewards.com/earn/orbs' },
-      // Legacy links this over plain HTTP. The host serves HTTPS (verified), and
-      // an insecure link in the chrome of every page is a mixed-content warning
-      // waiting to happen, so it is upgraded rather than copied faithfully.
-      { key: 'networkStatus', href: 'https://status.orbs.network/' },
-      { key: 'defiOrg', href: 'https://defi.org' },
-      { key: 'developers', href: 'https://docs.orbs.network/' },
+      { key: 'status', href: 'https://status.orbs.network/' },
     ],
   },
   {
@@ -106,15 +99,24 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
       },
       { key: 'ecosystem', href: '/ecosystem' },
       // `/news` is the legacy URL for press coverage and is labelled "Media".
+      // The light variant of the Figma component omits it; the dark one, and
+      // every page instance, keeps it.
       { key: 'media', href: '/news' },
+      { key: 'notifications', href: '/notifications' },
+      { key: 'tonAccess', href: '/ton-access' },
+      { key: 'tonVote', href: '/ton-vote' },
       { key: 'brandAssets', href: '/brand-assets' },
-      { key: 'contact', href: '/contact' },
     ],
   },
-  // The legacy Community column also carried a Governance link to
-  // `/governance-blog`. Omitted on purpose: the governance blog is being deleted
-  // in the migration (plan §2.6, #30), so porting the link would mean shipping a
-  // pointer to something we are actively removing.
+  {
+    key: 'company',
+    links: [
+      { key: 'contact', href: '/contact' },
+      { key: 'faq', href: '/faq' },
+      { key: 'docs', href: 'https://docs.orbs.network/' },
+      { key: 'github', href: 'https://github.com/orbs-network' },
+    ],
+  },
 ]
 
 /**
@@ -139,7 +141,7 @@ export const FOOTER_POLICY_LINKS: readonly FooterLinkSpec[] = [
 ]
 
 /**
- * Social accounts, in the legacy order.
+ * Social accounts, in the 3.4 order (X first; the legacy footer led with GitHub).
  *
  * `icon` names a component rather than an image path: the icons are already
  * typed React components under `src/components/icons/socials/`, and they use
@@ -154,13 +156,10 @@ export type FooterSocialSpec = {
 }
 
 export const FOOTER_SOCIALS: readonly FooterSocialSpec[] = [
-  { key: 'github', icon: 'github', href: 'https://github.com/orbs-network/' },
   { key: 'x', icon: 'x', href: 'https://twitter.com/orbs_network' },
+  { key: 'github', icon: 'github', href: 'https://github.com/orbs-network/' },
   { key: 'telegram', icon: 'telegram', href: 'https://t.me/OrbsNetwork' },
   { key: 'discord', icon: 'discord', href: 'https://discord.gg/sswGDYGBt5' },
   { key: 'youtube', icon: 'youtube', href: 'https://www.youtube.com/channel/UCfpV4z-MGxeiabFkht1LNPQ/featured' },
   { key: 'snapshot', icon: 'snapshot', href: 'https://snapshot.org/#/orbs-network.eth' },
 ]
-
-/** The contact address in the logo section. */
-export const FOOTER_EMAIL = 'hello@orbs.com'
