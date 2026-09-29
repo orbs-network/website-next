@@ -1451,7 +1451,9 @@
       }
     }
   },
-  "sdk": {
-    "heroLink": "SDK/API/Skill"
+  "devDocs": {
+    "sdk": "SDK",
+    "api": "API",
+    "skill": "Skill"
   }
 }

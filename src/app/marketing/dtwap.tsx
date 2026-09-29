@@ -16,6 +16,7 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { getTranslations } from 'next-intl/server'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { getDevDocsLink } from './dev-docs'
 
 /**
  * The dTWAP page body, rendered by all three locale routes.
@@ -35,7 +36,7 @@ import { ProductHero } from '@/components/marketing/product-hero'
  */
 export async function DtwapPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dtwap' })
-  const sdk = await getTranslations({ locale, namespace: 'sdk' })
+  const devDocs = await getDevDocsLink('dtwap', locale)
 
   return (
     <>
@@ -50,7 +51,7 @@ export async function DtwapPage({ locale }: { locale: Locale }) {
         imageAlt=""
         repo={DTWAP_HERO.repo}
         telegram={DTWAP_HERO.telegram}
-        sdkLabel={sdk('heroLink')}
+        devLink={devDocs}
         locale={locale}
       />
 

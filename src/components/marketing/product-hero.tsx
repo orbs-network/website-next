@@ -6,7 +6,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { SDK_DOCS_URL } from '@/content/shared/sdk'
+import type { SectionLink } from './section-parts'
 
 /**
  * Either both or neither.
@@ -68,7 +68,7 @@ export function ProductHero({
   telegram,
   locale,
   eyebrow,
-  sdkLabel,
+  devLink,
 }: HeroImage &
   HeroCta &
   HeroSecondaryCta & {
@@ -89,11 +89,11 @@ export function ProductHero({
     /** A short bracketed label above the headline — "[ORBS INSTITUTIONAL]". */
     eyebrow?: string
     /**
-     * Label for the link to the SDK docs, on the pages of products the SDK
-     * exposes. The destination is fixed — `SDK_DOCS_URL` — so the caller
-     * cannot point one product's hero at a different copy of the docs.
+     * The developer link — "SDK", "API" or "Skill" — into this product's part
+     * of the docs. Opens in a new tab: it leaves the site. The mapping lives in
+     * `PRODUCT_DEV_DOCS`; resolve it with `getDevDocsLink`.
      */
-    sdkLabel?: string
+    devLink?: SectionLink
   }) {
   return (
     <section className="container mx-auto px-5 pt-16 pb-24">
@@ -147,10 +147,10 @@ export function ProductHero({
               </Button>
             )}
 
-            {sdkLabel && (
+            {devLink && (
               <Button asChild size="lg" variant="secondary">
-                <a href={SDK_DOCS_URL} target="_blank" rel="noopener noreferrer" lang={textLang(sdkLabel, locale)}>
-                  {sdkLabel}
+                <a href={devLink.href} target="_blank" rel="noopener noreferrer" lang={textLang(devLink.label, locale)}>
+                  {devLink.label}
                 </a>
               </Button>
             )}

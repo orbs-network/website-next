@@ -1,6 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
-import { SDK_DOCS_URL } from '@/content/shared/sdk'
+import { PRODUCT_DEV_DOCS } from '@/content/shared/sdk'
 import { ProductHero } from './product-hero'
 
 const meta = {
@@ -99,16 +99,18 @@ export const SourceLinksAreOptional: Story = {
   },
 }
 
-/**
- * The SDK link sits in the call-to-action row, goes to the SDK docs — the one
- * destination for everything SDK-related — and opens safely in a new tab.
- */
-export const SdkLinkGoesToTheDocs: Story = {
-  args: { ...BASE, sdkLabel: 'SDK/API/Skill' },
-  play: async ({ canvasElement }) => {
-    const link = within(canvasElement).getByRole('link', { name: 'SDK/API/Skill' })
+const DEV_LINK = { label: 'SDK', href: PRODUCT_DEV_DOCS.dtwap.href }
 
-    await expect(link).toHaveAttribute('href', SDK_DOCS_URL)
+/**
+ * The developer link sits in the call-to-action row, goes where it is given —
+ * the product's own part of the docs — and opens safely in a new tab.
+ */
+export const DevLinkGoesToTheProductDocs: Story = {
+  args: { ...BASE, devLink: DEV_LINK },
+  play: async ({ canvasElement }) => {
+    const link = within(canvasElement).getByRole('link', { name: 'SDK' })
+
+    await expect(link).toHaveAttribute('href', 'https://docs.orbs.com/advanced-orders/shared')
     await expect(link).toHaveAttribute('target', '_blank')
     await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
     await expect(link.parentElement).toBe(
@@ -117,18 +119,18 @@ export const SdkLinkGoesToTheDocs: Story = {
   },
 }
 
-/** Only products the SDK exposes carry it: no label, no link. */
-export const SdkLinkIsOptIn: Story = {
+/** Only products with docs carry it: no link given, no link drawn. */
+export const DevLinkIsOptIn: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).queryByRole('link', { name: /sdk/i })).not.toBeInTheDocument()
+    await expect(within(canvasElement).queryByRole('link', { name: /sdk|api|skill/i })).not.toBeInTheDocument()
   },
 }
 
 /** The label is English in every catalog, so a Korean page marks it. */
-export const SdkLinkIsMarkedEnglishInKorean: Story = {
-  args: { ...BASE, headline: '탈중앙화 거래소', intro: '지정가 주문', locale: 'ko', sdkLabel: 'SDK/API/Skill' },
+export const DevLinkIsMarkedEnglishInKorean: Story = {
+  args: { ...BASE, headline: '탈중앙화 거래소', intro: '지정가 주문', locale: 'ko', devLink: DEV_LINK },
   play: async ({ canvasElement }) => {
-    await expect(within(canvasElement).getByRole('link', { name: 'SDK/API/Skill' })).toHaveAttribute('lang', 'en')
+    await expect(within(canvasElement).getByRole('link', { name: 'SDK' })).toHaveAttribute('lang', 'en')
   },
 }

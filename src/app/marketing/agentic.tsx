@@ -6,6 +6,7 @@ import { Disclaimer } from '@/components/marketing/disclaimer'
 import { FeatureGrid } from '@/components/marketing/feature-grid'
 import { NumberedSteps } from '@/components/marketing/numbered-steps'
 import { ProductHero } from '@/components/marketing/product-hero'
+import { getDevDocsLink } from './dev-docs'
 import {
   AGENTIC_BREAKS,
   AGENTIC_CHAINS,
@@ -37,7 +38,7 @@ import { textLang } from '@/i18n/script'
  */
 export async function AgenticPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.agentic' })
-  const sdk = await getTranslations({ locale, namespace: 'sdk' })
+  const devDocs = await getDevDocsLink('agentic', locale)
 
   const getStarted = resolveLocaleLink(AGENTIC_HERO.getStarted, locale)
 
@@ -54,7 +55,7 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         repo={AGENTIC_HERO.repo}
         // From the intro, not the headline: the headline is the product name,
         // English in every locale, while the intro and CTA are translated.
-        sdkLabel={sdk('heroLink')}
+        devLink={devDocs}
         locale={locale}
       />
 

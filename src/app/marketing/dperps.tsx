@@ -29,7 +29,6 @@ import { textLang } from '@/i18n/script'
  */
 export async function DperpsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dperps' })
-  const sdk = await getTranslations({ locale, namespace: 'sdk' })
 
   // Korean sends both the hero button and the one-pager to a Naver article
   // rather than to the English announcement post, so destinations resolve per
@@ -49,7 +48,6 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         // The illustration restates the headline visually, and the headline is
         // already the page's h1.
         imageAlt=""
-        sdkLabel={sdk('heroLink')}
         locale={locale}
       />
 
