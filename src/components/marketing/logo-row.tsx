@@ -19,7 +19,20 @@ export type LogoRowItem = {
    * Rendered at a fixed HEIGHT with automatic width, so every mark reads at the
    * same optical weight whatever its proportions.
    */
-  logo?: { src: string; width: number; height: number }
+  logo?: {
+    src: string
+    width: number
+    height: number
+    /**
+     * The same mark drawn for a light background, when the brand has one.
+     *
+     * `src` is the dark-theme mark. Multicolour marks cannot be CSS-inverted
+     * without inverting their brand colours, so where the design supplies a
+     * dark-ink variant it ships as its own file and the theme picks one. Same
+     * intrinsic dimensions as `src` — swapping themes must not reflow the row.
+     */
+    onLight?: string
+  }
   /**
    * Invert the mark in the light theme.
    *
@@ -103,27 +116,13 @@ export function LogoRow({
       <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
         {items.map((item) => (
           <li key={item.name} className="flex items-center gap-3">
+            {item.logo?.onLight && (
+              <LogoImage logo={{ ...item.logo, src: item.logo.onLight }} className="dark:hidden" />
+            )}
             {item.logo && (
-              <Image
-                src={item.logo.src}
-                alt=""
-                width={item.logo.width}
-                height={item.logo.height}
-                /*
-                  Without this every mark is requested at its intrinsic size —
-                  next/image treats `width` as the rendered width, so a 2000px
-                  chain icon and a 1249px wordmark were being fetched at up to
-                  3840px to be displayed 32px high.
-                */
-                sizes="10rem"
-                className={cn(
-                  // Fixed height, automatic width — but CAPPED. Blackhole is
-                  // 1249x107, which at 32px high is 373px wide: on a 390px
-                  // viewport that one mark plus its name pushed the document
-                  // past the viewport and the whole page scrolled sideways.
-                  'h-8 w-auto max-w-[10rem] object-contain',
-                  item.invertOnLight && 'invert dark:invert-0'
-                )}
+              <LogoImage
+                logo={item.logo}
+                className={cn(item.logo.onLight && 'hidden dark:block', item.invertOnLight && 'invert dark:invert-0')}
               />
             )}
             <span
@@ -147,5 +146,38 @@ export function LogoRow({
         ))}
       </ul>
     </section>
+  )
+}
+
+/**
+ * One mark. Decorative: the name is text beside it (see `LogoRow`).
+ *
+ * A theme pair renders both images, one hidden with `display: none` — lazy
+ * `next/image` does not fetch a hidden image, so a reader downloads only the
+ * variant their theme shows.
+ */
+function LogoImage({ logo, className }: { logo: NonNullable<LogoRowItem['logo']>; className?: string }) {
+  return (
+    <Image
+      src={logo.src}
+      alt=""
+      width={logo.width}
+      height={logo.height}
+      /*
+        Without this every mark is requested at its intrinsic size —
+        next/image treats `width` as the rendered width, so a 2000px
+        chain icon and a 1249px wordmark were being fetched at up to
+        3840px to be displayed 32px high.
+      */
+      sizes="10rem"
+      className={cn(
+        // Fixed height, automatic width — but CAPPED. Blackhole is
+        // 1249x107, which at 32px high is 373px wide: on a 390px
+        // viewport that one mark plus its name pushed the document
+        // past the viewport and the whole page scrolled sideways.
+        'h-8 w-auto max-w-[10rem] object-contain',
+        className
+      )}
+    />
   )
 }
