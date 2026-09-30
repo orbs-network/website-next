@@ -42,6 +42,11 @@ export const DSPOT_POINTS = ['pricing', 'custody', 'settlement'] as const
  * `*-light.svg` is the same file with `fill`/`stroke="white"` turned to
  * `#121214` — everywhere EXCEPT inside `<mask>`, where white is luminance and
  * darkening it blanks the whole graphic. See `ThemedGraphic`.
+ *
+ * The light sphere is the exception: its nodes, rings and outer dashed circle
+ * are `#59595A`, the grey the light dSPOT frame draws them in (#231). Near-black
+ * nodes read heavier than the art around them, and the outer ring was left the
+ * dark file's `#D6D6D6`, which all but vanished on the light page.
  */
 export const DSPOT_GRAPHICS = {
   /** The stacked hexagon planes with the order-type marks. */
