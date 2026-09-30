@@ -399,6 +399,16 @@
         "title": "Orbs Agentic",
         "description": "AI 에이전트와 DeFi 프로토콜 사이의 실행 레이어. Orbs가 실행, 라우팅, 공동 서명 오라클 검증을 처리하므로 모든 에이전트 거래는 온체인에서 독립적으로 검증됩니다."
       },
+      "eyebrows": {
+        "hero": "[AI AGENTS]",
+        "breaks": "[THE BOTTLENECK]",
+        "tools": "[EXECUTION TOOL]",
+        "chains": "[SUPPORTED CHAINS]",
+        "oracle": "[VERIFICATION]",
+        "architecture": "[ARCHITECTURE]",
+        "poweredBy": "[TRACK RECORD]",
+        "getStarted": "[GET STARTED]"
+      },
       "hero": {
         "headline": "Orbs Agentic",
         "intro": "AI 에이전트와 DeFi 프로토콜 사이의 실행 레이어.\n\n에이전트가 스왑을 하거나, 지정가 주문을 넣거나, TWAP 전략을 실행해야 할 때 오브스 에이전틱(Orbs Agentic) 툴을 호출합니다. Orbs Network가 실행, 라우팅, 공동 서명 오라클 검증을 처리하므로 모든 거래는 온체인에서 독립적으로 검증됩니다.",
@@ -848,6 +858,13 @@
         "title": "실행 서비스",
         "description": "Orbs Lambda와 Orbs VM — 탈중앙화 서버리스 함수와 컨테이너 기반 컴퓨팅."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / COMPUTE]",
+        "lambdaProduct": "[ORBS LAMBDA]",
+        "vm": "[ORBS VM]",
+        "alternatives": "[COMPARISON]",
+        "evolution": "[EVOLUTION]"
+      },
       "hero": {
         "headline": "오브스 블록체인 서비스"
       },
@@ -873,8 +890,14 @@
         "title": "Proof of Stake",
         "description": "Orbs PoS V3 — 멀티체인 스테이킹, 가디언, 델리게이터와 네트워크 보안."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / STAKING]",
+        "roles": "[ROLES]",
+        "v3": "[POS V3]",
+        "explainers": "[HOW IT WORKS]"
+      },
       "hero": {
-        "headline": "ORBS PROOF-OF-STAKE V3:\n멀티 체인 스테이킹",
+        "headline": "Orbs Proof-of-Stake V3:\n멀티 체인 스테이킹",
         "intro": "오브스의 PoS(Proof-of-Stake; 지분증명) 유니버스는 오브스 네트워크를 이루는 근간입니다. 오브스의 현재 PoS 모델인 \"V3: 멀티 체인 스테이킹\"은 우리 네트워크의 하이브리드 구조와 크로스 체인 능력을 활용하여 이더리움과 폴리곤 두 네트워크에서 멀티 체인으로 PoS 스테이킹을 가능하게 합니다."
       },
       "roles": {

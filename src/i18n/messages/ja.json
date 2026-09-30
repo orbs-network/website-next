@@ -574,6 +574,13 @@
         "title": "実行サービス",
         "description": "Orbs LambdaとOrbs VM — 分散型サーバーレス関数とコンテナベースのコンピュート。"
       },
+      "eyebrows": {
+        "hero": "[NETWORK / COMPUTE]",
+        "lambdaProduct": "[ORBS LAMBDA]",
+        "vm": "[ORBS VM]",
+        "alternatives": "[COMPARISON]",
+        "evolution": "[EVOLUTION]"
+      },
       "hero": {
         "headline": "Execution Services"
       },
@@ -598,6 +605,12 @@
       "meta": {
         "title": "Proof of Stake",
         "description": "Orbs PoS V3 — マルチチェーンステーキング、ガーディアン、デリゲーターとネットワークのセキュリティ。"
+      },
+      "eyebrows": {
+        "hero": "[NETWORK / STAKING]",
+        "roles": "[ROLES]",
+        "v3": "[POS V3]",
+        "explainers": "[HOW IT WORKS]"
       },
       "hero": {
         "headline": "OrbsのPoSユニバース：\nガーディアンの時代",
