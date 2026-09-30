@@ -226,7 +226,8 @@ export function ProductHero({
   )
 }
 
-function IconLink({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
+/** Exported for `SplitHero` callers that keep the legacy repo and Telegram links. */
+export function IconLink({ href, label, icon }: { href: string; label: string; icon: React.ReactNode }) {
   return (
     <a
       href={href}

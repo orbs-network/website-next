@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { cn } from '@/lib/utils'
 import { Card, CardContent } from '@/components/ui/card'
 import { H2, H3 } from '@/app/components/typography'
 import type { Integration } from '@/content/pages/dtwap'
@@ -27,9 +28,11 @@ export function IntegrationGrid({
   integrateHref,
   integrations,
   locale,
+  bare = false,
 }: {
   /** Anchor target for the hero's call to action. */
   id?: string
+  /** Ignored when `bare`: the wrapping section carries the heading. */
   title: string
   integrateTitle: string
   integrateCta: string
@@ -37,17 +40,20 @@ export function IntegrationGrid({
   integrations: readonly Integration[]
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
+  /**
+   * Opt-in for pages moved onto the master (#227): no `<section>` or heading of
+   * its own, so a `DividedSection` can wrap it, borderless tiles and a
+   * left-aligned "Integrate your DEX". Pages still on the legacy layout
+   * (dLIMIT) keep the centred, bordered version.
+   */
+  bare?: boolean
 }) {
-  return (
-    <section id={id} className="container py-20">
-      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
-        {title}
-      </H2>
-
-      <ul className="mt-16 grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+  const grid = (
+    <>
+      <ul className={cn('grid md:grid-cols-2 lg:grid-cols-3', bare ? 'gap-4' : 'mt-16 gap-8')}>
         {integrations.map((integration) => (
           <li key={integration.id}>
-            <Card className="h-full overflow-hidden p-0">
+            <Card className={cn('h-full overflow-hidden p-0', bare && 'rounded-none border-0 bg-surface shadow-none')}>
               {/*
                 Portrait, not 16:9. Every partner screenshot is a tall capture
                 of the order form (ratios 0.47-0.65), so a video-shaped frame
@@ -110,7 +116,7 @@ export function IntegrationGrid({
         ))}
       </ul>
 
-      <div className="mt-16 text-center">
+      <div className={cn('mt-16', !bare && 'text-center')}>
         <H3 weight="medium" lang={textLang(integrateTitle, locale)}>
           {integrateTitle}
         </H3>
@@ -120,6 +126,20 @@ export function IntegrationGrid({
           </a>
         </Button>
       </div>
+    </>
+  )
+
+  if (bare) {
+    return grid
+  }
+
+  return (
+    <section id={id} className="container py-20">
+      <H2 className="text-balance text-center" lang={textLang(title, locale)}>
+        {title}
+      </H2>
+
+      {grid}
     </section>
   )
 }

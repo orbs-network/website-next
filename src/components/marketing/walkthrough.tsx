@@ -1,5 +1,6 @@
 import { H2 } from '@/app/components/typography'
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
@@ -22,46 +23,67 @@ export function Walkthrough({
   title,
   steps,
   locale,
+  bare = false,
 }: {
+  /** Ignored when `bare`: the wrapping section carries the heading. */
   title: string
   steps: readonly WalkthroughStep[]
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
+  /**
+   * Opt-in for pages moved onto the master (#227): no `<section>` or heading of
+   * its own, so a `DividedSection` can wrap it, and flat frames rather than
+   * bordered ones. dLIMIT keeps the legacy version.
+   */
+  bare?: boolean
 }) {
+  const list = (
+    <ol className={cn('grid gap-10 md:grid-cols-3', !bare && 'mt-16')}>
+      {steps.map((step) => (
+        <li key={step.id}>
+          <div
+            className={cn(
+              'relative aspect-[4/3] overflow-hidden',
+              bare ? 'bg-surface' : 'rounded-lg border border-border bg-muted'
+            )}
+          >
+            {/*
+                Empty alt: the caption immediately below states what the
+                screenshot shows, so alt text would repeat it verbatim to a
+                screen reader.
+              */}
+            <Image
+              src={step.image}
+              alt=""
+              fill
+              sizes="(min-width: 768px) 33vw, 100vw"
+              className="object-cover object-top"
+            />
+          </div>
+          {/*
+              Per caption. Each screenshot is annotated independently, and the
+              Korean walkthrough leaves interface labels in English inside
+              otherwise-translated captions.
+            */}
+          <p className="mt-4 text-muted-foreground leading-relaxed" lang={textLang(step.caption, locale)}>
+            {step.caption}
+          </p>
+        </li>
+      ))}
+    </ol>
+  )
+
+  if (bare) {
+    return list
+  }
+
   return (
     <section className="container py-20">
       <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
 
-      <ol className="mt-16 grid gap-10 md:grid-cols-3">
-        {steps.map((step) => (
-          <li key={step.id}>
-            <div className="relative aspect-[4/3] overflow-hidden rounded-lg border border-border bg-muted">
-              {/*
-                Empty alt: the caption immediately below states what the
-                screenshot shows, so alt text would repeat it verbatim to a
-                screen reader.
-              */}
-              <Image
-                src={step.image}
-                alt=""
-                fill
-                sizes="(min-width: 768px) 33vw, 100vw"
-                className="object-cover object-top"
-              />
-            </div>
-            {/*
-              Per caption. Each screenshot is annotated independently, and the
-              Korean walkthrough leaves interface labels in English inside
-              otherwise-translated captions.
-            */}
-            <p className="mt-4 text-muted-foreground leading-relaxed" lang={textLang(step.caption, locale)}>
-              {step.caption}
-            </p>
-          </li>
-        ))}
-      </ol>
+      {list}
     </section>
   )
 }

@@ -29,11 +29,11 @@ const SKILLS = [
  * is what a reader scans for.
  */
 export const MetadataIsADescriptionList: Story = {
-  args: { title: 'AI Skills', chainsLabel: 'Chains', orderTypesLabel: 'Order types', skills: SKILLS, locale: 'en' },
+  args: { chainsLabel: 'Chains', orderTypesLabel: 'Order types', skills: SKILLS, locale: 'en' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
 
-    await expect(canvas.getByRole('heading', { level: 2, name: 'AI Skills' })).toBeInTheDocument()
+    await expect(canvas.getByRole('heading', { level: 2, name: 'Spot Advanced Swap Orders' })).toBeInTheDocument()
     await expect(canvas.getByText('Chains')).toBeInTheDocument()
     await expect(canvas.getByText('Ethereum, Base')).toBeInTheDocument()
     await expect(canvasElement.querySelectorAll('dt')).toHaveLength(2)
@@ -51,7 +51,7 @@ export const MetadataIsADescriptionList: Story = {
  * before, because the value was hardcoded on the element.
  */
 export const CardIsNamedByTheSkill: Story = {
-  args: { title: 'AI 스킬', chainsLabel: '체인', orderTypesLabel: '주문 유형', skills: SKILLS, locale: 'ko' },
+  args: { chainsLabel: '체인', orderTypesLabel: '주문 유형', skills: SKILLS, locale: 'ko' },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
     const link = canvas.getByRole('link', { name: 'Spot Advanced Swap Orders' })

@@ -2,7 +2,7 @@ import { getTranslations } from 'next-intl/server'
 import { EcosystemDirectory } from '@/components/marketing/ecosystem-directory'
 import { ECOSYSTEM_CATEGORIES } from '@/content/pages/ecosystem'
 import type { Locale } from '@/i18n/locales'
-import { textLang } from '@/i18n/script'
+import { InnerClosingCta } from './inner-closing'
 
 /**
  * The ecosystem directory page.
@@ -24,5 +24,18 @@ export async function EcosystemPage({ locale }: { locale: Locale }) {
     entries: category.entries,
   }))
 
-  return <EcosystemDirectory title={t('meta.title')} groups={groups} locale={locale} />
+  // The page name is the eyebrow and the existing description is the headline:
+  // the master's hero is a label over a statement, and "Ecosystem" twice would
+  // be both.
+  return (
+    <>
+      <EcosystemDirectory
+        eyebrow={t('hero.eyebrow')}
+        headline={t('meta.description')}
+        groups={groups}
+        locale={locale}
+      />
+      <InnerClosingCta locale={locale} />
+    </>
+  )
 }
