@@ -134,12 +134,13 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button asChild>
+              <Button asChild variant="solid">
                 <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('hero.cta')}>
                   {t('hero.cta')}
                 </Link>
               </Button>
-              <SdkButton variant="secondary" label={t('sdk')} locale={locale} />
+              {/* Same destination as the SDK buttons below; the design keeps its own wording here. */}
+              <SdkButton label={t('hero.docs')} locale={locale} />
             </div>
           </div>
         </div>
@@ -165,7 +166,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
           {t('stack.eyebrow')}
         </p>
 
-        <div className="mt-14 grid gap-16 lg:grid-cols-2">
+        {/*
+          The headline block is centred against the cards rather than
+          top-aligned with them, and the cards start close under the eyebrow
+          (42px in the design).
+        */}
+        <div className="mt-10 grid gap-16 lg:grid-cols-2 lg:items-center">
           <div>
             {/*
               One sentence per line (#219). The breaks are `\n` in the catalog,
@@ -174,7 +180,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             <H2 className="whitespace-pre-line" lang={lang('stack.title')}>
               {t('stack.title')}
             </H2>
-            <p className="mt-6 max-w-lg text-p text-fg-muted" lang={lang('stack.intro')}>
+            <p className="mt-6 max-w-lg text-p text-fg" lang={lang('stack.intro')}>
               {t('stack.intro')}
             </p>
             {/*
@@ -184,7 +190,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             <SdkButton className="mt-10" label={t('sdk')} locale={locale} />
           </div>
 
-          <ul className="flex flex-col gap-8">
+          <ul className="grid auto-rows-fr gap-5">
             {HOME_STACK.map((card) => (
               <HighlightCard
                 key={card.id}
@@ -195,6 +201,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 body={t(`stack.${card.id}.body`)}
                 cta={t('stack.cta')}
                 lang={lang(`stack.${card.id}.body`)}
+                className="p-5 lg:px-5 lg:py-7"
               />
             ))}
           </ul>
@@ -216,12 +223,16 @@ export async function HomePage({ locale }: { locale: Locale }) {
           >
             {t('solutions.eyebrow')}
           </p>
-          <H2 className="mx-auto mt-6 max-w-3xl text-balance" lang={lang('solutions.title')}>
+          {/*
+            No `max-w-3xl`: the design sets this on one line, and the cap was
+            what broke it at the hyphen ("on- / chain").
+          */}
+          <H2 className="mt-6 text-balance" lang={lang('solutions.title')}>
             {t('solutions.title')}
           </H2>
         </div>
 
-        <ul className="mt-16 grid gap-8 md:grid-cols-3">
+        <ul className="mt-12 grid gap-5 md:grid-cols-3">
           {HOME_SOLUTIONS.map((card) => (
             <HighlightCard
               key={card.id}
@@ -232,6 +243,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
               body={t(`solutions.${card.id}.body`)}
               cta={t(`solutions.${card.id}.cta`)}
               lang={lang(`solutions.${card.id}.body`)}
+              className="p-6 lg:p-[2.125rem] lg:min-h-[23.4375rem]"
             />
           ))}
         </ul>
@@ -484,27 +496,15 @@ export async function HomePage({ locale }: { locale: Locale }) {
 }
 
 /**
- * The site's one SDK call to action: "Explore the SDK", off-site to the SDK
- * docs. Sara asked for the same wording wherever an SDK CTA appears (#214); the
- * product heroes carry it through `devDocs.sdk`.
+ * A link off-site to the SDK docs, outline with the line arrow.
  *
- * Primary — outline with the line arrow — as the button spec draws it. The
- * hero passes `secondary`: it already has a primary beside it, and two arrows
- * side by side would leave neither as the main action.
+ * "Explore SDK" under the stack intro and the solutions cards (#214), "Read
+ * the docs" in the hero; the design words them differently and both go to the
+ * same place. The product heroes carry the SDK wording through `devDocs.sdk`.
  */
-function SdkButton({
-  label,
-  locale,
-  className,
-  variant = 'primary',
-}: {
-  label: string
-  locale: Locale
-  className?: string
-  variant?: 'primary' | 'secondary'
-}) {
+function SdkButton({ label, locale, className }: { label: string; locale: Locale; className?: string }) {
   return (
-    <Button asChild variant={variant} className={className}>
+    <Button asChild className={className}>
       <a href={SDK_DOCS_URL} target="_blank" rel="noopener noreferrer" lang={textLang(label, locale)}>
         {label}
       </a>
@@ -512,8 +512,18 @@ function SdkButton({
   )
 }
 
+const CARD_ACCENT = {
+  primary: 'text-accent-primary',
+  pink: 'text-accent-pink',
+  cyan: 'text-accent-cyan',
+} as const satisfies Record<NonNullable<HomeCard['accent']>, string>
+
 /**
- * A bordered card with an eyebrow, a heading, a body and one link.
+ * A filled card with an eyebrow, a heading, a body and one link.
+ *
+ * Filled, not bordered: the 09-30 design draws both rows as flat panels with
+ * no outline. Padding differs between the two rows, so it comes in through
+ * `className`.
  *
  * Shared between the stack and solutions sections, which draw the same shape
  * with different content. Local to this page rather than in the component
@@ -528,6 +538,7 @@ function HighlightCard({
   body,
   cta,
   lang,
+  className,
 }: {
   card: HomeCard
   locale: Locale
@@ -536,12 +547,15 @@ function HighlightCard({
   body: string
   cta: string
   lang?: string
+  className?: string
 }) {
   return (
-    <li className="flex flex-col rounded-sm border border-border p-6" lang={lang}>
-      <p className="text-detail font-medium uppercase tracking-widest text-accent-primary">{eyebrow}</p>
+    <li className={cn('flex flex-col bg-card-fill', className)} lang={lang}>
+      <p className={cn('text-detail font-medium uppercase tracking-widest', CARD_ACCENT[card.accent ?? 'primary'])}>
+        {eyebrow}
+      </p>
 
-      <div className="mt-6 flex items-center gap-3">
+      <div className="mt-9 flex items-center gap-3">
         {card.icon && (
           /*
             Fixed HEIGHT, width follows. `size-8` forced both marks into the
@@ -559,14 +573,15 @@ function HighlightCard({
             className="h-8 w-auto"
           />
         )}
-        <H4>{title}</H4>
+        {/* A product name next to its mark is a lockup: letter-spaced, as drawn. */}
+        <H4 className={cn(card.icon && 'tracking-[0.12em]')}>{title}</H4>
       </div>
 
-      <p className="mt-4 flex-1 text-p text-fg-muted">{body}</p>
+      <p className="mt-10 flex-1 text-p text-fg">{body}</p>
 
       <Link
         href={localeHref(card.href, locale)}
-        className="mt-8 inline-flex items-center gap-2 text-detail font-medium uppercase tracking-widest transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+        className="mt-10 inline-flex self-start items-center gap-2 text-detail font-medium uppercase tracking-widest transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
         {cta}
         <span aria-hidden="true">&rarr;</span>
