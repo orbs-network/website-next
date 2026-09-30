@@ -410,6 +410,16 @@
         "title": "Orbs Agentic",
         "description": "The execution layer between AI agents and DeFi protocols. Orbs handles execution, routing and cosigned-oracle verification, so every agent trade is independently verified on-chain."
       },
+      "eyebrows": {
+        "hero": "[AI AGENTS]",
+        "breaks": "[THE BOTTLENECK]",
+        "tools": "[EXECUTION TOOL]",
+        "chains": "[SUPPORTED CHAINS]",
+        "oracle": "[VERIFICATION]",
+        "architecture": "[ARCHITECTURE]",
+        "poweredBy": "[TRACK RECORD]",
+        "getStarted": "[GET STARTED]"
+      },
       "hero": {
         "headline": "Orbs Agentic",
         "intro": "The execution layer between AI agents and DeFi protocols.\n\nWhen an agent needs to swap, place a limit order, or run a TWAP strategy, it calls an Orbs Agentic tool. The Orbs Network handles execution, routing, and cosigned-oracle verification — so every trade is independently verified on-chain.\n\nNot a wallet. Not a custodial layer. Not AI trading. The verification layer that lets agents execute DeFi safely.",
@@ -632,24 +642,29 @@
         "title": "Integrated by leading venues, including:"
       },
       "products": {
+        "eyebrow": "[Products]",
         "title": "Best price. Better execution. One stack.",
         "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
         "items": {
           "liquidityHub": {
             "title": "Liquidity Hub",
-            "body": "Aggregates DEX liquidity and professional market makers through an RFQ layer for best on-chain pricing."
+            "body": "Aggregates DEX liquidity and professional market makers through an RFQ layer for best on-chain pricing.",
+            "cta": "Discover Liquidity Hub"
           },
           "dtwap": {
             "title": "dTWAP",
-            "body": "Splits large orders over time to reduce market impact and improve execution quality. Decentralized. Non-custodial. Fully on-chain."
+            "body": "Splits large orders over time to reduce market impact and improve execution quality. Decentralized. Non-custodial. Fully on-chain.",
+            "cta": "Discover dTWAP"
           },
           "dlimit": {
             "title": "dLIMIT",
-            "body": "Executes only when the target price is available. No manual monitoring. No off-chain custody. No desk-side intervention."
+            "body": "Executes only when the target price is available. No manual monitoring. No off-chain custody. No desk-side intervention.",
+            "cta": "Discover dLIMIT"
           },
           "dsltp": {
             "title": "dSLTP",
-            "body": "Automated position protection with on-chain triggers."
+            "body": "Automated position protection with on-chain triggers.",
+            "cta": "Discover dSLTP"
           }
         }
       },
@@ -667,7 +682,8 @@
         "body": "Orbs integrates and executes."
       },
       "integrationPaths": {
-        "title": "Two integration paths:",
+        "eyebrow": "[Integration]",
+        "title": "Two integration paths",
         "items": {
           "institutional": {
             "title": "Institutional users",
@@ -718,6 +734,7 @@
         }
       },
       "whoFor": {
+        "eyebrow": "[Audience]",
         "title": "Who is it for?",
         "items": {
           "institutional": {
@@ -730,9 +747,12 @@
           }
         }
       },
-      "talkToTeam": {
-        "title": "Talk to the team",
-        "body": "Talk to us about integration or view more information on GitHub.",
+      "marquee": {
+        "bestPrice": "Best price.",
+        "betterExecution": "Better execution.",
+        "oneStack": "One stack."
+      },
+      "closing": {
         "contact": "Talk to the team",
         "github": "View on GitHub"
       }
@@ -907,25 +927,28 @@
         "description": "What Orbs is: a decentralized Layer-3 blockchain infrastructure built for advanced on-chain trading."
       },
       "hero": {
+        "eyebrow": "[Overview]",
         "headline": "Bringing CeFi-level\nexecution to DeFi",
-        "intro": "L3 For Advanced On-chain Trading"
+        "intro": "L3 For Advanced On-chain Trading",
+        "cta": "Explore the protocols"
       },
       "what": {
+        "eyebrow": "[Introduction]",
         "title": "What is Orbs?",
         "body": "Orbs is a decentralized Layer-3 (L3) blockchain infrastructure designed specifically for advanced on-chain trading. Orbs improves on-chain trading by providing technology for aggregated liquidity, advanced trading orders, and decentralized derivatives.\n\nThis is made possible by Orbs enhancing the capabilities of both EVM and non-EVM smart contracts without moving liquidity onto a new chain. This unique setup creates a decentralized backend that brings CeFi-level execution to DeFi trading."
       },
       "challenge": {
-        "eyebrow": "PAIN",
+        "eyebrow": "[Pain]",
         "title": "On-chain Trading Challenges",
         "body": "People prefer on-chain trading for enhanced privacy, security, anonymity, ease of onboarding, and lack of counterparty risk. However, on-chain execution often lags behind due to limitations in smart contract functionality, interoperability issues, liquidity fragmentation, inferior user experience, and suboptimal pricing."
       },
       "solution": {
-        "eyebrow": "SOLUTION",
+        "eyebrow": "[Solution]",
         "title": "Layer 3 Technology Stack",
         "body": "Orbs Layer 3 brings CeFi-level capabilities to DeFi by providing DeFi platforms with a decentralized backend, delivering scalable, efficient, and secure trading solutions without the need for centralized backends."
       },
       "tech": {
-        "eyebrow": "Tech",
+        "eyebrow": "[Tech]",
         "title": "Layer 3 Technology Stack",
         "body": "Orbs is a Layer 3 blockchain designed to enhance the capabilities of existing Layer 1 and Layer 2 blockchains. Utilizing Proof-of-Stake consensus, Orbs acts as an intermediary execution layer, facilitating complex logic and scripts beyond the native functionalities of smart contracts. Innovative protocols like dLIMIT, dTWAP, and Liquidity Hub push the boundaries of DeFi and smart contract technology. Orbs provides a scalable, efficient, and customizable environment for dApps, addressing scalability challenges inherent in Ethereum and other L1 blockchains."
       },
@@ -948,7 +971,8 @@
             "title": "dPERPS",
             "body": "Full suite of services for decentralized perpetuals platforms, including hedger, liquidator and oracle, enabling intent-based on-chain perpetual futures trading."
           }
-        }
+        },
+        "cta": "Discover {name}"
       },
       "why": {
         "title": "Why?",
@@ -957,10 +981,12 @@
         "howBody": "This is achieved by leveraging Orbs' innovative Layer-3 blockchain infrastructure, which enhances existing Layer-1 and Layer-2 solutions and enables complex logic to be implemented on a fully decentralized stack without moving liquidity to a new chain. Utilizing proof-of-stake consensus, Orbs provides DEXs with a decentralized backend that powers unique protocols such as dLIMIT, dTWAP, Liquidity Hub, and dPERPS. These, in turn, optimize trading with aggregated liquidity, advanced trading orders, and on-chain derivatives, which push the boundaries of DeFi and on-chain trading."
       },
       "mission": {
+        "eyebrow": "[Purpose]",
         "title": "Mission",
         "body": "Orbs is dedicated to transforming the DeFi landscape by bringing CeFi-level execution to on-chain trading. Orbs Layer-3 blockchain infrastructure supports protocols that empower traders with advanced tools and platforms, ensuring secure, scalable, and efficient trading solutions without centralized intermediaries."
       },
       "benefits": {
+        "eyebrow": "[Benefits]",
         "title": "How do Users Benefit from\nProtocols Powered by Orbs",
         "intro": "Users benefit from protocols powered by Orbs in several key ways:",
         "items": {
@@ -977,6 +1003,16 @@
             "body": "Protocols powered by Orbs maintain the core principles of decentralization, providing users with enhanced privacy, security, and anonymity. By eliminating the need for centralized backends, Orbs ensures that users can trade in a decentralized manner, protecting their data and maintaining control over their assets."
           }
         }
+      },
+      "marquee": {
+        "liquidity": "Aggregated liquidity.",
+        "orders": "Advanced trading orders.",
+        "derivatives": "Decentralized derivatives."
+      },
+      "closing": {
+        "follow": "Follow us",
+        "community": "Join community",
+        "contact": "Talk to the team"
       }
     },
     "ecosystem": {
@@ -1010,6 +1046,13 @@
         "title": "Execution Services",
         "description": "Orbs Lambda and Orbs VM: decentralized serverless functions and container-based compute."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / COMPUTE]",
+        "lambdaProduct": "[ORBS LAMBDA]",
+        "vm": "[ORBS VM]",
+        "alternatives": "[COMPARISON]",
+        "evolution": "[EVOLUTION]"
+      },
       "hero": {
         "headline": "Execution Services"
       },
@@ -1035,19 +1078,25 @@
         "title": "Proof of Stake",
         "description": "Orbs PoS V3: multi-chain staking, guardians, delegators and how the network secures itself."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / STAKING]",
+        "roles": "[ROLES]",
+        "v3": "[POS V3]",
+        "explainers": "[HOW IT WORKS]"
+      },
       "hero": {
-        "headline": "ORBS PROOF-OF-STAKE V3:\nMULTI-CHAIN STAKING",
+        "headline": "Orbs Proof-of-Stake V3:\nMulti-chain staking",
         "intro": "The Orbs Proof-of-Stake (PoS) Universe is the backbone of the Orbs network and the Universe that is being created. Orbs’ current PoS model - “Orbs PoS V3: Multi-chain Staking” utilizes Orbs’ hybrid architecture and cross-chain capabilities to deploy multi-chain Orbs PoS staking on both Ethereum and Polygon."
       },
       "roles": {
         "guardian": {
-          "title": "GUARDIANS",
+          "title": "Guardians",
           "subtitle": "Orbs Guardians represent the Orbs community, they maintain the security of the network by running validator nodes and uphold its long term vision, investing time and effort in the network's success.",
           "linkText": "Become an Orbs Guardian!",
           "body": "Roles and Responsibilities\n\n- Guardians operate the Orbs network validator nodes and run the subscribed applications.\n- Guardians are responsible for the staking rewards distribution to their community of delegators by being able to modify their Delegator’s rewards split.\n- Guardians have an option to be part of the [Certified Committee](https://www.orbs.com/white-papers/orbs-pos-v2-the-age-of-guardians-section-election-committees) and operate virtual chains that require certified Guardians. Certified Committee members are eligible for added incentives.\n- Guardians are expected to be committed to their communities and their Delegators’ staked tokens. Following [OGV-1&2 ](https://www.orbs.com/Reinstating-Guardians-Self-Stake-Requirement/), Guardians are required to have a self-stake of at least 3% of their total delegated stake.\n\nEconomic Incentives\n\n- Applications running virtual chains on Orbs pay fees directly to the Guardians, representing the cost of the computational resources allocated to the virtual chain.\n- Guardians receive staking rewards of at least 3.33% of their delegated stake, for operating the network and contributing to the network’s security.\n- Guardians who choose to participate in the Certified Committee receive a bootstrap fund distributed in DAI."
         },
         "delegator": {
-          "title": "DELEGATORS",
+          "title": "Delegators",
           "subtitle": "Delegators are ORBS token holders who assign their voting weight (stake) to Guardians, empowering them to maintain security and uphold the long term vision of the ecosystem.",
           "linkText": "Stake your ORBS tokens!",
           "body": "Roles and Responsibilities\n\n- Actively contribute to the network’s success by staking your ORBS tokens. [Instructions](https://www.orbs.com/tetra-orbs-staking-wallet-tutorial/) on how to stake using the Orbs Tetra wallet.\n- Select a worthy [Guardian](https://staking.orbs.network/?p=/guardians) to delegate your voting power to.\n- Staked tokens will be locked for a period of 14 days. Read more about the [Orbs locking](https://www.orbs.com/introducing-locking-when-staking-orbs) mechanism.\n- Orbs Delegators can choose to stake on Ethereum or Polygon.\n\nEconomic Incentives\n\n- Token holders that delegate to an active Guardian are rewarded in proportion to their stake.\n- Annual reward of up to 6.66% of the Delegator’s staked tokens, depending on the reward distribution split set by the selected Guardian.\n- Only delegation to an active Guardian that participates in the elected committee receives rewards. Also, it is important to note that staking rewards may vary between Guardians, so choose your Guardian carefully!"

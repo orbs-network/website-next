@@ -10,9 +10,7 @@ function Heading() {
   return (
     <div className="flex flex-col items-center justify-center pt-10 pb-20">
       <H1 className="inline-block text-center mx-auto">Orbs in the News</H1>
-      <p className="text-gray-600 dark:text-gray-400 text-center">
-        Check out the latest articles and publications featuring Orbs.
-      </p>
+      <p className="text-fg-muted text-center">Check out the latest articles and publications featuring Orbs.</p>
     </div>
   )
 }
@@ -39,7 +37,7 @@ export async function NewsIndex({ currentPage }: { currentPage: number }) {
     return (
       <div className="container py-10">
         <Heading />
-        <p className="text-gray-600 dark:text-gray-400">No coverage yet. Check back soon.</p>
+        <p className="text-fg-muted">No coverage yet. Check back soon.</p>
       </div>
     )
   }

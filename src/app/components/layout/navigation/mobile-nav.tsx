@@ -148,15 +148,20 @@ export function MobileNav({
           `Content`. Without it the page under the panel scrolls — Page Down,
           a wheel over the header — while the menu is open.
 
-          The tint is 20% over the page with a 10px blur, from the frame.
+          The panel is the opaque page colour with the tint on the column
+          inside it. The frame draws a 20% tint with a 10px blur over the hero,
+          where the two look the same; over home's `.band-contrast` bands that
+          left the menu's links on the other theme's page colour — dark text on
+          near-black in light (#228). Two elements, not one: tailwind-merge 3
+          reads Tailwind 3's `bg-gradient-to-*` as a background colour, so
+          `cn` silently drops `bg-bg` from any class list that also has one.
         */}
         <DialogPrimitive.Overlay className="fixed inset-0 z-50" />
         <DialogPrimitive.Content
           aria-describedby={undefined}
           className={cn(
-            'fixed inset-x-0 bottom-0 top-[3.75rem] z-50 backdrop-blur-[10px] focus-visible:outline-none',
-            'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0',
-            TINT
+            'fixed inset-x-0 bottom-0 top-[3.75rem] z-50 bg-bg focus-visible:outline-none',
+            'data-[state=open]:animate-in data-[state=open]:fade-in-0 data-[state=closed]:animate-out data-[state=closed]:fade-out-0'
           )}
         >
           {/*
@@ -189,7 +194,7 @@ export function MobileNav({
             Ecosystem rows, which on a real phone would hide the rows being
             reached for.
           */}
-          <div className="flex h-full flex-col overflow-y-auto overscroll-contain">
+          <div className={cn('flex h-full flex-col overflow-y-auto overscroll-contain', TINT)}>
             <div className="container flex-1 pb-10">
               {/*
                 Radix requires a title on a dialog, and the design has one: the
@@ -266,8 +271,7 @@ function RowArrow({ className }: { className?: string }) {
  * `Mobile / Menu` → `Footer Area`: a band of its own under the menu, carrying
  * a second coat of the panel's tint, then three sections, each under a rule —
  * status, contact, socials. The frame's 5px blur on the band is left off: the
- * band sits inside the panel's 10px blur already, and a nested backdrop filter
- * reads the panel, not the page, so it would blur nothing new.
+ * panel under it is opaque, so there is nothing behind it to blur.
  *
  * The status band carries `empty:hidden` for the same reason as the footer's
  * `<li>`: the indicator renders nothing until it has a reading, and nothing at
