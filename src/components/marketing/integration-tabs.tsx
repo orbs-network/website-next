@@ -59,7 +59,7 @@ export function IntegrationTabs({
   }
 
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>

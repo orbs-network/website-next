@@ -68,7 +68,7 @@ export function LegalDocument({
   const hasOwnHeading = /^#[ \t]+\S/m.test(markdown)
 
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       {/*
         Deliberately OUTSIDE the article, which is where `lang` and `dir` live.
         The title comes from the message catalog in the ROUTE's language, while

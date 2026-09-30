@@ -51,7 +51,7 @@ export async function ContactPage({ locale }: { locale: Locale }) {
   }
 
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       <div className="mx-auto max-w-3xl text-center">
         {/*
           `text-balance` because `text-h1` is a fixed size with no responsive

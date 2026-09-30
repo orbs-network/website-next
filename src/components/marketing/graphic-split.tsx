@@ -29,7 +29,7 @@ export function GraphicSplit({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-section">
+    <section className="container py-section">
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
         <div className="flex flex-col">
           <Eyebrow text={eyebrow} locale={locale} />

@@ -31,7 +31,7 @@ export function HomeHero() {
       </div>
       <H1 className="mb-8">Bringing CeFi execution to DeFi</H1>
 
-      <Button asChild size="lg">
+      <Button asChild>
         <Link href="/blog">View Blog</Link>
       </Button>
     </section>

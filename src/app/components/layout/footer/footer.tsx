@@ -53,7 +53,7 @@ export async function Footer({ locale }: { locale: Locale }) {
 
   return (
     <footer className="mt-20 py-16 lg:py-[5.625rem]">
-      <div className="container mx-auto px-5">
+      <div className="container">
         <div className="flex flex-col gap-6 lg:flex-row lg:items-start lg:gap-[5.4375rem]">
           <Link
             href={localePath(locale, '/')}

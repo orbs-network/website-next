@@ -39,7 +39,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
       <ProductHero headline={t('hero.headline')} intro="" locale={locale} />
 
       {EXECUTION_SERVICES_PRODUCTS.map((product) => (
-        <section key={product.id} className="container mx-auto px-5 py-20" lang={lang(`${product.id}.body`)}>
+        <section key={product.id} className="container py-20" lang={lang(`${product.id}.body`)}>
           <div className="mx-auto grid max-w-5xl items-center gap-12 lg:grid-cols-[1fr_2fr]">
             {/*
               Capped at 320px. These are decorative brand illustrations, so
@@ -65,7 +65,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
       ))}
 
       {EXECUTION_SERVICES_DIAGRAMS.map((diagram) => (
-        <section key={diagram.id} className="container mx-auto px-5 py-20" lang={lang(`${diagram.id}.body`)}>
+        <section key={diagram.id} className="container py-20" lang={lang(`${diagram.id}.body`)}>
           <div className="mx-auto max-w-4xl">
             <H2 className="text-balance text-center" lang={lang(`${diagram.id}.title`)}>
               {t(`${diagram.id}.title`)}

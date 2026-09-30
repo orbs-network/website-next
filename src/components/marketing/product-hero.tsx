@@ -101,7 +101,7 @@ export function ProductHero({
     devLink?: SectionLink
   }) {
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       {/*
         `mx-auto` is load-bearing, not decoration: `max-w-3xl` alone constrains
         the width but leaves the column pinned to the left of the container,

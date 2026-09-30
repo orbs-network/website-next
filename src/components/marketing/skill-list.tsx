@@ -57,7 +57,7 @@ export function SkillList({
   graphic?: SectionGraphic
 }) {
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       <div className="mx-auto max-w-3xl text-center">
         {graphic && (
           <div className="relative mx-auto mb-10 aspect-[5/4] w-full max-w-sm">

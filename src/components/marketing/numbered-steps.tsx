@@ -39,7 +39,7 @@ export function NumberedSteps({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       <div className="mx-auto max-w-3xl">
         <H2 className="text-balance text-center" lang={textLang(title, locale)}>
           {title}

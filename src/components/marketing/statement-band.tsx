@@ -26,11 +26,8 @@ export function StatementBand({ text, locale }: { text: string; locale: Locale }
   const lang = textLang(text, locale)
 
   return (
-    <section
-      lang={lang}
-      className="flex min-h-[26rem] items-center bg-statement-band px-5 py-section lg:min-h-[44.5rem]"
-    >
-      <div className="container mx-auto">
+    <section lang={lang} className="flex min-h-[26rem] items-center bg-statement-band py-section lg:min-h-[44.5rem]">
+      <div className="container">
         <p className="text-balance text-h3 text-neutral-900 sm:text-h2 lg:ml-[33%]">{text}</p>
       </div>
     </section>

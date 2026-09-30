@@ -37,7 +37,7 @@ export async function PosPage({ locale }: { locale: Locale }) {
     <>
       <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-2">
           {POS_ROLES.map((role) => (
             <article key={role.id} lang={lang(`roles.${role.id}.body`)}>
@@ -82,7 +82,7 @@ export async function PosPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('items.item9.body')}>
+      <section className="container py-20" lang={lang('items.item9.body')}>
         <div className="mx-auto grid max-w-5xl gap-12 lg:grid-cols-2 lg:items-start">
           <div>
             <H2 lang={lang('items.item9.title')}>{t('items.item9.title')}</H2>
@@ -102,7 +102,7 @@ export async function PosPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <div className="mx-auto max-w-3xl divide-y divide-border border-y border-border">
           {POS_EXPLAINERS.map((id) => (
             <Disclosure key={id} summary={t(`items.${id}.title`)} locale={locale}>

@@ -93,7 +93,7 @@ export function ArchitectureSection({
   const visibleLinks = (links ?? []).filter((link) => link.label.trim() !== '')
 
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       {eyebrow && (
         <p
           className="mb-4 text-center text-detail font-medium uppercase tracking-widest text-fg-muted"
