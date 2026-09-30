@@ -15,7 +15,7 @@ import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '
  * under the cursor.
  *
  * The maths lives in `hero-facets.ts` (what the field looks like at rest) and
- * `hero-facet-physics.ts` (the motion that blooms, stirs and collapses it), and
+ * `hero-facet-physics.ts` (the springs that bloom, stir and collapse it), and
  * is tested there. This file is the parts that can only be done in a browser —
  * capability detection, the pointer, the canvas and the frame loop.
  *

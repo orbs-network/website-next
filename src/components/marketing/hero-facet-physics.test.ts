@@ -3,19 +3,17 @@ import {
   BLOOM_SPEED,
   MAX_DRIFT,
   createFacetField,
-  FINGER_RADIUS,
-  fingerInfluence,
   facetsOf,
   isFacetFieldSettled,
   moveFacetPointer,
   stepFacetField,
   type FacetField,
 } from './hero-facet-physics'
-import { FACET_RADIUS, FACET_SIZE_MIN, FACET_SPACING, facetsAround } from './hero-facets'
+import { FACET_RADIUS, FACET_SIZE_MIN, facetsAround } from './hero-facets'
 
 /**
- * The motion is tuned by eye, but everything it promises is checkable: that
- * it settles onto the measured design, that the bloom travels outward, that
+ * The springs are tuned by eye, but everything they promise is checkable: that
+ * they settle onto the measured design, that the bloom travels outward, that
  * the collapse runs the other way, and that the field goes quiet so the frame
  * loop can stop.
  */
@@ -98,18 +96,18 @@ describe('the bloom', () => {
     expect(mean(near)).toBeGreaterThan(mean(far))
   })
 
-  it('grows to full size without popping past it — no bounce', () => {
+  it('overshoots before settling — the bounce', () => {
     const field = createFacetField()
     moveFacetPointer(field, { ...CURSOR })
 
     let peak = 0
-    for (let i = 0; i < 240; i++) {
+    for (let i = 0; i < 120; i++) {
       run(field, 1 / 120)
       for (const p of field.particles.values()) peak = Math.max(peak, p.presence)
     }
 
-    expect(peak).toBeGreaterThan(0.999)
-    expect(peak).toBeLessThanOrEqual(1 + 1e-9)
+    expect(peak).toBeGreaterThan(1.1)
+    expect(peak).toBeLessThan(1.4)
   })
 })
 
@@ -167,46 +165,6 @@ describe('the liquid', () => {
     expect(meanDrift).toBeGreaterThan(2)
   })
 
-  it('separates neighbouring facets in motion, rather than sliding the lattice as a block', () => {
-    const field = settledAt()
-    run(field, 0.2, { move: { x: 800, y: 0 } })
-
-    // How far apart ADJACENT cells have drifted from each other. A block slide scores ~0 however far it moves.
-    const near = particles(field).filter((p) => p.distance < 90)
-    const apart: number[] = []
-    for (const p of near) {
-      for (const q of near) {
-        const cells = Math.hypot(p.rest.x - q.rest.x, p.rest.y - q.rest.y)
-        if (cells > 1 && cells < FACET_SPACING * 1.05)
-          apart.push(Math.hypot(p.offsetX - q.offsetX, p.offsetY - q.offsetY))
-      }
-    }
-    const mean = apart.reduce((sum, d) => sum + d, 0) / apart.length
-
-    // A quarter of a cell: at a uniform response this was 0.8px.
-    expect(mean).toBeGreaterThan(FACET_SPACING / 4)
-  })
-
-  it('moves the facets the pointer passes over, and leaves the rest of the disc still', () => {
-    // Floating balls and a finger through the water: what it touches moves, what it misses barely rocks.
-    const field = settledAt()
-    run(field, 0.2, { move: { x: 800, y: 0 } })
-
-    // Distance from each facet's cell to the segment the pointer travelled along.
-    const fromPath = (p: { rest: { x: number; y: number } }) => {
-      const x = Math.min(Math.max(p.rest.x, CURSOR.x), field.anchor!.x)
-      return Math.hypot(p.rest.x - x, p.rest.y - CURSOR.y)
-    }
-    const meanDrift = (lo: number, hi: number) => {
-      const band = [...field.particles.values()].filter((p) => fromPath(p) >= lo && fromPath(p) < hi)
-      return band.reduce((sum, p) => sum + Math.hypot(p.offsetX, p.offsetY), 0) / band.length
-    }
-
-    expect(meanDrift(0, 15)).toBeGreaterThan(FACET_SPACING / 2)
-    expect(meanDrift(30, 45)).toBeLessThan(meanDrift(0, 15) / 3)
-    expect(meanDrift(FINGER_RADIUS, Infinity)).toBe(0)
-  })
-
   it('turns the two flanks of a stroke in opposite directions', () => {
     const field = settledAt()
     run(field, 0.15, { move: { x: 800, y: 0 } })
@@ -221,29 +179,10 @@ describe('the liquid', () => {
     expect(Math.abs(flank(-1))).toBeGreaterThan(0.01)
   })
 
-  it('eases slowly back onto the design once the pointer stops, without overshooting its cell', () => {
+  it('wobbles back onto the design once the pointer stops', () => {
     const field = settledAt()
     run(field, 0.3, { move: { x: 900, y: -400 } })
-    // The pointer's smoothed velocity takes a few frames to reach zero; from then on nothing is pushing.
-    run(field, 0.15)
-
-    // Where each facet had been pushed to once the pointer stopped.
-    const pushed = new Map([...field.particles].map(([key, p]) => [key, { x: p.offsetX, y: p.offsetY }]))
-    const drift = () => Math.max(...[...field.particles.values()].map((p) => Math.hypot(p.offsetX, p.offsetY)))
-
-    // Eased, not snapped: still visibly displaced a quarter of a second later.
-    const before = drift()
-    run(field, 0.25)
-    expect(drift()).toBeGreaterThan(before / 3)
-
-    for (let i = 0; i < 6 * 120; i++) {
-      run(field, 1 / 120)
-      // Never past the cell: the offset keeps pointing the way it was pushed, however small it gets.
-      for (const [key, p] of field.particles) {
-        const from = pushed.get(key)
-        if (from) expect(p.offsetX * from.x + p.offsetY * from.y).toBeGreaterThanOrEqual(-1e-6)
-      }
-    }
+    run(field, 5)
 
     for (const p of field.particles.values()) {
       expect(Math.hypot(p.offsetX, p.offsetY)).toBeLessThan(0.01)
@@ -299,17 +238,5 @@ describe('timing', () => {
     for (const [key, presence] of fast) {
       if (slow.has(key)) expect(Math.abs(presence - slow.get(key)!)).toBeLessThan(0.01)
     }
-  })
-})
-
-describe('fingerInfluence', () => {
-  it('is 1 at the pointer and 0 from FINGER_RADIUS out', () => {
-    expect(fingerInfluence(0)).toBe(1)
-    expect(fingerInfluence(FINGER_RADIUS)).toBe(0)
-    expect(fingerInfluence(FINGER_RADIUS * 2)).toBe(0)
-  })
-
-  it('falls all the way out, so the nearest facets are moved hardest', () => {
-    for (let d = 0; d < FINGER_RADIUS - 5; d += 5) expect(fingerInfluence(d + 5)).toBeLessThan(fingerInfluence(d))
   })
 })
