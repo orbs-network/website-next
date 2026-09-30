@@ -10,7 +10,7 @@ import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
 import { HeroFacetField } from '@/components/marketing/hero-facet-field'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
-import { ClosingCta } from '@/components/marketing/closing-cta'
+import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
@@ -397,16 +397,13 @@ export async function HomePage({ locale }: { locale: Locale }) {
         locale={locale}
         actions={
           <>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
-                {t('connect.follow')}
-              </a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
-                {t('connect.community')}
-              </a>
-            </Button>
+            <ClosingSocialButtons
+              follow={t('connect.follow')}
+              community={t('connect.community')}
+              x={HOME_LINKS.x}
+              telegram={HOME_LINKS.telegram}
+              locale={locale}
+            />
             <Button asChild>
               <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
                 {t('connect.contact')}
