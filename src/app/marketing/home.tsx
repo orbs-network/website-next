@@ -248,7 +248,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
         against the news run's #f6f6f6 — and the pair inverts with the theme.
       */}
       <div className="band-contrast bg-surface">
-        <section className="container py-section">
+        {/*
+          No bottom padding at `lg`: the list's vertical rule runs to the foot
+          of the band, so `FeatureTabs` carries that space inside its columns.
+        */}
+        <section className="container pt-section pb-section lg:pb-0">
           <p
             className="text-detail font-medium uppercase tracking-widest text-fg-muted"
             lang={lang('features.eyebrow')}
@@ -267,20 +271,21 @@ export async function HomePage({ locale }: { locale: Locale }) {
               panel: t(`features.${id}.panel`),
             }))}
             locale={locale}
+            footer={
+              <>
+                <Button asChild>
+                  <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
+                    {t('features.cta')}
+                  </Link>
+                </Button>
+                <Button asChild>
+                  <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer" lang={lang('features.github')}>
+                    {t('features.github')}
+                  </a>
+                </Button>
+              </>
+            }
           />
-
-          <div className="mt-10 flex flex-wrap gap-4">
-            <Button asChild variant="secondary">
-              <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
-                {t('features.cta')}
-              </Link>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer" lang={lang('features.github')}>
-                {t('features.github')}
-              </a>
-            </Button>
-          </div>
         </section>
       </div>
 
@@ -294,7 +299,8 @@ export async function HomePage({ locale }: { locale: Locale }) {
             <H2 className="text-balance" lang={lang('network.title')}>
               {t('network.title')}
             </H2>
-            <div className="mt-6 max-w-lg">
+            {/* `space-y-5`: the prose renderer sets no paragraph margin, so the two ran together. */}
+            <div className="mt-6 max-w-lg space-y-5">
               <MarkdownProse>{t('network.body')}</MarkdownProse>
             </div>
           </div>
@@ -366,25 +372,39 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </section>
         )}
 
+        {/*
+          Same 1fr / 2fr split as the features list above: the heading on its
+          own, the rows in the right column, and "View resources" pinned
+          bottom-left level with the last row. In the DOM the button follows
+          the list, so a phone and a screen reader get heading, rows, button.
+        */}
         <section className="container py-section">
           <H2 className="text-balance" lang={lang('discover.title')}>
             {t('discover.title')}
           </H2>
 
-          <ul className="mt-16 flex flex-col">
-            {HOME_DISCOVER.map((item) => (
-              <li key={item.id}>
-                <Link
-                  href={localeHref(item.href, locale)}
-                  lang={lang(`discover.${item.id}`)}
-                  className="flex items-center justify-between border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-                >
-                  {t(`discover.${item.id}`)}
-                  <span aria-hidden="true">&rarr;</span>
-                </Link>
-              </li>
-            ))}
-          </ul>
+          <div className="mt-16 grid gap-10 lg:mt-48 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-5">
+            <ul className="flex min-w-0 flex-col lg:col-start-2 lg:row-start-1">
+              {HOME_DISCOVER.map((item) => (
+                <li key={item.id}>
+                  <Link
+                    href={localeHref(item.href, locale)}
+                    lang={lang(`discover.${item.id}`)}
+                    className="flex items-center justify-between gap-6 border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+                  >
+                    {t(`discover.${item.id}`)}
+                    <LongArrow />
+                  </Link>
+                </li>
+              ))}
+            </ul>
+
+            <Button asChild className="self-end justify-self-start lg:col-start-1 lg:row-start-1">
+              <Link href={localeHref(HOME_LINKS.resources, locale)} lang={lang('discover.cta')}>
+                {t('discover.cta')}
+              </Link>
+            </Button>
+          </div>
         </section>
       </div>
 
@@ -639,5 +659,29 @@ function NewsCard({
         )}
       </Link>
     </li>
+  )
+}
+
+/**
+ * The Discover rows' arrow: long and hairline, as drawn in the design (about
+ * 36px across at 42px type), rather than an `&rarr;` glyph, whose weight and
+ * length follow the font and read as a bullet at this size.
+ */
+function LongArrow() {
+  return (
+    <svg
+      width="36"
+      height="24"
+      viewBox="0 0 36 24"
+      fill="none"
+      stroke="currentColor"
+      strokeWidth="1.5"
+      strokeLinecap="round"
+      strokeLinejoin="round"
+      aria-hidden="true"
+      className="h-auto w-7 shrink-0 lg:w-9"
+    >
+      <path d="M1 12H35M24 1L35 12L24 23" />
+    </svg>
   )
 }

@@ -1447,7 +1447,8 @@
         "title": "Discover.",
         "blog": "Blog",
         "whitePapers": "Whitepapers",
-        "faq": "FAQ"
+        "faq": "FAQ",
+        "cta": "View resources"
       },
       "marquee": {
         "oneApi": "One API.",

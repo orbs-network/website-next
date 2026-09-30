@@ -40,6 +40,7 @@ export type FeatureTab = {
 export function FeatureTabs({
   tabs,
   locale,
+  footer,
   className,
 }: {
   tabs: readonly FeatureTab[]
@@ -51,6 +52,12 @@ export function FeatureTabs({
    * panel are separate catalog entries that need not share a language.
    */
   locale: Locale
+  /**
+   * Rendered under the tab list, pinned to the bottom of its column so it sits
+   * level with the bottom of the panel — the design's two CTAs. On a phone it
+   * follows the panel instead of splitting the list from what it controls.
+   */
+  footer?: React.ReactNode
   className?: string
 }) {
   const [selected, setSelected] = React.useState(0)
@@ -87,7 +94,22 @@ export function FeatureTabs({
   const active = tabs[selected]
 
   return (
-    <div className={cn('grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)]', className)}>
+    /*
+      The design rules the section into two columns: a line across the top of
+      the tabs and a vertical one at the list's edge that runs to the bottom of
+      the band. The vertical rule is the `lg:border-r` on the list AND on the
+      footer — two grid rows with no row gap, so the line is unbroken — which
+      is why the caller drops the section's bottom padding at `lg` and this
+      component carries it (`lg:pb-9`) instead.
+
+      1fr / 2fr, from the frame: list 37–536, panel 557–1575.
+    */
+    <div
+      className={cn(
+        'grid gap-10 border-t border-border lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:grid-rows-[1fr_auto] lg:gap-x-5 lg:gap-y-0',
+        className
+      )}
+    >
       {/*
         `min-w-0` on both columns, and it is load-bearing rather than tidy. A
         grid item defaults to `min-width: auto`, so it refuses to shrink below
@@ -97,7 +119,11 @@ export function FeatureTabs({
         390px viewport and scrolled the whole page sideways. Measured, not
         guessed: `document.scrollWidth` was 448 against a `clientWidth` of 390.
       */}
-      <div role="tablist" aria-orientation="vertical" className="flex min-w-0 flex-col">
+      <div
+        role="tablist"
+        aria-orientation="vertical"
+        className="flex min-w-0 flex-col lg:col-start-1 lg:row-start-1 lg:border-r lg:border-border"
+      >
         {tabs.map((tab, index) => (
           <button
             key={tab.id}
@@ -117,7 +143,9 @@ export function FeatureTabs({
             onKeyDown={(event) => onKeyDown(event, index)}
             lang={textLang(tab.title, locale)}
             className={cn(
-              'border-b border-border py-6 text-start text-h4 transition-colors',
+              // `lg:pe-5` on the tab, not the list: the design runs each row's rule
+              // into the vertical one.
+              'border-b border-border py-6 text-start text-h4 transition-colors lg:pe-5',
               'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
               index === selected ? 'text-accent-primary' : 'text-fg hover:text-accent-primary'
             )}
@@ -148,6 +176,9 @@ export function FeatureTabs({
             gradient under eight tabs is a screen and a half of nothing.
           */
           'flex min-h-[34rem] min-w-0 flex-col justify-between rounded-sm p-8 sm:p-12 lg:min-h-[900px]',
+          // Inset from the rules by the same 36px the design leaves above and
+          // below it; the bottom inset is what the footer lines up against.
+          'lg:col-start-2 lg:row-span-2 lg:row-start-1 lg:my-9',
           // A CSS gradient rather than an exported image: it is a gradient, so
           // it scales to any box at zero bytes and cannot go blurry.
           'bg-gradient-to-br from-periwinkle-200 via-periwinkle-400 to-indigo-600',
@@ -187,6 +218,12 @@ export function FeatureTabs({
           className="hidden self-start text-[2.75rem] text-neutral-900 lg:inline-flex"
         />
       </div>
+
+      {footer && (
+        <div className="flex min-w-0 flex-wrap items-end gap-5 lg:col-start-1 lg:row-start-2 lg:border-r lg:border-border lg:pe-5 lg:pb-9">
+          {footer}
+        </div>
+      )}
     </div>
   )
 }
