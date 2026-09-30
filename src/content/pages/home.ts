@@ -147,7 +147,6 @@ export const HOME_IMAGES = {
 } as const
 
 export const HOME_LINKS = {
-  docs: 'https://docs.orbs.network/',
   github: 'https://github.com/orbs-network',
   x: 'https://twitter.com/orbs_network',
   telegram: 'https://t.me/OrbsNetwork',
