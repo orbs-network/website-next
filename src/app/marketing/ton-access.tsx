@@ -81,7 +81,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section id={TON_ACCESS_EXAMPLE_ID} className="container scroll-mt-24 py-20">
+      <section id={TON_ACCESS_EXAMPLE_ID} className="container scroll-mt-32 py-20">
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance" lang={lang('example.title')}>
             {t('example.title')}

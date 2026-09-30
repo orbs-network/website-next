@@ -25,8 +25,13 @@ export function ThemeToggle() {
           lang="en"
           className="relative inline-flex size-9 items-center justify-center text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
-          <Sun className="size-4 scale-100 rotate-0 transition-all dark:scale-0 dark:-rotate-90" />
-          <Moon className="absolute size-4 scale-0 rotate-90 transition-all dark:scale-100 dark:rotate-0" />
+          {/*
+            A solid 14px sun in both themes, as the header frame draws it
+            (#230). It was an outline sun that swapped to a moon in dark; the
+            menu it opens is where the choice is made, so the icon only has to
+            say "theme".
+          */}
+          <Sun className="size-3.5" fill="currentColor" aria-hidden="true" />
           <span className="sr-only">Toggle theme</span>
         </button>
       </DropdownMenuTrigger>

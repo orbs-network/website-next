@@ -146,3 +146,27 @@ export const ExternalRowsOpenSafely: Story = {
     await expect(canvas.getByRole('link', { name: 'GitHub' })).toHaveAttribute('rel', 'noopener noreferrer')
   },
 }
+
+/**
+ * The page being viewed is marked, both in the bar and in the panel (#230).
+ *
+ * On /dspot the Products trigger carries the current-page state without being
+ * opened, and inside the panel the dSPOT row is `aria-current="page"` — the
+ * attribute is what a screen reader announces, the colour is only for sight.
+ * No trailing slash on the path on purpose: `usePathname` and `localeHref`
+ * disagree about it, and the comparison has to ignore the difference.
+ */
+export const CurrentPageIsMarked: Story = {
+  args: BASE,
+  parameters: { nextjs: { appDirectory: true, navigation: { pathname: '/dspot' } } },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+
+    await expect(canvas.getByRole('button', { name: /Products/ })).toHaveAttribute('data-current', 'true')
+    await expect(canvas.getByRole('button', { name: /Network/ })).not.toHaveAttribute('data-current')
+
+    await openGroup(canvasElement, /Products/)
+    await waitFor(() => expect(canvas.getByRole('link', { name: 'dSPOT' })).toHaveAttribute('aria-current', 'page'))
+    await expect(canvas.getByRole('link', { name: 'dPERPS' })).not.toHaveAttribute('aria-current')
+  },
+}
