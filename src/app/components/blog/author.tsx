@@ -13,7 +13,7 @@ export function Author({ author }: { author: AuthorInfo }) {
           className="rounded-full object-cover object-top w-10 h-10 max-w-10 max-h-10 min-w-10 min-h-10"
         />
       )}
-      <span className="font-medium text-gray-700 dark:text-gray-300">
+      <span className="font-medium text-fg">
         {author.profileUrl ? (
           <a href={author.profileUrl} target="_blank" rel="noopener noreferrer">
             {author.name}

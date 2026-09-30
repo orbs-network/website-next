@@ -324,6 +324,24 @@ export const PanelLeavesTheHeaderInView: Story = {
 }
 
 /**
+ * The panel is opaque. It was a 20% tint over the page, which put the menu's
+ * links on whatever was scrolled under it — on home's inverted bands, dark text
+ * on near-black in light (#228). Checked computed, not by class: `cn` once
+ * dropped `bg-bg` without a trace because the gradient in the same list read to
+ * tailwind-merge as a second background colour.
+ */
+export const PanelIsOpaque: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const dialog = await openPanel(canvasElement)
+    const channels = getComputedStyle(dialog).backgroundColor.match(/[\d.]+/g) ?? []
+
+    await expect(channels.length).toBeGreaterThanOrEqual(3)
+    await expect(Number(channels[3] ?? 1)).toBe(1)
+  },
+}
+
+/**
  * The close control takes the burger's place rather than sitting over it: the
  * trigger is hidden while the panel is open, and the panel's own control is
  * the way out.
