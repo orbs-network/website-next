@@ -5,6 +5,7 @@ import {
   createFacetField,
   facetsOf,
   isFacetFieldSettled,
+  moveFacetPointer,
   stepFacetField,
 } from '@/components/marketing/hero-facet-physics'
 import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '@/components/marketing/hero-facets'
@@ -263,7 +264,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       const rect = root.getBoundingClientRect()
       const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
 
-      field.pointer = inside ? { x: clientX - rect.left, y: clientY - rect.top } : null
+      moveFacetPointer(field, inside ? { x: clientX - rect.left, y: clientY - rect.top } : null)
 
       /*
         Only wake the loop when there is something for it to do — the pointer
@@ -292,7 +293,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     }
 
     const onPointerLeave = () => {
-      field.pointer = null
+      moveFacetPointer(field, null)
       start()
     }
 

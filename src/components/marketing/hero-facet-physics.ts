@@ -171,7 +171,7 @@ type Particle = {
 }
 
 export type FacetField = {
-  /** The pointer, in field space, or `null` when it is outside the field. Set by the caller. */
+  /** The pointer, in field space, or `null` when it is outside the field. Write it with `moveFacetPointer`, not directly. */
   pointer: Point | null
   /** Where the pointer last was. The field collapses toward it after the pointer leaves. */
   anchor: Point | null
@@ -202,6 +202,28 @@ export function createFacetField(): FacetField {
     pointerVelocityX: 0,
     pointerVelocityY: 0,
     remainder: 0,
+  }
+}
+
+/**
+ * Report where the pointer is — `null` for outside the field.
+ *
+ * A function rather than an assignment because LEAVING HAS TO BE RECORDED THE
+ * MOMENT IT HAPPENS, not when the next frame gets round to it. Pointer events
+ * arrive between frames, and a pointer that leaves and re-enters before the
+ * next step — two events inside one 16ms frame, or any number while a
+ * background tab has paused the frame loop — would otherwise only ever be
+ * seen inside. The step would then measure the jump from where it left to
+ * where it came back as one frame of motion: a flick across the hero that
+ * never happened.
+ */
+export function moveFacetPointer(field: FacetField, point: Point | null) {
+  field.pointer = point ? { ...point } : null
+
+  if (!point) {
+    field.previousPointer = null
+    field.pointerVelocityX = 0
+    field.pointerVelocityY = 0
   }
 }
 

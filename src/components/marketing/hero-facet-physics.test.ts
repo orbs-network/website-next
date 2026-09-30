@@ -6,6 +6,7 @@ import {
   pushProfile,
   facetsOf,
   isFacetFieldSettled,
+  moveFacetPointer,
   stepFacetField,
   type FacetField,
 } from './hero-facet-physics'
@@ -30,14 +31,15 @@ function run(
   const frames = Math.round(seconds * fps)
 
   for (let i = 0; i < frames; i++) {
-    if (move && field.pointer) field.pointer = { x: field.pointer.x + move.x * dt, y: field.pointer.y + move.y * dt }
+    if (move && field.pointer)
+      moveFacetPointer(field, { x: field.pointer.x + move.x * dt, y: field.pointer.y + move.y * dt })
     stepFacetField(field, dt)
   }
 }
 
 function settledAt(point = CURSOR): FacetField {
   const field = createFacetField()
-  field.pointer = { ...point }
+  moveFacetPointer(field, { ...point })
   run(field, 4)
 
   return field
@@ -76,7 +78,7 @@ describe('at rest', () => {
 describe('the bloom', () => {
   it('travels outward from the pointer rather than appearing everywhere at once', () => {
     const field = createFacetField()
-    field.pointer = { ...CURSOR }
+    moveFacetPointer(field, { ...CURSOR })
     run(field, 0.1)
 
     const drawn = facetsOf(field)
@@ -97,7 +99,7 @@ describe('the bloom', () => {
 
   it('overshoots before settling — the bounce', () => {
     const field = createFacetField()
-    field.pointer = { ...CURSOR }
+    moveFacetPointer(field, { ...CURSOR })
 
     let peak = 0
     for (let i = 0; i < 120; i++) {
@@ -113,7 +115,7 @@ describe('the bloom', () => {
 describe('the collapse', () => {
   it('withdraws from the rim inward', () => {
     const field = settledAt()
-    field.pointer = null
+    moveFacetPointer(field, null)
     run(field, 0.08)
 
     const all = particles(field)
@@ -128,7 +130,7 @@ describe('the collapse', () => {
   it('fades all the way to nothing, rather than down to the rim size', () => {
     // 3.7px / 0.17 is the design's facet at the EDGE of the disc, not a floor for the fade.
     const field = settledAt()
-    field.pointer = null
+    moveFacetPointer(field, null)
 
     let smallest = Infinity
     for (let i = 0; i < 60; i++) {
@@ -141,7 +143,7 @@ describe('the collapse', () => {
 
   it('goes fully quiet, so the frame loop can stop', () => {
     const field = settledAt()
-    field.pointer = null
+    moveFacetPointer(field, null)
     run(field, 2)
 
     expect(facetsOf(field)).toHaveLength(0)
@@ -221,11 +223,21 @@ describe('the liquid', () => {
     expect(worst).toBeLessThanOrEqual(MAX_DRIFT + 1e-9)
   })
 
+  it('does not read a leave and re-enter between two frames as a flick', () => {
+    // Both events land before the next step, so the step never sees the pointer outside.
+    const field = settledAt()
+    moveFacetPointer(field, null)
+    moveFacetPointer(field, { x: CURSOR.x + 800, y: CURSOR.y })
+    run(field, 0.1)
+
+    for (const p of field.particles.values()) expect(Math.hypot(p.offsetX, p.offsetY)).toBeLessThan(0.01)
+  })
+
   it('does not read re-entering far away as a flick', () => {
     const field = settledAt()
-    field.pointer = null
+    moveFacetPointer(field, null)
     run(field, 0.05)
-    field.pointer = { x: CURSOR.x + 800, y: CURSOR.y }
+    moveFacetPointer(field, { x: CURSOR.x + 800, y: CURSOR.y })
     run(field, 0.1)
 
     for (const p of field.particles.values()) expect(Math.hypot(p.offsetX, p.offsetY)).toBeLessThan(0.01)
@@ -236,7 +248,7 @@ describe('timing', () => {
   it('animates the same at 60Hz and 144Hz', () => {
     const at = (fps: number) => {
       const field = createFacetField()
-      field.pointer = { ...CURSOR }
+      moveFacetPointer(field, { ...CURSOR })
       run(field, 0.25, { fps })
       return new Map([...field.particles].map(([key, p]) => [key, p.presence]))
     }
