@@ -1328,8 +1328,7 @@
         "eyebrow": "[$14B+ in trading volume]",
         "headline": "Trading infrastructure for on-chain finance",
         "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
-        "cta": "Talk to the team",
-        "docs": "Read the docs"
+        "cta": "Talk to the team"
       },
       "stats": {
         "processed": {
@@ -1470,7 +1469,8 @@
         "success": "You are on the list. Thanks for subscribing.",
         "failed": "That did not go through. Please try again.",
         "invalidEmail": "Please enter a valid email address."
-      }
+      },
+      "sdk": "Explore the SDK"
     },
     "smartContracts": {
       "meta": {
@@ -1711,7 +1711,7 @@
     }
   },
   "devDocs": {
-    "sdk": "SDK",
+    "sdk": "Explore the SDK",
     "api": "API",
     "skill": "Skill"
   }

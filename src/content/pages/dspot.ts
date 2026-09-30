@@ -10,12 +10,14 @@
  */
 
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
+import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
 import { HOME_LINKS } from './home'
 
 export const DSPOT_LINKS = {
   /** The hero's "Discover order types" scrolls to the modules on this page. */
   modules: '#modules',
-  docs: 'https://docs.orbs.network/',
+  /** The network section's docs link: the network's own docs, not the SDK's. */
+  docs: NETWORK_DOCS_URL,
   x: HOME_LINKS.x,
   telegram: HOME_LINKS.telegram,
   contact: '/contact',
