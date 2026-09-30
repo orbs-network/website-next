@@ -194,7 +194,7 @@ export type Facet = {
   y: number
   /** Side length of the equilateral triangle. */
   size: number
-  /** 0-1. Already includes the field's overall intensity. */
+  /** 0-1. */
   opacity: number
   /** Radians from the positive x axis. See `FACET_ORIENTATION`. */
   angle: number
@@ -207,21 +207,20 @@ export type Facet = {
  * cost is the ~200 cells that can possibly be visible and does not grow with
  * the size of the section.
  *
- * `intensity` scales size and alpha together and is how the field fades in and
- * out — "fade back to dots" in the designer's note. At 0 this returns nothing,
- * so an idle field costs one comparison.
+ * This is the field with the cursor held still: the design, and the target
+ * `hero-facet-physics.ts` springs every facet toward. Fading in and out is
+ * the physics' job, not this function's.
  */
 export function facetsAround(
   cursorX: number,
   cursorY: number,
   {
-    intensity = 1,
     spacing = FACET_SPACING,
     radius = FACET_RADIUS,
     elapsed = 0,
-  }: { intensity?: number; spacing?: number; radius?: number; elapsed?: number } = {}
+  }: { spacing?: number; radius?: number; elapsed?: number } = {}
 ): Facet[] {
-  if (intensity <= 0 || spacing <= 0 || radius <= 0) return []
+  if (spacing <= 0 || radius <= 0) return []
 
   const facets: Facet[] = []
 
@@ -254,23 +253,8 @@ export function facetsAround(
 
       if (strength <= 0) continue
 
-      /*
-        DISTANCE FIRST, THEN INTENSITY AS A MULTIPLIER — not one combined
-        `strength * intensity` fed into the interpolation.
-
-        The two are different quantities. Distance decides where a facet sits
-        between the rim size and the cursor size, and the design's floor of
-        3.7px/0.17 alpha is what a facet looks like at the EDGE OF THE DISC,
-        not what it looks like on its way out. Folding intensity into the same
-        interpolation applies that floor to the fade as well: every facet
-        shrinks to 3.7px, holds at 0.17 alpha, and then vanishes at the
-        cutoff — a pop, not the "fade back to dots" the note asks for.
-
-        At full intensity this is arithmetically identical to the old form, so
-        the measured match against the design is unchanged.
-      */
-      const size = lerp(FACET_SIZE_MIN, FACET_SIZE_MAX, strength) * intensity
-      const opacity = lerp(FACET_OPACITY_MIN, FACET_OPACITY_MAX, strength) * intensity
+      const size = lerp(FACET_SIZE_MIN, FACET_SIZE_MAX, strength)
+      const opacity = lerp(FACET_OPACITY_MIN, FACET_OPACITY_MAX, strength)
 
       facets.push({
         x,

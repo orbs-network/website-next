@@ -2,20 +2,21 @@
 
 import { useCallback, useEffect, useRef, useSyncExternalStore } from 'react'
 import {
-  FACET_GRADIENT_STOPS,
-  FACET_RADIUS,
-  FACET_SIZE_MAX,
-  facetsAround,
-  type Facet,
-} from '@/components/marketing/hero-facets'
+  createFacetField,
+  facetsOf,
+  isFacetFieldSettled,
+  stepFacetField,
+} from '@/components/marketing/hero-facet-physics'
+import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '@/components/marketing/hero-facets'
 
 /**
  * The hero's interactive backdrop: a dot grid that fans out into Orbs facets
  * under the cursor.
  *
- * The maths lives in `hero-facets.ts` and is tested there. This file is the
- * parts that can only be done in a browser — capability detection, the pointer,
- * the canvas, and the easing that makes it "fade back to dots".
+ * The maths lives in `hero-facets.ts` (what the field looks like at rest) and
+ * `hero-facet-physics.ts` (the springs that bloom, stir and collapse it), and
+ * is tested there. This file is the parts that can only be done in a browser —
+ * capability detection, the pointer, the canvas and the frame loop.
  *
  * **The dot grid is a child, not something this draws.** It is passed in and
  * rendered on the server, so the resting state of the hero is correct with no
@@ -130,20 +131,16 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       React on pointer move would be the whole cost this component exists to
       avoid.
     */
-    let pointerX = 0
-    let pointerY = 0
-    let intensity = 0
-    let target = 0
+    /*
+      The field's clock is its own `elapsed`, advanced only while frames run,
+      NOT wall clock — so the rotation picks up where it left off rather than
+      jumping to wherever `performance.now()` had got to while nothing was
+      being drawn.
+    */
+    const field = createFacetField()
     let frame = 0
     let width = 0
     let height = 0
-    /*
-      Seconds of rotation accumulated while the field has been awake, NOT wall
-      clock. Advanced per frame from the frame timestamp, so the wave picks up
-      where it left off rather than jumping to wherever `performance.now()` had
-      got to while nothing was being drawn.
-    */
-    let elapsed = 0
     let lastFrameAt = 0
 
     const resize = () => {
@@ -160,16 +157,17 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     const draw = () => {
       ctx.clearRect(0, 0, width, height)
 
-      if (intensity > 0.002) {
-        const facets = facetsAround(pointerX, pointerY, { intensity, elapsed })
+      const facets = facetsOf(field)
+      const centre = field.anchor
 
+      if (centre && facets.length > 0) {
         /*
           ONE gradient across the disc, recreated per frame because the disc
           moves. This is how the design is built: each drawn facet carries a
           gradient whose handles run far past the shape, which is Figma's
           record of a single gradient sampled per shape.
         */
-        const gradient = ctx.createLinearGradient(0, pointerY - FACET_RADIUS, 0, pointerY + FACET_RADIUS)
+        const gradient = ctx.createLinearGradient(0, centre.y - FACET_RADIUS, 0, centre.y + FACET_RADIUS)
         for (const stop of FACET_GRADIENT_STOPS) gradient.addColorStop(stop.offset, stop.color)
 
         ctx.fillStyle = gradient
@@ -188,35 +186,31 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         custom properties rather than by reaching for the child's node. The
         grid is a server-rendered child this component does not own, and
         `--hero-facet-*` is the whole contract between them.
+
+        The hole is the bloom front, so the dots give way exactly as far as
+        the wave of facets has reached, and come back as it withdraws.
       */
-      const hole = intensity > 0.002 ? FACET_RADIUS * intensity : 0
-      root.style.setProperty('--hero-facet-x', `${pointerX}px`)
-      root.style.setProperty('--hero-facet-y', `${pointerY}px`)
-      root.style.setProperty('--hero-facet-hole', `${hole}px`)
+      if (centre) {
+        root.style.setProperty('--hero-facet-x', `${centre.x}px`)
+        root.style.setProperty('--hero-facet-y', `${centre.y}px`)
+      }
+      root.style.setProperty('--hero-facet-hole', `${field.front}px`)
     }
 
     const tick = (now: number) => {
       /*
         Clamped to 100ms. A backgrounded tab or a long task can hand back a gap
-        of seconds, and advancing the wave by all of it would snap every facet
-        to a new orientation the moment the reader came back.
+        of seconds, and simulating all of it would snap every facet to a new
+        orientation the moment the reader came back.
       */
       const delta = lastFrameAt === 0 ? 0 : Math.min((now - lastFrameAt) / 1000, 0.1)
       lastFrameAt = now
-      elapsed += delta
 
-      // Exponential ease toward the target. Frame-rate dependent, which is
-      // acceptable for a decorative fade and keeps this to one line; the
-      // visible difference between 60Hz and 120Hz is a fade that settles in
-      // ~120ms rather than ~200ms.
-      intensity += (target - intensity) * 0.16
-
+      stepFacetField(field, delta)
       draw()
 
-      if (target === 0 && intensity <= 0.002) {
-        // Settled and out of view. Stop burning frames until something moves.
-        intensity = 0
-        draw()
+      if (isFacetFieldSettled(field)) {
+        // Collapsed and out of view. Stop burning frames until something moves.
         frame = 0
         lastFrameAt = 0
         return
@@ -224,8 +218,8 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
 
       /*
         Keeps running while the pointer is in the field even if it never moves
-        again — unlike the fade, the rotation is not settling toward anything,
-        so there is no idle state to stop at while the field is up.
+        again — the rotation is not settling toward anything, so there is no
+        idle state to stop at while the field is up.
       */
       frame = requestAnimationFrame(tick)
     }
@@ -269,16 +263,11 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       const rect = root.getBoundingClientRect()
       const inside = clientX >= rect.left && clientX <= rect.right && clientY >= rect.top && clientY <= rect.bottom
 
-      target = inside ? 1 : 0
-
-      if (inside) {
-        pointerX = clientX - rect.left
-        pointerY = clientY - rect.top
-      }
+      field.pointer = inside ? { x: clientX - rect.left, y: clientY - rect.top } : null
 
       /*
         Only wake the loop when there is something for it to do — the pointer
-        is in the field, or a fade is still settling.
+        is in the field, or a collapse is still settling.
 
         This listener is on the WINDOW, so it runs for every mouse move
         anywhere on the page. Calling `start()` unconditionally meant that once
@@ -287,7 +276,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         clearing a 2880x1372 canvas and writing three custom properties to
         paint nothing.
       */
-      if (target !== 0 || intensity > 0.002) start()
+      if (!isFacetFieldSettled(field)) start()
     }
 
     const onPointerMove = (event: PointerEvent) => {
@@ -303,7 +292,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     }
 
     const onPointerLeave = () => {
-      target = 0
+      field.pointer = null
       start()
     }
 
