@@ -101,7 +101,7 @@ export function LogoRow({
   sub?: string
   items: readonly LogoRowItem[]
   /**
-   * Spread the marks across the full width from `lg` up, first mark at the
+   * Spread the marks across the full width from `xl` up, first mark at the
    * left edge and last at the right, instead of centring them as a cluster.
    * The home page's venue strip is drawn that way; rows with a visible heading
    * read better centred under it, so it is opt-in.
@@ -127,7 +127,10 @@ export function LogoRow({
       <ul
         className={cn(
           'mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8',
-          spread && 'lg:flex-nowrap lg:justify-between'
+          // `xl`, not `lg`: six venue marks need about 1030px with their gaps,
+          // and at 1024 the column is 958 — a forced single line there scrolled
+          // the page sideways. Below `xl` they wrap as a centred cluster.
+          spread && 'xl:flex-nowrap xl:justify-between'
         )}
       >
         {items.map((item) => (
