@@ -88,6 +88,18 @@
     --color-link: var(--color-indigo-400);
 
     /*
+      Per-card accents (#192). The design colour-codes card eyebrows by
+      audience and product: periwinkle (accent-primary), pink, cyan. The 400
+      bases are the design's own values and are only legible on DARK grounds;
+      pink/400 on white is about 2:1 and cyan/400 about 1.3:1. So the light
+      theme takes the 600 step of the same hue, which clears AA for 11px text.
+    */
+    --color-accent-pink: var(--color-pink-600);
+    --color-accent-cyan: var(--color-cyan-600);
+    /* The filled card (stack, solutions). White on the #f6f6f6 page. */
+    --color-card-fill: var(--color-neutral-100);
+
+    /*
       Typography scale.
 
       THE HEADING SIZES ARE FLUID, and that is the fix for #108 rather than a
@@ -292,6 +304,15 @@
     --color-accent-primary-hover: var(--color-periwinkle-300);
     --color-link: var(--color-periwinkle-300);
 
+    --color-accent-pink: var(--color-pink-400);
+    --color-accent-cyan: var(--color-cyan-400);
+    /*
+      The filled card. The design draws it as #29292B at 50% on the page, which
+      is #1e1e20: a flat colour here because an alpha fill would shift with
+      whatever band the card sits on.
+    */
+    --color-card-fill: #1e1e20;
+
     /* shadcn compatibility shims (dark) */
     --background: var(--color-bg);
     --foreground: var(--color-fg);
@@ -425,6 +446,9 @@
     --color-accent-primary: var(--color-periwinkle-300);
     --color-accent-primary-hover: var(--color-periwinkle-200);
     --color-link: var(--color-periwinkle-300);
+    --color-accent-pink: var(--color-pink-400);
+    --color-accent-cyan: var(--color-cyan-400);
+    --color-card-fill: #1e1e20;
     --accent: var(--color-periwinkle-300);
     --primary: var(--color-periwinkle-300);
     --ring: var(--color-periwinkle-300);
@@ -450,6 +474,9 @@
     --color-accent-primary: var(--color-indigo-500);
     --color-accent-primary-hover: var(--color-indigo-400);
     --color-link: var(--color-indigo-500);
+    --color-accent-pink: var(--color-pink-600);
+    --color-accent-cyan: var(--color-cyan-600);
+    --color-card-fill: var(--color-neutral-100);
     --accent: var(--color-indigo-500);
     --primary: var(--color-indigo-500);
     --ring: var(--color-indigo-500);

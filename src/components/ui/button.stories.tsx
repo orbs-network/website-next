@@ -14,7 +14,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary'],
+      options: ['primary', 'secondary', 'solid'],
       description: 'Visual style of the button',
     },
     size: {
@@ -86,6 +86,26 @@ export const SecondaryDisabled: Story = {
     variant: 'secondary',
     children: 'Join Community',
     disabled: true,
+  },
+}
+
+/**
+ * Solid: the hero's main action. Filled with the text colour, so the label has
+ * to take the BACKGROUND colour or it disappears into its own fill. And it
+ * keeps the arrow, unlike `secondary`.
+ */
+export const Solid: Story = {
+  args: {
+    variant: 'solid',
+    children: 'Talk to the team',
+  },
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button')
+    const style = getComputedStyle(button)
+
+    await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
+    await expect(style.color).not.toBe(style.backgroundColor)
+    await expect(button.querySelector('svg')).toBeTruthy()
   },
 }
 
