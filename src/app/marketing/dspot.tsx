@@ -92,8 +92,6 @@ export async function DspotPage({ locale }: { locale: Locale }) {
 
       <ClosingCta
         phrases={DSPOT_MARQUEE.map((id) => t(`marquee.${id}`))}
-        pauseLabel={t('marquee.pause')}
-        resumeLabel={t('marquee.resume')}
         locale={locale}
         actions={
           <>

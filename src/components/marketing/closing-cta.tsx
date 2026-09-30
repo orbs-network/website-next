@@ -22,15 +22,11 @@ import { SectionBackdrop } from './section-backdrop'
  */
 export function ClosingCta({
   phrases,
-  pauseLabel,
-  resumeLabel,
   actions,
   children,
   locale,
 }: {
   phrases: readonly string[]
-  pauseLabel: string
-  resumeLabel: string
   actions: React.ReactNode
   children?: React.ReactNode
   locale: Locale
@@ -41,7 +37,7 @@ export function ClosingCta({
 
       {children}
 
-      <Marquee phrases={phrases} pauseLabel={pauseLabel} resumeLabel={resumeLabel} locale={locale} />
+      <Marquee phrases={phrases} locale={locale} />
 
       {/*
         `CTA Area` is 518px around a 174px container and the buttons are 42px,

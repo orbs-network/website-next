@@ -64,8 +64,6 @@ export const Page: Story = {
       />
       <ClosingCta
         phrases={['One API.', 'Spot and perpetuals.', 'Build, test and launch.']}
-        pauseLabel="Pause"
-        resumeLabel="Resume"
         locale="en"
         actions={<Button>Talk to the team</Button>}
       />
@@ -306,13 +304,7 @@ export const StatementPointsAreAnOrderedList: Story = {
 /** The signup the home page passes in renders above the phrases, as designed. */
 export const ClosingChildrenSitAboveTheMarquee: Story = {
   render: () => (
-    <ClosingCta
-      phrases={['One API.']}
-      pauseLabel="Pause"
-      resumeLabel="Resume"
-      locale="en"
-      actions={<Button>Talk to the team</Button>}
-    >
+    <ClosingCta phrases={['One API.']} locale="en" actions={<Button>Talk to the team</Button>}>
       <p data-testid="signup">Signup</p>
     </ClosingCta>
   ),

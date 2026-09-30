@@ -1452,9 +1452,7 @@
       "marquee": {
         "oneApi": "One API.",
         "everyOrderType": "Every on-chain order type.",
-        "institutionalGrade": "Institutional-grade execution.",
-        "pause": "Pause",
-        "resume": "Resume"
+        "institutionalGrade": "Institutional-grade execution."
       },
       "connect": {
         "follow": "Follow us",
@@ -1639,9 +1637,7 @@
       "marquee": {
         "advancedOrders": "Advanced orders.",
         "liquidityRoutes": "More liquidity routes.",
-        "yourBrand": "Your brand.",
-        "pause": "Pause",
-        "resume": "Resume"
+        "yourBrand": "Your brand."
       },
       "closing": {
         "uiKit": "Explore the UI kit",
@@ -1704,9 +1700,7 @@
       "marquee": {
         "control": "Trade with more control.",
         "liquidity": "Access aggregated liquidity.",
-        "custody": "Keep custody until execution.",
-        "pause": "Pause",
-        "resume": "Resume"
+        "custody": "Keep custody until execution."
       },
       "closing": {
         "follow": "Follow us",

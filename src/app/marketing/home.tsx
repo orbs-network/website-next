@@ -394,8 +394,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <ClosingCta
         phrases={HOME_MARQUEE.map((id) => t(`marquee.${id}`))}
-        pauseLabel={t('marquee.pause')}
-        resumeLabel={t('marquee.resume')}
         locale={locale}
         actions={
           <>
