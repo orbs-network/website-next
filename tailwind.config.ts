@@ -233,6 +233,9 @@ const config: Config = {
         'fg-muted': 'var(--color-fg-muted)',
         'accent-primary': 'var(--color-accent-primary)',
         'accent-primary-hover': 'var(--color-accent-primary-hover)',
+        'accent-pink': 'var(--color-accent-pink)',
+        'accent-cyan': 'var(--color-accent-cyan)',
+        'card-fill': 'var(--color-card-fill)',
         link: 'var(--color-link)',
 
         // shadcn shims — keep the DEFAULT/foreground nested shape so existing
