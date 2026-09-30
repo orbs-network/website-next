@@ -1,9 +1,8 @@
 import { cache } from 'react'
-import { unstable_cache } from 'next/cache'
 import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
 import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
-import { isReservedRootSlug, postPath } from './routes'
+import { isReservedRootSlug } from './routes'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -280,101 +279,6 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
     })
 
     return withoutReservedSlugs(posts.items.map((post) => post.fields))
-  })
-}
-
-/** The post the header's dropdown panels feature. Plain data: it crosses into a client component. */
-export type FeaturedPost = {
-  title: string
-  href: string
-  image: string | null
-}
-
-/** Cache tag for the featured post. The revalidation webhook invalidates it on every blog change. */
-export const FEATURED_POST_TAG = 'nav-featured-post'
-
-/**
- * How many of the newest posts to look through for one that can be linked. A
- * post with no slug, or a reserved one, is skipped rather than featured; three
- * is enough that one bad entry at the top does not empty the column.
- */
-const FEATURED_POST_CANDIDATES = 3
-
-/**
- * The newest linkable post, cached once for the whole site.
- *
- * The header renders on every page — 456 of them at build — so an uncached read
- * here is 456 Contentful requests per build and one per regeneration after it.
- * The CDA client does not go through `fetch`, so Next's request dedupe never
- * sees it. One shared entry instead, invalidated by tag from the revalidation
- * webhook rather than on a timer: a timer would put every page on ISR for the
- * sake of one link, while a publish is the only thing that changes the answer.
- *
- * This inner half THROWS on failure, and that is the point of splitting it
- * from `getFeaturedPost`. A degraded build's empty answer must not land in a
- * cache that nothing expires; see `degradable`.
- */
-const readFeaturedPost = unstable_cache(
-  async (): Promise<FeaturedPost | null> => {
-    const client = getClient()
-
-    const posts = await client.getEntries<TypeBlogPostSkeleton>({
-      content_type: 'blogPost',
-      order: [...POST_ORDER],
-      limit: FEATURED_POST_CANDIDATES,
-    })
-
-    const post = withoutReservedSlugs(posts.items.map((entry) => entry.fields)).find(
-      (fields): fields is BlogPostFields & { slug: string } => typeof fields.slug === 'string' && fields.slug !== ''
-    )
-    if (!post) return null
-
-    return { title: post.title, href: postPath(post.slug), image: getAssetUrl(post.heroImage) }
-  },
-  [FEATURED_POST_TAG],
-  { tags: [FEATURED_POST_TAG] }
-)
-
-const IS_BUILD = process.env.NEXT_PHASE === 'phase-production-build'
-
-/**
- * One read per build worker, shared by every page it renders.
- *
- * `unstable_cache` already makes a SUCCESSFUL read one request per build. A
- * failure is deliberately not cached, though, so in a degraded build every
- * page asked again: ~100 requests to a space that had already said it was over
- * quota, and as many identical warnings burying the build log. Memoising the
- * promise covers that, and the concurrent first reads a cold cache lets
- * through.
- *
- * Build-only. A running site must not hold one answer for its lifetime; there
- * the tag is what decides when to ask again.
- */
-let buildRead: Promise<FeaturedPost | null> | undefined
-
-/**
- * `null` when the space has no linkable post, or when it could not be asked.
- *
- * At request time a failure is logged and the header renders without the
- * column — the one place this module swallows a Contentful error, and on
- * purpose. The header is on every page, including the ones rendered on demand
- * (404s, `/[slug]/[...rest]`, draft previews, a post published after the
- * build). Throwing would turn a Contentful outage into a 500 on all of them for
- * the sake of one decorative link. The cost: a page regenerated DURING an
- * outage keeps the missing column until the next blog change fires the
- * webhook. That is the better failure.
- *
- * At build time the rules are `degradable`'s, like every other read.
- */
-export function getFeaturedPost(): Promise<FeaturedPost | null> {
-  if (IS_BUILD) {
-    buildRead ??= degradable('getFeaturedPost', null, readFeaturedPost)
-    return buildRead
-  }
-
-  return readFeaturedPost().catch((error: unknown) => {
-    console.error('[api] getFeaturedPost: Contentful read failed; rendering the header without a featured post', error)
-    return null
   })
 }
 

@@ -66,7 +66,7 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'venues', href: '/venues' },
   // The one that already exists.
   { id: 'institutions', href: '/institutional' },
-  { id: 'aiAgents', href: '/ai-agents' },
+  { id: 'aiAgents', href: '/ai/skills' },
 ]
 
 /**

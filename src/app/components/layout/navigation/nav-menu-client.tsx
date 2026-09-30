@@ -1,10 +1,7 @@
 'use client'
 
-import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { DSpotGlyph, PerpetualHubGlyph } from '@/components/icons'
-import { buttonVariants } from '@/components/ui/button'
+import { AgenticGlyph, DPerpsGlyph, DSpotMenuGlyph, SdkApiGlyph } from '@/components/icons'
 import { MenuItem, MenuItemW } from '@/components/ui/menu-item'
 import {
   NavigationMenu,
@@ -14,7 +11,6 @@ import {
   NavigationMenuList,
   NavigationMenuTrigger,
 } from '@/components/ui/navigation-menu'
-import type { FeaturedPost } from '@/app/lib/api'
 import type { NavLinkSpec } from '@/content/shared/navigation'
 import { cn } from '@/lib/utils'
 
@@ -27,8 +23,10 @@ import { cn } from '@/lib/utils'
  * same marks; a second copy of this map is a second thing to update.
  */
 export const GLYPHS: Record<NonNullable<NavLinkSpec['icon']>, React.ComponentType<{ className?: string }>> = {
-  dspot: DSpotGlyph,
-  perpetualHub: PerpetualHubGlyph,
+  sdk: SdkApiGlyph,
+  dspot: DSpotMenuGlyph,
+  dperps: DPerpsGlyph,
+  agentic: AgenticGlyph,
 }
 
 /** A link with its label and destination already resolved on the server. */
@@ -51,34 +49,28 @@ export type ResolvedNavGroup = {
   links: readonly ResolvedNavLink[]
 }
 
-/** The post, plus its title's `lang` — decided on the server, where the locale is. */
-export type ResolvedFeaturedPost = FeaturedPost & { titleLang?: string }
-
-/** The featured-post column's two catalog strings, resolved on the server like every other label. */
-export type FeaturedCopy = {
-  label: string
-  labelLang?: string
-  cta: string
-  ctaLang?: string
-}
-
 /**
  * Whether a list's rows should keep a column for an icon.
  *
- * Products has marks on some rows and (for now) none on SDK/API and Agentic —
- * see `NavLinkSpec['icon']`. Without a reserved column their labels would sit
- * 33px left of their neighbours'. Solutions and Network have no marks at all,
- * so there it would be 33px of nothing.
+ * Every Products row has a mark; Solutions and Network have none, so there the
+ * column would be 30px of nothing. The reserve is kept for a Products row added
+ * before its mark exists — without it that label would sit left of its
+ * neighbours'.
  */
 export function hasIcons(links: readonly ResolvedNavLink[]) {
   return links.some((link) => link.icon !== undefined)
 }
 
-/** The mark, or an empty box of the same size when the list keeps an icon column. */
+/**
+ * The mark, or an empty box of the same size when the list keeps an icon column.
+ *
+ * 18px: the menu frame draws every mark at about 17px, in a column whose
+ * labels start 30px from the mark's left edge — hence the rows' `gap-3`.
+ */
 export function rowIcon(link: ResolvedNavLink, reserve: boolean) {
   const Glyph = link.icon ? GLYPHS[link.icon] : undefined
-  if (Glyph) return <Glyph className="size-6" />
-  return reserve ? <span aria-hidden="true" className="size-6" /> : undefined
+  if (Glyph) return <Glyph className="size-[1.125rem] shrink-0" />
+  return reserve ? <span aria-hidden="true" className="size-[1.125rem] shrink-0" /> : undefined
 }
 
 /**
@@ -95,21 +87,16 @@ export function rowIcon(link: ResolvedNavLink, reserve: boolean) {
  * here would mean shipping the whole `nav` namespace in the RSC payload of all
  * 456 prerendered pages.
  *
- * Each panel is the design's two columns: the group's links, and the newest
- * blog post. The post is the same in all three panels. Without one — a
- * degraded build, an empty space — the panel is the links column alone rather
- * than a column with a hole in it.
+ * Each panel is the group's links alone. The design adds a featured blog post
+ * as a second column; Eran and Sara dropped it (#216) — one newest post under
+ * every product read as a mismatch, and it made the menu busy.
  */
 export function NavMenuClient({
   groups,
   topLevel,
-  featured,
-  featuredCopy,
 }: {
   groups: readonly ResolvedNavGroup[]
   topLevel: readonly ResolvedNavLink[]
-  featured: ResolvedFeaturedPost | null
-  featuredCopy: FeaturedCopy
 }) {
   return (
     <NavigationMenu>
@@ -132,10 +119,7 @@ export function NavMenuClient({
             </NavigationMenuTrigger>
 
             <NavigationMenuContent>
-              <div className="flex">
-                <NavLinks links={group.links} />
-                {featured && <FeaturedPostCard post={featured} copy={featuredCopy} />}
-              </div>
+              <NavLinks links={group.links} />
             </NavigationMenuContent>
           </NavigationMenuItem>
         ))}
@@ -213,7 +197,7 @@ function NavRow({ link, icon, nested = false }: { link: ResolvedNavLink; icon?: 
         // saturated blue. Hover is the accent TEXT colour `MenuItemW` already
         // applies. Same token bites elsewhere — see #120.
         className={cn(
-          '-mx-2 w-full gap-2 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
+          '-mx-2 w-full gap-3 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
           // The order types sit tighter under their parent, and at 70% in the
           // design — `fg-muted` is the token for that.
           nested ? 'py-1 text-fg-muted' : 'py-2.5'
@@ -228,58 +212,5 @@ function NavRow({ link, icon, nested = false }: { link: ResolvedNavLink; icon?: 
         )}
       </MenuItemW>
     </NavigationMenuLink>
-  )
-}
-
-/**
- * The second column: the newest blog post, as one link.
- *
- * One link, not an image link, a title link and a "Learn more" link to the
- * same place — three tab stops to one destination. The title is the link's
- * accessible name; the image is decorative and the button-shaped "Learn more"
- * is hidden from assistive technology, since "Learn more" as a name says
- * nothing about where it goes.
- */
-function FeaturedPostCard({ post, copy }: { post: ResolvedFeaturedPost; copy: FeaturedCopy }) {
-  return (
-    <div className="w-[30.125rem] shrink-0 p-[1.125rem]">
-      <p className="text-detail font-medium uppercase tracking-widest text-fg" lang={copy.labelLang}>
-        [{copy.label}]
-      </p>
-
-      <NavigationMenuLink asChild>
-        <Link href={post.href} className="group mt-3.5 block focus-visible:outline-none">
-          <Image
-            src={post.image ?? '/blog/placeholder.png'}
-            alt=""
-            width={446}
-            height={294}
-            sizes="446px"
-            className="aspect-[446/294] w-full rounded-sm object-cover"
-          />
-          <span className="mt-5 flex items-center justify-between gap-6">
-            <span
-              className="text-h5 tracking-normal text-fg transition-colors group-hover:text-accent-primary group-focus-visible:text-accent-primary"
-              lang={post.titleLang}
-            >
-              {post.title}
-            </span>
-            <span
-              aria-hidden="true"
-              lang={copy.ctaLang}
-              // The button's look without a second interactive element: it
-              // follows the card's hover and focus rather than its own.
-              className={cn(
-                buttonVariants({ size: 'sm' }),
-                'shrink-0 group-hover:border-accent-primary group-hover:text-accent-primary group-focus-visible:border-accent-primary group-focus-visible:text-accent-primary'
-              )}
-            >
-              {copy.cta}
-              <ArrowRight className="size-3" />
-            </span>
-          </span>
-        </Link>
-      </NavigationMenuLink>
-    </div>
   )
 }

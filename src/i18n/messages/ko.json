@@ -17,6 +17,7 @@
       "agentic": "Agentic",
       "venues": "For Exchanges & Wallets",
       "institutions": "For Institutions",
+      "aiAgents": "For AI Agents",
       "pos": "Proof of Stake & Staking",
       "executionServices": "Execution Services",
       "status": "Status",
@@ -25,8 +26,6 @@
       "ecosystem": "Ecosystem",
       "blog": "블로그"
     },
-    "featuredPost": "Featured Post",
-    "featuredPostCta": "Learn More",
     "menuLabel": "메뉴 열기",
     "menuTitle": "메뉴",
     "menuClose": "닫기"
@@ -53,6 +52,7 @@
       "agentic": "Agentic",
       "venues": "Venues",
       "institutions": "Institutions",
+      "aiAgents": "AI Agents",
       "overview": "Overview",
       "pos": "PoS & Staking",
       "executionServices": "블록체인 서비스",

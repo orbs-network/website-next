@@ -31,7 +31,7 @@ export async function Header({ locale }: { locale: Locale }) {
   const footerT = await getTranslations({ locale, namespace: 'footer' })
   // Resolved once and handed to both navs, so the desktop bar and the mobile
   // panel cannot list different things.
-  const { groups, topLevel, featured, featuredCopy } = await resolveNavigation(locale)
+  const { groups, topLevel } = await resolveNavigation(locale)
   const cta = { label: t('talkToTheTeam'), href: localeHref('/contact', locale) }
   // The mobile panel's footer area repeats the page footer's status, contact
   // and socials, so it reads the page footer's strings rather than copies.
@@ -71,7 +71,7 @@ export async function Header({ locale }: { locale: Locale }) {
             page scrolled sideways (#96).
           */}
           <div className="hidden xl:block">
-            <NavMenuClient groups={groups} topLevel={topLevel} featured={featured} featuredCopy={featuredCopy} />
+            <NavMenuClient groups={groups} topLevel={topLevel} />
           </div>
 
           <div className="flex items-center gap-4">

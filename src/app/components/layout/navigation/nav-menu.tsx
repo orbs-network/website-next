@@ -1,10 +1,9 @@
 import { getTranslations } from 'next-intl/server'
-import { getFeaturedPost } from '@/app/lib/api'
 import { NAV_GROUPS, NAV_TOP_LEVEL_LINKS, type NavLinkSpec } from '@/content/shared/navigation'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import type { FeaturedCopy, ResolvedNavGroup, ResolvedNavLink } from './nav-menu-client'
+import type { ResolvedNavGroup, ResolvedNavLink } from './nav-menu-client'
 
 /**
  * Where a menu link points in this locale, and whether that leaves the site.
@@ -73,20 +72,8 @@ export async function resolveNavigation(locale: Locale) {
     return { key: group.key, label, lang: textLang(label, locale), links: group.links.map(resolveLink) }
   })
 
-  const featuredLabel = t('featuredPost')
-  const featuredCta = t('featuredPostCta')
-  const post = await getFeaturedPost()
-
   return {
     groups,
     topLevel: NAV_TOP_LEVEL_LINKS.map(resolveLink),
-    // Post titles are English whatever the page's locale; `textLang` says so.
-    featured: post ? { ...post, titleLang: textLang(post.title, locale) } : null,
-    featuredCopy: {
-      label: featuredLabel,
-      labelLang: textLang(featuredLabel, locale),
-      cta: featuredCta,
-      ctaLang: textLang(featuredCta, locale),
-    } satisfies FeaturedCopy,
   }
 }
