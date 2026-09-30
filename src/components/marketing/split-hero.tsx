@@ -28,15 +28,22 @@ export function SplitHero({
   intro,
   cta,
   secondaryCta,
+  actions,
   graphic,
   locale,
 }: {
   eyebrow: string
   headline: string
   intro: string
-  cta: SectionLink
+  /**
+   * Optional for the legacy pages moved onto this hero (#227): Liquidity Hub's
+   * header has never had a button, and inventing one would be new copy.
+   */
+  cta?: SectionLink
   /** Beside `cta`, quieter — dSPOT's link to the SDK docs. */
   secondaryCta?: SectionLink
+  /** After the buttons: dTWAP's GitHub and Telegram icon links. */
+  actions?: React.ReactNode
   /**
    * Decorative: the headline says what the page is, and the graphic is brand
    * illustration rather than information. So `alt=""`, and no prop to set one.
@@ -55,10 +62,13 @@ export function SplitHero({
           <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(intro, locale)}>
             {intro}
           </p>
-          <div className="mt-14 flex flex-wrap gap-4">
-            <CtaButton link={cta} locale={locale} />
-            {secondaryCta && <CtaButton link={secondaryCta} locale={locale} variant="secondary" />}
-          </div>
+          {(cta || secondaryCta || actions) && (
+            <div className="mt-14 flex flex-wrap items-center gap-4">
+              {cta && <CtaButton link={cta} locale={locale} />}
+              {secondaryCta && <CtaButton link={secondaryCta} locale={locale} variant="secondary" />}
+              {actions}
+            </div>
+          )}
         </div>
 
         <div className="relative mx-auto aspect-square w-full max-w-md lg:order-first lg:max-w-none">

@@ -1,10 +1,9 @@
 import Link from 'next/link'
-import { H2, H3 } from '@/app/components/typography'
+import { H3 } from '@/app/components/typography'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Prose } from './prose'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { ThemedGraphic, type SectionGraphic } from './section-parts'
 
 export type SkillEntry = {
   /** Message key and React key. */
@@ -33,50 +32,39 @@ export type ResolvedSkill = SkillEntry & {
  * There is one skill today. This still renders as a list rather than a single
  * bespoke block, because the legacy page is an index and the next skill should
  * need no layout work.
+ *
+ * Just the list since the index moved onto the master (#227): the title,
+ * intro and illustration are the page's `SplitHero`, and the list sits in a
+ * `DividedSection` below it.
  */
 export function SkillList({
-  title,
-  intro,
   chainsLabel,
   orderTypesLabel,
   skills,
   locale,
-  graphic,
 }: {
-  title: string
-  intro?: string
   chainsLabel: string
   orderTypesLabel: string
   skills: readonly ResolvedSkill[]
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
-  /**
-   * The index's hero illustration, centred above the title. Only the index
-   * carries one; the skill pages under it do not.
-   */
-  graphic?: SectionGraphic
 }) {
   return (
-    <section className="container py-20">
-      <div className="mx-auto max-w-3xl text-center">
-        {graphic && (
-          <div className="relative mx-auto mb-10 aspect-[5/4] w-full max-w-sm">
-            <ThemedGraphic graphic={graphic} priority sizes="24rem" className="size-full object-contain" />
-          </div>
-        )}
-        <H2 className="text-balance" lang={textLang(title, locale)}>
-          {title}
-        </H2>
-        {intro && <Prose text={intro} locale={locale} className="mt-6 [&_p]:text-lg" />}
-      </div>
-
-      <ul className="mx-auto mt-16 grid max-w-4xl gap-8">
-        {skills.map((skill) => (
-          <li key={skill.id}>
-            {/* `relative` bounds the stretched link that makes the card clickable. */}
-            <Card className="relative h-full transition-colors hover:border-accent-primary">
-              <CardHeader>
-                <H3 weight="medium">
+    <ul className="grid max-w-4xl gap-4">
+      {skills.map((skill) => (
+        <li key={skill.id}>
+          {/*
+            `relative` bounds the stretched link that makes the card clickable.
+            Flat `bg-surface`, no border: the master's card (#227).
+          */}
+          <Card className="relative h-full rounded-none border-0 bg-surface shadow-none">
+            <CardHeader>
+              {/*
+                `h2`: the section around the list has no heading of its own —
+                the page `h1` introduces it — so a skill is the next level.
+              */}
+              <H3 asChild weight="medium">
+                <h2>
                   {/*
                     Skill names are product identifiers and stay Latin. This
                     was hardcoded `lang="en"`, which was right in a Japanese or
@@ -89,54 +77,54 @@ export function SkillList({
                   >
                     {skill.name}
                   </Link>
-                </H3>
-              </CardHeader>
+                </h2>
+              </H3>
+            </CardHeader>
 
-              <CardContent>
-                <Prose text={skill.description} locale={locale} />
+            <CardContent>
+              <Prose text={skill.description} locale={locale} />
 
-                {/*
+              {/*
                   The LABELS come from the catalog and are translated; the
                   VALUES are chain and order-type names and stay Latin. Each
                   `<dt>`/`<dd>` pair is therefore two languages sitting
                   together, which is why the values were already hardcoded
                   `lang="en"` while the labels beside them had nothing.
                 */}
-                <dl className="mt-6 grid gap-3 sm:grid-cols-2">
-                  <div>
-                    <dt
-                      className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
-                      lang={textLang(chainsLabel, locale)}
-                    >
-                      {chainsLabel}
-                    </dt>
-                    <dd
-                      className="mt-1 text-detail text-muted-foreground"
-                      lang={textLang(skill.chains.join(', '), locale)}
-                    >
-                      {skill.chains.join(', ')}
-                    </dd>
-                  </div>
-                  <div>
-                    <dt
-                      className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
-                      lang={textLang(orderTypesLabel, locale)}
-                    >
-                      {orderTypesLabel}
-                    </dt>
-                    <dd
-                      className="mt-1 text-detail text-muted-foreground"
-                      lang={textLang(skill.orderTypes.join(', '), locale)}
-                    >
-                      {skill.orderTypes.join(', ')}
-                    </dd>
-                  </div>
-                </dl>
-              </CardContent>
-            </Card>
-          </li>
-        ))}
-      </ul>
-    </section>
+              <dl className="mt-6 grid gap-3 sm:grid-cols-2">
+                <div>
+                  <dt
+                    className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                    lang={textLang(chainsLabel, locale)}
+                  >
+                    {chainsLabel}
+                  </dt>
+                  <dd
+                    className="mt-1 text-detail text-muted-foreground"
+                    lang={textLang(skill.chains.join(', '), locale)}
+                  >
+                    {skill.chains.join(', ')}
+                  </dd>
+                </div>
+                <div>
+                  <dt
+                    className="text-detail font-semibold uppercase tracking-wide text-fg-muted"
+                    lang={textLang(orderTypesLabel, locale)}
+                  >
+                    {orderTypesLabel}
+                  </dt>
+                  <dd
+                    className="mt-1 text-detail text-muted-foreground"
+                    lang={textLang(skill.orderTypes.join(', '), locale)}
+                  >
+                    {skill.orderTypes.join(', ')}
+                  </dd>
+                </div>
+              </dl>
+            </CardContent>
+          </Card>
+        </li>
+      ))}
+    </ul>
   )
 }

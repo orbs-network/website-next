@@ -1,14 +1,15 @@
 import Image from 'next/image'
-import { H1, H2 } from '@/app/components/typography'
+import { H1, H4 } from '@/app/components/typography'
+import type { Locale } from '@/i18n/locales'
+import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
+import { Eyebrow } from './section-parts'
 
 export type EcosystemCard = {
   name: string
   url: string
   logo?: string
 }
-
-import type { Locale } from '@/i18n/locales'
-import { textLang } from '@/i18n/script'
 
 export type EcosystemGroup = {
   key: string
@@ -28,13 +29,21 @@ export type EcosystemGroup = {
  * the text does the work. One entry has no logo at all and renders as text
  * alone, which is why the name is always present rather than being replaced by
  * the image.
+ *
+ * Laid out on the master (#227): a left-aligned eyebrow and statement for the
+ * page head, then one ruled row per category with its title on the left and
+ * the tiles beside it. Fifteen categories stacked full-width under 50px
+ * headings made the page a scroll of headings; beside the tiles, the title
+ * takes a column and the rows stay short.
  */
 export function EcosystemDirectory({
-  title,
+  eyebrow,
+  headline,
   groups,
   locale,
 }: {
-  title: string
+  eyebrow: string
+  headline: string
   groups: readonly EcosystemGroup[]
   /**
    * The document's locale. Each string's own `lang` is derived from it.
@@ -48,18 +57,28 @@ export function EcosystemDirectory({
   locale: Locale
 }) {
   return (
-    <section className="container pt-16 pb-24">
-      <H1 className="mb-16" lang={textLang(title, locale)}>
-        {title}
+    <section className="container pt-16 pb-section">
+      <Eyebrow text={eyebrow} locale={locale} />
+      <H1 className="mt-3 max-w-4xl text-balance" lang={textLang(headline, locale)}>
+        {headline}
       </H1>
 
-      {groups.map((group) => (
-        <div key={group.key} className="mt-16 first:mt-0">
-          <H2 className="mb-8" lang={textLang(group.title, locale)}>
-            {group.title}
-          </H2>
+      {groups.map((group, index) => (
+        <div
+          key={group.key}
+          className={cn(
+            'grid grid-cols-1 gap-8 border-t border-border pt-6 pb-12 lg:grid-cols-[minmax(0,1fr)_minmax(0,3fr)]',
+            index === 0 && 'mt-section'
+          )}
+        >
+          {/* An `h2` in the outline, set at `h4` size: fifteen of them run down one column. */}
+          <H4 asChild>
+            <h2 className="text-balance" lang={textLang(group.title, locale)}>
+              {group.title}
+            </h2>
+          </H4>
 
-          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-4">
+          <ul className="grid grid-cols-2 gap-4 sm:grid-cols-3">
             {group.entries.map((entry) => (
               <li key={`${group.key}-${entry.name}`}>
                 <EcosystemTile entry={entry} locale={locale} />
@@ -82,7 +101,7 @@ export function EcosystemDirectory({
  * behave like one: no anchor, no hover affordance, no tab stop.
  */
 function EcosystemTile({ entry, locale }: { entry: EcosystemCard; locale: Locale }) {
-  const tile = 'flex h-full flex-col items-center justify-center gap-3 rounded-sm border border-border p-5 text-center'
+  const tile = 'flex h-full flex-col items-center justify-center gap-3 border border-border p-5 text-center'
 
   const body = (
     <>

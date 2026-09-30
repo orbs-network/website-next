@@ -103,11 +103,13 @@
         "description": "A decentralized on-chain protocol that extends DEX/AMMs with time-weighted average price orders, reducing the market impact of large trades."
       },
       "hero": {
-        "headline": "TIME-WEIGHTED AVERAGE\nPRICE PROTOCOL FOR\nDECENTRALIZED EXCHANGES",
+        "eyebrow": "[dTWAP]",
+        "headline": "Time-weighted average\nprice protocol for\ndecentralized exchanges",
         "intro": "Extend existing on-chain DEX/AMMs with a decentralized on-chain protocol for executing advanced time-spread algorithmic trades. Reduce large orders’ impact on the market.",
         "cta": "GET STARTED"
       },
       "benefits": {
+        "eyebrow": "[BENEFITS]",
         "title": "The two benefits of TWAP",
         "intro": "**TWAP (Time-Weighted Average Price)** is an algorithmic trading strategy that divides an order into multiple smaller trades that are executed at regular intervals over a specified period of time.",
         "items": {
@@ -122,11 +124,13 @@
         }
       },
       "integrations": {
+        "eyebrow": "[INTEGRATIONS]",
         "title": "Recent and Ongoing Integrations to DEX/AMMs",
         "integrateTitle": "Integrate your DEX",
         "integrateCta": "README"
       },
       "explanation": {
+        "eyebrow": "[INTERFACE]",
         "title": "User-friendly and flexible UI",
         "slides": {
           "limit": "Users can set a limit on the price at which trades will be executed or choose to execute at the best market price.",
@@ -135,6 +139,7 @@
         }
       },
       "code": {
+        "eyebrow": "[DEVELOPERS]",
         "title": "Easy integration into every DEX frontend based on React",
         "reactTab": "React Component",
         "stylesTab": "Fully Customizable UI",
@@ -144,6 +149,7 @@
         "copied": "Copied"
       },
       "schema": {
+        "eyebrow": "[HOW IT WORKS]",
         "title": "Decentralized Execution of TWAP Orders",
         "body": "**Makers** - The first entity in the dTWAP protocol are DEX traders that submit new orders to the dTWAP EVM contract. They set all order parameters such as limit price and expiration. The dTWAP contract enforces these requirements in a trustless manner.\n\n**Takers** - Incentivized third-party participants that monitor all live orders and submit bids on the best path to execute their next segment. The dTWAP contract selects the best bid and guarantees that the path that provides the best price to makers is the one executed.\n\nOrbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019. All Orbs Network validators are takers and participate as honest bidders in the protocol, guaranteeing that orders are executed 24/7 with high redundancy and best price.",
         "whitePaper": "read the white paper",
@@ -305,10 +311,12 @@
         "description": "A decentralized optimization layer above AMMs that mitigates fragmented liquidity in DeFi, letting DEXs tap external liquidity sources to provide better prices on swaps."
       },
       "hero": {
+        "eyebrow": "[LIQUIDITY HUB]",
         "headline": "Aggregated liquidity for\ndecentralized exchanges",
         "intro": "Liquidity Hub is a decentralized optimization layer that operates above Automated Market Makers (AMMs). This layer mitigates the problem of fragmented liquidity in DeFi, enabling DEXs to tap into external liquidity sources in order to provide better prices on swaps."
       },
       "sources": {
+        "eyebrow": "[LIQUIDITY SOURCES]",
         "intro": "Instead of the typical swap that searches for the best route within a specific DEX's limited liquidity pools, integrating the Liquidity Hub software protocol allows DEXs to enhance this process by utilizing additional liquidity sources that come from:",
         "items": {
           "solverAuctions": {
@@ -326,6 +334,7 @@
         "alt": "A swap routed through Liquidity Hub, comparing solver and API order sources against the AMM and falling back to the AMM contract when it cannot beat that price."
       },
       "benefits": {
+        "eyebrow": "[BENEFITS]",
         "title": "Integrate now with a user-friendly and flexible UI",
         "items": {
           "lpCannibalization": {
@@ -355,6 +364,7 @@
         }
       },
       "audiences": {
+        "eyebrow": "[WHO BENEFITS]",
         "title": "New DEX Standard",
         "intro": "Integrating the Liquidity Hub protocol brings the benefit of aggregated liquidity to any DEX-AMM in DeFi, benefitting the users, the DEX itself, and Solvers participating in the protocol:",
         "items": {
@@ -373,6 +383,7 @@
         }
       },
       "partners": {
+        "eyebrow": "[LAUNCH PARTNERS]",
         "title": "Partners",
         "items": {
           "quickswap": {
@@ -388,6 +399,7 @@
         }
       },
       "decentralization": {
+        "eyebrow": "[DECENTRALIZATION]",
         "title": "Mitigating Centralization risks using Orbs L3",
         "body": "All on-chain parts are trustless since contracts verify all actions. However, users may be concerned that Liquidity Hub backend is able to manipulate trades in some way. This concern is mitigated by using the Orbs Network's decentralized L3 technology.\n\nAs part of Liquidity Hub, Orbs Guardians will run software utilizing ORBS-VM, which acts as a decentralized backend that is required for Liquidity Hub to run optimally and in a fully decentralized manner.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019.\n\nThe Liquidity Hub is a beta version that is still under active development.",
         "terms": "Terms of use"
@@ -497,8 +509,10 @@
         "title": "AI Skills",
         "description": "DeFi trading tools for AI coding agents like Claude Code, Cursor and Windsurf. Install a skill and let your agent place on-chain orders for you."
       },
+      "eyebrow": "[FOR AI AGENTS]",
       "title": "AI Skills",
       "intro": "DeFi trading tools for AI coding agents like Claude Code, Cursor, and Windsurf. Install a skill and let your agent place on-chain orders for you.",
+      "listEyebrow": "[SKILLS]",
       "chainsLabel": "Chains",
       "orderTypesLabel": "Order types",
       "items": {
@@ -1005,6 +1019,9 @@
       "meta": {
         "title": "Ecosystem",
         "description": "Projects, exchanges, wallets and chains building on or integrated with the Orbs network."
+      },
+      "hero": {
+        "eyebrow": "[ECOSYSTEM]"
       },
       "categories": {
         "useCases": "Use-cases and Applications",
