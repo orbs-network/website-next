@@ -16,20 +16,10 @@ export const INSTITUTIONAL_STATS = ['volume', 'chains', 'venues'] as const
 /**
  * The four products, each linking to its own page.
  *
- * All four now exist, which they did not when this migration started — so
- * unlike most cross-links in Phase 3 these resolve today.
- *
- * NO ICONS, deliberately. The legacy assets (`product-dlimit.svg` and friends)
- * are landscape WORDMARKS — 109x20, a coloured glyph followed by the product
- * name — and they fail here twice over: squeezed into a square icon slot they
- * are stretched, and their lettering is `#F6F6F6` on a white card, so the name
- * simply vanishes in the light theme. They would also duplicate the card title,
- * which already says "dLIMIT".
- *
- * The glyphs in `icons/products` are the right marks for this, but
- * `FeatureGrid` takes an image path rather than a component. Rather than widen
- * that API for one page, the cards run on their titles; pairing them with the
- * real glyphs is a small follow-up worth doing deliberately.
+ * Rendered as `ModuleCards`, dSPOT's card row, with each product's lockup from
+ * `icons/products`. Not the legacy `product-*.svg` wordmarks: those letter in
+ * `#F6F6F6` and vanish on the light theme. Lockups and colours live with the
+ * page, because Tailwind only scans `src/app` and `src/components`.
  */
 export const INSTITUTIONAL_PRODUCTS = [
   { id: 'liquidityHub', href: '/liquidity-hub' },
@@ -45,34 +35,39 @@ export const INSTITUTIONAL_PRODUCTS = [
  * page's partner strip. An earlier version of this listed names only, which
  * turned a branding strip into a text list.
  *
- * All five files are white on transparent, so they are inverted in the light
- * theme for the same reason as the signers below; without it the row was five
- * blank boxes on the light page (#228).
+ * `wordmark`: each mark already spells the name, which otherwise printed twice.
+ * `invertOnLight`: the marks are white, so without it the light theme shows an
+ * empty strip — the names beside them used to be all that was visible.
  */
 export const INSTITUTIONAL_VENUES: readonly LogoRowItem[] = [
   {
     name: 'PancakeSwap',
     logo: { src: '/marketing/institutional/venue-pancakeswap.png', width: 286, height: 44 },
+    wordmark: true,
     invertOnLight: true,
   },
   {
     name: 'SushiSwap',
     logo: { src: '/marketing/institutional/venue-sushiswap.png', width: 300, height: 93 },
+    wordmark: true,
     invertOnLight: true,
   },
   {
     name: 'QuickSwap',
     logo: { src: '/marketing/institutional/venue-quickswap.png', width: 240, height: 37 },
+    wordmark: true,
     invertOnLight: true,
   },
   {
     name: 'Blackhole',
     logo: { src: '/marketing/institutional/venue-blackhole.png', width: 1249, height: 107 },
+    wordmark: true,
     invertOnLight: true,
   },
   {
     name: 'Thena',
     logo: { src: '/marketing/institutional/venue-thena.png', width: 188, height: 42 },
+    wordmark: true,
     invertOnLight: true,
   },
 ]
@@ -83,33 +78,39 @@ export const INSTITUTIONAL_VENUES: readonly LogoRowItem[] = [
  * Every one of these marks is a monochrome `fill="white"` SVG, so they are
  * inverted in the light theme — without that they are white on a near-white
  * background and simply do not appear. Real light-theme assets from the brand
- * owners would be better; this is correct rather than merely visible.
+ * owners would be better; this is correct rather than merely visible. Wordmarks,
+ * like the venues.
  */
 export const INSTITUTIONAL_SIGNERS: readonly LogoRowItem[] = [
   {
     name: 'Ledger',
     logo: { src: '/marketing/institutional/infra-ledger.svg', width: 160, height: 54 },
     invertOnLight: true,
+    wordmark: true,
   },
   {
     name: 'Safe',
     logo: { src: '/marketing/institutional/infra-safe.svg', width: 158, height: 46 },
     invertOnLight: true,
+    wordmark: true,
   },
   {
     name: 'Fireblocks',
     logo: { src: '/marketing/institutional/infra-fireblocks.svg', width: 227, height: 35 },
     invertOnLight: true,
+    wordmark: true,
   },
   {
     name: 'copper.co',
     logo: { src: '/marketing/institutional/infra-copper.svg', width: 208, height: 53 },
     invertOnLight: true,
+    wordmark: true,
   },
   {
     name: 'BitGo',
     logo: { src: '/marketing/institutional/infra-bitgo.svg', width: 146, height: 39 },
     invertOnLight: true,
+    wordmark: true,
   },
 ]
 
@@ -139,3 +140,11 @@ export const INSTITUTIONAL_FEATURES = [
   'reporting',
   'audited',
 ] as const
+
+export type InstitutionalProductId = (typeof INSTITUTIONAL_PRODUCTS)[number]['id']
+
+/**
+ * The closing block's scrolling phrases: the products headline, one sentence
+ * each, so the marquee repeats the page's own promise rather than new copy.
+ */
+export const INSTITUTIONAL_MARQUEE = ['bestPrice', 'betterExecution', 'oneStack'] as const
