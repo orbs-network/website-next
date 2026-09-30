@@ -1,21 +1,23 @@
 import * as React from 'react'
 import * as NavigationMenuPrimitive from '@radix-ui/react-navigation-menu'
 import { cva } from 'class-variance-authority'
-import { ChevronDown } from 'lucide-react'
 
 import { cn } from '@/lib/utils'
 
 const NavigationMenu = React.forwardRef<
   React.ElementRef<typeof NavigationMenuPrimitive.Root>,
-  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root>
->(({ className, children, ...props }, ref) => (
+  React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root> & {
+    /** Styles for the panel, which the root renders itself and so is otherwise unreachable. */
+    viewportClassName?: string
+  }
+>(({ className, viewportClassName, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn('relative z-10 flex max-w-max flex-1 items-center justify-center', className)}
     {...props}
   >
     {children}
-    <NavigationMenuViewport />
+    <NavigationMenuViewport className={viewportClassName} />
   </NavigationMenuPrimitive.Root>
 ))
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName
@@ -47,11 +49,12 @@ const NavigationMenuTrigger = React.forwardRef<
     className={cn(navigationMenuTriggerStyle(), 'group', className)}
     {...props}
   >
-    {children}{' '}
-    <ChevronDown
-      className="relative top-[1px] ml-1 h-3 w-3 transition duration-300 group-data-[state=open]:rotate-180"
-      aria-hidden="true"
-    />
+    {/*
+      No chevron. The shadcn default draws one; the Orbs header does not (#230),
+      and this is the menu's only consumer. `aria-expanded` from Radix is what
+      tells assistive tech the trigger opens something.
+    */}
+    {children}
   </NavigationMenuPrimitive.Trigger>
 ))
 NavigationMenuTrigger.displayName = NavigationMenuPrimitive.Trigger.displayName

@@ -50,7 +50,7 @@ export function ModuleCards({
   locale: Locale
 }) {
   return (
-    <section id={id} className="container scroll-mt-24 border-t border-border pt-3 pb-section">
+    <section id={id} className="container scroll-mt-32 border-t border-border pt-3 pb-section">
       <Eyebrow text={eyebrow} locale={locale} />
 
       <H2 className="mt-6 max-w-5xl text-balance" lang={textLang(heading, locale)}>
