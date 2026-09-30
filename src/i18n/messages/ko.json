@@ -14,7 +14,7 @@
       "dsltp": "dSLTP",
       "liquidityHub": "유동성 허브",
       "dperps": "dPERPS",
-      "agentic": "Agentic",
+      "agentic": "Orbs Agentic",
       "venues": "For Exchanges & Wallets",
       "institutions": "For Institutions",
       "pos": "Proof of Stake & Staking",
@@ -50,7 +50,7 @@
       "sdk": "SDK/API",
       "dspot": "dSPOT",
       "dperps": "dPERPS",
-      "agentic": "Agentic",
+      "agentic": "Orbs Agentic",
       "venues": "Venues",
       "institutions": "Institutions",
       "overview": "Overview",
@@ -1176,18 +1176,18 @@
     "home": {
       "meta": {
         "title": "Trading infrastructure for on-chain finance",
-        "description": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected."
+        "description": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected."
       },
       "hero": {
-        "eyebrow": "[$2.5B+ in trading volume]",
-        "headline": "Trading infrastructure for on-chain finance.",
-        "intro": "One execution stack for spot and perps — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $2.5B+ in executed volume.",
+        "eyebrow": "[$14B+ in trading volume]",
+        "headline": "Trading infrastructure for on-chain finance",
+        "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
         "cta": "Talk to the team",
         "docs": "Read the docs"
       },
       "stats": {
         "processed": {
-          "value": "$2.5B+",
+          "value": "$14B+",
           "label": "Processed"
         },
         "liveSince": {
@@ -1209,13 +1209,13 @@
       },
       "stack": {
         "eyebrow": "[The stack]",
-        "title": "Best price. Better execution. One stack.",
-        "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
+        "title": "Best price.\nBetter execution.\nOne stack.",
+        "intro": "Institutional-grade trading infrastructure — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. High performance perpetual futures trading protocol. The market structure institutions know, delivered on-chain.",
         "cta": "Discover",
         "dspot": {
-          "eyebrow": "Execution control",
+          "eyebrow": "Spot market",
           "title": "dSPOT",
-          "body": "TWAP, limit, stop-loss and take-profit — the risk-management order types trading teams expect, executed on-chain. ~90% lower gas than the previous generation, 100% fill rate across 8 chains."
+          "body": "Liquidity Aggregation as well as TWAP, limit, stop-loss and take-profit — the risk-management order types trading teams expect, executed on-chain. ~90% lower gas than the previous generation, 100% fill rate across 8 chains."
         },
         "dperps": {
           "eyebrow": "Derivatives",
@@ -1255,35 +1255,35 @@
         "github": "View on GitHub",
         "nonCustodial": {
           "title": "Non-custodial by design",
-          "panel": "No custody handoff. No counterparty risk on Orbs."
+          "panel": "Assets never leave the client's wallet. Orders sign from the wallet and settle back to it — no handoff to Orbs or any venue."
         },
         "gasless": {
           "title": "Gasless across every product",
-          "panel": "Gasless across every product."
+          "panel": "End users pay nothing for gas. Orbs absorbs chain-level costs and abstracts the complexity behind every transaction."
         },
         "mev": {
           "title": "MEV protection",
-          "panel": "MEV protection."
+          "panel": "Trades route through a private RFQ layer that prices off-chain and settles on-chain. No mempool exposure. No sandwich attacks."
         },
         "permissionless": {
           "title": "Permissionless integration",
-          "panel": "Permissionless integration."
+          "panel": "Open SDKs, public smart contracts, audited docs. Integrate without partnership agreements, gatekeepers, or revenue shares."
         },
         "robust": {
           "title": "Robust infrastructure",
-          "panel": "Robust infrastructure."
+          "panel": "Spot products live since 2023. $14B+ processed across 30+ venues on 10+ chains. Battle-tested on every critical execution path."
         },
         "whiteLabel": {
           "title": "White-label ready",
-          "panel": "White-label ready."
+          "panel": "Embed Orbs execution under your own brand. Custom UI, themed widgets, full UX control — your platform, our pipes."
         },
         "reporting": {
           "title": "Reporting & audit trails",
-          "panel": "Reporting and audit trails."
+          "panel": "Every order leaves a deterministic on-chain trail. Compliance-ready exports cover trades, slippage, fills, and routing decisions."
         },
         "audited": {
           "title": "Audited, immutable, ownerless contracts",
-          "panel": "Audited, immutable, ownerless contracts."
+          "panel": "No admin keys. No upgrade paths. No kill switches. Audited by leading firms — the code is the contract."
         }
       },
       "network": {

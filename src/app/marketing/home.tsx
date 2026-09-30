@@ -168,7 +168,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
         <div className="mt-14 grid gap-16 lg:grid-cols-2">
           <div>
-            <H2 className="text-balance" lang={lang('stack.title')}>
+            {/*
+              One sentence per line (#219). The breaks are `\n` in the catalog,
+              not width-dependent wrapping, so they hold at every viewport.
+            */}
+            <H2 className="whitespace-pre-line" lang={lang('stack.title')}>
               {t('stack.title')}
             </H2>
             <p className="mt-6 max-w-lg text-detail text-fg-muted" lang={lang('stack.intro')}>

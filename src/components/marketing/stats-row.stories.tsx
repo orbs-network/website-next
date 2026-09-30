@@ -11,13 +11,13 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const STATS = [
-  { id: 'volume', value: '$2.5B+', label: 'Cumulative volume' },
+  { id: 'volume', value: '$14B+', label: 'Cumulative volume' },
   { id: 'chains', value: '10+', label: 'Chains live' },
 ]
 
 /**
  * A description list, not a grid of divs: each label is the term and each
- * figure its value, so a screen reader announces "Cumulative volume, $2.5B+"
+ * figure its value, so a screen reader announces "Cumulative volume, $14B+"
  * rather than two loose strings whose relationship is only visual.
  */
 export const IsADescriptionList: Story = {
@@ -27,7 +27,7 @@ export const IsADescriptionList: Story = {
 
     await expect(canvasElement.querySelectorAll('dt')).toHaveLength(2)
     await expect(canvasElement.querySelectorAll('dd')).toHaveLength(2)
-    await expect(canvas.getByText('$2.5B+')).toBeInTheDocument()
+    await expect(canvas.getByText('$14B+')).toBeInTheDocument()
     await expect(canvas.getByText('Cumulative volume')).toBeInTheDocument()
   },
 }
