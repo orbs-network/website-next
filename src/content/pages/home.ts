@@ -166,6 +166,11 @@ export const HOME_LINKS = {
   x: 'https://twitter.com/orbs_network',
   telegram: 'https://t.me/OrbsNetwork',
   contact: '/contact',
+  /**
+   * Discover's "View resources". There is no resources index; the blog is the
+   * nearest thing to one, and it is also the first row above the button.
+   */
+  resources: '/blog',
 } as const
 
 /** How many posts the "In the news" rail asks Contentful for. */

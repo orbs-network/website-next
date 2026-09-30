@@ -106,3 +106,55 @@ export const OnlyTheSelectedTabIsInTheTabOrder: Story = {
 function canvas_tabs(root: HTMLElement): HTMLElement[] {
   return Array.from(root.querySelectorAll<HTMLElement>('[role="tab"]'))
 }
+
+const FOOTER = (
+  <>
+    <a href="#contact">Talk to the team</a>
+    <a href="#github">View on GitHub</a>
+  </>
+)
+
+/**
+ * The footer sits level with the bottom of the panel at `lg` — the design pins
+ * the two CTAs bottom-left, across from the panel's foot — and the column's
+ * vertical rule runs past both to the bottom of the component.
+ *
+ * At a 1440 viewport because both are `lg:` layout; in a narrow runner the
+ * story would test the stacked phone layout instead (see mobile-overflow).
+ */
+export const FooterLinesUpWithThePanelBottom: Story = {
+  parameters: {
+    viewport: { options: { desktop1440: { name: 'Desktop 1440', styles: { width: '1440px', height: '1000px' } } } },
+  },
+  globals: { viewport: { value: 'desktop1440' } },
+  args: { ...args, footer: FOOTER },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const panel = canvas.getByRole('tabpanel').getBoundingClientRect()
+    const footer = canvas.getByRole('link', { name: 'Talk to the team' }).parentElement!
+    const link = canvas.getByRole('link', { name: 'Talk to the team' }).getBoundingClientRect()
+    const tablist = canvas.getByRole('tablist').getBoundingClientRect()
+
+    await expect(Math.round(link.bottom)).toBe(Math.round(panel.bottom))
+    await expect(link.left).toBeLessThan(panel.left)
+    // The rule is unbroken: the footer starts where the tab list ends.
+    await expect(Math.round(footer.getBoundingClientRect().top)).toBe(Math.round(tablist.bottom))
+    await expect(getComputedStyle(footer).borderRightStyle).toBe('solid')
+  },
+}
+
+/** On a phone the footer follows the panel, so the list stays next to what it controls. */
+export const FooterFollowsThePanelOnAPhone: Story = {
+  parameters: {
+    viewport: { options: { phone390: { name: 'Phone 390', styles: { width: '390px', height: '844px' } } } },
+  },
+  globals: { viewport: { value: 'phone390' } },
+  args: { ...args, footer: FOOTER },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const panel = canvas.getByRole('tabpanel').getBoundingClientRect()
+    const link = canvas.getByRole('link', { name: 'Talk to the team' }).getBoundingClientRect()
+
+    await expect(link.top).toBeGreaterThan(panel.bottom)
+  },
+}
