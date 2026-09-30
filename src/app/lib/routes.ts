@@ -43,6 +43,7 @@ export const RESERVED_ROOT_SEGMENTS: ReadonlySet<string> = new Set([
   ...MARKETING_PAGE_PATHS.map((path) => path.split('/')[1]),
   'blog',
   'news',
+  'governance-blog',
   'api',
   // Metadata routes and Next's own namespace.
   'sitemap.xml',
@@ -83,6 +84,7 @@ export function encodedPostPath(slug: string): string {
 
 export const BLOG_INDEX_PATH = '/blog/'
 export const HOME_PATH = '/'
+export const GOVERNANCE_PATH = '/governance-blog/'
 
 /**
  * Page 1 lives at `/blog/` rather than `/blog/page/1/`, so there is exactly one

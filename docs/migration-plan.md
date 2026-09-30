@@ -76,7 +76,7 @@ admin access to `orbs.com` DNS is available.
 | ~25 marketing pages | Hardcoded  | Bespoke layout, low churn, developer-owned.        |
 | White papers        | Hardcoded  | 33 entries, last updated 2024-01.                  |
 | Policy pages        | Hardcoded  | Effectively static.                                |
-| Governance blog     | Deleted    | Empty since 2023-01. See 2.6.                      |
+| Governance blog     | Rebuilt    | Curated post list, not empty. See 2.6 and #224.    |
 
 **Why marketing pages are not in Contentful:** the product and landing pages are
 heavy bespoke layout — sliders, code-snippet switchers, schema diagrams, benefit
@@ -159,6 +159,12 @@ posts. Last commit **2023-01-02**. It has been linked from the navbar and footer
 for over three years while serving nothing.
 
 **Decision:** delete it, remove the nav and footer entries, `301 → /blog`.
+
+**Superseded (#224).** The premise was wrong: the legacy page is not empty, it
+lists governance posts (the OIPs and the self-delegation proposals) that live in
+Contentful, not in `content/governance-blog/`. Eran and Sara want it back in the
+Network group, so `/governance-blog` is rebuilt as a curated post list — the
+slugs are in `src/content/shared/governance.ts` — and the redirect is gone.
 
 ### 2.7 Visual approach: match current, redesign later
 
@@ -303,7 +309,7 @@ The bulk of the work.
 ### Phase 5 — Cutover
 
 - Full URL audit against the live sitemap
-- Redirect map, including `/governance-blog → /blog`
+- Redirect map
 - DNS switch
 - Decommission the old repo's CircleCI pipeline
 

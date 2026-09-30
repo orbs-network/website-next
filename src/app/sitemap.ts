@@ -1,6 +1,6 @@
 import type { MetadataRoute } from 'next'
 import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
-import { HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
+import { GOVERNANCE_PATH, HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
 import { absoluteUrl } from './lib/site'
 import { isArchived, translatedLocalesFor } from '@/i18n/availability'
 import { MARKETING_PAGE_PATHS } from '@/content/pages'
@@ -134,5 +134,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     })
   )
 
-  return [...home, ...marketingPages, ...whitePapers, ...blogPages, ...newsPages, ...postEntries]
+  // English only, like the blog. A fixed list of old posts, so it changes rarely.
+  const governance: MetadataRoute.Sitemap = [
+    { url: absoluteUrl(GOVERNANCE_PATH), lastModified: lastArchiveChange, changeFrequency: 'monthly', priority: 0.5 },
+  ]
+
+  return [...home, ...marketingPages, ...whitePapers, ...blogPages, ...newsPages, ...governance, ...postEntries]
 }

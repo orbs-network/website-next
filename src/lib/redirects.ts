@@ -12,7 +12,7 @@
  *
  * THIS IS NOT THE FULL CUTOVER MAP. #38 is the audit that diffs every live
  * orbs.com URL against the routes this repo produces — legacy blog slugs,
- * `/governance-blog`, trailing-slash behaviour. This file holds moves we make
+ * trailing-slash behaviour. This file holds moves we make
  * ourselves, and it is the machinery that audit will fill.
  *
  * Deliberately free of app imports. `next.config.ts` reads this, and the config
@@ -93,17 +93,6 @@ export const REDIRECTS: readonly Redirect[] = [
     to: '/terms-of-use',
     locales: ['en'],
     reason: 'A duplicate of the terms of use at a misspelled path. See #38.',
-  },
-  /*
-    The governance blog section is being deleted rather than migrated — plan
-    2.6. Its legacy page carries 29 words and a blog layout, so the archive it
-    pointed at is where a reader should end up.
-  */
-  {
-    from: '/governance-blog',
-    to: '/blog',
-    locales: ['en'],
-    reason: 'Section deleted in the migration; the blog archive replaces it. See #38.',
   },
 ]
 

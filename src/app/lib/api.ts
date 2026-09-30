@@ -282,6 +282,37 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
   })
 }
 
+/**
+ * Specific posts by slug, newest first — for a curated list such as the
+ * governance index, where membership is a list of slugs rather than a query.
+ *
+ * A slug that matches nothing is logged, not thrown: a renamed or unpublished
+ * post should drop one card from the list, not take the page down.
+ */
+export async function getPostsBySlugs(slugs: readonly string[]): Promise<BlogPostFields[]> {
+  if (slugs.length === 0) return []
+
+  return degradable('getPostsBySlugs', [], async () => {
+    const client = getClient()
+
+    const page = await client.getEntries<TypeBlogPostSkeleton>({
+      content_type: 'blogPost',
+      'fields.slug[in]': [...slugs],
+      order: [...POST_ORDER],
+      limit: Math.min(slugs.length, CDA_MAX_LIMIT),
+    })
+
+    const posts = page.items.map((post) => post.fields)
+    const found = new Set(posts.map((post) => post.slug))
+    const missing = slugs.filter((slug) => !found.has(slug))
+    if (missing.length > 0) {
+      console.warn(`[api] getPostsBySlugs: no published post for ${missing.map((slug) => `"${slug}"`).join(', ')}`)
+    }
+
+    return withoutReservedSlugs(posts)
+  })
+}
+
 /** Media mentions per page. Matches the blog's 12 for a consistent grid. */
 export const MEDIA_PER_PAGE = 12
 
