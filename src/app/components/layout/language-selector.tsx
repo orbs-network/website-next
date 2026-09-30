@@ -37,10 +37,13 @@ export function LanguageSelector() {
       <DropdownMenuTrigger asChild>
         <button
           type="button"
-          className="inline-flex items-center gap-1 text-xs text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+          // 15px with a thin 20px chevron, from the header frame (#230).
+          className="inline-flex items-center gap-1.5 text-[0.9375rem] text-fg transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
         >
           {LOCALE_LABELS[currentLocale]}
           <ChevronDownIcon
+            aria-hidden="true"
+            strokeWidth={1}
             className="transition-transform duration-200 size-5"
             style={{ transform: isOpen ? 'rotate(180deg)' : 'rotate(0deg)' }}
           />

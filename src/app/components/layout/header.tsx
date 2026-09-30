@@ -42,16 +42,41 @@ export async function Header({ locale }: { locale: Locale }) {
   }
 
   return (
-    <nav className="border-b border-gray-200 dark:border-gray-800 bg-white/80 dark:bg-gray-950/80 backdrop-blur-sm sticky top-0 z-50">
+    <nav className="sticky top-0 z-50">
+      {/*
+        The bar's background, on its own layer rather than on the <nav>.
+
+        20% of the page colour under a heavy blur, from the header frame
+        (#230) — it was white/80 and Tailwind's blue-black gray-950/80, neither
+        of which is a theme token. `color-mix` rather than `bg-bg/20`: the
+        tokens are bare `var()`s, and Tailwind v3 silently emits nothing for an
+        opacity modifier on one (#237).
+
+        A separate element because `backdrop-filter` makes the element carrying
+        it the containing block for `position: fixed` descendants, and the
+        dropdown's page overlay is one — on the <nav> it would have been
+        clipped to the bar.
+      */}
+      <div
+        aria-hidden="true"
+        className="absolute inset-0 -z-10 bg-[color-mix(in_srgb,var(--color-bg)_20%,transparent)] backdrop-blur-[50px]"
+      />
       <div className="container">
-        <div className="flex items-center justify-between h-16">
+        {/*
+          The rule is on this row, not the <nav>, so it is inset to the page
+          gutters the way the design draws it rather than running full-bleed.
+          60px on a phone, 100px once the full bar shows.
+        */}
+        <div className="flex h-[3.75rem] items-center justify-between border-b border-neutral-400 dark:border-neutral-600 xl:h-[6.25rem]">
           <Link
             href={localePath(locale, '/')}
             aria-label={t('homeLink')}
             // Decided from the string, not the locale: `homeLink` is "Orbs home"
             // in Japanese but "Orbs 홈" in Korean, so only one of them needs it.
             lang={textLang(t('homeLink'), locale)}
-            className="text-xl font-bold text-gray-900 dark:text-white hover:text-gray-600 dark:hover:text-gray-300 transition-colors"
+            // Wordmark in `fg`, accent on hover — the design's #121214 / #F6F6F6
+            // / #3346F2. It was Tailwind greys that went grey on hover.
+            className="text-fg transition-colors hover:text-accent-primary"
           >
             {/*
               The lockup contains the word "Orbs", which inside a link that
@@ -70,11 +95,11 @@ export async function Header({ locale }: { locale: Locale }) {
             document once laid out at 880px inside a 390px viewport and every
             page scrolled sideways (#96).
           */}
-          <div className="hidden xl:block">
+          <div className="hidden h-full xl:block">
             <NavMenuClient groups={groups} topLevel={topLevel} />
           </div>
 
-          <div className="flex items-center gap-4">
+          <div className="flex items-center gap-6">
             <ThemeToggle />
             <LanguageSelector />
             {/*
@@ -82,7 +107,7 @@ export async function Header({ locale }: { locale: Locale }) {
               `<Button>` with no handler, so it looked like the site's main
               call to action and did nothing when pressed.
             */}
-            <Button asChild size="sm" className="hidden whitespace-nowrap sm:inline-flex">
+            <Button asChild className="hidden whitespace-nowrap sm:inline-flex">
               <Link href={cta.href} lang={textLang(cta.label, locale)}>
                 {cta.label}
               </Link>
