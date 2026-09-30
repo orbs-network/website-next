@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, userEvent, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { NewsletterForm } from './newsletter-form'
 
 const meta = {
@@ -46,8 +46,11 @@ export const LabelFloatsAndStaysVisible: Story = {
     await userEvent.type(input, 'Ada')
     await userEvent.tab()
 
-    // Filled and blurred: still floated, still visible.
-    await expect(size()).toBeLessThan(resting)
+    // Filled and blurred: still floated, still visible. `waitFor` because the
+    // label animates its size over 150ms; read at once it is still at rest.
+    await waitFor(async () => {
+      await expect(size()).toBeLessThan(resting)
+    })
     await expect(label).toBeVisible()
     await expect(canvas.getByRole('textbox', { name: 'Your name' })).toHaveValue('Ada')
   },
