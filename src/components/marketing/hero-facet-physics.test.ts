@@ -3,7 +3,8 @@ import {
   BLOOM_SPEED,
   MAX_DRIFT,
   createFacetField,
-  pushProfile,
+  FINGER_RADIUS,
+  fingerInfluence,
   facetsOf,
   isFacetFieldSettled,
   moveFacetPointer,
@@ -186,6 +187,26 @@ describe('the liquid', () => {
     expect(mean).toBeGreaterThan(FACET_SPACING / 4)
   })
 
+  it('moves the facets the pointer passes over, and leaves the rest of the disc still', () => {
+    // Floating balls and a finger through the water: what it touches moves, what it misses barely rocks.
+    const field = settledAt()
+    run(field, 0.2, { move: { x: 800, y: 0 } })
+
+    // Distance from each facet's cell to the segment the pointer travelled along.
+    const fromPath = (p: { rest: { x: number; y: number } }) => {
+      const x = Math.min(Math.max(p.rest.x, CURSOR.x), field.anchor!.x)
+      return Math.hypot(p.rest.x - x, p.rest.y - CURSOR.y)
+    }
+    const meanDrift = (lo: number, hi: number) => {
+      const band = [...field.particles.values()].filter((p) => fromPath(p) >= lo && fromPath(p) < hi)
+      return band.reduce((sum, p) => sum + Math.hypot(p.offsetX, p.offsetY), 0) / band.length
+    }
+
+    expect(meanDrift(0, 15)).toBeGreaterThan(FACET_SPACING / 2)
+    expect(meanDrift(30, 45)).toBeLessThan(meanDrift(0, 15) / 3)
+    expect(meanDrift(FINGER_RADIUS, Infinity)).toBe(0)
+  })
+
   it('turns the two flanks of a stroke in opposite directions', () => {
     const field = settledAt()
     run(field, 0.15, { move: { x: 800, y: 0 } })
@@ -281,15 +302,14 @@ describe('timing', () => {
   })
 })
 
-describe('pushProfile', () => {
-  it('is zero at the pointer and the rim, and peaks at 1 in between', () => {
-    expect(pushProfile(0)).toBe(0)
-    expect(pushProfile(FACET_RADIUS)).toBe(0)
-    expect(pushProfile(FACET_RADIUS / Math.sqrt(3))).toBeCloseTo(1, 10)
+describe('fingerInfluence', () => {
+  it('is 1 at the pointer and 0 from FINGER_RADIUS out', () => {
+    expect(fingerInfluence(0)).toBe(1)
+    expect(fingerInfluence(FINGER_RADIUS)).toBe(0)
+    expect(fingerInfluence(FINGER_RADIUS * 2)).toBe(0)
   })
 
-  it('grows outward from the pointer up to its peak — which is what separates neighbours', () => {
-    const peak = FACET_RADIUS / Math.sqrt(3)
-    for (let d = 5; d < peak; d += 5) expect(pushProfile(d + 5)).toBeGreaterThan(pushProfile(d))
+  it('falls all the way out, so the nearest facets are moved hardest', () => {
+    for (let d = 0; d < FINGER_RADIUS - 5; d += 5) expect(fingerInfluence(d + 5)).toBeLessThan(fingerInfluence(d))
   })
 })

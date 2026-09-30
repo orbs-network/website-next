@@ -1,4 +1,4 @@
-import { FACET_RADIUS, FACET_SPACING, facetsAround, falloff, type Facet } from '@/components/marketing/hero-facets'
+import { FACET_RADIUS, FACET_SPACING, facetsAround, type Facet } from '@/components/marketing/hero-facets'
 
 /**
  * The facet field as a set of particles with state: the motion that
@@ -77,22 +77,20 @@ export const DRIFT_RETURN_SECONDS = 0.7
 export const SPIN_RETURN_SECONDS = 0.6
 
 /**
- * How strongly the pointer's motion moves the facets it passes over. Tuned so
- * a brisk 800px/s sweep drags the nearest facets about one and a half lattice
- * cells and opens gaps of half a cell between neighbours — a visible
- * disturbance that still reads as the grid.
+ * How strongly the pointer's motion moves the facets within `FINGER_RADIUS`
+ * of it. Tuned so a brisk 800px/s sweep drags the facets it passes over about
+ * a lattice cell and a half, while the rim of the disc does not move.
  *
- *  - `DRAG`, a fraction of the pointer's velocity: the facet under the
- *    pointer travels with it at this share of its speed. The wake.
- *  - `PUSH`, a fraction of its speed, directed away from the pointer and
- *    shaped by `pushProfile` so it spreads the facets rather than piling them
- *    up.
+ *  - `DRAG`, a fraction of the pointer's velocity: a facet under the pointer
+ *    travels with it at this share of its speed. The wake.
+ *  - `PUSH`, a fraction of its speed, directed away from the pointer: facets
+ *    in the finger's path are shoved aside.
  *  - `SWIRL`, radians per px of sideways pointer travel: facets turn by which
  *    side of the path they are on, so the two flanks of a stroke spin
  *    opposite ways, like eddies.
  */
-export const DRAG = 0.25
-export const PUSH = 0.25
+export const DRAG = 0.5
+export const PUSH = 0.6
 export const SWIRL = 0.004
 
 /**
@@ -123,27 +121,34 @@ function cellNoise(col: number, row: number): number {
 export const MAX_DRIFT = 44
 
 /**
- * How the push varies across the disc: `t(1 - t^2)`, zero at the pointer and
- * the rim, peaking ~58% of the way out, normalised to 1 at the peak.
+ * The reach of the pointer's push and drag, in px — about three facet cells.
  *
- * NOT the size falloff, which is what it was first. A push strongest at the
- * pointer moves the near facets furthest, straight into the ones behind them:
- * the field compresses into a ring and nothing separates. What separates
- * neighbours is a push that GROWS with distance, so inside the peak each
- * facet is shoved further than the one nearer the pointer and the gaps
- * between them open — a clearing round the cursor, like a finger drawn
- * through liquid.
+ * Much smaller than the disc, deliberately. Think of floating balls and a
+ * finger drawn through the water: the finger moves the balls it touches, and
+ * the ones a hand's width away barely rock. With the whole 162px disc in
+ * reach, the rim was stirred nearly as hard as the facets under the pointer
+ * and the field read as one sheet sliding about, not as things being pushed.
  */
-export function pushProfile(distance: number, radius: number = FACET_RADIUS): number {
-  if (!(radius > 0) || distance <= 0 || distance >= radius) return 0
+export const FINGER_RADIUS = 60
+
+/**
+ * How hard the finger moves a facet at `distance`: 1 at the pointer, falling
+ * smoothly to 0 at `FINGER_RADIUS` and staying there.
+ *
+ * `(1 - t^2)^2` rather than the size falloff's `1 - t^2`: the square takes
+ * the slope to zero at the edge as well, so there is no visible line where
+ * facets stop responding, and it drops away faster — at half the radius it is
+ * 0.56 against 0.75 — which is what concentrates the disturbance on the
+ * facets nearest the pointer.
+ */
+export function fingerInfluence(distance: number, radius: number = FINGER_RADIUS): number {
+  if (!(radius > 0) || distance >= radius) return 0
 
   const t = distance / radius
+  const k = 1 - t * t
 
-  return (t * (1 - t * t)) / PUSH_PROFILE_PEAK
+  return k * k
 }
-
-/** The maximum of `t(1 - t^2)`, at `t = 1/sqrt(3)`. */
-const PUSH_PROFILE_PEAK = 2 / (3 * Math.sqrt(3))
 
 /**
  * The integration step. The field is stepped at a fixed 120Hz whatever the
@@ -345,15 +350,14 @@ function integrate(field: FacetField, h: number) {
 
     // The liquid. Only a present, moving pointer stirs anything.
     const moving = present && speed > 0
-    const influence = moving ? falloff(distance) * p.response : 0
-    const push = moving ? pushProfile(distance) * p.response : 0
+    const influence = moving ? fingerInfluence(distance) * p.response : 0
     const ux = distance > 0 ? dx / distance : 0
     const uy = distance > 0 ? dy / distance : 0
 
     // Moved directly by the pointer, then an exact exponential step home. See `DRIFT_RETURN_SECONDS`.
     const driftDecay = Math.exp(-h / DRIFT_RETURN_SECONDS)
-    p.offsetX = p.offsetX * driftDecay + (influence * DRAG * vx + push * PUSH * speed * ux) * h
-    p.offsetY = p.offsetY * driftDecay + (influence * DRAG * vy + push * PUSH * speed * uy) * h
+    p.offsetX = p.offsetX * driftDecay + influence * (DRAG * vx + PUSH * speed * ux) * h
+    p.offsetY = p.offsetY * driftDecay + influence * (DRAG * vy + PUSH * speed * uy) * h
 
     const drift = Math.hypot(p.offsetX, p.offsetY)
     if (drift > MAX_DRIFT) {
