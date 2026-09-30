@@ -28,12 +28,16 @@ export { DSltp } from './products/dsltp'
 
 // Products — bare glyphs, for menu rows where the label is a sibling
 export {
+  AgenticGlyph,
   DLimitGlyph,
+  DPerpsGlyph,
   DSltpGlyph,
   DSpotGlyph,
+  DSpotMenuGlyph,
   DTwapGlyph,
   LiquidityHubGlyph,
   PerpetualHubGlyph,
+  SdkApiGlyph,
 } from './products/glyphs'
 
 // Partners

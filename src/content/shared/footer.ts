@@ -53,9 +53,9 @@ export type FooterColumnSpec = {
  * is simply the last column, so the reading order and the data agree.
  *
  * Links in the design that are NOT here, because nothing exists behind them:
- * AI AGENTS (#158), GOVERNANCE, TEAM and AUDITS. Same rule as the nav — ship
- * the page, then the link — rather than four more `PENDING` entries in the
- * chrome of every page. Each is a one-line addition when its page lands.
+ * GOVERNANCE, TEAM and AUDITS. Same rule as the nav — ship the page, then the
+ * link — rather than more `PENDING` entries in the chrome of every page. Each
+ * is a one-line addition when its page lands.
  *
  * The legacy footer also carried Tetra, Staking Calculator, DeFi.org,
  * Developers and White Papers. 3.4 dropped them, and that was confirmed as
@@ -77,6 +77,8 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
     links: [
       { key: 'venues', href: '/venues' },
       { key: 'institutions', href: '/institutional' },
+      // Same destination as the nav's "For AI Agents" (#212).
+      { key: 'aiAgents', href: '/ai/skills' },
     ],
   },
   {

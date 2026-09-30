@@ -26,7 +26,7 @@ const PRODUCTS: ResolvedNavGroup = {
         { key: 'liquidityHub', href: '/liquidity-hub/', external: false, label: 'Liquidity Hub' },
       ],
     },
-    { key: 'dperps', href: '/dperps/', external: false, label: 'dPERPS', icon: 'perpetualHub' },
+    { key: 'dperps', href: '/dperps/', external: false, label: 'dPERPS', icon: 'dperps' },
   ],
 }
 
@@ -51,8 +51,6 @@ const BASE = {
       desktopOnly: true as const,
     },
   ],
-  featured: { title: 'Introducing dSPOT', href: '/introducing-dspot/', image: null },
-  featuredCopy: { label: 'Featured Post', cta: 'Learn More' },
 }
 
 async function openGroup(canvasElement: HTMLElement, name: RegExp) {
@@ -146,35 +144,5 @@ export const ExternalRowsOpenSafely: Story = {
     await expect(canvas.getByRole('link', { name: 'Proof of Stake & Staking' })).not.toHaveAttribute('target')
     // Top-level external links too.
     await expect(canvas.getByRole('link', { name: 'GitHub' })).toHaveAttribute('rel', 'noopener noreferrer')
-  },
-}
-
-/**
- * The featured post is ONE link named by its title. "Learn More" looks like a
- * button but is part of the same link and hidden from assistive technology —
- * three tab stops to one destination, one of them named "Learn More", is what
- * it replaces.
- */
-export const FeaturedPostIsOneLinkNamedByItsTitle: Story = {
-  args: BASE,
-  play: async ({ canvasElement }) => {
-    const canvas = await openGroup(canvasElement, /Products/)
-
-    const post = await waitFor(() => canvas.getByRole('link', { name: 'Introducing dSPOT' }))
-    await expect(post).toHaveAttribute('href', '/introducing-dspot/')
-    await expect(within(post).getByText('Learn More').closest('[aria-hidden="true"]')).not.toBeNull()
-    await expect(canvas.queryByRole('link', { name: /Learn More/ })).not.toBeInTheDocument()
-    await expect(post.querySelector('img')?.getAttribute('alt')).toBe('')
-  },
-}
-
-/** No post — a degraded build, an empty space — means no column, not an empty one. */
-export const NoFeaturedPostNoColumn: Story = {
-  args: { ...BASE, featured: null },
-  play: async ({ canvasElement }) => {
-    const canvas = await openGroup(canvasElement, /Products/)
-
-    await waitFor(() => canvas.getByRole('link', { name: 'dSPOT' }))
-    await expect(canvas.queryByText('Featured Post')).not.toBeInTheDocument()
   },
 }
