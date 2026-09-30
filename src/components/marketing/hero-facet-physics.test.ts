@@ -3,12 +3,13 @@ import {
   BLOOM_SPEED,
   MAX_DRIFT,
   createFacetField,
+  pushProfile,
   facetsOf,
   isFacetFieldSettled,
   stepFacetField,
   type FacetField,
 } from './hero-facet-physics'
-import { FACET_RADIUS, FACET_SIZE_MIN, facetsAround } from './hero-facets'
+import { FACET_RADIUS, FACET_SIZE_MIN, FACET_SPACING, facetsAround } from './hero-facets'
 
 /**
  * The springs are tuned by eye, but everything they promise is checkable: that
@@ -163,6 +164,26 @@ describe('the liquid', () => {
     expect(meanDrift).toBeGreaterThan(2)
   })
 
+  it('separates neighbouring facets in motion, rather than sliding the lattice as a block', () => {
+    const field = settledAt()
+    run(field, 0.2, { move: { x: 800, y: 0 } })
+
+    // How far apart ADJACENT cells have drifted from each other. A block slide scores ~0 however far it moves.
+    const near = particles(field).filter((p) => p.distance < 90)
+    const apart: number[] = []
+    for (const p of near) {
+      for (const q of near) {
+        const cells = Math.hypot(p.rest.x - q.rest.x, p.rest.y - q.rest.y)
+        if (cells > 1 && cells < FACET_SPACING * 1.05)
+          apart.push(Math.hypot(p.offsetX - q.offsetX, p.offsetY - q.offsetY))
+      }
+    }
+    const mean = apart.reduce((sum, d) => sum + d, 0) / apart.length
+
+    // A quarter of a cell: at a uniform response this was 0.8px.
+    expect(mean).toBeGreaterThan(FACET_SPACING / 4)
+  })
+
   it('turns the two flanks of a stroke in opposite directions', () => {
     const field = settledAt()
     run(field, 0.15, { move: { x: 800, y: 0 } })
@@ -226,5 +247,18 @@ describe('timing', () => {
     for (const [key, presence] of fast) {
       if (slow.has(key)) expect(Math.abs(presence - slow.get(key)!)).toBeLessThan(0.01)
     }
+  })
+})
+
+describe('pushProfile', () => {
+  it('is zero at the pointer and the rim, and peaks at 1 in between', () => {
+    expect(pushProfile(0)).toBe(0)
+    expect(pushProfile(FACET_RADIUS)).toBe(0)
+    expect(pushProfile(FACET_RADIUS / Math.sqrt(3))).toBeCloseTo(1, 10)
+  })
+
+  it('grows outward from the pointer up to its peak — which is what separates neighbours', () => {
+    const peak = FACET_RADIUS / Math.sqrt(3)
+    for (let d = 5; d < peak; d += 5) expect(pushProfile(d + 5)).toBeGreaterThan(pushProfile(d))
   })
 })

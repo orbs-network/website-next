@@ -55,29 +55,81 @@ export const COLLAPSE_SPEED = 900
 /** Scale. Snappy, with one clear overshoot (~25%) — the "bounce" in the bloom. */
 export const SCALE_SPRING = spring(2.4, 0.4)
 
-/** Position. Loose and underdamped, so a displaced facet wobbles home like something floating. */
-export const DRIFT_SPRING = spring(1.1, 0.3)
+/**
+ * Position. Loose and underdamped, so a displaced facet wobbles home like
+ * something floating — and slow enough that the wake behind a stroke lingers
+ * rather than snapping shut.
+ */
+export const DRIFT_SPRING = spring(0.85, 0.32)
 
 /** Rotation offset. Looser still; it has to hand back to the travelling wave without a snap. */
 export const SPIN_SPRING = spring(0.8, 0.35)
 
 /**
  * How strongly the pointer's motion moves the facets it passes over, per px/s
- * of pointer speed. Tuned so a brisk 800px/s sweep shifts the nearest facets by
- * ~10px — about half a lattice cell, enough to disturb the grid without
- * scrambling it.
+ * of pointer speed. Tuned so a brisk 800px/s sweep drags the nearest facets
+ * ~one lattice cell and opens gaps of about the same between them — a visible
+ * disturbance that still reads as the grid.
  *
  *  - `DRAG` pulls along the direction of travel: the wake.
- *  - `PUSH` pushes away from the pointer: the bow wave.
+ *  - `PUSH` pushes away from the pointer, shaped by `pushProfile` so it
+ *    spreads the facets apart rather than piling them up.
  *  - `SWIRL` turns facets by which side of the path they are on, so the two
  *    flanks of a stroke spin opposite ways, like eddies.
  */
-export const DRAG = 0.6
-export const PUSH = 0.5
+export const DRAG = 1
+export const PUSH = 3
 export const SWIRL = 0.04
 
-/** The furthest a facet may drift from its cell, in px. A flick across the hero should stir the field, not scatter it. */
-export const MAX_DRIFT = 28
+/**
+ * How much each facet's response to the pointer varies, either side of 1.
+ *
+ * Without it, neighbours feel almost the same force and move as a block: the
+ * field slides, and nothing separates, however strong the drag. Giving each
+ * facet its own responsiveness — fixed per cell, so it is the same facet
+ * every visit — is what breaks the lattice into individual pieces in motion,
+ * like particles of different weight suspended in the same liquid. It only
+ * scales the pointer's forces, so at rest it changes nothing.
+ */
+export const RESPONSE_SPREAD = 0.45
+
+/**
+ * A stable pseudo-random 0-1 per lattice cell. The classic shader hash: not
+ * a good random number generator, and it does not need to be one — it needs
+ * to look unpatterned across a few hundred neighbouring cells, and to give
+ * the same answer every frame.
+ */
+function cellNoise(col: number, row: number): number {
+  const n = Math.sin(col * 12.9898 + row * 78.233) * 43758.5453
+
+  return n - Math.floor(n)
+}
+
+/** The furthest a facet may drift from its cell, in px — about two cells. A flick should stir the field, not scatter it. */
+export const MAX_DRIFT = 44
+
+/**
+ * How the push varies across the disc: `t(1 - t^2)`, zero at the pointer and
+ * the rim, peaking ~58% of the way out, normalised to 1 at the peak.
+ *
+ * NOT the size falloff, which is what it was first. A push strongest at the
+ * pointer moves the near facets furthest, straight into the ones behind them:
+ * the field compresses into a ring and nothing separates. What separates
+ * neighbours is a push that GROWS with distance, so inside the peak each
+ * facet is shoved further than the one nearer the pointer and the gaps
+ * between them open — a clearing round the cursor, like a finger drawn
+ * through liquid.
+ */
+export function pushProfile(distance: number, radius: number = FACET_RADIUS): number {
+  if (!(radius > 0) || distance <= 0 || distance >= radius) return 0
+
+  const t = distance / radius
+
+  return (t * (1 - t * t)) / PUSH_PROFILE_PEAK
+}
+
+/** The maximum of `t(1 - t^2)`, at `t = 1/sqrt(3)`. */
+const PUSH_PROFILE_PEAK = 2 / (3 * Math.sqrt(3))
 
 /**
  * The integration step. Springs are stepped at a fixed 120Hz whatever the
@@ -114,6 +166,8 @@ type Particle = {
   /** Rotation on top of the travelling wave, in radians. */
   spin: number
   spinVelocity: number
+  /** Multiplier on the pointer's forces on this facet. See `RESPONSE_SPREAD`. */
+  response: number
 }
 
 export type FacetField = {
@@ -152,8 +206,14 @@ export function createFacetField(): FacetField {
 }
 
 /** Keyed by lattice cell rather than by position, so float noise in a centre can never split one cell into two particles. */
+function cellOf(facet: Facet): { col: number; row: number } {
+  return { col: Math.round(facet.x / FACET_SPACING), row: Math.round(facet.y / FACET_SPACING) }
+}
+
 function cellKey(facet: Facet): string {
-  return `${Math.round(facet.x / FACET_SPACING)},${Math.round(facet.y / FACET_SPACING)}`
+  const { col, row } = cellOf(facet)
+
+  return `${col},${row}`
 }
 
 function trackPointerVelocity(field: FacetField, dt: number) {
@@ -213,6 +273,7 @@ function retarget(field: FacetField) {
       existing.rest = facet
       if (present) existing.live = true
     } else if (present) {
+      const { col, row } = cellOf(facet)
       field.particles.set(key, {
         rest: facet,
         live: true,
@@ -224,6 +285,7 @@ function retarget(field: FacetField) {
         velocityY: 0,
         spin: 0,
         spinVelocity: 0,
+        response: 1 + RESPONSE_SPREAD * (2 * cellNoise(col, row) - 1),
       })
     }
   }
@@ -252,16 +314,20 @@ function integrate(field: FacetField, h: number) {
     p.presence += p.presenceVelocity * h
 
     // The liquid. Only a present, moving pointer stirs anything.
-    const influence = present && speed > 0 ? falloff(distance) : 0
+    const moving = present && speed > 0
+    const influence = moving ? falloff(distance) * p.response : 0
+    const push = moving ? pushProfile(distance) * p.response : 0
     const ux = distance > 0 ? dx / distance : 0
     const uy = distance > 0 ? dy / distance : 0
 
     const forceX =
-      influence * (DRAG * vx + PUSH * speed * ux) -
+      influence * DRAG * vx +
+      push * PUSH * speed * ux -
       DRIFT_SPRING.stiffness * p.offsetX -
       DRIFT_SPRING.damping * p.velocityX
     const forceY =
-      influence * (DRAG * vy + PUSH * speed * uy) -
+      influence * DRAG * vy +
+      push * PUSH * speed * uy -
       DRIFT_SPRING.stiffness * p.offsetY -
       DRIFT_SPRING.damping * p.velocityY
     p.velocityX += forceX * h
