@@ -90,3 +90,49 @@ export const WhiteMarksInvertInLightTheme: Story = {
     await expect(canvasElement.querySelector('img')).toHaveClass('dark:invert-0')
   },
 }
+
+/**
+ * A mark with a light-background twin shows exactly one of the two per theme,
+ * by computed display rather than by class name — the venue row once shipped
+ * white marks only and half of them vanished on the light theme (#220).
+ */
+export const ThemePairShowsOneMarkPerTheme: Story = {
+  args: {
+    locale: 'en',
+    title: 'Venues',
+    items: [
+      {
+        name: 'THENA',
+        logo: {
+          src: '/marketing/home/venues/thena.svg',
+          onLight: '/marketing/home/venues/thena-on-light.svg',
+          width: 129,
+          height: 30,
+        },
+        wordmark: true,
+      },
+    ],
+  },
+  play: async ({ canvasElement }) => {
+    const shown = () =>
+      [...canvasElement.querySelectorAll('img')]
+        .filter((img) => getComputedStyle(img).display !== 'none')
+        .map((img) => img.getAttribute('src') ?? '')
+
+    const html = document.documentElement
+    const wasDark = html.classList.contains('dark')
+    try {
+      html.classList.remove('dark')
+      const light = shown()
+      await expect(light).toHaveLength(1)
+      await expect(light[0]).toContain('thena-on-light.svg')
+
+      html.classList.add('dark')
+      const dark = shown()
+      await expect(dark).toHaveLength(1)
+      await expect(dark[0]).not.toContain('on-light')
+    } finally {
+      html.classList.toggle('dark', wasDark)
+    }
+  },
+}

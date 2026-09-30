@@ -99,23 +99,27 @@ export const HOME_FEATURES = [
  *
  * Dimensions measured, not read off the design: they are six different shapes
  * and a single declared box would distort five of them.
+ *
+ * Each has an `-on-light` twin: the 09-30 export draws every venue in #121214
+ * as well as white, and the white files alone vanished on the light theme
+ * (#220). Cut from the same component set at the same crop. DefiZoo's white
+ * file was re-cut from that export too — the earlier one was framed tighter,
+ * and a pair that differs in shape would reflow the row on a theme switch.
  */
 export const HOME_VENUES: readonly LogoRowItem[] = [
-  {
-    name: 'PancakeSwap',
-    logo: { src: '/marketing/home/venues/pancakeswap.svg', width: 151, height: 24 },
-    wordmark: true,
-  },
-  { name: 'SushiSwap', logo: { src: '/marketing/home/venues/sushiswap.png', width: 240, height: 56 }, wordmark: true },
-  { name: 'QuickSwap', logo: { src: '/marketing/home/venues/quickswap.svg', width: 153, height: 36 }, wordmark: true },
-  { name: 'THENA', logo: { src: '/marketing/home/venues/thena.svg', width: 129, height: 30 }, wordmark: true },
-  {
-    name: 'SpookySwap',
-    logo: { src: '/marketing/home/venues/spookyswap.svg', width: 167, height: 40 },
-    wordmark: true,
-  },
-  { name: 'DefiZoo', logo: { src: '/marketing/home/venues/defizoo.svg', width: 117, height: 24 }, wordmark: true },
+  { name: 'PancakeSwap', logo: venue('pancakeswap', 151, 24), wordmark: true },
+  { name: 'SushiSwap', logo: venue('sushiswap', 240, 56, 'png'), wordmark: true },
+  { name: 'QuickSwap', logo: venue('quickswap', 153, 36), wordmark: true },
+  { name: 'THENA', logo: venue('thena', 129, 30), wordmark: true },
+  { name: 'SpookySwap', logo: venue('spookyswap', 167, 40), wordmark: true },
+  { name: 'DefiZoo', logo: venue('defizoo', 148, 37), wordmark: true },
 ]
+
+/** A venue mark and its `-on-light` twin, which share a crop and so dimensions. */
+function venue(slug: string, width: number, height: number, ext: 'svg' | 'png' = 'svg') {
+  const base = `/marketing/home/venues/${slug}`
+  return { src: `${base}.${ext}`, onLight: `${base}-on-light.${ext}`, width, height }
+}
 
 /** "Discover." — three large links out to the reading material. */
 export const HOME_DISCOVER = [
