@@ -40,8 +40,7 @@ export type MobileNavFooter = {
  * is what the design keeps on it.
  *
  * It renders from the same resolved data as the desktop menu, so the two cannot
- * drift — a link added to `NAV_GROUPS` appears in both or neither. The featured
- * post is the one thing it leaves out: the design has no room for it.
+ * drift — a link added to `NAV_GROUPS` appears in both or neither.
  *
  * `Sheet` (Radix Dialog) rather than a hand-rolled panel: an overlay nav needs
  * a focus trap, Escape to close, background scroll lock and `aria-modal`, and
@@ -311,7 +310,7 @@ function MobileNavRow({
       lang={link.lang}
       icon={icon}
       className={cn(
-        '-mx-2 flex w-full gap-2 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
+        '-mx-2 flex w-full gap-3 rounded-sm px-2 text-h5 font-normal tracking-normal hover:no-underline',
         nested ? 'py-1.5 text-fg-muted' : 'py-2.5'
       )}
     >

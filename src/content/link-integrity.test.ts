@@ -33,9 +33,9 @@ const CONTENT = join(REPO, 'src/content')
 /**
  * Paths that are linked but not yet built.
  *
- * This reached EMPTY — every one of the original seventeen resolved. These are
- * new debt, taken on knowingly: the design 3.4 home page links to pages whose
- * content is still being written (#149).
+ * EMPTY, for the second time. Every one of the original seventeen resolved;
+ * the last addition, `/ai-agents` from the 3.4 home page, went when the home
+ * card was pointed at the existing `/ai/skills` instead (#212).
  *
  * `/dperps` was here and is not any more, which is the mechanism working: it
  * shipped as the rename of `/perpetual-hub`, so its line had to come out in the
@@ -46,7 +46,7 @@ const CONTENT = join(REPO, 'src/content')
  * in the same diff. The debt is counted down in the repository rather than in
  * someone's memory.
  */
-const PENDING: readonly string[] = ['/ai-agents']
+const PENDING: readonly string[] = []
 
 /**
  * Blog posts referenced from marketing copy, by slug.

@@ -24,18 +24,14 @@ export type NavLinkSpec = {
    */
   href: string
   /**
-   * Which product glyph precedes the label, if any.
+   * Which product mark precedes the label, if any.
    *
-   * Only the Products panel has designed icons. Solutions and Network repeat
-   * one placeholder mark on every row in the mockups, so they ship without,
-   * rather than inventing marks — an invented icon is harder to remove later
-   * than a missing one is to add.
-   *
-   * SDK/API and Agentic DO have designed icons, but the Figma file could not
-   * be exported when this was built. They have no key here yet; the row keeps
-   * the icon's slot so its label lines up with its neighbours'.
+   * Only the Products panel has designed icons (#210). Solutions and Network
+   * repeat one placeholder mark on every row in the mockups, so they ship
+   * without, rather than inventing marks — an invented icon is harder to
+   * remove later than a missing one is to add.
    */
-  icon?: 'dspot' | 'perpetualHub'
+  icon?: 'sdk' | 'dspot' | 'dperps' | 'agentic'
   /**
    * Links nested under this one. dSPOT is a product AND the family of order
    * types it bundles, so the design lists those beneath it, indented and
@@ -59,9 +55,9 @@ export type NavGroupSpec = {
 /**
  * The three dropdowns, in design order.
  *
- * Omitted until their pages exist, rather than linked to a 404: AI Agents
- * (Solutions), Governance (Network). Add them here when they are built — the
- * link-integrity test fails on a menu link to a route that does not exist.
+ * Omitted until it has a destination, rather than linked to a 404: Governance
+ * (Network, #213). The link-integrity test fails on a menu link to a route
+ * that does not exist.
  *
  * The Network design also opens with "What is Orbs L3", overlapping the next
  * row in the frame; read as a leftover, not a row.
@@ -71,7 +67,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     key: 'products',
     links: [
       // No SDK page on this site — see `SDK_DOCS_URL`.
-      { key: 'sdk', href: SDK_DOCS_URL },
+      { key: 'sdk', href: SDK_DOCS_URL, icon: 'sdk' },
       {
         key: 'dspot',
         href: '/dspot',
@@ -83,8 +79,8 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
           { key: 'liquidityHub', href: '/liquidity-hub' },
         ],
       },
-      { key: 'dperps', href: '/dperps', icon: 'perpetualHub' },
-      { key: 'agentic', href: '/agentic' },
+      { key: 'dperps', href: '/dperps', icon: 'dperps' },
+      { key: 'agentic', href: '/agentic', icon: 'agentic' },
     ],
   },
   {
@@ -92,6 +88,9 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     links: [
       { key: 'venues', href: '/venues' },
       { key: 'institutions', href: '/institutional' },
+      // No dedicated AI-agents page: the skills index is where an agent
+      // builder starts (#212, Sara). #158 proposed a page; this supersedes it.
+      { key: 'aiAgents', href: '/ai/skills' },
     ],
   },
   {

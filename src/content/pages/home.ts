@@ -66,17 +66,17 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'venues', href: '/venues' },
   // The one that already exists.
   { id: 'institutions', href: '/institutional' },
-  { id: 'aiAgents', href: '/ai-agents' },
+  { id: 'aiAgents', href: '/ai/skills' },
 ]
 
 /**
  * [KEY FEATURES & BENEFITS] — the tab list.
  *
- * Eight tabs. The design draws ONE panel state ("No custody handoff. No
- * counterparty risk on Orbs.") and leaves the other seven undrawn, so seven
- * panels have no copy yet. Rather than invent seven marketing claims, those
- * catalog entries currently restate the tab, which is true and obviously
- * provisional. See #149.
+ * Eight tabs. The design draws only one panel, so each panel carries the same
+ * one-line summary as the matching card on /institutional (#221, Sara's call).
+ * The two are separate catalog entries because the Japanese and Korean
+ * catalogs have no institutional page, and `home-features.test.ts` fails if
+ * they drift apart.
  */
 export const HOME_FEATURES = [
   'nonCustodial',

@@ -155,12 +155,13 @@ export function FeatureTabs({
         )}
       >
         {/*
-          Steps down on small screens. `text-h2` has no responsive step — the
-          type scale is missing one, which is #108 — so at a phone width this
-          line alone is wider than the viewport. `break-words` is the backstop
-          for a longer word than any of these.
+          `text-h3`, not `text-h2`: the panel carries a one- or two-sentence
+          summary of the feature (#221), not a four-word echo of its tab. At
+          56px a 130-character sentence fills the panel and wraps to seven
+          lines. `break-words` is the backstop for a longer word than any of
+          these.
         */}
-        <p className="max-w-2xl text-balance break-words text-h3 text-neutral-900 sm:text-h2">{active.panel}</p>
+        <p className="max-w-2xl text-balance break-words text-h3 text-neutral-900">{active.panel}</p>
 
         {/*
           The design puts the Orbs lockup in the bottom-left of the panel

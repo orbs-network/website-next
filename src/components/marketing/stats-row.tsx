@@ -6,7 +6,7 @@ import { textLang } from '@/i18n/script'
 export type Stat = {
   /** Message key and React key. */
   id: string
-  /** The figure itself — "$2.5B+", "30+". */
+  /** The figure itself — "$14B+", "30+". */
   value: string
   /** What it counts. */
   label: string
@@ -17,7 +17,7 @@ export type Stat = {
  *
  * A description list, not a grid of divs: each figure is a value and each label
  * is the term it belongs to, and `<dl>` is what says so. A screen reader then
- * announces "Cumulative volume, $2.5B+" rather than two loose strings whose
+ * announces "Cumulative volume, $14B+" rather than two loose strings whose
  * relationship has to be inferred from where they sit on screen.
  *
  * The value is rendered FIRST visually but is the `<dd>`; `flex-col-reverse`
@@ -57,7 +57,7 @@ export function StatsRow({
           <div key={stat.id} className="flex flex-col-reverse gap-2">
             {/*
               The label and the value are marked SEPARATELY, and this pair is
-              the clearest case on the site for why. "$2.5B+" is Latin in every
+              the clearest case on the site for why. "$14B+" is Latin in every
               locale, while "누적 거래량" beside it is Korean — one `lang` over
               the row has to be wrong about one of them.
             */}
