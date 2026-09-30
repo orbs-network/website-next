@@ -13,8 +13,8 @@ import {
 import { FACET_RADIUS, FACET_SIZE_MIN, FACET_SPACING, facetsAround } from './hero-facets'
 
 /**
- * The springs are tuned by eye, but everything they promise is checkable: that
- * they settle onto the measured design, that the bloom travels outward, that
+ * The motion is tuned by eye, but everything it promises is checkable: that
+ * it settles onto the measured design, that the bloom travels outward, that
  * the collapse runs the other way, and that the field goes quiet so the frame
  * loop can stop.
  */
@@ -97,18 +97,18 @@ describe('the bloom', () => {
     expect(mean(near)).toBeGreaterThan(mean(far))
   })
 
-  it('overshoots before settling — the bounce', () => {
+  it('grows to full size without popping past it — no bounce', () => {
     const field = createFacetField()
     moveFacetPointer(field, { ...CURSOR })
 
     let peak = 0
-    for (let i = 0; i < 120; i++) {
+    for (let i = 0; i < 240; i++) {
       run(field, 1 / 120)
       for (const p of field.particles.values()) peak = Math.max(peak, p.presence)
     }
 
-    expect(peak).toBeGreaterThan(1.1)
-    expect(peak).toBeLessThan(1.4)
+    expect(peak).toBeGreaterThan(0.999)
+    expect(peak).toBeLessThanOrEqual(1 + 1e-9)
   })
 })
 
@@ -200,10 +200,29 @@ describe('the liquid', () => {
     expect(Math.abs(flank(-1))).toBeGreaterThan(0.01)
   })
 
-  it('wobbles back onto the design once the pointer stops', () => {
+  it('eases slowly back onto the design once the pointer stops, without overshooting its cell', () => {
     const field = settledAt()
     run(field, 0.3, { move: { x: 900, y: -400 } })
-    run(field, 5)
+    // The pointer's smoothed velocity takes a few frames to reach zero; from then on nothing is pushing.
+    run(field, 0.15)
+
+    // Where each facet had been pushed to once the pointer stopped.
+    const pushed = new Map([...field.particles].map(([key, p]) => [key, { x: p.offsetX, y: p.offsetY }]))
+    const drift = () => Math.max(...[...field.particles.values()].map((p) => Math.hypot(p.offsetX, p.offsetY)))
+
+    // Slowly: still visibly displaced half a second later.
+    const before = drift()
+    run(field, 0.5)
+    expect(drift()).toBeGreaterThan(before / 3)
+
+    for (let i = 0; i < 6 * 120; i++) {
+      run(field, 1 / 120)
+      // Never past the cell: the offset keeps pointing the way it was pushed, however small it gets.
+      for (const [key, p] of field.particles) {
+        const from = pushed.get(key)
+        if (from) expect(p.offsetX * from.x + p.offsetY * from.y).toBeGreaterThanOrEqual(-1e-6)
+      }
+    }
 
     for (const p of field.particles.values()) {
       expect(Math.hypot(p.offsetX, p.offsetY)).toBeLessThan(0.01)

@@ -1,21 +1,22 @@
 import { FACET_RADIUS, FACET_SPACING, facetsAround, falloff, type Facet } from '@/components/marketing/hero-facets'
 
 /**
- * The facet field as a set of sprung particles: the motion that `facetsAround`
- * cannot express, because it has no memory.
+ * The facet field as a set of particles with state: the motion that
+ * `facetsAround` cannot express, because it has no memory.
  *
  * `facetsAround` is still the specification. It says what every facet looks
  * like for a cursor that has been sitting still — the measured design — and
- * each particle here springs toward exactly that. Hold the pointer still and
- * the springs settle onto it; `hero-facet-physics.test.ts` pins that, so the
+ * each particle here eases toward exactly that. Hold the pointer still and
+ * the field settles onto it; `hero-facet-physics.test.ts` pins that, so the
  * motion can be retuned freely without drifting off the design.
  *
- * What the springs add, all of it in motion and none of it at rest:
+ * What this adds, all of it in motion and none of it at rest:
  *
  *  - **Bloom.** Facets scale up in a wave from the pointer rather than all at
- *    once, and overshoot before settling.
+ *    once.
  *  - **Liquid.** A moving pointer drags nearby facets along its path, pushes
- *    them aside and sets them turning; they wobble back when it stops.
+ *    them aside and sets them turning; they drift slowly home when it stops.
+ *    Nothing overshoots — see `DRIFT_RETURN_SECONDS`.
  *  - **Collapse.** On leaving, the field shrinks back from the rim inward.
  *
  * Pure and deterministic — no DOM, no clock — so every behaviour above is a
@@ -27,8 +28,8 @@ type Spring = { stiffness: number; damping: number }
 
 /**
  * A spring described the way it is tuned: how fast it oscillates and how
- * quickly that dies away. `dampingRatio` below 1 overshoots; 0.4 settles with
- * one visible bounce, 0.3 with two.
+ * quickly that dies away. `dampingRatio` below 1 overshoots; 1 is the quickest
+ * settle that does not.
  */
 function spring(frequencyHz: number, dampingRatio: number): Spring {
   const omega = 2 * Math.PI * frequencyHz
@@ -52,34 +53,47 @@ export const BLOOM_SPEED = 650
 /** The same front, shrinking, after the pointer leaves. Faster than the bloom: exits should not linger. */
 export const COLLAPSE_SPEED = 900
 
-/** Scale. Snappy, with one clear overshoot (~25%) — the "bounce" in the bloom. */
-export const SCALE_SPRING = spring(2.4, 0.4)
-
 /**
- * Position. Loose and underdamped, so a displaced facet wobbles home like
- * something floating — and slow enough that the wake behind a stroke lingers
- * rather than snapping shut.
+ * Scale. Critically damped: the quickest settle that does not pop past full
+ * size. (It overshot once, as a deliberate "bounce", and was taken out.)
  */
-export const DRIFT_SPRING = spring(0.85, 0.32)
-
-/** Rotation offset. Looser still; it has to hand back to the travelling wave without a snap. */
-export const SPIN_SPRING = spring(0.8, 0.35)
+export const SCALE_SPRING = spring(2.4, 1)
 
 /**
- * How strongly the pointer's motion moves the facets it passes over, per px/s
- * of pointer speed. Tuned so a brisk 800px/s sweep drags the nearest facets
- * ~one lattice cell and opens gaps of about the same between them — a visible
+ * How long a displaced facet takes to drift home, as the time constant of an
+ * exponential: ~63% of the way in 0.7s, all but invisible by ~3s.
+ *
+ * NOT A SPRING, and that is the point. Position and rotation have no inertia
+ * here — the pointer moves a facet directly, and when it stops, the facet
+ * eases back along the way it came and stops dead in its cell. Springs were
+ * tried first, underdamped and then overdamped; both carry velocity, and a
+ * facet still moving when the pointer stopped would glide through its cell
+ * and come back — read, rightly, as a bounce. A first-order return cannot
+ * overshoot, by construction.
+ */
+export const DRIFT_RETURN_SECONDS = 0.7
+
+/** The same for rotation, handing back to the travelling wave. */
+export const SPIN_RETURN_SECONDS = 0.6
+
+/**
+ * How strongly the pointer's motion moves the facets it passes over. Tuned so
+ * a brisk 800px/s sweep drags the nearest facets about one and a half lattice
+ * cells and opens gaps of half a cell between neighbours — a visible
  * disturbance that still reads as the grid.
  *
- *  - `DRAG` pulls along the direction of travel: the wake.
- *  - `PUSH` pushes away from the pointer, shaped by `pushProfile` so it
- *    spreads the facets apart rather than piling them up.
- *  - `SWIRL` turns facets by which side of the path they are on, so the two
- *    flanks of a stroke spin opposite ways, like eddies.
+ *  - `DRAG`, a fraction of the pointer's velocity: the facet under the
+ *    pointer travels with it at this share of its speed. The wake.
+ *  - `PUSH`, a fraction of its speed, directed away from the pointer and
+ *    shaped by `pushProfile` so it spreads the facets rather than piling them
+ *    up.
+ *  - `SWIRL`, radians per px of sideways pointer travel: facets turn by which
+ *    side of the path they are on, so the two flanks of a stroke spin
+ *    opposite ways, like eddies.
  */
-export const DRAG = 1
-export const PUSH = 3
-export const SWIRL = 0.04
+export const DRAG = 0.25
+export const PUSH = 0.25
+export const SWIRL = 0.004
 
 /**
  * How much each facet's response to the pointer varies, either side of 1.
@@ -132,10 +146,10 @@ export function pushProfile(distance: number, radius: number = FACET_RADIUS): nu
 const PUSH_PROFILE_PEAK = 2 / (3 * Math.sqrt(3))
 
 /**
- * The integration step. Springs are stepped at a fixed 120Hz whatever the
+ * The integration step. The field is stepped at a fixed 120Hz whatever the
  * display runs at, so a 60Hz laptop and a 144Hz monitor animate the same —
  * the old single-line ease was frame-rate dependent, which a decorative fade
- * could live with and a bouncing spring cannot.
+ * could live with and a stateful field cannot.
  */
 const STEP = 1 / 120
 
@@ -155,17 +169,14 @@ type Particle = {
   rest: Facet
   /** Whether the cell was in the disc the last time the pointer was in the field. */
   live: boolean
-  /** Scale, 0-1 with overshoot. Multiplies the rest size and (clamped) the rest opacity. */
+  /** Scale, 0-1. Multiplies the rest size and opacity. */
   presence: number
   presenceVelocity: number
   /** Drift from the cell centre, in px. */
   offsetX: number
   offsetY: number
-  velocityX: number
-  velocityY: number
   /** Rotation on top of the travelling wave, in radians. */
   spin: number
-  spinVelocity: number
   /** Multiplier on the pointer's forces on this facet. See `RESPONSE_SPREAD`. */
   response: number
 }
@@ -303,10 +314,7 @@ function retarget(field: FacetField) {
         presenceVelocity: 0,
         offsetX: 0,
         offsetY: 0,
-        velocityX: 0,
-        velocityY: 0,
         spin: 0,
-        spinVelocity: 0,
         response: 1 + RESPONSE_SPREAD * (2 * cellNoise(col, row) - 1),
       })
     }
@@ -342,35 +350,20 @@ function integrate(field: FacetField, h: number) {
     const ux = distance > 0 ? dx / distance : 0
     const uy = distance > 0 ? dy / distance : 0
 
-    const forceX =
-      influence * DRAG * vx +
-      push * PUSH * speed * ux -
-      DRIFT_SPRING.stiffness * p.offsetX -
-      DRIFT_SPRING.damping * p.velocityX
-    const forceY =
-      influence * DRAG * vy +
-      push * PUSH * speed * uy -
-      DRIFT_SPRING.stiffness * p.offsetY -
-      DRIFT_SPRING.damping * p.velocityY
-    p.velocityX += forceX * h
-    p.velocityY += forceY * h
-    p.offsetX += p.velocityX * h
-    p.offsetY += p.velocityY * h
+    // Moved directly by the pointer, then an exact exponential step home. See `DRIFT_RETURN_SECONDS`.
+    const driftDecay = Math.exp(-h / DRIFT_RETURN_SECONDS)
+    p.offsetX = p.offsetX * driftDecay + (influence * DRAG * vx + push * PUSH * speed * ux) * h
+    p.offsetY = p.offsetY * driftDecay + (influence * DRAG * vy + push * PUSH * speed * uy) * h
 
     const drift = Math.hypot(p.offsetX, p.offsetY)
     if (drift > MAX_DRIFT) {
-      const scale = MAX_DRIFT / drift
-      p.offsetX *= scale
-      p.offsetY *= scale
-      p.velocityX *= scale
-      p.velocityY *= scale
+      p.offsetX *= MAX_DRIFT / drift
+      p.offsetY *= MAX_DRIFT / drift
     }
 
     // Which side of the path the facet is on: the 2D cross product of its bearing and the pointer's velocity.
-    const torque = influence * SWIRL * (ux * vy - uy * vx)
-    const spinForce = torque - SPIN_SPRING.stiffness * p.spin - SPIN_SPRING.damping * p.spinVelocity
-    p.spinVelocity += spinForce * h
-    p.spin += p.spinVelocity * h
+    const turn = influence * SWIRL * (ux * vy - uy * vx)
+    p.spin = p.spin * Math.exp(-h / SPIN_RETURN_SECONDS) + turn * h
   }
 }
 
@@ -435,19 +428,19 @@ export function facetsOf(field: FacetField): Facet[] {
       the two together once made every facet shrink to the rim size, hold, and
       then pop out, instead of the "fade back to dots" the note asks for.
 
-      Scale may undershoot below zero on the way out — the spring's bounce in
-      the other direction. A negative size would draw an inverted triangle, so
-      it is clamped; opacity is clamped at 1 as well, since the overshoot is
-      meant to read as size, not as a flash.
+      Clamped to 0-1 all the same. The scale spring is critically damped and
+      does not overshoot a target it is settling on, but a target that flips
+      mid-flight — the pointer leaving during the bloom — hands it velocity
+      the wrong way, and a size below zero would draw an inverted triangle.
     */
-    const presence = Math.max(p.presence, 0)
+    const presence = Math.min(Math.max(p.presence, 0), 1)
     if (presence < SETTLED) continue
 
     facets.push({
       x: p.rest.x + p.offsetX,
       y: p.rest.y + p.offsetY,
       size: p.rest.size * presence,
-      opacity: p.rest.opacity * Math.min(presence, 1),
+      opacity: p.rest.opacity * presence,
       angle: p.rest.angle + p.spin,
     })
   }
