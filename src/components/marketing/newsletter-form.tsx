@@ -150,11 +150,20 @@ export function NewsletterForm({ labels, locale }: { labels: NewsletterLabels; l
 }
 
 /**
- * One underlined input, as the design draws them.
+ * One underlined input, as the design draws them: the field's name set large
+ * on the underline, like a placeholder, until the reader focuses or fills it.
  *
- * The label is visible rather than a placeholder. A placeholder disappears the
- * moment someone types, so anybody who loses their place — or returns to a
- * half-filled form — has to clear the field to find out what it wanted.
+ * It IS the label, not a placeholder. A placeholder disappears the moment
+ * someone types, so anybody who loses their place — or returns to a half-
+ * filled form — has to clear the field to find out what it wanted. This one
+ * floats up to a small caption above the value instead and stays there.
+ *
+ * Pure CSS, keyed on `:placeholder-shown` (hence the single-space
+ * placeholder): it is true exactly when the field is empty, including after
+ * browser autofill, which writes a value without firing the events React
+ * would need to track it — the same reason the form reads values from the DOM.
+ * The label follows the input in the markup because `peer-*` can only look
+ * backwards; `htmlFor` keeps it the input's accessible name either way.
  */
 function Field({
   name,
@@ -180,28 +189,40 @@ function Field({
 
   return (
     <div className="flex flex-col gap-2">
-      <label
-        htmlFor={id}
-        className="text-detail font-medium uppercase tracking-wide text-fg-muted"
-        lang={textLang(label, locale)}
-      >
-        {label}
-      </label>
-      <input
-        id={id}
-        name={name}
-        type={type}
-        maxLength={maxLength}
-        autoComplete={autoComplete}
-        disabled={disabled}
-        aria-invalid={error !== undefined}
-        aria-describedby={error ? `${id}-error` : undefined}
-        className={cn(
-          'border-0 border-b bg-transparent pb-2 text-field text-fg',
-          'placeholder:text-fg-muted focus:outline-none focus:ring-0',
-          error ? 'border-b-destructive' : 'border-b-border focus:border-b-accent-primary'
-        )}
-      />
+      <div className="relative pt-6">
+        <input
+          id={id}
+          name={name}
+          type={type}
+          maxLength={maxLength}
+          autoComplete={autoComplete}
+          disabled={disabled}
+          placeholder=" "
+          aria-invalid={error !== undefined}
+          aria-describedby={error ? `${id}-error` : undefined}
+          className={cn(
+            'peer w-full border-0 border-b bg-transparent pb-2 text-field font-light text-fg',
+            'focus:outline-none focus:ring-0',
+            error ? 'border-b-destructive' : 'border-b-border focus:border-b-accent-primary'
+          )}
+        />
+        <label
+          htmlFor={id}
+          lang={textLang(label, locale)}
+          className={cn(
+            // Floated: the caption above a filled or focused field.
+            'pointer-events-none absolute start-0 top-0 text-detail font-medium uppercase tracking-wide text-fg-muted',
+            'transition-all duration-150 motion-reduce:transition-none',
+            // Resting: set on the underline where the value will go. `peer-focus`
+            // is generated after `peer-placeholder-shown`, so focus wins.
+            'peer-placeholder-shown:top-6 peer-placeholder-shown:text-field peer-placeholder-shown:font-light',
+            'peer-placeholder-shown:normal-case peer-placeholder-shown:tracking-normal',
+            'peer-focus:top-0 peer-focus:text-detail peer-focus:font-medium peer-focus:uppercase peer-focus:tracking-wide'
+          )}
+        >
+          {label}
+        </label>
+      </div>
       {error && (
         <p id={`${id}-error`} className="text-detail text-destructive" lang={textLang(error, locale)}>
           {error}

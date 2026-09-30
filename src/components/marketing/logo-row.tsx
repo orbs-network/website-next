@@ -83,6 +83,8 @@ export function LogoRow({
   titleHidden = false,
   sub,
   items,
+  spread = false,
+  className,
   locale,
 }: {
   title: string
@@ -98,11 +100,20 @@ export function LogoRow({
   /** Optional line under the heading. */
   sub?: string
   items: readonly LogoRowItem[]
+  /**
+   * Spread the marks across the full width from `lg` up, first mark at the
+   * left edge and last at the right, instead of centring them as a cluster.
+   * The home page's venue strip is drawn that way; rows with a visible heading
+   * read better centred under it, so it is opt-in.
+   */
+  spread?: boolean
+  /** Merged onto the section, e.g. a rule above it. */
+  className?: string
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
 }) {
   return (
-    <section className="container py-20">
+    <section className={cn('container py-20', className)}>
       <H2 className={cn('text-balance text-center', titleHidden && 'sr-only')} lang={textLang(title, locale)}>
         {title}
       </H2>
@@ -113,7 +124,12 @@ export function LogoRow({
         </p>
       )}
 
-      <ul className="mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8">
+      <ul
+        className={cn(
+          'mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8',
+          spread && 'lg:flex-nowrap lg:justify-between'
+        )}
+      >
         {items.map((item) => (
           <li key={item.name} className="flex items-center gap-3">
             {item.logo?.onLight && (
