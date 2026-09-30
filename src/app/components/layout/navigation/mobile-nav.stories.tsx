@@ -165,6 +165,24 @@ export const ClosesOnEscape: Story = {
   },
 }
 
+/**
+ * The page under the panel is locked while the menu is open, and released on
+ * close. Radix keeps the lock in `Overlay`; the panel was once composed without
+ * one and the page scrolled underneath it.
+ */
+export const LocksPageScrollWhileOpen: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    await expect(document.body).not.toHaveAttribute('data-scroll-locked')
+
+    await openPanel(canvasElement)
+    await waitFor(() => expect(document.body).toHaveAttribute('data-scroll-locked'))
+
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(document.body).not.toHaveAttribute('data-scroll-locked'))
+  },
+}
+
 /** External rows still open off-site safely. */
 export const ExternalRowsOpenSafely: Story = {
   args: BASE,

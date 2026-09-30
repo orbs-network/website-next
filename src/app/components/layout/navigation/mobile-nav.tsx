@@ -138,14 +138,19 @@ export function MobileNav({
 
       <DialogPrimitive.Portal>
         {/*
-          No overlay element: the panel is the overlay. It starts at the
-          header's 60px rule and runs to the bottom of the viewport, so the
+          A transparent overlay. It draws nothing, and the panel below starts at
+          the header's 60px rule and runs to the bottom of the viewport, so the
           header — logo and all — stays in view, as both frames draw it. A tap
-          on the header is outside the dialog and closes it, the same as the
-          shadcn overlay did.
+          on the header lands on the overlay and closes the menu.
+
+          It cannot be dropped for being invisible: Radix puts the dialog's
+          scroll lock (`RemoveScroll`) in `Overlay`, not in `Root` or
+          `Content`. Without it the page under the panel scrolls — Page Down,
+          a wheel over the header — while the menu is open.
 
           The tint is 20% over the page with a 10px blur, from the frame.
         */}
+        <DialogPrimitive.Overlay className="fixed inset-0 z-50" />
         <DialogPrimitive.Content
           aria-describedby={undefined}
           className={cn(
