@@ -10,7 +10,7 @@ import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
 import { HeroFacetField } from '@/components/marketing/hero-facet-field'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
-import { ClosingCta } from '@/components/marketing/closing-cta'
+import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
@@ -29,6 +29,7 @@ import {
 import { postPath } from '@/app/lib/routes'
 import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import { readingMinutes } from '@/lib/reading-time'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
@@ -138,11 +139,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                   {t('hero.cta')}
                 </Link>
               </Button>
-              <Button asChild variant="secondary">
-                <a href={HOME_LINKS.docs} target="_blank" rel="noopener noreferrer" lang={lang('hero.docs')}>
-                  {t('hero.docs')}
-                </a>
-              </Button>
+              <SdkButton variant="secondary" label={t('sdk')} locale={locale} />
             </div>
           </div>
         </div>
@@ -180,6 +177,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
             <p className="mt-6 max-w-lg text-p text-fg-muted" lang={lang('stack.intro')}>
               {t('stack.intro')}
             </p>
+            {/*
+              Not in any frame — Sara's review asked for it (#214), in the empty
+              column beside the product cards.
+            */}
+            <SdkButton className="mt-10" label={t('sdk')} locale={locale} />
           </div>
 
           <ul className="flex flex-col gap-8">
@@ -233,6 +235,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
             />
           ))}
         </ul>
+
+        {/* Eran's review, folded into #214: each audience above builds on the SDK. */}
+        <div className="mt-12 flex justify-center">
+          <SdkButton label={t('sdk')} locale={locale} />
+        </div>
       </section>
 
       {/*
@@ -399,16 +406,13 @@ export async function HomePage({ locale }: { locale: Locale }) {
         locale={locale}
         actions={
           <>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.x} target="_blank" rel="noopener noreferrer" lang={lang('connect.follow')}>
-                {t('connect.follow')}
-              </a>
-            </Button>
-            <Button asChild variant="secondary">
-              <a href={HOME_LINKS.telegram} target="_blank" rel="noopener noreferrer" lang={lang('connect.community')}>
-                {t('connect.community')}
-              </a>
-            </Button>
+            <ClosingSocialButtons
+              follow={t('connect.follow')}
+              community={t('connect.community')}
+              x={HOME_LINKS.x}
+              telegram={HOME_LINKS.telegram}
+              locale={locale}
+            />
             <Button asChild>
               <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('connect.contact')}>
                 {t('connect.contact')}
@@ -456,6 +460,35 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </section>
       </ClosingCta>
     </>
+  )
+}
+
+/**
+ * The site's one SDK call to action: "Explore the SDK", off-site to the SDK
+ * docs. Sara asked for the same wording wherever an SDK CTA appears (#214); the
+ * product heroes carry it through `devDocs.sdk`.
+ *
+ * Primary — outline with the line arrow — as the button spec draws it. The
+ * hero passes `secondary`: it already has a primary beside it, and two arrows
+ * side by side would leave neither as the main action.
+ */
+function SdkButton({
+  label,
+  locale,
+  className,
+  variant = 'primary',
+}: {
+  label: string
+  locale: Locale
+  className?: string
+  variant?: 'primary' | 'secondary'
+}) {
+  return (
+    <Button asChild variant={variant} className={className}>
+      <a href={SDK_DOCS_URL} target="_blank" rel="noopener noreferrer" lang={textLang(label, locale)}>
+        {label}
+      </a>
+    </Button>
   )
 }
 

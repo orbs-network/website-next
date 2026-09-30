@@ -42,10 +42,11 @@ const config: Config = {
         sits exactly where the first started, so the reset is invisible. Any
         other distance produces a visible jump.
 
-        Duration is long on purpose: a marquee fast enough to notice is a
-        marquee nobody can read. `motion-reduce:animate-none` at the call site
-        stops it entirely, which is what keeps this the right side of WCAG
-        2.2.2 — continuously moving text with no pause control.
+        25s for one pass of the phrase list — about 80px/s on the home band.
+        It was 40s; Eran and Sara found that sluggish (#225) and there is no
+        design value, so this is tuned by eye. Readers who ask their OS for
+        reduced motion get it paused (`Marquee`); see there for the WCAG 2.2.2
+        position.
       */
       /*
         Section padding, from the design rather than from the default scale.
@@ -151,7 +152,7 @@ const config: Config = {
         },
       },
       animation: {
-        marquee: 'marquee 40s linear infinite',
+        marquee: 'marquee 25s linear infinite',
       },
       borderRadius: {
         lg: 'var(--radius)',

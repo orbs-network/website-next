@@ -1183,8 +1183,7 @@
         "eyebrow": "[$14B+ in trading volume]",
         "headline": "Trading infrastructure for on-chain finance",
         "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
-        "cta": "Talk to the team",
-        "docs": "Read the docs"
+        "cta": "Talk to the team"
       },
       "stats": {
         "processed": {
@@ -1325,7 +1324,8 @@
         "success": "구독이 완료되었습니다. 감사합니다.",
         "failed": "전송하지 못했습니다. 다시 시도해 주세요.",
         "invalidEmail": "유효한 이메일 주소를 입력해 주세요."
-      }
+      },
+      "sdk": "Explore the SDK"
     },
     "smartContracts": {
       "meta": {
@@ -1451,7 +1451,7 @@
     }
   },
   "devDocs": {
-    "sdk": "SDK",
+    "sdk": "SDK 살펴보기",
     "api": "API",
     "skill": "Skill"
   }

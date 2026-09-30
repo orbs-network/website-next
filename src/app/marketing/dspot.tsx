@@ -1,7 +1,7 @@
 import { getDevDocsLink } from './dev-docs'
 import { getTranslations } from 'next-intl/server'
 import { DLimit, DSltp, DTwap, LiquidityHub } from '@/components/icons'
-import { ClosingCta } from '@/components/marketing/closing-cta'
+import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { GraphicSplit } from '@/components/marketing/graphic-split'
 import { ModuleCards } from '@/components/marketing/module-cards'
 import { CtaButton } from '@/components/marketing/section-parts'
@@ -95,10 +95,11 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         locale={locale}
         actions={
           <>
-            <CtaButton link={{ label: t('closing.follow'), href: DSPOT_LINKS.x }} variant="secondary" locale={locale} />
-            <CtaButton
-              link={{ label: t('closing.community'), href: DSPOT_LINKS.telegram }}
-              variant="secondary"
+            <ClosingSocialButtons
+              follow={t('closing.follow')}
+              community={t('closing.community')}
+              x={DSPOT_LINKS.x}
+              telegram={DSPOT_LINKS.telegram}
               locale={locale}
             />
             <CtaButton link={{ label: t('closing.contact'), href: DSPOT_LINKS.contact }} locale={locale} />
