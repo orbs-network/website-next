@@ -909,7 +909,8 @@
         "eyebrow": "[$14B+ in trading volume]",
         "headline": "Trading infrastructure for on-chain finance",
         "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
-        "cta": "Talk to the team"
+        "cta": "Talk to the team",
+        "docs": "Read the docs"
       },
       "stats": {
         "processed": {
@@ -936,7 +937,7 @@
       "stack": {
         "eyebrow": "[The stack]",
         "title": "Best price.\nBetter execution.\nOne stack.",
-        "intro": "Institutional-grade trading infrastructure — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. High performance perpetual futures trading protocol. The market structure institutions know, delivered on-chain.",
+        "intro": "The risk-management order types trading teams expect — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. The market structure institutions know, delivered on-chain.",
         "cta": "Discover",
         "dspot": {
           "eyebrow": "Spot market",
@@ -1028,7 +1029,8 @@
         "title": "Discover.",
         "blog": "Blog",
         "whitePapers": "Whitepapers",
-        "faq": "FAQ"
+        "faq": "FAQ",
+        "cta": "View resources"
       },
       "marquee": {
         "oneApi": "One API.",
@@ -1051,7 +1053,7 @@
         "failed": "送信できませんでした。もう一度お試しください。",
         "invalidEmail": "有効なメールアドレスを入力してください。"
       },
-      "sdk": "Explore the SDK"
+      "sdk": "Explore SDK"
     },
     "smartContracts": {
       "meta": {
@@ -1177,7 +1179,7 @@
     }
   },
   "devDocs": {
-    "sdk": "Explore the SDK",
+    "sdk": "Explore SDK",
     "api": "API",
     "skill": "Skill"
   }

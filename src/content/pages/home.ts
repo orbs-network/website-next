@@ -31,6 +31,12 @@ export type HomeCard = {
    * mark repeats rather than adds, and it is rendered `alt=""`.
    */
   icon?: { src: string; width: number; height: number }
+  /**
+   * The eyebrow's colour (#192). The design colour-codes cards by audience and
+   * product rather than using one accent: dSPOT and institutions periwinkle,
+   * dPERPS and AI agents pink, venues cyan. Defaults to `primary`.
+   */
+  accent?: 'primary' | 'pink' | 'cyan'
 }
 
 /**
@@ -58,15 +64,20 @@ export type HomeCard = {
 */
 export const HOME_STACK: readonly HomeCard[] = [
   { id: 'dspot', href: '/dspot', icon: { src: '/marketing/home/icons/dspot.svg', width: 48, height: 46 } },
-  { id: 'dperps', href: '/dperps', icon: { src: '/marketing/home/icons/dperps.svg', width: 42, height: 51 } },
+  {
+    id: 'dperps',
+    href: '/dperps',
+    icon: { src: '/marketing/home/icons/dperps.svg', width: 42, height: 51 },
+    accent: 'pink',
+  },
 ]
 
 /** [SOLUTIONS] — three audience cards. */
 export const HOME_SOLUTIONS: readonly HomeCard[] = [
-  { id: 'venues', href: '/venues' },
+  { id: 'venues', href: '/venues', accent: 'cyan' },
   // The one that already exists.
   { id: 'institutions', href: '/institutional' },
-  { id: 'aiAgents', href: '/ai/skills' },
+  { id: 'aiAgents', href: '/ai/skills', accent: 'pink' },
 ]
 
 /**
@@ -155,6 +166,11 @@ export const HOME_LINKS = {
   x: 'https://twitter.com/orbs_network',
   telegram: 'https://t.me/OrbsNetwork',
   contact: '/contact',
+  /**
+   * Discover's "View resources". There is no resources index; the blog is the
+   * nearest thing to one, and it is also the first row above the button.
+   */
+  resources: '/blog',
 } as const
 
 /** How many posts the "In the news" rail asks Contentful for. */

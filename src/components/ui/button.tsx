@@ -4,10 +4,13 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 /**
- * Orbs brand button. Two variants:
+ * Orbs brand button. Three variants:
  *
  * - `primary` (default) — bordered, uppercase, trailing arrow.
  * - `secondary` — identical styling minus the trailing arrow.
+ * - `solid` — filled with the foreground colour, trailing arrow. The design
+ *   uses it once per page at most, for the hero's main action, so it reads as
+ *   THE action beside an outline one. Inverts with the theme like the text.
  *
  * Shared states: default / disabled / hover (border + text + arrow all switch
  * to the accent colour on hover, or `fg-muted` when disabled).
@@ -23,7 +26,7 @@ import { cn } from '@/lib/utils'
  * - Pass a custom `icon` (ReactNode) to override the default arrow.
  * - Pass `noIcon` to suppress the trailing icon entirely (useful when `asChild`
  *   is wrapping a Link whose icon you want to control manually).
- * - The secondary variant never renders an icon automatically.
+ * - The secondary variant never renders an icon automatically; `solid` does.
  */
 const buttonVariants = cva(
   [
@@ -57,6 +60,7 @@ const buttonVariants = cva(
       variant: {
         primary: '',
         secondary: '',
+        solid: 'border-fg bg-fg text-bg hover:border-fg-muted hover:bg-fg-muted hover:text-bg',
       },
       size: {
         sm: 'px-3 py-1.5 text-detail',
@@ -112,7 +116,7 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
     const Comp = asChild ? Slot : 'button'
     const resolvedSize = size ?? 'default'
 
-    const showIcon = variant === 'primary' && !noIcon
+    const showIcon = variant !== 'secondary' && !noIcon
     const iconNode = showIcon ? (icon ?? <ButtonArrow />) : null
 
     const content =
