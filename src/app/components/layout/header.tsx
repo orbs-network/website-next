@@ -83,8 +83,9 @@ export async function Header({ locale }: { locale: Locale }) {
               already carries an `aria-label` would be a second piece of content
               in one link — so it is hidden and the link keeps one accessible
               name. Sized by font size: the lockup scales its mark from `em`.
+              Half size on the 60px bar — the mobile frames draw it 50x15.
             */}
-            <OrbsLogo className="text-xl" aria-hidden />
+            <OrbsLogo className="text-[0.625rem] xl:text-xl" aria-hidden />
           </Link>
 
           {/*
@@ -100,8 +101,15 @@ export async function Header({ locale }: { locale: Locale }) {
           </div>
 
           <div className="flex items-center gap-6">
-            <ThemeToggle />
-            <LanguageSelector />
+            {/*
+              Theme and language are in the panel below `xl`, beside its call
+              to action — the mobile frames draw the header as the logo and the
+              burger alone (#230).
+            */}
+            <div className="hidden items-center gap-6 xl:flex">
+              <ThemeToggle />
+              <LanguageSelector />
+            </div>
             {/*
               A link, not a button: it goes somewhere. It was a bare
               `<Button>` with no handler, so it looked like the site's main
@@ -123,6 +131,12 @@ export async function Header({ locale }: { locale: Locale }) {
                 title={nav('menuTitle')}
                 closeLabel={nav('menuClose')}
                 cta={cta}
+                settings={
+                  <>
+                    <ThemeToggle />
+                    <LanguageSelector />
+                  </>
+                }
                 footer={mobileFooter}
               />
             </div>
