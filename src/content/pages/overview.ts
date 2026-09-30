@@ -1,20 +1,35 @@
 /**
- * Structural data for the Overview page — icons, destinations, ordering. Copy
- * lives under `pages.overview` in the message catalogs.
+ * Structural data for the Overview page — destinations and ordering. Copy lives
+ * under `pages.overview` in the message catalogs.
  *
  * Each product card links to its product page. The legacy cards did not, which
- * left a page describing four protocols with no way to reach any of them.
+ * left a page describing four protocols with no way to reach any of them. Their
+ * lockups and colours live with the page (see `PRODUCT_PRESENTATION`), because
+ * Tailwind only scans `src/app` and `src/components`.
  */
 export const OVERVIEW_PRODUCTS = [
-  { id: 'dtwap', icon: '/marketing/overview/dtwap-logo.svg', href: '/dtwap' },
-  { id: 'dlimit', icon: '/marketing/overview/dlimit-logo.svg', href: '/dlimit' },
-  { id: 'liquidityHub', icon: '/marketing/overview/liquidity-hub-logo.svg', href: '/liquidity-hub' },
-  { id: 'perpetualHub', icon: '/marketing/overview/perpetual-hub-logo.svg', href: '/dperps' },
+  { id: 'dtwap', href: '/dtwap' },
+  { id: 'dlimit', href: '/dlimit' },
+  { id: 'liquidityHub', href: '/liquidity-hub' },
+  { id: 'perpetualHub', href: '/dperps' },
 ] as const
 
-/** The three reader benefits, in legacy order. */
-export const OVERVIEW_BENEFITS = [
-  { id: 'access', icon: '/marketing/overview/how-item1.svg' },
-  { id: 'pricing', icon: '/marketing/overview/how-item2.svg' },
-  { id: 'decentralization', icon: '/marketing/overview/how-item3.svg' },
-] as const
+export type OverviewProductId = (typeof OVERVIEW_PRODUCTS)[number]['id']
+
+/**
+ * The three reader benefits, in legacy order. Text only: the legacy icons were
+ * generic line art, and the master's points carry none.
+ */
+export const OVERVIEW_BENEFITS = ['access', 'pricing', 'decentralization'] as const
+
+export const OVERVIEW_LINKS = {
+  /** The hero's button scrolls to the protocol cards on this page. */
+  protocols: '#protocols',
+  contact: '/contact',
+} as const
+
+/**
+ * The closing block's scrolling phrases: the three things "What is Orbs?" says
+ * the network provides, so the marquee repeats the page rather than new copy.
+ */
+export const OVERVIEW_MARQUEE = ['liquidity', 'orders', 'derivatives'] as const

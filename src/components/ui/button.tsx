@@ -83,6 +83,9 @@ const buttonVariants = cva(
  * The design system's CTA arrow: a 12x9 stroke at 1px with round ends, drawn
  * rather than taken from Lucide, whose `ArrowRight` is a 2px stroke on a
  * square box and reads twice as heavy next to 11px type.
+ *
+ * Exported for text links that end in the same arrow (dSPOT's module cards),
+ * where a typed `→` at 11px renders as a near-invisible dash.
  */
 function ButtonArrow() {
   return (
@@ -145,4 +148,4 @@ const Button = React.forwardRef<HTMLButtonElement, ButtonProps>(
 )
 Button.displayName = 'Button'
 
-export { Button, buttonVariants }
+export { Button, ButtonArrow, buttonVariants }

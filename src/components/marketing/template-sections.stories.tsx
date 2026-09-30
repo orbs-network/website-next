@@ -1,6 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
-import { DLimit, LiquidityHub } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import { ClosingCta } from './closing-cta'
 import { GraphicSplit } from './graphic-split'
@@ -226,15 +225,16 @@ const MODULES = (
         id: 'dlimit',
         eyebrow: 'dLIMIT',
         accentClassName: 'text-indigo-400',
-        mark: <DLimit />,
+        title: 'dLIMIT',
         body: 'Place orders at a target price or better.',
         link: { label: 'Discover dLIMIT', href: '/dlimit' },
       },
       {
         id: 'liquidityHub',
         eyebrow: 'Liquidity Hub',
-        accentClassName: 'text-cyan-600 dark:text-cyan-400',
-        mark: <LiquidityHub />,
+        accentClassName: 'text-[#06737b] dark:text-cyan-400',
+        title: 'Liquidity Hub',
+        titleClassName: 'uppercase',
         body: 'Let DEXs tap external liquidity sources for better prices on swaps.',
         link: { label: 'Discover Liquidity Hub', href: '/liquidity-hub' },
       },
@@ -244,8 +244,9 @@ const MODULES = (
 )
 
 /**
- * Each module card is headed by its product's lockup, and the coloured name
- * above it — the same word again — is hidden from assistive technology.
+ * Each module card is headed by its product's name as plain text, and the
+ * coloured name above it — the same word again — is hidden from assistive
+ * technology. No glyph inside the heading (#211): the design draws none.
  */
 export const ModuleCardsAreNamedOnce: Story = {
   render: () => MODULES,
@@ -254,6 +255,7 @@ export const ModuleCardsAreNamedOnce: Story = {
     const headings = canvas.getAllByRole('heading', { level: 3 })
 
     await expect(headings.map((h) => h.textContent)).toEqual(['dLIMIT', 'Liquidity Hub'])
+    for (const heading of headings) await expect(heading.querySelector('svg')).toBeNull()
     for (const card of canvasElement.querySelectorAll('li')) {
       await expect(card.querySelector('p')?.getAttribute('aria-hidden')).toBe('true')
     }
@@ -268,6 +270,28 @@ export const ModuleCardsLinkDown: Story = {
 
     await expect(canvas.getByRole('link', { name: /discover dlimit/i }).getAttribute('href')).toBe('/dlimit/')
     await expect(canvasElement.querySelector('section')?.id).toBe('modules')
+  },
+}
+
+/**
+ * The cards recess into the light page (#E7E7E7 on #F6F6F6) and take the
+ * shared `card-fill` in dark (#231). The Discover link ends in the drawn line
+ * arrow, not a typed `→` that renders as an 11px dash.
+ */
+export const ModuleCardFillFollowsTheTheme: Story = {
+  render: () => MODULES,
+  play: async ({ canvasElement }) => {
+    const card = canvasElement.querySelector('li') as HTMLElement
+
+    await expect(getComputedStyle(card).backgroundColor).toBe('rgb(231, 231, 231)')
+    await expect(card.querySelector('a svg')).not.toBeNull()
+
+    document.documentElement.classList.add('dark')
+    try {
+      await expect(getComputedStyle(card).backgroundColor).toBe('rgb(30, 30, 32)')
+    } finally {
+      document.documentElement.classList.remove('dark')
+    }
   },
 }
 
@@ -298,6 +322,25 @@ export const StatementPointsAreAnOrderedList: Story = {
 
     await expect(items).toHaveLength(3)
     await expect(items[0].closest('ol')).not.toBeNull()
+  },
+}
+
+/**
+ * Each number sits in the design's outlined octagon, in the accent colour
+ * (#3346F2 on light), and is hidden because the `<ol>` already counts (#231).
+ */
+export const StatementPointsHaveOutlinedBadges: Story = {
+  ...StatementPointsAreAnOrderedList,
+  play: async ({ canvasElement }) => {
+    const items = within(canvasElement).getAllByRole('listitem')
+
+    for (const [index, item] of items.entries()) {
+      const badge = item.querySelector(':scope > [aria-hidden="true"]') as HTMLElement
+      await expect(badge.textContent).toBe(String(index + 1))
+      await expect(badge.getBoundingClientRect().width).toBe(30)
+      await expect(badge.querySelector('svg path')?.getAttribute('stroke')).toBe('currentColor')
+      await expect(getComputedStyle(badge).color).toBe('rgb(51, 70, 242)')
+    }
   },
 }
 

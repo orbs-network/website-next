@@ -201,7 +201,7 @@ export default async function BlogPostPage({ params }: Props) {
       <article className="container py-8 max-w-4xl">
         <header className="mb-10">
           <h1 className="text-4xl font-bold mb-4">{post.title}</h1>
-          <div className="flex items-center gap-3 text-gray-500">
+          <div className="flex items-center gap-3 text-fg-muted">
             {author && <Author author={author} />}
             <time dateTime={post.date}>
               {new Date(post.date).toLocaleDateString('en-US', {

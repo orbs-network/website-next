@@ -1,6 +1,7 @@
 import { H2 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
 import { Eyebrow } from './section-parts'
 import { Prose } from './prose'
 
@@ -27,15 +28,18 @@ export function SplitStatement({
   body,
   points,
   locale,
+  className,
 }: {
   eyebrow: string
   heading: string
   body: string
   points?: readonly string[]
   locale: Locale
+  /** Merged onto the section, e.g. a page whose frame sets the eyebrow further below the divider. */
+  className?: string
 }) {
   return (
-    <section className="container border-t border-border pt-3 pb-section lg:pb-48">
+    <section className={cn('container border-t border-border pt-3 pb-section lg:pb-48', className)}>
       <Eyebrow text={eyebrow} locale={locale} />
 
       <div className="mt-16 grid grid-cols-1 gap-8 lg:mt-44 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-32">
@@ -45,13 +49,12 @@ export function SplitStatement({
         <div className="max-w-2xl">
           <Prose text={body} locale={locale} className="[&_p]:text-p [&_p]:text-fg" />
           {points && points.length > 0 && (
-            <ol className="mt-12 space-y-4">
+            <ol className="mt-12 space-y-2.5">
               {points.map((point, index) => (
-                <li key={point} className="flex gap-6 text-p text-fg" lang={textLang(point, locale)}>
-                  <span aria-hidden="true" className="w-4 shrink-0 font-semibold">
-                    {index + 1}
-                  </span>
-                  <span>{point}</span>
+                <li key={point} className="flex items-start gap-2.5 text-p text-fg" lang={textLang(point, locale)}>
+                  <NumberBadge value={index + 1} />
+                  {/* `py-px`: a 28px line inside the 30px badge row, so a one-line point centres on it. */}
+                  <span className="min-w-0 py-px">{point}</span>
                 </li>
               ))}
             </ol>
@@ -59,5 +62,35 @@ export function SplitStatement({
         </div>
       </div>
     </section>
+  )
+}
+
+/**
+ * A list number in the design's 30px outlined octagon.
+ *
+ * The review notes call it a heptagon or a hexagon; the exported frame's path
+ * has eight vertices, so it is drawn from those. Aria-hidden because the
+ * `<ol>` already announces the position.
+ *
+ * `accent-primary` rather than the design's #3346F2 in both themes: that is
+ * exactly #3346F2 on light, but on the dark page #3346F2 is 2.9:1, under AA
+ * for the numeral and under 3:1 for the outline. Dark takes the periwinkle
+ * accent (5.9:1), the same substitution the site makes everywhere (#179).
+ */
+function NumberBadge({ value }: { value: number }) {
+  return (
+    <span
+      aria-hidden="true"
+      className="relative flex size-[30px] shrink-0 items-center justify-center text-sm font-semibold text-accent-primary"
+    >
+      <svg viewBox="0 0 30 30" fill="none" className="absolute inset-0 size-full overflow-visible">
+        <path
+          d="M4.39 4.39L15 0L25.61 4.39L30 15L25.61 25.61L15 30L4.39 25.61L0 15Z"
+          stroke="currentColor"
+          strokeLinejoin="round"
+        />
+      </svg>
+      <span className="relative">{value}</span>
+    </span>
   )
 }

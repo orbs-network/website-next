@@ -46,9 +46,12 @@ export async function Header({ locale }: { locale: Locale }) {
       {/*
         The bar's background, on its own layer rather than on the <nav>.
 
-        20% of the page colour under a heavy blur, from the header frame
-        (#230) — it was white/80 and Tailwind's blue-black gray-950/80, neither
-        of which is a theme token. `color-mix` rather than `bg-bg/20`: the
+        90% of the page colour under a heavy blur. The header frame draws 20%
+        (#230), which only holds over the page colour, where the two are
+        indistinguishable. Over home's `.band-contrast` bands — the page colour
+        of the other theme — 20% left the nav text at about 2.2:1 in light and
+        white on light grey in dark (#228); the accent active link needs ~88%
+        to clear 4.5:1 there. `color-mix` rather than `bg-bg/90`: the
         tokens are bare `var()`s, and Tailwind v3 silently emits nothing for an
         opacity modifier on one (#237).
 
@@ -59,7 +62,7 @@ export async function Header({ locale }: { locale: Locale }) {
       */}
       <div
         aria-hidden="true"
-        className="absolute inset-0 -z-10 bg-[color-mix(in_srgb,var(--color-bg)_20%,transparent)] backdrop-blur-[50px]"
+        className="absolute inset-0 -z-10 bg-[color-mix(in_srgb,var(--color-bg)_90%,transparent)] backdrop-blur-[50px]"
       />
       <div className="container">
         {/*

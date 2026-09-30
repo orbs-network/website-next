@@ -1,6 +1,5 @@
 import { getDevDocsLink } from './dev-docs'
 import { getTranslations } from 'next-intl/server'
-import { DLimit, DSltp, DTwap, LiquidityHub } from '@/components/icons'
 import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { GraphicSplit } from '@/components/marketing/graphic-split'
 import { ModuleCards } from '@/components/marketing/module-cards'
@@ -19,18 +18,24 @@ import {
 import type { Locale } from '@/i18n/locales'
 
 /**
- * Each product's lockup and colour. Here rather than in `content/pages/dspot`
+ * Each product's label colour. Here rather than in `content/pages/dspot`
  * because Tailwind only scans `src/app` and `src/components` for class names.
  *
- * The design's colours are the dark-theme ones. On the light surface the
- * periwinkle, coral and cyan fall under 3:1, so the light theme takes the
- * darker step of each.
+ * The design uses the same four hues in both themes: #3346F2, #7A89E9,
+ * #F27272 and #2CEDFC. On the light card (#E7E7E7) only the first clears AA
+ * for 11px text; the other three read 2.6, 2.3 and 1.2:1. The palette's 600
+ * steps pass but change the colour — coral/600 is brown, periwinkle/600 navy —
+ * so each light value is the design hue with only its OKLCH lightness lowered
+ * until it reaches 4.5:1 on #E7E7E7: #545FBB 4.55, #B73D42 4.52, #06737B 4.53.
+ *
+ * Liquidity Hub is the one title set in capitals: the design draws it
+ * "LIQUIDITY HUB", and it has no lowercase "d" to protect.
  */
-const MODULE_PRESENTATION: Record<DspotModuleId, { mark: React.ReactNode; accentClassName: string }> = {
-  dlimit: { mark: <DLimit />, accentClassName: 'text-indigo-400' },
-  dtwap: { mark: <DTwap />, accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
-  dsltp: { mark: <DSltp />, accentClassName: 'text-coral-600 dark:text-[#f17171]' },
-  liquidityHub: { mark: <LiquidityHub />, accentClassName: 'text-cyan-600 dark:text-cyan-400' },
+const MODULE_PRESENTATION: Record<DspotModuleId, { accentClassName: string; titleClassName?: string }> = {
+  dlimit: { accentClassName: 'text-indigo-400' },
+  dtwap: { accentClassName: 'text-[#545fbb] dark:text-periwinkle-400' },
+  dsltp: { accentClassName: 'text-[#b73d42] dark:text-[#f27272]' },
+  liquidityHub: { accentClassName: 'text-[#06737b] dark:text-cyan-400', titleClassName: 'uppercase' },
 }
 
 /**
@@ -51,6 +56,11 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         headline={t('hero.headline')}
         intro={t('hero.intro')}
         cta={{ label: t('hero.cta'), href: DSPOT_LINKS.modules }}
+        /*
+          Not in the design, which draws one hero CTA; kept on purpose. #214
+          made every product hero's SDK link an "Explore SDK" CTA, and dSPOT's
+          is the only one that lands on the docs' Spot guide chooser.
+        */
         secondaryCta={devDocs}
         graphic={DSPOT_GRAPHICS.hero}
         locale={locale}
@@ -64,6 +74,7 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         cards={DSPOT_MODULES.map((module) => ({
           id: module.id,
           eyebrow: t(`modules.${module.id}.name`),
+          title: t(`modules.${module.id}.name`),
           body: t(`modules.${module.id}.body`),
           link: { label: t(`modules.${module.id}.cta`), href: module.href },
           ...MODULE_PRESENTATION[module.id],
@@ -77,6 +88,12 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         body={t('execution.body')}
         points={DSPOT_POINTS.map((id) => t(`execution.points.${id}`))}
         locale={locale}
+        /*
+          The dSPOT frame sets this eyebrow 43px under the divider (40 + the
+          eyebrow's half-leading); the Venues frame, the other user, keeps it
+          tight.
+        */
+        className="pt-10"
       />
 
       <StatementBand text={t('band')} locale={locale} />
