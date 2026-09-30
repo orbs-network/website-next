@@ -61,7 +61,7 @@ export const SCALE_SPRING = spring(2.4, 1)
 
 /**
  * How long a displaced facet takes to drift home, as the time constant of an
- * exponential: ~63% of the way in 0.7s, all but invisible by ~3s.
+ * exponential: ~63% of the way in 0.35s, all but invisible by ~1.5s.
  *
  * NOT A SPRING, and that is the point. Position and rotation have no inertia
  * here — the pointer moves a facet directly, and when it stops, the facet
@@ -71,10 +71,10 @@ export const SCALE_SPRING = spring(2.4, 1)
  * and come back — read, rightly, as a bounce. A first-order return cannot
  * overshoot, by construction.
  */
-export const DRIFT_RETURN_SECONDS = 0.7
+export const DRIFT_RETURN_SECONDS = 0.35
 
 /** The same for rotation, handing back to the travelling wave. */
-export const SPIN_RETURN_SECONDS = 0.6
+export const SPIN_RETURN_SECONDS = 0.3
 
 /**
  * How strongly the pointer's motion moves the facets within `FINGER_RADIUS`

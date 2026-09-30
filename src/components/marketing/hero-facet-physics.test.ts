@@ -231,9 +231,9 @@ describe('the liquid', () => {
     const pushed = new Map([...field.particles].map(([key, p]) => [key, { x: p.offsetX, y: p.offsetY }]))
     const drift = () => Math.max(...[...field.particles.values()].map((p) => Math.hypot(p.offsetX, p.offsetY)))
 
-    // Slowly: still visibly displaced half a second later.
+    // Eased, not snapped: still visibly displaced a quarter of a second later.
     const before = drift()
-    run(field, 0.5)
+    run(field, 0.25)
     expect(drift()).toBeGreaterThan(before / 3)
 
     for (let i = 0; i < 6 * 120; i++) {
