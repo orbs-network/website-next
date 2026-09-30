@@ -170,3 +170,23 @@ export const CurrentPageIsMarked: Story = {
     await expect(canvas.getByRole('link', { name: 'dPERPS' })).not.toHaveAttribute('aria-current')
   },
 }
+
+/**
+ * A trigger spans the full bar height, so the pointer never crosses dead space
+ * between it and its panel. Radix's unstyled list wrapper once left the
+ * triggers 16px tall in the 100px bar, with a 40px gap that closed the menu
+ * under a slow pointer.
+ */
+export const TriggersSpanTheBar: Story = {
+  args: BASE,
+  render: (args) => (
+    <div style={{ height: 100 }}>
+      <NavMenuClient {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'Products' })
+
+    await expect(trigger.getBoundingClientRect().height).toBe(100)
+  },
+}

@@ -170,7 +170,15 @@ export function NavMenuClient({
     <NavigationMenu
       value={open}
       onValueChange={setOpen}
-      className="h-full"
+      /*
+        Radix wraps the list in an unstyled `div`, so `h-full` on the list and
+        items resolved against an auto height and the triggers came out 16px
+        tall — a 40px dead band between a trigger and its panel, where a slow
+        pointer closed the menu before it reached a link. The wrapper is the
+        root's only child holding the `ul`; the overlay and viewport are left
+        alone.
+      */
+      className="h-full [&>div:has(>ul)]:h-full"
       /*
         Flush with the header rule: `top-full` of a full-height root is the
         rule's top edge, and `mt-px` steps past it. Square, borderless and
