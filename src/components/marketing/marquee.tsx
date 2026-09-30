@@ -30,8 +30,10 @@ export function Marquee({
   locale: Locale
   className?: string
 }) {
+  // 104px between phrases, the design's (#225). Half of it pads each end of
+  // the track, so the seam between the two copies is the same 104px.
   const track = (
-    <ul className="flex shrink-0 items-center gap-16 px-8">
+    <ul className="flex shrink-0 items-center gap-[6.5rem] px-[3.25rem]">
       {phrases.map((phrase) => (
         /*
           Per phrase. The home marquee is a list of independent slogans, and
