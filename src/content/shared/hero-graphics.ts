@@ -11,9 +11,11 @@ import type { SectionGraphic } from '@/components/marketing/section-parts'
  * never rescales the art. The slicing was a one-off script, not kept: when the
  * art changes, ask for one SVG per illustration rather than the sheet.
  *
- * One hand edit: `dspot/hero-light.svg` had five dashed guides left `white` in
- * the export, invisible on the light theme; they are `#121214` like every
- * other light file's.
+ * Two hand edits, both in `dspot/hero-light.svg`. Five dashed guides were
+ * left `white` in the export, invisible on the light theme; they are
+ * `#121214` like every other light file's. And its sixteen node dots (the
+ * `opacity="0.9"` fills) are `#59595A`, not `#121214`: the light dSPOT frame
+ * draws them grey, which is #686869 on the page once the opacity applies (#231).
  *
  * `width`/`height` are the crop box, rounded. `ThemedGraphic` lays them out
  * `object-contain` in a square, so they only set the aspect ratio.
