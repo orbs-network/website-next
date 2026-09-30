@@ -6,10 +6,18 @@
  * SDK/API" and the footer's "SDK/API" go here, and each product hero links to
  * its own section of it — see `PRODUCT_DEV_DOCS`.
  *
- * Not `docs.orbs.network`: that is the network's documentation — staking,
- * nodes, the L3 — and stays as the plain "Docs" link.
+ * It is also where the plain "Docs" links go — the header's and the footer's.
+ * The network's own documentation is `NETWORK_DOCS_URL`, a different site.
  */
 export const SDK_DOCS_URL = 'https://docs.orbs.com/'
+
+/**
+ * The network's documentation — staking, nodes, the L3 — labelled
+ * "Developers" and filed under Network in the nav and footer, so the two docs
+ * sites never share a label (Sarbloc, #224). `/v3` is the current version; the
+ * bare domain opens older material.
+ */
+export const NETWORK_DOCS_URL = 'https://docs.orbs.network/v3'
 
 /** What a product hero's developer link offers, and so what it is labelled. */
 export type DevDocsKind = 'sdk' | 'api' | 'skill'

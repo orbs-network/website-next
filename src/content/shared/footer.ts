@@ -1,5 +1,5 @@
 import type { Locale } from '@/i18n/locales'
-import { SDK_DOCS_URL } from './sdk'
+import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
  * The footer's link structure: the 3.4 `Footer` component in Figma, which
@@ -59,7 +59,8 @@ export type FooterColumnSpec = {
  *
  * The legacy footer also carried Tetra, Staking Calculator, DeFi.org,
  * Developers and White Papers. 3.4 dropped them, and that was confirmed as
- * deliberate (#154) rather than lost in a redraw.
+ * deliberate (#154) rather than lost in a redraw. Developers came back in the
+ * 2026-09-30 review (#224), pointing at the network docs.
  */
 export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
   {
@@ -87,7 +88,12 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
       { key: 'overview', href: '/overview' },
       { key: 'pos', href: '/pos' },
       { key: 'executionServices', href: '/execution-services' },
+      // The design's Network column. Eran's markup (#224) wrote it into
+      // Community; the design, the nav and #213 all put it here.
+      { key: 'governance', href: '/governance-blog' },
       { key: 'status', href: 'https://status.orbs.network/' },
+      // Eran's addition under Status (#224).
+      { key: 'developers', href: NETWORK_DOCS_URL },
     ],
   },
   {
@@ -106,9 +112,9 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
       // The light variant of the Figma component omits it; the dark one, and
       // every page instance, keeps it.
       { key: 'media', href: '/news' },
-      { key: 'notifications', href: '/notifications' },
-      { key: 'tonAccess', href: '/ton-access' },
-      { key: 'tonVote', href: '/ton-vote' },
+      // Notifications, TON Access and TON Vote came out on Eran's word — "no
+      // longer relevant" (#224). The pages stay up, unlinked, in case they
+      // are wanted again.
       { key: 'brandAssets', href: '/brand-assets' },
     ],
   },
@@ -117,7 +123,7 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
     links: [
       { key: 'contact', href: '/contact' },
       { key: 'faq', href: '/faq' },
-      { key: 'docs', href: 'https://docs.orbs.network/' },
+      { key: 'docs', href: SDK_DOCS_URL },
       { key: 'github', href: 'https://github.com/orbs-network' },
     ],
   },

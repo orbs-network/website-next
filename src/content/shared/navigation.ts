@@ -1,4 +1,4 @@
-import { SDK_DOCS_URL } from './sdk'
+import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
  * The header menu's structure, from the 3.4 designs (`Main Menu / Product`,
@@ -98,9 +98,13 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     links: [
       { key: 'pos', href: '/pos' },
       { key: 'executionServices', href: '/execution-services' },
+      // Third, as the design has it (#213).
+      { key: 'governance', href: '/governance-blog' },
       { key: 'status', href: 'https://status.orbs.network/' },
       { key: 'github', href: 'https://github.com/orbs-network' },
-      { key: 'docs', href: 'https://docs.orbs.network/' },
+      // The design labels this "Docs". It is the network's docs, and the bar's
+      // own "Docs" now opens the SDK's, so two "Docs" would open two sites.
+      { key: 'developers', href: NETWORK_DOCS_URL },
     ],
   },
 ]
@@ -109,6 +113,6 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
 export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
   { key: 'ecosystem', href: '/ecosystem' },
   { key: 'blog', href: '/blog' },
-  { key: 'docs', href: 'https://docs.orbs.network/', desktopOnly: true },
+  { key: 'docs', href: SDK_DOCS_URL, desktopOnly: true },
   { key: 'github', href: 'https://github.com/orbs-network', desktopOnly: true },
 ]

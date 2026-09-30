@@ -3,6 +3,7 @@ import { NextRequest, NextResponse } from 'next/server'
 import {
   BLOG_INDEX_PATH,
   BLOG_PAGE_ROUTE,
+  GOVERNANCE_PATH,
   HOME_PATH,
   NEWS_INDEX_PATH,
   NEWS_PAGE_ROUTE,
@@ -10,6 +11,7 @@ import {
   encodedPostPath,
 } from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
+import { GOVERNANCE_POST_SLUGS } from '@/content/shared/governance'
 
 /**
  * On-demand revalidation for Contentful.
@@ -137,7 +139,10 @@ export async function POST(request: NextRequest) {
   // one, and it cannot be settled by testing — 0 of the 320 slugs in the space
   // are non-ASCII, so no such page exists to observe. Sending both costs one
   // no-op call and removes the need to guess. Revisit once #22 lands those two.
-  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, postPath(slug), encodedPostPath(slug)])]
+  // The governance index lists a fixed set of posts, so it changes only when
+  // one of those does.
+  const governance = GOVERNANCE_POST_SLUGS.includes(slug) ? [GOVERNANCE_PATH] : []
+  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, ...governance, postPath(slug), encodedPostPath(slug)])]
 
   for (const path of paths) {
     revalidatePath(path)
