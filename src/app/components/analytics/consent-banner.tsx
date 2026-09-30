@@ -176,13 +176,13 @@ export function ConsentBanner({ labels, lang }: { labels: ConsentBannerLabels; l
       lang={lang}
       className={cn(
         'fixed inset-x-0 bottom-0 z-50 border-t border-border bg-surface',
-        'px-5 py-4 sm:px-8',
+        'py-4',
         // `pb-[env(safe-area-inset-bottom)]` so the buttons clear the home
         // indicator on a phone rather than sitting under it.
         'pb-[max(1rem,env(safe-area-inset-bottom))]'
       )}
     >
-      <div className="container mx-auto flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+      <div className="container flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
         <p className="text-detail leading-relaxed text-fg-muted">
           {labels.message}{' '}
           <a

@@ -89,7 +89,7 @@ export function LogoRow({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       <H2 className={cn('text-balance text-center', titleHidden && 'sr-only')} lang={textLang(title, locale)}>
         {title}
       </H2>

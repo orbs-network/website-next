@@ -51,7 +51,7 @@ export default async function WhitePaperPage({ params }: Props) {
   const t = await getTranslations({ locale: 'en', namespace: 'pages.whitePapers' })
 
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       <div className="mx-auto max-w-4xl">
         <nav aria-label="Breadcrumb" className="mb-8">
           <Link
@@ -78,7 +78,7 @@ export default async function WhitePaperPage({ params }: Props) {
             particular hands them to a system viewer — and a reader who wants
             the document wants the file. The preview below is an enhancement.
           */}
-          <Button asChild size="lg">
+          <Button asChild>
             <a href={paper.pdf} target="_blank" rel="noopener noreferrer">
               Read the paper (PDF)
             </a>

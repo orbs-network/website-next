@@ -76,6 +76,13 @@
     --color-fg: var(--color-neutral-900);
     --color-fg-muted: var(--color-neutral-500);
     --color-border: var(--color-neutral-300);
+    /*
+      Outline of an interactive control — the button border (#229). Not
+      `--color-border`: that is the hairline between sections and is meant to
+      recede, while a button's outline has to read as a button. The design
+      system draws it #59595A on light and #E2E2E2 on dark.
+    */
+    --color-control-border: var(--color-neutral-500);
     --color-accent-primary: var(--color-indigo-400);
     --color-accent-primary-hover: var(--color-indigo-500);
     --color-link: var(--color-indigo-400);
@@ -101,8 +108,8 @@
       390px:
 
         level   390px    1440px
-        h1        40   ->   72
-        h2        32   ->   56
+        h1        40   ->   50
+        h2        32   ->   50
         h3        24   ->   32
         h4        20   ->   22
 
@@ -110,7 +117,13 @@
       pure-viewport font size does not respond to the reader's own text-size
       setting, which fails WCAG 1.4.4; with a rem term it still scales on zoom.
 
-      h5, p, detail and field are deliberately NOT fluid. They are 14px, 18px,
+      h1 and h2 are the SAME size at desktop, 50px, and that is the design
+      system rather than a typo (#229, from Eran's type sheet): the 3.4 frames
+      had 72/56, the system that replaced them sets both headline levels at
+      50/60. They still differ below 1440 — h1 floors higher — so a page
+      heading keeps its rank over a section heading on a phone.
+
+      h5, p, detail and field are deliberately NOT fluid. They are 14px, 16px,
       11px and 20px — body and label sizes that are already comfortable on a
       phone, and shrinking them would cost legibility to solve a problem only
       display type has.
@@ -118,22 +131,25 @@
       Line heights are unitless ratios, so they follow the size down on their
       own and need no responsive step of their own.
     */
-    --font-size-h1: clamp(2.5rem, 1.7571rem + 3.0476vw, 4.5rem); /* 40px -> 72px */
-    --line-height-h1: 1.111; /* 80/72 */
-    --font-size-h2: clamp(2rem, 1.4429rem + 2.2857vw, 3.5rem); /* 32px -> 56px */
-    --line-height-h2: 1.143; /* 64/56 */
+    --font-size-h1: clamp(2.5rem, 2.2679rem + 0.9524vw, 3.125rem); /* 40px -> 50px */
+    --line-height-h1: 1.2; /* 60/50 */
+    --font-size-h2: clamp(2rem, 1.5821rem + 1.7143vw, 3.125rem); /* 32px -> 50px */
+    --line-height-h2: 1.2; /* 60/50 */
     --font-size-h3: clamp(1.5rem, 1.3143rem + 0.7619vw, 2rem); /* 24px -> 32px */
     --line-height-h3: 1.25; /* 40/32 */
     --font-size-h4: clamp(1.25rem, 1.2036rem + 0.1905vw, 1.375rem); /* 20px -> 22px */
     --line-height-h4: 1.364; /* 30/22 */
     --font-size-h5: 0.875rem; /* 14px */
     --line-height-h5: 1.429; /* 20/14 */
-    --font-size-p: 1.125rem; /* 18px */
-    --line-height-p: 1.556; /* 28/18 */
+    --font-size-p: 1rem; /* 16px */
+    --line-height-p: 1.4375; /* 23/16 */
     --font-size-detail: 0.6875rem; /* 11px */
     --line-height-detail: 1.455; /* 16/11 */
     --font-size-field: 1.25rem; /* 20px */
     --line-height-field: 1.4; /* 28/20 */
+
+    /* Page gutter — see `container` in tailwind.config.ts (#229). */
+    --gutter: 1.25rem; /* 20px */
 
     --tracking-tight: -0.01em;
     --tracking-wide: 0.08em;
@@ -250,6 +266,7 @@
     --color-fg: var(--color-neutral-200);
     --color-fg-muted: var(--color-neutral-400);
     --color-border: var(--color-neutral-600);
+    --color-control-border: var(--color-neutral-300);
     /*
       Periwinkle, not indigo — taken from the design rather than chosen (#179).
 
@@ -385,6 +402,7 @@
     --color-fg: var(--color-neutral-200);
     --color-fg-muted: var(--color-neutral-400);
     --color-border: var(--color-neutral-600);
+    --color-control-border: var(--color-neutral-300);
 
     --card: var(--color-neutral-700);
     --card-foreground: var(--color-neutral-200);
@@ -418,6 +436,7 @@
     --color-fg: var(--color-neutral-900);
     --color-fg-muted: var(--color-neutral-500);
     --color-border: var(--color-neutral-300);
+    --color-control-border: var(--color-neutral-500);
 
     --card: var(--color-neutral-100);
     --card-foreground: var(--color-neutral-900);
@@ -438,6 +457,13 @@
 }
 
 @layer base {
+  /* 33px from `lg`, the design system's desktop gutter (#229). */
+  @media (min-width: 1024px) {
+    :root {
+      --gutter: 2.0625rem;
+    }
+  }
+
   * {
     @apply border-border;
   }

@@ -252,7 +252,7 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
       ) : null}
 
       <div>
-        <Button type="submit" size="lg" disabled={sending}>
+        <Button type="submit" disabled={sending}>
           {sending ? labels.submitting : labels.submit}
         </Button>
       </div>

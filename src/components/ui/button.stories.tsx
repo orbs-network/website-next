@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { fn } from 'storybook/test'
+import { expect, fn, within } from 'storybook/test'
 import { Download } from 'lucide-react'
 
 import { Button } from './button'
@@ -19,7 +19,7 @@ const meta = {
     },
     size: {
       control: 'select',
-      options: ['sm', 'default', 'lg'],
+      options: ['sm', 'default'],
       description: 'Size of the button',
     },
     asChild: {
@@ -97,16 +97,24 @@ export const Small: Story = {
   },
 }
 
+/**
+ * Pins the design-system CTA (#229): 33px tall, 11px regular, 0.08em tracking.
+ * The tracking check is the one worth having — a `tracking-*` utility on the
+ * base class silently beats the token's letter-spacing, which is how the
+ * button shipped at 0.025em before.
+ */
 export const Default: Story = {
   args: {
     size: 'default',
   },
-}
+  play: async ({ canvasElement }) => {
+    const button = within(canvasElement).getByRole('button')
+    const style = getComputedStyle(button)
 
-export const Large: Story = {
-  args: {
-    size: 'lg',
-    children: 'Large',
+    await expect(button.getBoundingClientRect().height).toBe(33)
+    await expect(style.fontSize).toBe('11px')
+    await expect(style.fontWeight).toBe('400')
+    await expect(style.letterSpacing).toBe('0.88px')
   },
 }
 
@@ -140,7 +148,6 @@ export const AllStates: Story = {
         <div className="flex flex-wrap items-center gap-4">
           <Button size="sm">Small</Button>
           <Button size="default">Default</Button>
-          <Button size="lg">Large</Button>
         </div>
         <div className="flex flex-wrap items-center gap-4">
           <Button variant="secondary" size="sm">
@@ -148,9 +155,6 @@ export const AllStates: Story = {
           </Button>
           <Button variant="secondary" size="default">
             Default
-          </Button>
-          <Button variant="secondary" size="lg">
-            Large
           </Button>
         </div>
       </div>

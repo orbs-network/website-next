@@ -12,10 +12,10 @@ import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLin
  * the 3.4 pages share none of it. Bending one component into both would make
  * every prop a question about which design the caller is on.
  *
- * **The headline is `text-h2`, not `text-h1`.** The design sets page titles and
- * section titles alike at 50px, and h2 (56px at 1440) is the scale step that
- * lands on it. h1 is 72px, which puts "One API and SDK for spot and
- * perpetuals" on four lines in a half-width column.
+ * **The headline is plain `text-h1`.** It used to be overridden to `text-h2`
+ * because the design sets page and section titles alike at 50px and h1 was
+ * 72px. The type scale now matches the design system (#229) — h1 IS 50px at
+ * 1440 — so the override had nothing left to correct.
  *
  * **Text first on a phone.** The graphic is decorative and square; above the
  * headline on a 390px screen it is a screenful of illustration before the page
@@ -45,11 +45,11 @@ export function SplitHero({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14">
+    <section className="container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14">
       <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
         <div>
           <Eyebrow text={eyebrow} locale={locale} />
-          <H1 className="mt-3 text-balance text-h2" lang={textLang(headline, locale)}>
+          <H1 className="mt-3 text-balance" lang={textLang(headline, locale)}>
             {headline}
           </H1>
           <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(intro, locale)}>

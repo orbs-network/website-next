@@ -9,6 +9,30 @@ const config: Config = {
   ],
   plugins: [require('@tailwindcss/typography'), require('tailwindcss-animate')],
   theme: {
+    /*
+      The page grid, from the design system (#229).
+
+      Outside `extend` on purpose: this REPLACES Tailwind's default container,
+      which stepped its max-width through every breakpoint (640, 768, ... 1536)
+      and so jumped width five times while resizing. The design is fluid with
+      fixed gutters: 33px either side from `lg`, 20px on a phone, content capped
+      at 1374px — which is a 1440 frame minus its gutters, so the cap is the
+      frame and the padding sits inside it.
+
+      `center` is why no call site carries `mx-auto`, and the padding is why
+      none carries `px-5`. A section that set its own would double the gutter.
+
+      The gutter is `--gutter` (globals.css) rather than `padding: { lg: ... }`
+      because Tailwind only emits per-screen container padding for screens
+      listed in `container.screens` — and listing `lg` there would also cap the
+      width at 1024px from `lg`, which is the stepping this exists to remove.
+      The variable also lets full-bleed chrome outside a container share it.
+    */
+    container: {
+      center: true,
+      padding: 'var(--gutter)',
+      screens: { '2xl': '1440px' },
+    },
     extend: {
       /*
         The home page's scrolling band of phrases.
@@ -244,6 +268,7 @@ const config: Config = {
           foreground: 'var(--destructive-foreground)',
         },
         border: 'var(--color-border)',
+        'control-border': 'var(--color-control-border)',
         input: 'var(--input)',
         ring: 'var(--ring)',
       },

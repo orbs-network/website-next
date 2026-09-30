@@ -97,13 +97,13 @@ const semantics: SemanticSwatch[] = [
 type TypeSample = { name: string; className: string; sample: string }
 
 const typeSamples: TypeSample[] = [
-  { name: 'H1 / 72', className: 'text-h1 font-semibold', sample: 'Bringing CeFi execution to DeFi' },
-  { name: 'H2 / 56', className: 'text-h2 font-semibold', sample: 'Orbs powers performant onchain apps' },
+  { name: 'H1 / 50', className: 'text-h1 font-semibold', sample: 'Bringing CeFi execution to DeFi' },
+  { name: 'H2 / 50', className: 'text-h2 font-semibold', sample: 'Orbs powers performant onchain apps' },
   { name: 'H3 / 32', className: 'text-h3 font-semibold', sample: 'A decentralized backend for Web3' },
   { name: 'H4 / 22', className: 'text-h4 font-medium', sample: 'Section heading for supporting content' },
   { name: 'H5 / 14', className: 'text-h5 font-semibold uppercase', sample: 'Eyebrow label' },
   {
-    name: 'P / 18',
+    name: 'P / 16',
     className: 'text-p',
     sample: 'Orbs is an open and decentralized public blockchain infrastructure.',
   },

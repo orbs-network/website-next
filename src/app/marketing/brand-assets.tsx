@@ -17,7 +17,7 @@ export async function BrandAssetsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.brandAssets' })
 
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       <H1 className="mb-12">{t('meta.title')}</H1>
 
       <ul className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">

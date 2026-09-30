@@ -37,7 +37,7 @@ export async function NewsIndex({ currentPage }: { currentPage: number }) {
 
   if (items.length === 0) {
     return (
-      <div className="container mx-auto px-5 py-10">
+      <div className="container py-10">
         <Heading />
         <p className="text-gray-600 dark:text-gray-400">No coverage yet. Check back soon.</p>
       </div>
@@ -45,7 +45,7 @@ export async function NewsIndex({ currentPage }: { currentPage: number }) {
   }
 
   return (
-    <div className="container mx-auto px-5 py-10">
+    <div className="container py-10">
       <Heading />
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
         {items.map((mention) => (

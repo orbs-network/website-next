@@ -55,7 +55,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <H2 className="mx-auto max-w-3xl text-balance text-center" lang={lang('tools.title')}>
           {t('tools.title')}
         </H2>
@@ -70,7 +70,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
                 {t(`tools.${tool.id}.title`)}
               </H4>
 
-              <p className="mt-3 text-detail text-fg-muted" lang={lang(`tools.${tool.id}.body`)}>
+              <p className="mt-3 text-p text-fg-muted" lang={lang(`tools.${tool.id}.body`)}>
                 {t(`tools.${tool.id}.body`)}
               </p>
             </li>
@@ -78,7 +78,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance text-center" lang={lang('slider.title')}>
             {t('slider.title')}
@@ -126,7 +126,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <H2 className="text-balance text-center" lang={lang('partners.title')}>
           {t('partners.title')}
         </H2>
@@ -164,7 +164,7 @@ export async function TonVotePage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('verification.body')}>
+      <section className="container py-20" lang={lang('verification.body')}>
         <div className="mx-auto max-w-3xl">
           <H2 className="text-balance text-center" lang={lang('verification.title')}>
             {t('verification.title')}

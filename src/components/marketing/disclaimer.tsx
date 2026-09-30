@@ -17,7 +17,7 @@ import { Prose } from './prose'
  */
 export function Disclaimer({ text, locale }: { text: string; locale: Locale }) {
   return (
-    <section className="container mx-auto px-5 pb-20">
+    <section className="container pb-20">
       <div className="mx-auto max-w-3xl">
         <Separator className="mb-8" />
         {/*

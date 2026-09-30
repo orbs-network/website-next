@@ -92,7 +92,7 @@ export function FeatureGrid({
   eyebrow?: string
 }) {
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       <div className="mx-auto max-w-3xl text-center">
         {eyebrow && (
           <p

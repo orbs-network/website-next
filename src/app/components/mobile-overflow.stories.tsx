@@ -72,9 +72,10 @@ export const LongButtonLabelWraps: Story = {
   play: async ({ canvasElement }) => {
     assertFits(canvasElement)
 
-    // And it did wrap, rather than fitting by being truncated.
+    // And it did wrap, rather than fitting by being truncated. 33px is the
+    // one-line button (#229), so anything taller has a second line.
     const button = canvasElement.querySelector('button') as HTMLElement
-    expect(button.getBoundingClientRect().height).toBeGreaterThan(48)
+    expect(button.getBoundingClientRect().height).toBeGreaterThan(33)
   },
 }
 

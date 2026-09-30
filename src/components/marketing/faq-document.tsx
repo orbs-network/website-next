@@ -76,7 +76,7 @@ export function FaqDocument({
   const sections = parseFaq(markdown)
 
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       <div className="mx-auto max-w-3xl">
         <H1 className="mb-12" lang={textLang(title, locale)}>
           {title}

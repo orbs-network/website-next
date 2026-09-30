@@ -48,7 +48,7 @@ export function EcosystemDirectory({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 pt-16 pb-24">
+    <section className="container pt-16 pb-24">
       <H1 className="mb-16" lang={textLang(title, locale)}>
         {title}
       </H1>

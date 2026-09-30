@@ -95,7 +95,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         for real now, so shipping a frozen copy of it as well left the hero
         wearing the same motif twice.
       */}
-      <section className="relative isolate mx-auto overflow-hidden px-5 pt-36 pb-24 lg:min-h-[810px]">
+      <section className="relative isolate mx-auto overflow-hidden pt-36 pb-24 lg:min-h-[810px]">
         {/*
           `Grid Pattern Top`: 2px square dots on a 40.5px lattice.
 
@@ -113,7 +113,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           <SectionBackdrop variant="dots" />
         </HeroFacetField>
 
-        <div className="container relative mx-auto">
+        <div className="container relative">
           <div className="relative mx-auto max-w-4xl text-center">
             <p
               className="text-detail font-medium uppercase tracking-widest text-accent-primary"
@@ -131,12 +131,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button asChild size="lg">
+              <Button asChild>
                 <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('hero.cta')}>
                   {t('hero.cta')}
                 </Link>
               </Button>
-              <Button asChild size="lg" variant="secondary">
+              <Button asChild variant="secondary">
                 <a href={HOME_LINKS.docs} target="_blank" rel="noopener noreferrer" lang={lang('hero.docs')}>
                   {t('hero.docs')}
                 </a>
@@ -161,7 +161,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <section className="container mx-auto border-t border-border px-5 py-section">
+      <section className="container border-t border-border py-section">
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('stack.eyebrow')}>
           {t('stack.eyebrow')}
         </p>
@@ -175,7 +175,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             <H2 className="whitespace-pre-line" lang={lang('stack.title')}>
               {t('stack.title')}
             </H2>
-            <p className="mt-6 max-w-lg text-detail text-fg-muted" lang={lang('stack.intro')}>
+            <p className="mt-6 max-w-lg text-p text-fg-muted" lang={lang('stack.intro')}>
               {t('stack.intro')}
             </p>
           </div>
@@ -204,7 +204,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <LogoRow title={t('venues.title')} titleHidden items={HOME_VENUES} locale={locale} />
 
-      <section className="container mx-auto border-t border-border px-5 py-section">
+      <section className="container border-t border-border py-section">
         <div className="text-center">
           <p
             className="text-detail font-medium uppercase tracking-widest text-fg-muted"
@@ -239,7 +239,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         against the news run's #f6f6f6 — and the pair inverts with the theme.
       */}
       <div className="band-contrast bg-surface">
-        <section className="container mx-auto px-5 py-section">
+        <section className="container py-section">
           <p
             className="text-detail font-medium uppercase tracking-widest text-fg-muted"
             lang={lang('features.eyebrow')}
@@ -275,7 +275,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </section>
       </div>
 
-      <section className="container mx-auto border-t border-border px-5 py-section" lang={lang('network.body')}>
+      <section className="container border-t border-border py-section" lang={lang('network.body')}>
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('network.eyebrow')}>
           {t('network.eyebrow')}
         </p>
@@ -316,7 +316,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <div className="band-contrast bg-bg">
         {posts.length > 0 && (
-          <section className="container mx-auto px-5 py-section">
+          <section className="container py-section">
             <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('news.eyebrow')}>
               {t('news.eyebrow')}
             </p>
@@ -357,7 +357,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </section>
         )}
 
-        <section className="container mx-auto px-5 py-section">
+        <section className="container py-section">
           <H2 className="text-balance" lang={lang('discover.title')}>
             {t('discover.title')}
           </H2>
@@ -427,13 +427,13 @@ export async function HomePage({ locale }: { locale: Locale }) {
           contact form was built to fix — the legacy one has been posting to a
           dead Heroku host for years.
         */}
-        <section className="container mx-auto border-b border-border px-5 py-section">
+        <section className="container border-b border-border py-section">
           <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
             <div className="lg:border-r lg:border-border lg:pr-16">
               <H2 className="text-balance text-h3 sm:text-h2" lang={lang('newsletter.heading')}>
                 {t('newsletter.heading')}
               </H2>
-              <p className="mt-6 text-detail leading-relaxed text-fg-muted" lang={lang('newsletter.body')}>
+              <p className="mt-6 text-p text-fg-muted" lang={lang('newsletter.body')}>
                 {t('newsletter.body')}
               </p>
             </div>
@@ -509,7 +509,7 @@ function HighlightCard({
         <H4>{title}</H4>
       </div>
 
-      <p className="mt-4 flex-1 text-detail text-fg-muted">{body}</p>
+      <p className="mt-4 flex-1 text-p text-fg-muted">{body}</p>
 
       <Link
         href={localeHref(card.href, locale)}
@@ -600,7 +600,7 @@ function NewsCard({
         </H4>
 
         {post.shortDescription && (
-          <p className="mt-3 text-detail text-fg-muted" lang={textLang(post.shortDescription, locale)}>
+          <p className="mt-3 text-p text-fg-muted" lang={textLang(post.shortDescription, locale)}>
             {post.shortDescription}
           </p>
         )}

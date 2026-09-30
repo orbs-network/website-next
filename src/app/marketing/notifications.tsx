@@ -40,7 +40,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <section className="container mx-auto px-5 py-20" lang={lang('contribute.title')}>
+      <section className="container py-20" lang={lang('contribute.title')}>
         <div className="mx-auto max-w-3xl text-center">
           <H2 className="text-balance">{t('contribute.title')}</H2>
         </div>
@@ -78,7 +78,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         </div>
 
         <div className="mt-8 text-center">
-          <Button asChild size="lg">
+          <Button asChild>
             <a href={NOTIFICATION_APPS.github} target="_blank" rel="noopener noreferrer">
               {t('contribute.cta')}
             </a>
@@ -86,7 +86,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('integrations.title')}>
+      <section className="container py-20" lang={lang('integrations.title')}>
         <div className="mx-auto max-w-4xl">
           <H2 className="mb-10 text-balance text-center">{t('integrations.title')}</H2>
 
@@ -116,7 +116,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('schema.body')}>
+      <section className="container py-20" lang={lang('schema.body')}>
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance text-center" lang={lang('schema.title')}>
             {t('schema.title')}
@@ -140,7 +140,7 @@ export async function NotificationsPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('apps.body')}>
+      <section className="container py-20" lang={lang('apps.body')}>
         <div className="mx-auto max-w-3xl text-center">
           <H2 className="text-balance" lang={lang('apps.title')}>
             {t('apps.title')}

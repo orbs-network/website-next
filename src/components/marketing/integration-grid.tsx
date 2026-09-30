@@ -39,7 +39,7 @@ export function IntegrationGrid({
   locale: Locale
 }) {
   return (
-    <section id={id} className="container mx-auto px-5 py-20">
+    <section id={id} className="container py-20">
       <H2 className="text-balance text-center" lang={textLang(title, locale)}>
         {title}
       </H2>
@@ -114,7 +114,7 @@ export function IntegrationGrid({
         <H3 weight="medium" lang={textLang(integrateTitle, locale)}>
           {integrateTitle}
         </H3>
-        <Button asChild size="lg" className="mt-6">
+        <Button asChild className="mt-6">
           <a href={integrateHref} lang={textLang(integrateCta, locale)} target="_blank" rel="noopener noreferrer">
             {integrateCta}
           </a>

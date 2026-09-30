@@ -66,7 +66,7 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
     <>
       <ProductHero headline={t('hero.headline')} intro={t('hero.intro')} locale={locale} />
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <div className="mx-auto max-w-3xl divide-y divide-border border-y border-border">
           {ORBS_CONTRACTS.map(({ id, addresses }) => (
             <Disclosure
@@ -126,7 +126,7 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 pb-20">
+      <section className="container pb-20">
         <div className="mx-auto max-w-3xl">
           <H2 className={HEADING_STEP} lang={lang('roles.title')}>
             {t('roles.title')}
@@ -153,7 +153,7 @@ export async function SmartContractsPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 pb-20">
+      <section className="container pb-20">
         <div className="mx-auto max-w-3xl">
           <H2 className={HEADING_STEP} lang={lang('architecture.title')}>
             {t('architecture.title')}

@@ -35,7 +35,7 @@ export function SplitStatement({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto border-t border-border px-5 pt-3 pb-section lg:pb-48">
+    <section className="container border-t border-border pt-3 pb-section lg:pb-48">
       <Eyebrow text={eyebrow} locale={locale} />
 
       <div className="mt-16 grid grid-cols-1 gap-8 lg:mt-44 lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-32">

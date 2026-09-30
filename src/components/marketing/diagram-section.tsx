@@ -59,7 +59,7 @@ export function DiagramSection({
   locale: Locale
 }) {
   return (
-    <section className="container mx-auto px-5 py-20">
+    <section className="container py-20">
       {title && (
         <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
           {title}

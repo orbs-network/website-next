@@ -52,7 +52,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <ul className="mx-auto grid max-w-5xl gap-6 sm:grid-cols-2 lg:grid-cols-3">
           {TON_ACCESS_CARDS.map((card) => (
             <li key={card.id} className="flex flex-col rounded-sm border border-border p-6">
@@ -73,7 +73,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
                 {t(`cards.${card.id}.summary`)}
               </p>
 
-              <p className="mt-3 text-detail text-fg-muted" lang={lang(`cards.${card.id}.body`)}>
+              <p className="mt-3 text-p text-fg-muted" lang={lang(`cards.${card.id}.body`)}>
                 {t(`cards.${card.id}.body`)}
               </p>
             </li>
@@ -81,7 +81,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         </ul>
       </section>
 
-      <section id={TON_ACCESS_EXAMPLE_ID} className="container mx-auto scroll-mt-24 px-5 py-20">
+      <section id={TON_ACCESS_EXAMPLE_ID} className="container scroll-mt-24 py-20">
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance" lang={lang('example.title')}>
             {t('example.title')}
@@ -116,7 +116,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20" lang={lang('schema.body')}>
+      <section className="container py-20" lang={lang('schema.body')}>
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance text-center" lang={lang('schema.title')}>
             {t('schema.title')}
@@ -140,7 +140,7 @@ export async function TonAccessPage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      <section className="container mx-auto px-5 py-20">
+      <section className="container py-20">
         <div className="mx-auto max-w-4xl">
           <H2 className="text-balance text-center" lang={lang('voices.title')}>
             {t('voices.title')}
