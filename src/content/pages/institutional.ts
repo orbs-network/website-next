@@ -44,13 +44,37 @@ export const INSTITUTIONAL_PRODUCTS = [
  * The legacy page shows their brand marks, most of them reused from the home
  * page's partner strip. An earlier version of this listed names only, which
  * turned a branding strip into a text list.
+ *
+ * All five files are white on transparent, so they are inverted in the light
+ * theme for the same reason as the signers below; without it the row was five
+ * blank boxes on the light page (#228).
  */
 export const INSTITUTIONAL_VENUES: readonly LogoRowItem[] = [
-  { name: 'PancakeSwap', logo: { src: '/marketing/institutional/venue-pancakeswap.png', width: 286, height: 44 } },
-  { name: 'SushiSwap', logo: { src: '/marketing/institutional/venue-sushiswap.png', width: 300, height: 93 } },
-  { name: 'QuickSwap', logo: { src: '/marketing/institutional/venue-quickswap.png', width: 240, height: 37 } },
-  { name: 'Blackhole', logo: { src: '/marketing/institutional/venue-blackhole.png', width: 1249, height: 107 } },
-  { name: 'Thena', logo: { src: '/marketing/institutional/venue-thena.png', width: 188, height: 42 } },
+  {
+    name: 'PancakeSwap',
+    logo: { src: '/marketing/institutional/venue-pancakeswap.png', width: 286, height: 44 },
+    invertOnLight: true,
+  },
+  {
+    name: 'SushiSwap',
+    logo: { src: '/marketing/institutional/venue-sushiswap.png', width: 300, height: 93 },
+    invertOnLight: true,
+  },
+  {
+    name: 'QuickSwap',
+    logo: { src: '/marketing/institutional/venue-quickswap.png', width: 240, height: 37 },
+    invertOnLight: true,
+  },
+  {
+    name: 'Blackhole',
+    logo: { src: '/marketing/institutional/venue-blackhole.png', width: 1249, height: 107 },
+    invertOnLight: true,
+  },
+  {
+    name: 'Thena',
+    logo: { src: '/marketing/institutional/venue-thena.png', width: 188, height: 42 },
+    invertOnLight: true,
+  },
 ]
 
 /**

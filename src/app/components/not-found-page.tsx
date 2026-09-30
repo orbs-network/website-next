@@ -24,7 +24,7 @@ export function NotFoundPage({ locale }: { locale: Locale }) {
   return (
     <div className="container py-24 text-center" lang="en">
       <H1 className="mb-4">Page not found</H1>
-      <p className="mb-8 text-gray-600 dark:text-gray-400">That page doesn&apos;t exist, or it may have moved.</p>
+      <p className="mb-8 text-fg-muted">That page doesn&apos;t exist, or it may have moved.</p>
 
       <Button asChild>
         <Link href={localePath(locale, '/')}>Go to the home page</Link>
