@@ -28,6 +28,7 @@ export function StatsRow({
   title,
   stats,
   columns = 3,
+  align = 'center',
   locale,
 }: {
   /** Optional: the institutional page runs these bare, under the hero. */
@@ -35,11 +36,22 @@ export function StatsRow({
   stats: readonly Stat[]
   /** How many across on a wide viewport. Three unless told otherwise. */
   columns?: 3 | 5
+  /**
+   * `start` is the home page's row: each figure left-aligned at the start of
+   * its column, so five of them spread across the full width, with a soft glow
+   * behind the one under the pointer (`Stats Container Area on Hover` in the
+   * 2026-09-30 frame). Centred is every other caller, and stays the default.
+   */
+  align?: 'center' | 'start'
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
 }) {
   return (
-    <section className="container py-20">
+    // `overflow-x-clip` for the glow: it reaches past the first and last
+    // figures, and even at opacity 0 a pseudo-element that crosses the
+    // viewport edge scrolls the page sideways (measured: 20px at 390).
+    // `clip`, not `hidden`, so the section does not become a scroll container.
+    <section className={cn('container py-20', align === 'start' && 'overflow-x-clip')}>
       {title && (
         <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
           {title}
@@ -52,9 +64,15 @@ export function StatsRow({
         two unrelated rows; five wraps three into a sparse line. Default stays
         three — every existing caller has three.
       */}
-      <dl className={cn('grid gap-10 text-center', columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3')}>
+      <dl
+        className={cn(
+          'grid gap-10',
+          align === 'center' && 'text-center',
+          columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
+        )}
+      >
         {stats.map((stat) => (
-          <div key={stat.id} className="flex flex-col-reverse gap-2">
+          <div key={stat.id} className={cn('flex flex-col-reverse gap-2', align === 'start' && STAT_GLOW)}>
             {/*
               The label and the value are marked SEPARATELY, and this pair is
               the clearest case on the site for why. "$14B+" is Latin in every
@@ -76,3 +94,18 @@ export function StatsRow({
     </section>
   )
 }
+
+/**
+ * The hover glow, as a pseudo-element so it costs no markup and cannot catch
+ * the pointer. `-z-10` inside `isolate` keeps it behind the figure without
+ * escaping the stat and sliding under the section's background. Violet at 35%
+ * fading out by the closest side, which is how the frame draws it; decoration
+ * only, so there is nothing to show a keyboard user and no focus equivalent.
+ */
+const STAT_GLOW = [
+  'relative isolate',
+  "before:pointer-events-none before:absolute before:-inset-x-8 before:-inset-y-8 before:-z-10 before:content-['']",
+  'before:bg-[radial-gradient(closest-side,rgba(139,92,246,0.35),transparent)]',
+  'before:opacity-0 before:transition-opacity before:duration-300 hover:before:opacity-100',
+  'motion-reduce:before:transition-none',
+].join(' ')

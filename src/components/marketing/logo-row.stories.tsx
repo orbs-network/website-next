@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
+import { HOME_VENUES } from '@/content/pages/home'
 import { LogoRow } from './logo-row'
 
 const meta = {
@@ -134,5 +135,21 @@ export const ThemePairShowsOneMarkPerTheme: Story = {
     } finally {
       html.classList.toggle('dark', wasDark)
     }
+  },
+}
+
+/**
+ * The home venue strip, `spread`, at the narrowest `lg` width. Six marks need
+ * about 1030px with their gaps and the column is 958 here, so the row has to
+ * keep wrapping — forcing one line at `lg` scrolled the page sideways (#247).
+ */
+export const SpreadRowStillWrapsAt1024: Story = {
+  parameters: {
+    viewport: { options: { desktop1024: { name: 'Desktop 1024', styles: { width: '1024px', height: '800px' } } } },
+  },
+  globals: { viewport: { value: 'desktop1024' } },
+  args: { title: 'Venues running on the stack', titleHidden: true, spread: true, items: HOME_VENUES, locale: 'en' },
+  play: async () => {
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   },
 }

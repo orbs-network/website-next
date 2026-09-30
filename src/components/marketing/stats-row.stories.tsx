@@ -53,3 +53,25 @@ export const TitleIsOptional: Story = {
     await expect(within(canvasElement).queryByRole('heading')).not.toBeInTheDocument()
   },
 }
+
+const PHONE = {
+  parameters: {
+    viewport: { options: { phone390: { name: 'Phone 390', styles: { width: '390px', height: '844px' } } } },
+  },
+  globals: { viewport: { value: 'phone390' } },
+}
+
+/**
+ * The home row: figures start-aligned, and the hover glow reaching past them
+ * does not scroll the page sideways. It did, by 20px at 390, before the
+ * section clipped it — an invisible pseudo-element still counts as overflow.
+ */
+export const StartAlignedGlowDoesNotOverflow: Story = {
+  ...PHONE,
+  args: { stats: STATS, align: 'start', locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const dl = canvasElement.querySelector('dl')!
+    await expect(getComputedStyle(dl).textAlign).toBe('start')
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
+  },
+}

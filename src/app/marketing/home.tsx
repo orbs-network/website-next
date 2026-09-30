@@ -153,6 +153,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <StatsRow
         columns={5}
+        align="start"
         stats={HOME_STATS.map((id) => ({
           id,
           value: t(`stats.${id}.value`),
@@ -213,7 +214,14 @@ export async function HomePage({ locale }: { locale: Locale }) {
         no visible heading. The heading is kept for assistive technology — the
         marks are `alt=""` wordmarks, so without it the list has no name.
       */}
-      <LogoRow title={t('venues.title')} titleHidden items={HOME_VENUES} locale={locale} />
+      <LogoRow
+        title={t('venues.title')}
+        titleHidden
+        spread
+        className="border-t border-border"
+        items={HOME_VENUES}
+        locale={locale}
+      />
 
       <section className="container border-t border-border py-section">
         <div className="text-center">
@@ -463,9 +471,17 @@ export async function HomePage({ locale }: { locale: Locale }) {
           contact form was built to fix — the legacy one has been posting to a
           dead Heroku host for years.
         */}
-        <section className="container border-b border-border py-section">
-          <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
-            <div className="lg:border-r lg:border-border lg:pr-16">
+        {/*
+          The vertical rule runs the full height of the signup, top of the band
+          to the rule beneath, so at `lg` the padding moves off the section and
+          onto the two columns. `lg:pe-10` rather than a column gap is what
+          leaves "Get updates from" room to sit on one line: at 1440 the
+          heading is 50px and needs about 460px, and `gap-16` plus `pr-16` had
+          squeezed the column to 405 and orphaned "from" on a third line.
+        */}
+        <section className="container border-b border-border py-section lg:py-0">
+          <div className="grid gap-10 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-0">
+            <div className="lg:border-r lg:border-border lg:py-section lg:pe-10">
               <H2 className="text-balance text-h3 sm:text-h2" lang={lang('newsletter.heading')}>
                 {t('newsletter.heading')}
               </H2>
@@ -474,20 +490,22 @@ export async function HomePage({ locale }: { locale: Locale }) {
               </p>
             </div>
 
-            <NewsletterForm
-              labels={{
-                heading: t('newsletter.heading'),
-                body: t('newsletter.body'),
-                name: t('newsletter.name'),
-                email: t('newsletter.email'),
-                submit: t('newsletter.submit'),
-                sending: t('newsletter.sending'),
-                success: t('newsletter.success'),
-                failed: t('newsletter.failed'),
-                invalidEmail: t('newsletter.invalidEmail'),
-              }}
-              locale={locale}
-            />
+            <div className="lg:py-section lg:ps-12">
+              <NewsletterForm
+                labels={{
+                  heading: t('newsletter.heading'),
+                  body: t('newsletter.body'),
+                  name: t('newsletter.name'),
+                  email: t('newsletter.email'),
+                  submit: t('newsletter.submit'),
+                  sending: t('newsletter.sending'),
+                  success: t('newsletter.success'),
+                  failed: t('newsletter.failed'),
+                  invalidEmail: t('newsletter.invalidEmail'),
+                }}
+                locale={locale}
+              />
+            </div>
           </div>
         </section>
       </ClosingCta>
