@@ -1,5 +1,4 @@
 import { getTranslations } from 'next-intl/server'
-import { DLimit, DSltp, DTwap, LiquidityHub } from '@/components/icons'
 import { ClosingCta } from '@/components/marketing/closing-cta'
 import { InnerSection, PointColumns } from '@/components/marketing/inner-section'
 import { LogoRow } from '@/components/marketing/logo-row'
@@ -25,14 +24,14 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
 /**
- * Each product's lockup and colour, as on dSPOT (see `MODULE_PRESENTATION`
- * there): the design's colours are dark-theme ones, so light takes a darker step.
+ * Each product's colour, as on dSPOT (see `MODULE_PRESENTATION` there): the
+ * design's colours are dark-theme ones, so light takes a darker step.
  */
-const PRODUCT_PRESENTATION: Record<InstitutionalProductId, { mark: React.ReactNode; accentClassName: string }> = {
-  liquidityHub: { mark: <LiquidityHub />, accentClassName: 'text-cyan-600 dark:text-cyan-400' },
-  dtwap: { mark: <DTwap />, accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
-  dlimit: { mark: <DLimit />, accentClassName: 'text-indigo-400' },
-  dsltp: { mark: <DSltp />, accentClassName: 'text-coral-600 dark:text-[#f17171]' },
+const PRODUCT_PRESENTATION: Record<InstitutionalProductId, { accentClassName: string; titleClassName?: string }> = {
+  liquidityHub: { accentClassName: 'text-cyan-600 dark:text-cyan-400', titleClassName: 'uppercase' },
+  dtwap: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
+  dlimit: { accentClassName: 'text-indigo-400' },
+  dsltp: { accentClassName: 'text-coral-600 dark:text-[#f17171]' },
 }
 
 /**
@@ -120,6 +119,7 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
         cards={INSTITUTIONAL_PRODUCTS.map((product) => ({
           id: product.id,
           eyebrow: t(`products.items.${product.id}.title`),
+          title: t(`products.items.${product.id}.title`),
           body: t(`products.items.${product.id}.body`),
           link: { label: t(`products.items.${product.id}.cta`), href: product.href },
           ...PRODUCT_PRESENTATION[product.id],

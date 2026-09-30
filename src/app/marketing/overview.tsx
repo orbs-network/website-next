@@ -1,5 +1,4 @@
 import { getTranslations } from 'next-intl/server'
-import { DLimit, DPerpsGlyph, DTwap, LiquidityHub } from '@/components/icons'
 import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { InnerSection, PointColumns } from '@/components/marketing/inner-section'
 import { ModuleCards } from '@/components/marketing/module-cards'
@@ -16,28 +15,15 @@ import {
 } from '@/content/pages/overview'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import type { Locale } from '@/i18n/locales'
-import { textLang } from '@/i18n/script'
 
 /**
- * Each protocol's lockup and colour, as on dSPOT (see `MODULE_PRESENTATION`
- * there). dPERPS has no lockup component — `PerpetualHub` spells the old name —
- * so its glyph is paired with the name here, in the lockups' own type.
+ * Each protocol's colour, as on dSPOT (see `MODULE_PRESENTATION` there).
  */
-const PRODUCT_PRESENTATION: Record<OverviewProductId, { mark: React.ReactNode; accentClassName: string }> = {
-  dtwap: { mark: <DTwap />, accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
-  dlimit: { mark: <DLimit />, accentClassName: 'text-indigo-400' },
-  liquidityHub: { mark: <LiquidityHub />, accentClassName: 'text-cyan-600 dark:text-cyan-400' },
-  perpetualHub: {
-    mark: (
-      <span className="inline-flex items-center gap-2 text-h5 uppercase tracking-wider">
-        <DPerpsGlyph />
-        <span>
-          d<strong>PERPS</strong>
-        </span>
-      </span>
-    ),
-    accentClassName: 'text-pink-600 dark:text-pink-400',
-  },
+const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string; titleClassName?: string }> = {
+  dtwap: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
+  dlimit: { accentClassName: 'text-indigo-400' },
+  liquidityHub: { accentClassName: 'text-cyan-600 dark:text-cyan-400', titleClassName: 'uppercase' },
+  perpetualHub: { accentClassName: 'text-pink-600 dark:text-pink-400' },
 }
 
 /**
@@ -104,12 +90,11 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         body={t('tech.body')}
         cards={OVERVIEW_PRODUCTS.map((product) => {
           const name = t(`products.items.${product.id}.title`)
-          const { mark, accentClassName } = PRODUCT_PRESENTATION[product.id]
           return {
             id: product.id,
             eyebrow: name,
-            accentClassName,
-            mark: <span lang={textLang(name, locale)}>{mark}</span>,
+            title: name,
+            ...PRODUCT_PRESENTATION[product.id],
             body: t(`products.items.${product.id}.body`),
             link: { label: t('products.cta', { name }), href: product.href },
           }
