@@ -50,8 +50,6 @@ export async function VenuesPage({ locale }: { locale: Locale }) {
 
       <ClosingCta
         phrases={VENUES_MARQUEE.map((id) => t(`marquee.${id}`))}
-        pauseLabel={t('marquee.pause')}
-        resumeLabel={t('marquee.resume')}
         locale={locale}
         actions={
           <>
