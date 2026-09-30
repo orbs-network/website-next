@@ -47,10 +47,10 @@ describe('textLang', () => {
   })
 
   it('still marks a string that is only punctuation or digits', () => {
-    // Not blank, and genuinely rendered. "$2.5B+" sits next to Korean prose on
+    // Not blank, and genuinely rendered. "$14B+" sits next to Korean prose on
     // the stats row, and it is read aloud — so it is a real string with a real
     // language, unlike an empty one.
-    expect(textLang('$2.5B+', 'ko')).toBe('en')
+    expect(textLang('$14B+', 'ko')).toBe('en')
     expect(textLang('2023', 'ja')).toBe('en')
   })
 
