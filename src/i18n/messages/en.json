@@ -398,6 +398,16 @@
         "title": "Orbs Agentic",
         "description": "The execution layer between AI agents and DeFi protocols. Orbs handles execution, routing and cosigned-oracle verification, so every agent trade is independently verified on-chain."
       },
+      "eyebrows": {
+        "hero": "[AI AGENTS]",
+        "breaks": "[THE BOTTLENECK]",
+        "tools": "[EXECUTION TOOL]",
+        "chains": "[SUPPORTED CHAINS]",
+        "oracle": "[VERIFICATION]",
+        "architecture": "[ARCHITECTURE]",
+        "poweredBy": "[TRACK RECORD]",
+        "getStarted": "[GET STARTED]"
+      },
       "hero": {
         "headline": "Orbs Agentic",
         "intro": "The execution layer between AI agents and DeFi protocols.\n\nWhen an agent needs to swap, place a limit order, or run a TWAP strategy, it calls an Orbs Agentic tool. The Orbs Network handles execution, routing, and cosigned-oracle verification — so every trade is independently verified on-chain.\n\nNot a wallet. Not a custodial layer. Not AI trading. The verification layer that lets agents execute DeFi safely.",
@@ -1019,6 +1029,13 @@
         "title": "Execution Services",
         "description": "Orbs Lambda and Orbs VM: decentralized serverless functions and container-based compute."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / COMPUTE]",
+        "lambdaProduct": "[ORBS LAMBDA]",
+        "vm": "[ORBS VM]",
+        "alternatives": "[COMPARISON]",
+        "evolution": "[EVOLUTION]"
+      },
       "hero": {
         "headline": "Execution Services"
       },
@@ -1044,19 +1061,25 @@
         "title": "Proof of Stake",
         "description": "Orbs PoS V3: multi-chain staking, guardians, delegators and how the network secures itself."
       },
+      "eyebrows": {
+        "hero": "[NETWORK / STAKING]",
+        "roles": "[ROLES]",
+        "v3": "[POS V3]",
+        "explainers": "[HOW IT WORKS]"
+      },
       "hero": {
-        "headline": "ORBS PROOF-OF-STAKE V3:\nMULTI-CHAIN STAKING",
+        "headline": "Orbs Proof-of-Stake V3:\nMulti-chain staking",
         "intro": "The Orbs Proof-of-Stake (PoS) Universe is the backbone of the Orbs network and the Universe that is being created. Orbs’ current PoS model - “Orbs PoS V3: Multi-chain Staking” utilizes Orbs’ hybrid architecture and cross-chain capabilities to deploy multi-chain Orbs PoS staking on both Ethereum and Polygon."
       },
       "roles": {
         "guardian": {
-          "title": "GUARDIANS",
+          "title": "Guardians",
           "subtitle": "Orbs Guardians represent the Orbs community, they maintain the security of the network by running validator nodes and uphold its long term vision, investing time and effort in the network's success.",
           "linkText": "Become an Orbs Guardian!",
           "body": "Roles and Responsibilities\n\n- Guardians operate the Orbs network validator nodes and run the subscribed applications.\n- Guardians are responsible for the staking rewards distribution to their community of delegators by being able to modify their Delegator’s rewards split.\n- Guardians have an option to be part of the [Certified Committee](https://www.orbs.com/white-papers/orbs-pos-v2-the-age-of-guardians-section-election-committees) and operate virtual chains that require certified Guardians. Certified Committee members are eligible for added incentives.\n- Guardians are expected to be committed to their communities and their Delegators’ staked tokens. Following [OGV-1&2 ](https://www.orbs.com/Reinstating-Guardians-Self-Stake-Requirement/), Guardians are required to have a self-stake of at least 3% of their total delegated stake.\n\nEconomic Incentives\n\n- Applications running virtual chains on Orbs pay fees directly to the Guardians, representing the cost of the computational resources allocated to the virtual chain.\n- Guardians receive staking rewards of at least 3.33% of their delegated stake, for operating the network and contributing to the network’s security.\n- Guardians who choose to participate in the Certified Committee receive a bootstrap fund distributed in DAI."
         },
         "delegator": {
-          "title": "DELEGATORS",
+          "title": "Delegators",
           "subtitle": "Delegators are ORBS token holders who assign their voting weight (stake) to Guardians, empowering them to maintain security and uphold the long term vision of the ecosystem.",
           "linkText": "Stake your ORBS tokens!",
           "body": "Roles and Responsibilities\n\n- Actively contribute to the network’s success by staking your ORBS tokens. [Instructions](https://www.orbs.com/tetra-orbs-staking-wallet-tutorial/) on how to stake using the Orbs Tetra wallet.\n- Select a worthy [Guardian](https://staking.orbs.network/?p=/guardians) to delegate your voting power to.\n- Staked tokens will be locked for a period of 14 days. Read more about the [Orbs locking](https://www.orbs.com/introducing-locking-when-staking-orbs) mechanism.\n- Orbs Delegators can choose to stake on Ethereum or Polygon.\n\nEconomic Incentives\n\n- Token holders that delegate to an active Guardian are rewarded in proportion to their stake.\n- Annual reward of up to 6.66% of the Delegator’s staked tokens, depending on the reward distribution split set by the selected Guardian.\n- Only delegation to an active Guardian that participates in the elected committee receives rewards. Also, it is important to note that staking rewards may vary between Guardians, so choose your Guardian carefully!"
