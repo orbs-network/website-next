@@ -27,6 +27,8 @@ import {
   type HomeCard,
 } from '@/content/pages/home'
 import { postPath } from '@/app/lib/routes'
+import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { cn } from '@/lib/utils'
 import { readingMinutes } from '@/lib/reading-time'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
@@ -570,9 +572,9 @@ function NewsCard({
           src={image || '/blog/placeholder.png'}
           alt=""
           width={352}
-          height={198}
+          height={176}
           sizes="(min-width: 640px) 22rem, 19rem"
-          className="aspect-video w-full rounded-sm object-cover"
+          className={cn('w-full rounded-sm', COVER_FRAME, COVER_IMAGE)}
         />
 
         <p className="mt-4 flex flex-wrap gap-x-3 text-detail uppercase tracking-widest text-fg-muted">
