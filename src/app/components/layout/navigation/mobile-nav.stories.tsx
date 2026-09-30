@@ -101,7 +101,8 @@ export const GroupRowDisclosesItsLinks: Story = {
     await expect(products).toHaveAttribute('aria-expanded', 'true')
     const controlled = document.getElementById(products.getAttribute('aria-controls') ?? '')
     await expect(controlled).not.toBeNull()
-    await expect(within(controlled as HTMLElement).getByRole('link', { name: 'dSPOT' })).toBeVisible()
+    // Waited for: the panel fades in, and `toBeVisible` counts opacity.
+    await waitFor(() => expect(within(controlled as HTMLElement).getByRole('link', { name: 'dSPOT' })).toBeVisible())
     // Only the one pressed.
     await expect(panel.getByRole('button', { name: 'Network' })).toHaveAttribute('aria-expanded', 'false')
   },
@@ -285,5 +286,70 @@ export const FooterLinksClose: Story = {
 
     await userEvent.click(x)
     await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
+  },
+}
+
+/**
+ * The panel opens BELOW the 60px header, which stays in view — the `Mobile /
+ * Menu` frame. It was a right-hand sheet over the whole page, header included.
+ */
+export const PanelLeavesTheHeaderInView: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const dialog = await openPanel(canvasElement)
+    const rect = dialog.getBoundingClientRect()
+
+    await expect(rect.top).toBe(60)
+    await expect(rect.left).toBe(0)
+    await expect(rect.width).toBe(window.innerWidth)
+  },
+}
+
+/**
+ * The close control takes the burger's place rather than sitting over it: the
+ * trigger is hidden while the panel is open, and the panel's own control is
+ * the way out.
+ */
+export const CloseTakesTheTriggersPlace: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const trigger = within(canvasElement).getByRole('button', { name: 'Open menu', hidden: true })
+    const dialog = await openPanel(canvasElement)
+
+    await expect(getComputedStyle(trigger).visibility).toBe('hidden')
+    const close = within(dialog).getByRole('button', { name: 'Close' })
+    await userEvent.click(close)
+    await waitFor(() => expect(within(document.body).queryByRole('dialog')).not.toBeInTheDocument())
+    await expect(getComputedStyle(trigger).visibility).toBe('visible')
+  },
+}
+
+/**
+ * The theme and language controls sit on the call to action's row — the
+ * header no longer shows them at these widths, so this is the only place they
+ * are.
+ */
+export const SettingsSitBesideTheCallToAction: Story = {
+  args: { ...BASE, settings: <button type="button">Toggle theme</button> },
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+    const cta = panel.getByRole('link', { name: /Talk to the team/ })
+    const settings = panel.getByRole('button', { name: 'Toggle theme' })
+
+    await expect(cta.parentElement?.contains(settings)).toBe(true)
+  },
+}
+
+/** The page being viewed is marked, as in the desktop bar. */
+export const CurrentPageIsMarked: Story = {
+  args: BASE,
+  parameters: { nextjs: { appDirectory: true, navigation: { pathname: '/dspot' } } },
+  play: async ({ canvasElement }) => {
+    const panel = within(await openPanel(canvasElement))
+    await userEvent.click(panel.getByRole('button', { name: 'Products' }))
+
+    await expect(panel.getByRole('link', { name: 'dSPOT' })).toHaveAttribute('aria-current', 'page')
+    await expect(panel.getByRole('link', { name: 'dTWAP' })).not.toHaveAttribute('aria-current')
+    await expect(panel.getByRole('link', { name: 'Blog' })).not.toHaveAttribute('aria-current')
   },
 }
