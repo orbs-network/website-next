@@ -12,6 +12,7 @@ import {
 } from '@/app/lib/routes'
 import { secretMatches } from '@/app/lib/secrets'
 import { GOVERNANCE_POST_SLUGS } from '@/content/shared/governance'
+import { DEFAULT_LOCALE, LOCALES, localePath } from '@/i18n/locales'
 
 /**
  * On-demand revalidation for Contentful.
@@ -42,8 +43,11 @@ import { GOVERNANCE_POST_SLUGS } from '@/content/shared/governance'
  * would touch. Omitting archive leaves archived posts live.
  *
  * Publishing a post refreshes that post plus the pages that list it, rather
- * than forcing a full redeploy. The `revalidate = 3600` on the content routes
- * is the fallback if a webhook is ever missed.
+ * than forcing a full redeploy. The `revalidate = 86400` on the content routes
+ * is the fallback if a webhook is ever missed. A day, not an hour: every
+ * time-based refresh is a Delivery API call, crawlers visiting hundreds of
+ * posts turned an hourly window into the largest share of the monthly quota,
+ * and this webhook is what keeps pages current anyway (#141).
  */
 
 const SECRET_HEADER = 'x-contentful-webhook-secret'
@@ -142,7 +146,14 @@ export async function POST(request: NextRequest) {
   // The governance index lists a fixed set of posts, so it changes only when
   // one of those does.
   const governance = GOVERNANCE_POST_SLUGS.includes(slug) ? [GOVERNANCE_PATH] : []
-  const paths = [...new Set([HOME_PATH, BLOG_INDEX_PATH, ...governance, postPath(slug), encodedPostPath(slug)])]
+  // The localised home pages render the same recent-posts rail as `/`, but are
+  // separate routes that revalidating `/` does not reach.
+  const localisedHomes = LOCALES.filter((locale) => locale !== DEFAULT_LOCALE).map((locale) =>
+    localePath(locale, HOME_PATH)
+  )
+  const paths = [
+    ...new Set([HOME_PATH, ...localisedHomes, BLOG_INDEX_PATH, ...governance, postPath(slug), encodedPostPath(slug)]),
+  ]
 
   for (const path of paths) {
     revalidatePath(path)

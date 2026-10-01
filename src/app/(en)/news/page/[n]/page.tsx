@@ -8,7 +8,7 @@ type Props = {
   params: Promise<{ n: string }>
 }
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 /** Page 1 is served by /news, so this route starts at 2. */
 export async function generateStaticParams() {

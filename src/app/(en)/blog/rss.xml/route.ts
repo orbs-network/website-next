@@ -1,6 +1,7 @@
 import { getAssetUrl, getAuthorInfo, getPosts, type BlogPostFields } from '@/app/lib/api'
 import { BLOG_INDEX_PATH, encodedPostPath } from '@/app/lib/routes'
 import { absoluteUrl, siteUrl } from '@/app/lib/site'
+import { escapeXml } from '@/app/lib/xml'
 
 /**
  * RSS feed at the legacy URL.
@@ -37,15 +38,6 @@ const FEED_DESCRIPTION = 'Thoughts about the Orbs project, open source, blockcha
  * and makes the feed ~30x smaller.
  */
 const FEED_ITEM_LIMIT = 50
-
-function escapeXml(value: string): string {
-  return value
-    .replace(/&/g, '&amp;')
-    .replace(/</g, '&lt;')
-    .replace(/>/g, '&gt;')
-    .replace(/"/g, '&quot;')
-    .replace(/'/g, '&apos;')
-}
 
 /**
  * CDATA cannot contain the terminator itself; the standard trick is to split it

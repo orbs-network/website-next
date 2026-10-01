@@ -10,7 +10,7 @@ type Props = {
 
 // Time-based fallback. On-demand invalidation via the Contentful webhook
 // (#19) is the primary path; this bounds staleness if a webhook is missed.
-export const revalidate = 3600
+export const revalidate = 86400
 
 /**
  * Page 1 is served by /blog, so this route starts at 2. Generating a

@@ -4,7 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import { HOME_PATH } from '@/app/lib/routes'
 
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: 'ko', namespace: 'pages.home.meta' })
