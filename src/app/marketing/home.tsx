@@ -153,7 +153,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <StatsRow
         columns={5}
-        align="start"
+        glow
         stats={HOME_STATS.map((id) => ({
           id,
           value: t(`stats.${id}.value`),
