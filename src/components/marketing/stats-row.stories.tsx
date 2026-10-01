@@ -62,16 +62,17 @@ const PHONE = {
 }
 
 /**
- * The home row: figures start-aligned, and the hover glow reaching past them
- * does not scroll the page sideways. It did, by 20px at 390, before the
- * section clipped it — an invisible pseudo-element still counts as overflow.
+ * The home row: figures centred in their columns, under a glow that is
+ * centred too, and the glow reaching past the outer figures does not scroll
+ * the page sideways. It did, by 20px at 390, before the section clipped it —
+ * an invisible pseudo-element still counts as overflow.
  */
-export const StartAlignedGlowDoesNotOverflow: Story = {
+export const CentredGlowDoesNotOverflow: Story = {
   ...PHONE,
-  args: { stats: STATS, align: 'start', locale: 'en' },
+  args: { stats: STATS, columns: 5, glow: true, locale: 'en' },
   play: async ({ canvasElement }) => {
     const dl = canvasElement.querySelector('dl')!
-    await expect(getComputedStyle(dl).textAlign).toBe('start')
+    await expect(getComputedStyle(dl).textAlign).toBe('center')
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   },
 }

@@ -29,6 +29,7 @@ export function StatsRow({
   stats,
   columns = 3,
   align = 'center',
+  glow = false,
   locale,
 }: {
   /** Optional: the institutional page runs these bare, under the hero. */
@@ -36,13 +37,14 @@ export function StatsRow({
   stats: readonly Stat[]
   /** How many across on a wide viewport. Three unless told otherwise. */
   columns?: 3 | 5
-  /**
-   * `start` is the home page's row: each figure left-aligned at the start of
-   * its column, so five of them spread across the full width, with a soft glow
-   * behind the one under the pointer (`Stats Container Area on Hover` in the
-   * 2026-09-30 frame). Centred is every other caller, and stays the default.
-   */
+  /** `start` is the institutional page's row, under a left-aligned hero. */
   align?: 'center' | 'start'
+  /**
+   * A soft glow behind the figure under the pointer (`Stats Container Area on
+   * Hover` in the 2026-09-30 frame). The glow is centred on each stat, so a
+   * centred row is the one where figure and glow line up.
+   */
+  glow?: boolean
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
 }) {
@@ -51,7 +53,7 @@ export function StatsRow({
     // figures, and even at opacity 0 a pseudo-element that crosses the
     // viewport edge scrolls the page sideways (measured: 20px at 390).
     // `clip`, not `hidden`, so the section does not become a scroll container.
-    <section className={cn('container py-20', align === 'start' && 'overflow-x-clip')}>
+    <section className={cn('container py-20', glow && 'overflow-x-clip')}>
       {title && (
         <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
           {title}
@@ -72,7 +74,7 @@ export function StatsRow({
         )}
       >
         {stats.map((stat) => (
-          <div key={stat.id} className={cn('flex flex-col-reverse gap-2', align === 'start' && STAT_GLOW)}>
+          <div key={stat.id} className={cn('flex flex-col-reverse gap-2', glow && STAT_GLOW)}>
             {/*
               The label and the value are marked SEPARATELY, and this pair is
               the clearest case on the site for why. "$14B+" is Latin in every
