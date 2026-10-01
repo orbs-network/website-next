@@ -50,23 +50,6 @@ const nextConfig: NextConfig = {
     '/**': ['./src/content/legal/**'],
   },
   /**
-   * Edge-cache the sitemap.
-   *
-   * `sitemap.ts` is `force-dynamic` — it has to be, or `absoluteUrl()` freezes
-   * the build-time SITE_URL into every `<loc>` (#71) — which means every
-   * request costs two Contentful reads, `getAllPostRefs` plus
-   * `getMediaSummary`. Crawlers poll a sitemap on their own schedule, so that
-   * is the one remaining path to the Delivery API with no ceiling on it (#115).
-   *
-   * The header lives here rather than in the route because a Next metadata
-   * route returns a `MetadataRoute.Sitemap` array, not a `Response`, so it has
-   * nowhere to set one itself. The RSS feed, which is a route handler, sets the
-   * equivalent header inline.
-   *
-   * A day of staleness is invisible to crawlers: they recheck on a much longer
-   * cycle than that, and `<lastmod>` tells them what actually moved.
-   */
-  /**
    * Permanent redirects for URLs we have moved ourselves.
    *
    * The map and the rules that keep it honest live in `src/lib/redirects.ts` —
@@ -81,20 +64,6 @@ const nextConfig: NextConfig = {
    */
   async redirects() {
     return expandedRedirects()
-  },
-
-  async headers() {
-    return [
-      {
-        source: '/sitemap.xml',
-        headers: [
-          {
-            key: 'Cache-Control',
-            value: 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800',
-          },
-        ],
-      },
-    ]
   },
 }
 

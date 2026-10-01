@@ -105,7 +105,9 @@ type Props = {
 
 // Time-based fallback. On-demand invalidation via the Contentful webhook
 // (#19) is the primary path; this bounds staleness if a webhook is missed.
-export const revalidate = 3600
+// A day rather than an hour because each refresh is a Delivery API call, and
+// crawlers walk the whole archive (#141).
+export const revalidate = 86400
 
 /**
  * How much of the archive a production build renders ahead of time.

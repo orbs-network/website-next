@@ -8,7 +8,7 @@ import { BlogCard } from '../blog/blog-card'
 
 // Same fallback as the blog. A publish of one of these posts also revalidates
 // this page directly — see the webhook route.
-export const revalidate = 3600
+export const revalidate = 86400
 
 const INTRO = 'All posts related to community governance of the Orbs Network.'
 

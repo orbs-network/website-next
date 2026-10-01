@@ -9,7 +9,7 @@ import { HOME_PATH } from '@/app/lib/routes'
  * is the primary path; this bounds staleness if a webhook is missed. It matters
  * more than it did: the page now carries a news rail fed by Contentful.
  */
-export const revalidate = 3600
+export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: 'en', namespace: 'pages.home.meta' })

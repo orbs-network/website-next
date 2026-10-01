@@ -1,31 +1,24 @@
 import type { MetadataRoute } from 'next'
-import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './lib/api'
-import { GOVERNANCE_PATH, HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './lib/routes'
-import { absoluteUrl } from './lib/site'
+import { getAllPostRefs, getMediaSummary, MEDIA_PER_PAGE, POSTS_PER_PAGE } from './api'
+import { GOVERNANCE_PATH, HOME_PATH, blogPagePath, encodedPostPath, newsPagePath } from './routes'
+import { absoluteUrl } from './site'
 import { isArchived, translatedLocalesFor } from '@/i18n/availability'
 import { MARKETING_PAGE_PATHS } from '@/content/pages'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 
-/**
- * Computed per request, matching robots.ts.
+/*
+ * Built per request by `app/sitemap.xml/route.ts`, which renders these entries
+ * and sets the CDN cache header. That is why this is not a `sitemap.ts`
+ * metadata route: a metadata route cannot set its own headers, and the
+ * `headers()` entry in next.config that was meant to cache it never applied
+ * (#141 measured `x-vercel-cache: MISS` on every request). Every crawl went to
+ * Contentful.
  *
- * The original reason was the origin: this was prerendered, so `absoluteUrl()`
- * ran at build time and froze the build host into every `<loc>` while
- * robots.txt, being dynamic, correctly switched — two SEO files disagreeing
- * about the canonical domain. #71 removed that failure mode at the source by
- * making the origin a constant, so it can no longer differ between the two.
- *
- * Still dynamic, for the reason that outlives it: a sitemap's job is to list
- * what exists NOW, and a prerendered one omits every post published since the
- * last build. Indexing is also a per-deployment decision that has to be read at
- * runtime, which is why robots.ts stays dynamic regardless.
- *
- * The cost is one Contentful query per request. A sitemap is fetched by
- * crawlers a handful of times a day, so that is not a hot path — and it is one
- * `select`-narrowed query returning slug and date, not the full archive.
+ * Dynamic rather than prerendered because a sitemap's job is to list what
+ * exists NOW, and a prerendered one omits every post published since the last
+ * build. The CDN, not the build, decides how fresh it is.
  */
-export const dynamic = 'force-dynamic'
 
 /**
  * Covers what exists today: the home page, the paginated blog index, and every
@@ -43,7 +36,7 @@ export const dynamic = 'force-dynamic'
  * `trailingSlash: true` makes canonical. Emitting the slashless form here would
  * hand crawlers a URL that 308s on every request.
  */
-export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
+export async function sitemapEntries(): Promise<MetadataRoute.Sitemap> {
   const posts = await getAllPostRefs()
   // Modification time, not newest article date. The news pages change when an
   // older mention is edited or a backdated one is added, neither of which moves
