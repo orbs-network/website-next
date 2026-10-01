@@ -34,7 +34,7 @@ const NETWORK: ResolvedNavGroup = {
   key: 'network',
   label: 'Network',
   links: [
-    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake & Staking' },
+    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake' },
     { key: 'status', href: 'https://status.orbs.network/', external: true, label: 'Status' },
   ],
 }
@@ -141,7 +141,7 @@ export const ExternalRowsOpenSafely: Story = {
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
 
-    await expect(canvas.getByRole('link', { name: 'Proof of Stake & Staking' })).not.toHaveAttribute('target')
+    await expect(canvas.getByRole('link', { name: 'Proof of Stake' })).not.toHaveAttribute('target')
     // Top-level external links too.
     await expect(canvas.getByRole('link', { name: 'GitHub' })).toHaveAttribute('rel', 'noopener noreferrer')
   },

@@ -32,7 +32,7 @@ const NETWORK: ResolvedNavGroup = {
   key: 'network',
   label: 'Network',
   links: [
-    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake & Staking' },
+    { key: 'pos', href: '/pos/', external: false, label: 'Proof of Stake' },
     { key: 'status', href: 'https://status.orbs.network/', external: true, label: 'Status' },
   ],
 }

@@ -140,7 +140,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 </Link>
               </Button>
               {/* Same destination as the SDK buttons below; the design keeps its own wording here. */}
-              <SdkButton label={t('hero.docs')} locale={locale} />
+              <SdkButton label={t('sdk')} locale={locale} />
             </div>
           </div>
         </div>
@@ -516,9 +516,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
 /**
  * A link off-site to the SDK docs, outline with the line arrow.
  *
- * "Explore SDK" under the stack intro and the solutions cards (#214), "Read
- * the docs" in the hero; the design words them differently and both go to the
- * same place. The product heroes carry the SDK wording through `devDocs.sdk`.
+ * "Explore SDK" in the hero, under the stack intro and on the solutions cards
+ * (#214). The hero used to say "Read the docs", which read as the network's
+ * developer docs rather than the SDK the page is selling (Eran). The product
+ * heroes carry the SDK wording through `devDocs.sdk`.
  */
 function SdkButton({ label, locale, className }: { label: string; locale: Locale; className?: string }) {
   return (

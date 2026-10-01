@@ -18,7 +18,7 @@
       "venues": "For Exchanges & Wallets",
       "institutions": "For Institutions",
       "aiAgents": "For AI Agents",
-      "pos": "Proof of Stake & Staking",
+      "pos": "Proof of Stake",
       "executionServices": "Execution Services",
       "governance": "Governance",
       "status": "Status",
@@ -56,7 +56,7 @@
       "institutions": "Institutions",
       "aiAgents": "AI Agents",
       "overview": "Overview",
-      "pos": "PoS & Staking",
+      "pos": "Proof of Stake",
       "executionServices": "Execution Services",
       "governance": "Governance",
       "status": "Status",
@@ -953,8 +953,7 @@
         "eyebrow": "[$14B+ in trading volume]",
         "headline": "Trading infrastructure for on-chain finance",
         "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
-        "cta": "Talk to the team",
-        "docs": "Read the docs"
+        "cta": "Talk to the team"
       },
       "stats": {
         "processed": {
