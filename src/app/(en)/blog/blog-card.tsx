@@ -4,11 +4,11 @@ import Image from 'next/image'
 import { Author } from '@/app/components/blog/author'
 import { getAssetUrl, getAuthorInfo } from '@/app/lib/api'
 import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card'
-import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { COVER_FRAME, coverImage } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
 
 export function BlogCard({ post }: { post: BlogPostFields }) {
-  const heroImageUrl = getAssetUrl(post.heroImage)
+  const cover = coverImage(getAssetUrl(post.heroImage))
   const author = getAuthorInfo(post.author)
 
   return (
@@ -17,10 +17,10 @@ export function BlogCard({ post }: { post: BlogPostFields }) {
         <CardHeader className="p-0 pb-4">
           <div className={cn('relative overflow-hidden', COVER_FRAME)}>
             <Image
-              src={heroImageUrl || '/blog/placeholder.png'}
+              src={cover.src}
               alt={post.title}
               fill
-              className={cn(COVER_IMAGE, 'transition-transform group-hover:scale-105')}
+              className={cn(cover.fit, 'transition-transform group-hover:scale-105')}
               sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
             />
           </div>

@@ -8,7 +8,9 @@ import { draftMode } from 'next/headers'
 import type { ReactNode } from 'react'
 import { Author } from '@/app/components/blog/author'
 import { H4 } from '@/app/components/typography'
-import { getAllPostSlugs, getAssetUrl, getAuthorInfo, getPostBySlug } from '@/app/lib/api'
+import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { getAllPostSlugs, getAssetImage, getAssetUrl, getAuthorInfo, getPostBySlug } from '@/app/lib/api'
+import { cn } from '@/lib/utils'
 import { encodedPostPath } from '@/app/lib/routes'
 import { absoluteUrl } from '@/app/lib/site'
 import { BackButton } from './back-button'
@@ -194,7 +196,8 @@ export default async function BlogPostPage({ params }: Props) {
     notFound()
   }
 
-  const heroImageUrl = getAssetUrl(post.heroImage)
+  const hero = getAssetImage(post.heroImage)
+  const heroUrl = getAssetUrl(post.heroImage)
   const author = getAuthorInfo(post.author)
 
   return (
@@ -215,14 +218,34 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         </header>
 
-        {heroImageUrl && (
-          <div className="mb-10 relative aspect-video">
+        {/*
+          The cover at its own shape, with nothing cropped. The 16:9 frame
+          this replaces cut the ends off the 2:1 banners (#223); a post page
+          has no row to line up with, so there is no reason for a frame at
+          all. Capped at the file's own width so a small legacy cover is not
+          stretched soft across the column.
+        */}
+        {hero && (
+          <Image
+            src={hero.url}
+            alt={post.title}
+            width={hero.width}
+            height={hero.height}
+            priority
+            className="mx-auto mb-10 h-auto w-full rounded-[var(--radius)]"
+            style={{ maxWidth: hero.width }}
+            sizes={`(min-width: 896px) ${Math.min(hero.width, 896)}px, 100vw`}
+          />
+        )}
+        {/* No size from Contentful (none seen yet): the card frame, still uncropped. */}
+        {!hero && heroUrl && (
+          <div className={cn('relative mb-10 overflow-hidden rounded-[var(--radius)]', COVER_FRAME)}>
             <Image
-              src={heroImageUrl}
+              src={heroUrl}
               alt={post.title}
               fill
               priority
-              className="object-cover rounded-[var(--radius)]"
+              className={COVER_IMAGE}
               sizes="(min-width: 896px) 896px, 100vw"
             />
           </div>
