@@ -616,3 +616,22 @@
     mask-size: 202.5px 202.5px;
   }
 }
+
+@layer utilities {
+  /*
+    Hides a scroll container's scrollbar and leaves the scrolling alone: wheel,
+    trackpad, touch, keyboard and `scrollBy` all still move it. Only for strips
+    that offer another visible way through — the home news rail has arrow
+    buttons and is focusable. A scrollbar on a row of cards reads as a layout
+    bug rather than a control (#271).
+
+    `scrollbar-width` covers Firefox and Chromium 121+; the pseudo-element
+    covers Safari, which does not support the property.
+  */
+  .scrollbar-none {
+    scrollbar-width: none;
+  }
+  .scrollbar-none::-webkit-scrollbar {
+    display: none;
+  }
+}

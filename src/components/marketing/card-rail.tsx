@@ -14,8 +14,9 @@ import { textLang } from '@/i18n/script'
  * component whose props contradict each other in half its configurations.
  *
  * Same foundation for the same reason: CSS scroll snapping. The strip scrolls
- * with a trackpad, a touch swipe, the arrow keys and a scrollbar before any
- * JavaScript runs. The buttons only add a click target, and they disable
+ * with a trackpad, a touch swipe and the arrow keys before any JavaScript
+ * runs. The scrollbar itself is hidden (#271), which makes the buttons the
+ * visible way through for a mouse user without a wheel; they disable
  * themselves at each end rather than wrapping — wrapping a partially-visible
  * row jumps the reader somewhere they were not.
  */
@@ -125,8 +126,13 @@ export function CardRail({
         aria-label={label}
         // An accessible name takes its language from the element carrying it.
         lang={textLang(label, locale)}
+        // No visible scrollbar (#271): on a row of cards it reads as a layout
+        // bug. The strip still scrolls by every other means, and the arrows
+        // above plus `tabIndex` keep it operable without a wheel or trackpad.
+        // No bottom padding either — it only made room for the scrollbar, and
+        // without one it is a dead gap under the cards.
         className={cn(
-          'mt-6 flex snap-x snap-mandatory gap-6 overflow-x-auto pb-4',
+          'scrollbar-none mt-6 flex snap-x snap-mandatory gap-6 overflow-x-auto',
           'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
         )}
       >
