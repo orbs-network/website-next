@@ -217,11 +217,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
         The design draws this as a bare strip of marks between two rules, with
         no visible heading. The heading is kept for assistive technology — the
         marks are `alt=""` wordmarks, so without it the list has no name.
+        It scrolls in a slow loop (#275): nine marks no longer fit one line.
       */}
       <LogoRow
         title={t('venues.title')}
         titleHidden
-        spread
+        marquee
         className="border-t border-border"
         items={HOME_VENUES}
         locale={locale}

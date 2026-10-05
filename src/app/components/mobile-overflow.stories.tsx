@@ -7,6 +7,8 @@ import { GraphicSplit } from '@/components/marketing/graphic-split'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatementBand } from '@/components/marketing/statement-band'
+import { LogoRow } from '@/components/marketing/logo-row'
+import { HOME_VENUES } from '@/content/pages/home'
 
 /**
  * Nothing may be wider than a phone's content column (#189).
@@ -198,5 +200,22 @@ export const RawUrlInProseWraps: Story = {
   ),
   play: async ({ canvasElement }) => {
     assertFits(canvasElement)
+  },
+}
+
+/**
+ * The home venue strip scrolls (#275): nine marks, twice over, on a track
+ * nearly 4000px wide that moves inside the column. The track is clipped by its
+ * wrapper, so neither the column nor the page may see any of that width.
+ */
+export const LogoMarqueeStaysInItsColumn: Story = {
+  render: () => (
+    <Column>
+      <LogoRow title="Venues" titleHidden marquee items={HOME_VENUES} locale="en" />
+    </Column>
+  ),
+  play: async ({ canvasElement }) => {
+    assertFits(canvasElement)
+    expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   },
 }

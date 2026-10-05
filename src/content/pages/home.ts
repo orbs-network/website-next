@@ -116,6 +116,14 @@ export const HOME_FEATURES = [
  * (#220). Cut from the same component set at the same crop. DefiZoo's white
  * file was re-cut from that export too — the earlier one was framed tighter,
  * and a pair that differs in shape would reflow the row on a theme switch.
+ *
+ * Carbon, TradingView and SwapX (#274) follow, in the order of the design's
+ * "Additional Partner Logos Area" (2144:137567). Each is cut from its component
+ * set in the same 09-30 export — carbon-logo-white 2 (2141:133413), TradingView
+ * (2144:137725), Swap X Logo (2112:81991) — the dark-ink variant for
+ * `-on-light`, the white one for dark. All three are pure vectors with no
+ * embedded raster. The old text-only `SwapXLogo` placeholder icon is not the
+ * brand mark and is not used here.
  */
 export const HOME_VENUES: readonly LogoRowItem[] = [
   { name: 'PancakeSwap', logo: venue('pancakeswap', 151, 24), wordmark: true },
@@ -124,6 +132,9 @@ export const HOME_VENUES: readonly LogoRowItem[] = [
   { name: 'THENA', logo: venue('thena', 129, 30), wordmark: true },
   { name: 'SpookySwap', logo: venue('spookyswap', 167, 40), wordmark: true },
   { name: 'DefiZoo', logo: venue('defizoo', 148, 37), wordmark: true },
+  { name: 'Carbon', logo: venue('carbon', 149, 32), wordmark: true },
+  { name: 'TradingView', logo: venue('tradingview', 166, 24), wordmark: true },
+  { name: 'SwapX', logo: venue('swapx', 128, 30), wordmark: true },
 ]
 
 /** A venue mark and its `-on-light` twin, which share a crop and so dimensions. */
