@@ -380,6 +380,16 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       */
       const rect = root.getBoundingClientRect()
       tapFacetField(field, { x: event.clientX - rect.left, y: event.clientY - rect.top })
+
+      /*
+        Forget the mouse. On a hybrid device the last mouse position is still
+        remembered, and a scroll during the ripple would re-resolve it through
+        `resolvePointer` — cancelling the tap and holding the disc up at a
+        cursor nobody has moved since. Hover resumes on the next real move.
+      */
+      clientX = -1
+      clientY = -1
+
       start()
     }
 
