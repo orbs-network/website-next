@@ -153,6 +153,12 @@ const config: Config = {
       },
       animation: {
         marquee: 'marquee 25s linear infinite',
+        /*
+          The venue logo strip (#275). Same keyframes, slower: one copy of the
+          nine marks is about 1900px, so this is roughly 35px a second — slow
+          enough to read a mark as it passes, which is what the strip is for.
+        */
+        'marquee-slow': 'marquee 55s linear infinite',
       },
       borderRadius: {
         lg: 'var(--radius)',

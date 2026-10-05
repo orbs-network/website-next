@@ -84,6 +84,7 @@ export function LogoRow({
   sub,
   items,
   spread = false,
+  marquee = false,
   className,
   locale,
 }: {
@@ -107,6 +108,15 @@ export function LogoRow({
    * read better centred under it, so it is opt-in.
    */
   spread?: boolean
+  /**
+   * Scroll the marks sideways in a slow, continuous loop instead of laying
+   * them out as a row (#275). Takes precedence over `spread`.
+   *
+   * The home venue strip outgrew one line at nine marks: spread across the
+   * column they no longer fit at any desktop width, and wrapped they read as a
+   * grid rather than a strip. See `LogoMarquee` for how the loop is built.
+   */
+  marquee?: boolean
   /** Merged onto the section, e.g. a rule above it. */
   className?: string
   /** The document's locale. Each string's own `lang` is derived from it. */
@@ -124,47 +134,121 @@ export function LogoRow({
         </p>
       )}
 
-      <ul
+      {marquee ? (
+        <LogoMarquee items={items} locale={locale} />
+      ) : (
+        <ul
+          className={cn(
+            'mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8',
+            // `xl`, not `lg`: six venue marks need about 1030px with their gaps,
+            // and at 1024 the column is 958 — a forced single line there scrolled
+            // the page sideways. Below `xl` they wrap as a centred cluster.
+            spread && 'xl:flex-nowrap xl:justify-between'
+          )}
+        >
+          {items.map((item) => (
+            <LogoItem key={item.name} item={item} locale={locale} />
+          ))}
+        </ul>
+      )}
+    </section>
+  )
+}
+
+/**
+ * The marks in a slow, seamless, endless sideways loop.
+ *
+ * The technique is `Marquee`'s: the list twice in a row on one track, and one
+ * CSS animation moving the track left by half its width — exactly one copy —
+ * before starting over. At that instant the second copy sits where the first
+ * began, so the restart cannot be seen. No scroll listener, no rAF loop, no
+ * client JavaScript.
+ *
+ * What makes the seam seamless rather than nearly so:
+ * - The track is `w-max`, so `-50%` is half the CONTENT. On a plain block it
+ *   would be half the column, and the loop would jump by the difference.
+ * - Each copy carries half the gap as padding at both ends, so the space
+ *   across the seam equals the space between any two marks.
+ *
+ * The duplicate is `aria-hidden` and `inert`: a screen reader meets each venue
+ * once, and nothing in the copy can take focus.
+ *
+ * It stops on hover and on focus within, and does not move at all for readers
+ * who prefer reduced motion. They get the first copy alone, wrapped as a
+ * centred cluster so every mark is on screen, with the edge fade removed.
+ */
+function LogoMarquee({ items, locale }: { items: readonly LogoRowItem[]; locale: Locale }) {
+  const copy = (duplicate: boolean) => (
+    <ul
+      aria-hidden={duplicate || undefined}
+      inert={duplicate}
+      className={cn(
+        'flex shrink-0 items-center gap-x-16 px-8',
+        'motion-reduce:w-full motion-reduce:shrink motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-8',
+        duplicate && 'motion-reduce:hidden'
+      )}
+    >
+      {items.map((item) => (
+        <LogoItem key={item.name} item={item} locale={locale} />
+      ))}
+    </ul>
+  )
+
+  return (
+    <div
+      className={cn(
+        // Clips the track, so the moving strip cannot widen the page.
+        'mt-12 overflow-hidden',
+        // Marks fade in and out at the column edges rather than being cut off.
+        '[mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
+        'motion-reduce:[mask-image:none]'
+      )}
+    >
+      {/*
+        Play state goes on the element running the animation — on a wrapper
+        it does nothing to the child (see `Marquee`).
+      */}
+      <div
+        data-testid="logo-marquee-track"
         className={cn(
-          'mt-12 flex flex-wrap items-center justify-center gap-x-10 gap-y-8',
-          // `xl`, not `lg`: six venue marks need about 1030px with their gaps,
-          // and at 1024 the column is 958 — a forced single line there scrolled
-          // the page sideways. Below `xl` they wrap as a centred cluster.
-          spread && 'xl:flex-nowrap xl:justify-between'
+          'flex w-max animate-marquee-slow',
+          'hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]',
+          'motion-reduce:w-full motion-reduce:animate-none'
         )}
       >
-        {items.map((item) => (
-          <li key={item.name} className="flex items-center gap-3">
-            {item.logo?.onLight && (
-              <LogoImage logo={{ ...item.logo, src: item.logo.onLight }} className="dark:hidden" />
-            )}
-            {item.logo && (
-              <LogoImage
-                logo={item.logo}
-                className={cn(item.logo.onLight && 'hidden dark:block', item.invertOnLight && 'invert dark:invert-0')}
-              />
-            )}
-            <span
-              className={cn(
-                'text-detail font-medium uppercase tracking-wide text-fg-muted',
-                item.wordmark && 'sr-only'
-              )}
-              /*
-                Partner and chain names are proper nouns — "Ethereum" is
-                "Ethereum" in every locale — so this was hardcoded `lang="en"`.
-                Right in effect, but a claim rather than a rule, and in an
-                ENGLISH document it emitted a redundant attribute on every
-                item. Derived now: `undefined` in English, 'en' inside a
-                Japanese or Korean document.
-              */
-              lang={textLang(item.name, locale)}
-            >
-              {item.name}
-            </span>
-          </li>
-        ))}
-      </ul>
-    </section>
+        {copy(false)}
+        {copy(true)}
+      </div>
+    </div>
+  )
+}
+
+/** One entry: the mark, or its theme pair, and the name — visible, or for screen readers only. */
+function LogoItem({ item, locale }: { item: LogoRowItem; locale: Locale }) {
+  return (
+    <li className="flex items-center gap-3">
+      {item.logo?.onLight && <LogoImage logo={{ ...item.logo, src: item.logo.onLight }} className="dark:hidden" />}
+      {item.logo && (
+        <LogoImage
+          logo={item.logo}
+          className={cn(item.logo.onLight && 'hidden dark:block', item.invertOnLight && 'invert dark:invert-0')}
+        />
+      )}
+      <span
+        className={cn('text-detail font-medium uppercase tracking-wide text-fg-muted', item.wordmark && 'sr-only')}
+        /*
+          Partner and chain names are proper nouns — "Ethereum" is
+          "Ethereum" in every locale — so this was hardcoded `lang="en"`.
+          Right in effect, but a claim rather than a rule, and in an
+          ENGLISH document it emitted a redundant attribute on every
+          item. Derived now: `undefined` in English, 'en' inside a
+          Japanese or Korean document.
+        */
+        lang={textLang(item.name, locale)}
+      >
+        {item.name}
+      </span>
+    </li>
   )
 }
 
