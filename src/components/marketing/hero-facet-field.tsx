@@ -7,12 +7,13 @@ import {
   isFacetFieldSettled,
   moveFacetPointer,
   stepFacetField,
+  tapFacetField,
 } from '@/components/marketing/hero-facet-physics'
 import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '@/components/marketing/hero-facets'
 
 /**
  * The hero's interactive backdrop: a dot grid that fans out into Orbs facets
- * under the cursor.
+ * under the cursor, or in a brief ripple from a tap on a touch screen.
  *
  * The maths lives in `hero-facets.ts` (what the field looks like at rest) and
  * `hero-facet-physics.ts` (the springs that bloom, stir and collapse it), and
@@ -30,23 +31,40 @@ import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '
  * recalculations per frame against one `fillRect`-shaped canvas pass.
  */
 
-/** Media queries that decide whether this should run at all. */
+/** Media queries that decide whether this should run at all, and how. */
 const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
 /**
- * Whether the field should run, as a subscription rather than effect state.
+ * How far a touch may wander between down and up and still count as a tap,
+ * in CSS px. Past this it is a swipe, and a swipe belongs to the page's
+ * scrolling — usually the browser has already taken it with `pointercancel`,
+ * but a short drag it did not claim must not ripple either.
+ */
+const TAP_SLOP = 10
+
+/**
+ * - `off`: reduced motion, or the server. The dot grid alone, no canvas.
+ * - `tap`: touch-only devices. Taps ripple the field; nothing follows a hover.
+ * - `hover`: a fine pointer. The cursor holds the field up, as it always has,
+ *   and a touch on a hybrid device's screen ripples it too.
+ */
+type FieldMode = 'off' | 'tap' | 'hover'
+
+/**
+ * How the field should run, as a subscription rather than effect state.
  *
  * `useSyncExternalStore` instead of `useState` in an effect: the answer is
  * read from the environment rather than derived from a render, and setting
  * state in an effect to record it trips `react-hooks/set-state-in-effect` and
- * costs an extra commit on every page that uses this.
+ * costs an extra commit on every page that uses this. A string rather than an
+ * object, because the snapshot is compared with `Object.is`.
  *
- * The server snapshot is `false`, so the markup sent down is the dot grid
+ * The server snapshot is `off`, so the markup sent down is the dot grid
  * alone. That is the correct resting state rather than a placeholder, which is
  * why there is no hydration flash to suppress.
  */
-function useFieldEnabled(): boolean {
+function useFieldMode(): FieldMode {
   const subscribe = useCallback((onChange: () => void) => {
     const queries = [window.matchMedia(FINE_POINTER), window.matchMedia(REDUCED_MOTION)]
 
@@ -59,8 +77,12 @@ function useFieldEnabled(): boolean {
 
   return useSyncExternalStore(
     subscribe,
-    () => window.matchMedia(FINE_POINTER).matches && !window.matchMedia(REDUCED_MOTION).matches,
-    () => false
+    (): FieldMode => {
+      if (window.matchMedia(REDUCED_MOTION).matches) return 'off'
+
+      return window.matchMedia(FINE_POINTER).matches ? 'hover' : 'tap'
+    },
+    (): FieldMode => 'off'
   )
 }
 
@@ -114,10 +136,11 @@ function traceFacet(ctx: CanvasRenderingContext2D, facet: Facet) {
 export function HeroFacetField({ children }: { children?: React.ReactNode }) {
   const rootRef = useRef<HTMLDivElement>(null)
   const canvasRef = useRef<HTMLCanvasElement>(null)
-  const enabled = useFieldEnabled()
+  const mode = useFieldMode()
+  const enabled = mode !== 'off'
 
   useEffect(() => {
-    if (!enabled) return
+    if (mode === 'off') return
 
     const root = rootRef.current
     const canvas = canvasRef.current
@@ -281,10 +304,9 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     }
 
     const onPointerMove = (event: PointerEvent) => {
-      // Coarse pointers fire this too (a tap is a pointer event), and the
-      // field is explicitly desktop-only. `enabled` gates mounting; this gates
-      // a hybrid device where a touch arrives at a machine that also has a
-      // mouse.
+      // Coarse pointers fire this too (a tap is a pointer event), and hover
+      // is mouse-only — touch gets the tap below instead. This gates a hybrid
+      // device where a touch arrives at a machine that also has a mouse.
       if (event.pointerType !== 'mouse') return
 
       clientX = event.clientX
@@ -292,9 +314,87 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
       resolvePointer()
     }
 
-    const onPointerLeave = () => {
+    const onPointerLeave = (event: Event) => {
+      /*
+        Not for a lifting finger. A touch pointer "leaves" when it lifts, and
+        on a hybrid device that would collapse the tap it had just started.
+      */
+      if (event instanceof PointerEvent && event.pointerType === 'touch') return
+
       moveFacetPointer(field, null)
       start()
+    }
+
+    /*
+      THE TAP. A touch screen has no hover to follow, so a tap ripples the
+      field from the finger instead — modelled on galaxy.com's mobile hero,
+      which answers a tap with a ring that pushes its dots outward and fades
+      within a second.
+
+      DECIDED ON `pointerup`, NOT `pointerdown`. Every vertical swipe starts
+      with a pointerdown, and rippling on it would set the field off each time
+      the reader scrolled past the hero. A swipe the browser takes for
+      scrolling ends in `pointercancel`; one it does not is caught by
+      `TAP_SLOP`. Either way, only a touch that stays put is a tap.
+
+      NOTHING HERE CALLS `preventDefault`, and the listeners are passive. The
+      page scrolls exactly as it did; this only watches. Listening on the
+      window for the same reason as the mouse above — the field itself is
+      `pointer-events-none` and must stay that way.
+    */
+    let touch: { id: number; x: number; y: number } | null = null
+
+    const onTouchDown = (event: PointerEvent) => {
+      if (event.pointerType !== 'touch' || !event.isPrimary) return
+
+      /*
+        Only a touch that lands on the hero itself. The rect alone is not
+        enough: the site header and the mobile menu sit OVER the hero, and a
+        tap on one of them must not ripple the background underneath. The
+        field's parent is the box it backs, so its subtree is the hero.
+      */
+      const host = root.parentElement
+      const rect = root.getBoundingClientRect()
+      const inside =
+        event.clientX >= rect.left &&
+        event.clientX <= rect.right &&
+        event.clientY >= rect.top &&
+        event.clientY <= rect.bottom
+      const onHero = host !== null && event.target instanceof Node && host.contains(event.target)
+
+      touch = inside && onHero ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null
+    }
+
+    const onTouchUp = (event: PointerEvent) => {
+      if (!touch || event.pointerId !== touch.id) return
+
+      const down = touch
+      touch = null
+
+      if (Math.hypot(event.clientX - down.x, event.clientY - down.y) > TAP_SLOP) return
+
+      /*
+        Resolved against the rect NOW rather than at pointerdown: the page can
+        have moved between the two (momentum from an earlier fling), and the
+        ripple belongs where the finger is on the hero, not where it was.
+      */
+      const rect = root.getBoundingClientRect()
+      tapFacetField(field, { x: event.clientX - rect.left, y: event.clientY - rect.top })
+
+      /*
+        Forget the mouse. On a hybrid device the last mouse position is still
+        remembered, and a scroll during the ripple would re-resolve it through
+        `resolvePointer` — cancelling the tap and holding the disc up at a
+        cursor nobody has moved since. Hover resumes on the next real move.
+      */
+      clientX = -1
+      clientY = -1
+
+      start()
+    }
+
+    const onTouchCancel = (event: PointerEvent) => {
+      if (touch && event.pointerId === touch.id) touch = null
     }
 
     resize()
@@ -306,28 +406,41 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     })
     observer.observe(root)
 
-    window.addEventListener('pointermove', onPointerMove, { passive: true })
-    document.addEventListener('pointerleave', onPointerLeave)
-    window.addEventListener('blur', onPointerLeave)
-    /*
-      `capture` so this still fires when the page is scrolled inside a nested
-      scroller rather than on the document — scroll does not bubble, but it
-      does capture.
-    */
-    window.addEventListener('scroll', resolvePointer, { passive: true, capture: true })
+    window.addEventListener('pointerdown', onTouchDown, { passive: true })
+    window.addEventListener('pointerup', onTouchUp, { passive: true })
+    window.addEventListener('pointercancel', onTouchCancel, { passive: true })
+
+    // Hover is for a fine pointer only, exactly as before taps existed.
+    const hover = mode === 'hover'
+    if (hover) {
+      window.addEventListener('pointermove', onPointerMove, { passive: true })
+      document.addEventListener('pointerleave', onPointerLeave)
+      window.addEventListener('blur', onPointerLeave)
+      /*
+        `capture` so this still fires when the page is scrolled inside a nested
+        scroller rather than on the document — scroll does not bubble, but it
+        does capture.
+      */
+      window.addEventListener('scroll', resolvePointer, { passive: true, capture: true })
+    }
 
     return () => {
       if (frame !== 0) cancelAnimationFrame(frame)
       observer.disconnect()
-      window.removeEventListener('pointermove', onPointerMove)
-      document.removeEventListener('pointerleave', onPointerLeave)
-      window.removeEventListener('blur', onPointerLeave)
-      window.removeEventListener('scroll', resolvePointer, { capture: true })
+      window.removeEventListener('pointerdown', onTouchDown)
+      window.removeEventListener('pointerup', onTouchUp)
+      window.removeEventListener('pointercancel', onTouchCancel)
+      if (hover) {
+        window.removeEventListener('pointermove', onPointerMove)
+        document.removeEventListener('pointerleave', onPointerLeave)
+        window.removeEventListener('blur', onPointerLeave)
+        window.removeEventListener('scroll', resolvePointer, { capture: true })
+      }
       root.style.removeProperty('--hero-facet-x')
       root.style.removeProperty('--hero-facet-y')
       root.style.removeProperty('--hero-facet-hole')
     }
-  }, [enabled])
+  }, [mode])
 
   return (
     <div ref={rootRef} aria-hidden="true" className="pointer-events-none absolute inset-0 -z-10 overflow-hidden">

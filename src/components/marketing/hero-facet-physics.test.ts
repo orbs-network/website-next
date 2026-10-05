@@ -2,11 +2,13 @@ import { describe, expect, it } from 'vitest'
 import {
   BLOOM_SPEED,
   MAX_DRIFT,
+  TAP_HOLD,
   createFacetField,
   facetsOf,
   isFacetFieldSettled,
   moveFacetPointer,
   stepFacetField,
+  tapFacetField,
   type FacetField,
 } from './hero-facet-physics'
 import { FACET_RADIUS, FACET_SIZE_MIN, facetsAround } from './hero-facets'
@@ -220,6 +222,143 @@ describe('the liquid', () => {
     run(field, 0.1)
 
     for (const p of field.particles.values()) expect(Math.hypot(p.offsetX, p.offsetY)).toBeLessThan(0.01)
+  })
+})
+
+describe('the tap', () => {
+  /** Mean drift of each facet along its own bearing from the anchor: positive is outward. */
+  const outward = (field: FacetField) => {
+    const anchor = field.anchor!
+    const all = [...field.particles.values()].filter((p) => p.rest.x !== anchor.x || p.rest.y !== anchor.y)
+
+    return (
+      all.reduce((sum, p) => {
+        const d = Math.hypot(p.rest.x - anchor.x, p.rest.y - anchor.y)
+        return sum + (p.offsetX * (p.rest.x - anchor.x) + p.offsetY * (p.rest.y - anchor.y)) / d
+      }, 0) / all.length
+    )
+  }
+
+  it('blooms outward from the touch point', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 0.1)
+
+    const drawn = facetsOf(field)
+    expect(drawn.length).toBeGreaterThan(0)
+    for (const facet of drawn) {
+      // Drawn position includes the ripple's push, which is bounded by MAX_DRIFT.
+      expect(Math.hypot(facet.x - CURSOR.x, facet.y - CURSOR.y)).toBeLessThanOrEqual(BLOOM_SPEED * 0.1 + MAX_DRIFT)
+    }
+  })
+
+  it('pushes facets outward as the front passes — the ripple — where a still mouse does not', () => {
+    const tapped = createFacetField()
+    tapFacetField(tapped, { ...CURSOR })
+    run(tapped, 0.2)
+
+    const hovered = createFacetField()
+    moveFacetPointer(hovered, { ...CURSOR })
+    run(hovered, 0.2)
+
+    expect(outward(tapped)).toBeGreaterThan(1)
+    expect(Math.abs(outward(hovered))).toBeLessThan(1e-9)
+  })
+
+  it('keeps the ripple inside MAX_DRIFT', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+
+    let worst = 0
+    for (let i = 0; i < 120; i++) {
+      run(field, 1 / 120)
+      for (const p of field.particles.values()) worst = Math.max(worst, Math.hypot(p.offsetX, p.offsetY))
+    }
+
+    expect(worst).toBeGreaterThan(3)
+    expect(worst).toBeLessThanOrEqual(MAX_DRIFT + 1e-9)
+  })
+
+  it('holds the disc up for TAP_HOLD, then collapses on its own', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+
+    run(field, TAP_HOLD - 0.05)
+    expect(field.pointer).not.toBeNull()
+    expect(field.front).toBe(FACET_RADIUS)
+
+    run(field, 0.1)
+    expect(field.pointer).toBeNull()
+    expect(field.front).toBeLessThan(FACET_RADIUS)
+  })
+
+  it('has faded to nothing visible about a second after the tap', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 1.1)
+
+    for (const facet of facetsOf(field)) expect(facet.size * facet.opacity).toBeLessThan(0.5)
+  })
+
+  it('goes fully quiet with no further input, so the frame loop stops', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 2)
+
+    expect(facetsOf(field)).toHaveLength(0)
+    expect(isFacetFieldSettled(field)).toBe(true)
+  })
+
+  it('restarts the front at the new touch point on a second tap', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 0.3)
+    expect(field.front).toBe(FACET_RADIUS)
+
+    tapFacetField(field, { x: CURSOR.x + 300, y: CURSOR.y })
+    expect(field.front).toBe(0)
+    expect(field.anchor).toEqual(CURSOR)
+    run(field, 1 / 120)
+    expect(field.anchor).toEqual({ x: CURSOR.x + 300, y: CURSOR.y })
+  })
+
+  it('does not leave the first disc drawn outside the restarted front on a second tap', () => {
+    // The dot-grid hole is the front; anything drawn beyond it sits on top of dots that have come back.
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 0.3)
+    expect(facetsOf(field).length).toBeGreaterThan(100)
+
+    tapFacetField(field, { ...CURSOR })
+    run(field, 1 / 60)
+
+    for (const facet of facetsOf(field)) {
+      expect(Math.hypot(facet.x - CURSOR.x, facet.y - CURSOR.y)).toBeLessThanOrEqual(field.front + MAX_DRIFT)
+    }
+  })
+
+  it('does not read a tap far from the last pointer position as a flick', () => {
+    const field = settledAt()
+    run(field, 0.2, { move: { x: 800, y: 0 } })
+    expect(Math.abs(field.pointerVelocityX)).toBeGreaterThan(100)
+
+    tapFacetField(field, { x: CURSOR.x + 600, y: CURSOR.y + 200 })
+    run(field, 1 / 60)
+
+    expect(field.pointerVelocityX).toBe(0)
+    expect(field.pointerVelocityY).toBe(0)
+  })
+
+  it('hands over to a real pointer, which then holds the field up as usual', () => {
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 0.1)
+
+    moveFacetPointer(field, { ...CURSOR })
+    run(field, 2)
+
+    expect(field.pointer).toEqual(CURSOR)
+    expect(isFacetFieldSettled(field)).toBe(false)
   })
 })
 

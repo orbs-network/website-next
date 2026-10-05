@@ -17,6 +17,9 @@ import { FACET_RADIUS, FACET_SPACING, facetsAround, falloff, type Facet } from '
  *  - **Liquid.** A moving pointer drags nearby facets along its path, pushes
  *    them aside and sets them turning; they wobble back when it stops.
  *  - **Collapse.** On leaving, the field shrinks back from the rim inward.
+ *  - **Tap.** On touch, where there is no hover to follow, a tap blooms the
+ *    disc at the touch point with an outward ripple riding the bloom front,
+ *    holds it briefly and collapses. See `tapFacetField`.
  *
  * Pure and deterministic — no DOM, no clock — so every behaviour above is a
  * node test rather than something checked by eye.
@@ -80,6 +83,24 @@ export const SWIRL = 0.04
 export const MAX_DRIFT = 28
 
 /**
+ * How long a tapped disc stays up before it collapses, in seconds, counted
+ * from the tap. Long enough for the bloom to reach the rim (~250ms) and bounce
+ * once; the collapse then takes it to nothing by roughly one second after the
+ * tap — the same lifetime as galaxy.com's tap ripple, which this is modelled on.
+ */
+export const TAP_HOLD = 0.45
+
+/**
+ * The tap's ripple: an outward push, in px/s², on facets within `RIPPLE_BAND`
+ * px of the bloom front while it is still travelling. Galaxy's ripple shoves
+ * its dots radially outward as its ring passes; this is the same move on the
+ * one ring the field already has. Tuned for a ~6px kick — enough to read as a
+ * splash, small enough that the drift spring hands the lattice straight back.
+ */
+export const RIPPLE_PUSH = 1400
+export const RIPPLE_BAND = 30
+
+/**
  * The integration step. Springs are stepped at a fixed 120Hz whatever the
  * display runs at, so a 60Hz laptop and a 144Hz monitor animate the same —
  * the old single-line ease was frame-rate dependent, which a decorative fade
@@ -135,6 +156,8 @@ export type FacetField = {
   pointerVelocityY: number
   /** @internal Unstepped time carried to the next frame. */
   remainder: number
+  /** @internal Seconds left before a tapped disc collapses. 0 when the pointer is not a tap. */
+  tap: number
 }
 
 export function createFacetField(): FacetField {
@@ -148,6 +171,7 @@ export function createFacetField(): FacetField {
     pointerVelocityX: 0,
     pointerVelocityY: 0,
     remainder: 0,
+    tap: 0,
   }
 }
 
@@ -165,12 +189,44 @@ export function createFacetField(): FacetField {
  */
 export function moveFacetPointer(field: FacetField, point: Point | null) {
   field.pointer = point ? { ...point } : null
+  // A real pointer, arriving or leaving, takes over from a tap in progress.
+  field.tap = 0
 
   if (!point) {
     field.previousPointer = null
     field.pointerVelocityX = 0
     field.pointerVelocityY = 0
   }
+}
+
+/**
+ * A tap at `point`: bloom the disc there with a ripple, hold it for
+ * `TAP_HOLD`, then collapse — with no further input.
+ *
+ * A touch screen has no hover, so there is no pointer to follow between
+ * touches. Rather than invent one, a tap is treated as a pointer that arrives,
+ * stays still for a moment and leaves; every spring, the bloom and the
+ * collapse are the ones the mouse uses, and the field settles to nothing on
+ * its own so the frame loop stops.
+ *
+ * THE FRONT AND THE DISC RESTART FROM NOTHING. A second tap while the first
+ * is still up would otherwise inherit its front, and every cell of the new
+ * disc inside it would pop in at once instead of rippling out from the
+ * finger. And resetting the front alone is worse: the dot-grid hole is the
+ * front, so it snapped shut underneath ~200 facets that were still fully
+ * drawn and only then began to spring away. A new tap is a new ripple.
+ *
+ * And A TAP IS NOT A FLICK: the velocity history is cleared, so a tap far from
+ * the last pointer position does not read as one frame of very fast motion.
+ */
+export function tapFacetField(field: FacetField, point: Point) {
+  moveFacetPointer(field, point)
+  field.previousPointer = null
+  field.pointerVelocityX = 0
+  field.pointerVelocityY = 0
+  field.front = 0
+  field.particles.clear()
+  field.tap = TAP_HOLD
 }
 
 /** Keyed by lattice cell rather than by position, so float noise in a centre can never split one cell into two particles. */
@@ -257,6 +313,8 @@ function integrate(field: FacetField, h: number) {
   const vx = field.pointerVelocityX
   const vy = field.pointerVelocityY
   const speed = Math.hypot(vx, vy)
+  // Only while a tap's front is still travelling. Zero for the mouse, so hover is untouched by any of this.
+  const rippling = field.tap > 0 && field.front < FACET_RADIUS
 
   for (const p of field.particles.values()) {
     const dx = centre ? p.rest.x - centre.x : 0
@@ -278,12 +336,17 @@ function integrate(field: FacetField, h: number) {
     const ux = distance > 0 ? dx / distance : 0
     const uy = distance > 0 ? dy / distance : 0
 
+    // The tap's ripple: strongest on the front itself, nothing beyond RIPPLE_BAND either side of it.
+    const ripple = rippling ? RIPPLE_PUSH * Math.max(0, 1 - Math.abs(distance - field.front) / RIPPLE_BAND) : 0
+
     const forceX =
-      influence * (DRAG * vx + PUSH * speed * ux) -
+      influence * (DRAG * vx + PUSH * speed * ux) +
+      ripple * ux -
       DRIFT_SPRING.stiffness * p.offsetX -
       DRIFT_SPRING.damping * p.velocityX
     const forceY =
-      influence * (DRAG * vy + PUSH * speed * uy) -
+      influence * (DRAG * vy + PUSH * speed * uy) +
+      ripple * uy -
       DRIFT_SPRING.stiffness * p.offsetY -
       DRIFT_SPRING.damping * p.velocityY
     p.velocityX += forceX * h
@@ -315,6 +378,12 @@ function integrate(field: FacetField, h: number) {
  * gap from a backgrounded tab would be simulated in full rather than skipped.
  */
 export function stepFacetField(field: FacetField, dt: number) {
+  if (field.tap > 0) {
+    field.tap -= dt
+    // The tap's finger lifts. `moveFacetPointer` rather than a bare assignment, so leaving is recorded the usual way.
+    if (field.tap <= 0) moveFacetPointer(field, null)
+  }
+
   if (field.pointer) field.anchor = { ...field.pointer }
 
   field.elapsed += dt
