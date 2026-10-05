@@ -90,12 +90,26 @@
     /*
       Per-card accents (#192). The design colour-codes card eyebrows by
       audience and product: periwinkle (accent-primary), pink, cyan. The 400
-      bases are the design's own values and are only legible on DARK grounds;
-      pink/400 on white is about 2:1 and cyan/400 about 1.3:1. So the light
-      theme takes the 600 step of the same hue, which clears AA for 11px text.
+      bases are the design's own values and are only legible on DARK grounds:
+      Orbs Pink #DC8AE0 reads 2.40:1 on the white card and Orbs Cyan #2CEDFC
+      1.44:1, against the 4.5:1 that 11px eyebrow text needs.
+
+      These used to be the palette's 600 steps, which pass but are a different
+      colour: pink/600 #58375A is aubergine and cyan/600 #125F65 a dark teal, so
+      in light mode the cards did not read as pink or cyan at all (#272, #273).
+      The 500 steps keep the hue but fail (#B06EB3 3.67:1, #23BECA 2.26:1).
+
+      So each is the brand hue with only its OKLCH lightness lowered — the method
+      dSPOT's card labels use — to the first shade that clears 4.5:1 on the PAGE
+      (#f6f6f6), not just the white card, so the token holds on either ground:
+        pink  #A153A6  4.88:1 on #fff, 4.52:1 on #f6f6f6
+        cyan  #017D86  4.91:1 on #fff, 4.54:1 on #f6f6f6
+      Cyan's chroma is also clipped to stay inside sRGB at that lightness.
+      Literal values rather than palette stops: the palette mirrors Figma's
+      swatches, and these are not swatches.
     */
-    --color-accent-pink: var(--color-pink-600);
-    --color-accent-cyan: var(--color-cyan-600);
+    --color-accent-pink: #a153a6;
+    --color-accent-cyan: #017d86;
     /* The filled card (stack, solutions). White on the #f6f6f6 page. */
     --color-card-fill: var(--color-neutral-100);
 
@@ -474,8 +488,9 @@
     --color-accent-primary: var(--color-indigo-500);
     --color-accent-primary-hover: var(--color-indigo-400);
     --color-link: var(--color-indigo-500);
-    --color-accent-pink: var(--color-pink-600);
-    --color-accent-cyan: var(--color-cyan-600);
+    /* The light theme's values, for the same reason; see `:root`. */
+    --color-accent-pink: #a153a6;
+    --color-accent-cyan: #017d86;
     --color-card-fill: var(--color-neutral-100);
     --accent: var(--color-indigo-500);
     --primary: var(--color-indigo-500);
