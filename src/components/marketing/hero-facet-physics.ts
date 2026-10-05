@@ -209,9 +209,12 @@ export function moveFacetPointer(field: FacetField, point: Point | null) {
  * collapse are the ones the mouse uses, and the field settles to nothing on
  * its own so the frame loop stops.
  *
- * THE FRONT RESTARTS FROM ZERO. A second tap while the first is still up
- * would otherwise inherit its front, and every cell of the new disc inside it
- * would pop in at once instead of rippling out from the finger.
+ * THE FRONT AND THE DISC RESTART FROM NOTHING. A second tap while the first
+ * is still up would otherwise inherit its front, and every cell of the new
+ * disc inside it would pop in at once instead of rippling out from the
+ * finger. And resetting the front alone is worse: the dot-grid hole is the
+ * front, so it snapped shut underneath ~200 facets that were still fully
+ * drawn and only then began to spring away. A new tap is a new ripple.
  *
  * And A TAP IS NOT A FLICK: the velocity history is cleared, so a tap far from
  * the last pointer position does not read as one frame of very fast motion.
@@ -222,6 +225,7 @@ export function tapFacetField(field: FacetField, point: Point) {
   field.pointerVelocityX = 0
   field.pointerVelocityY = 0
   field.front = 0
+  field.particles.clear()
   field.tap = TAP_HOLD
 }
 

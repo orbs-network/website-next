@@ -322,6 +322,21 @@ describe('the tap', () => {
     expect(field.anchor).toEqual({ x: CURSOR.x + 300, y: CURSOR.y })
   })
 
+  it('does not leave the first disc drawn outside the restarted front on a second tap', () => {
+    // The dot-grid hole is the front; anything drawn beyond it sits on top of dots that have come back.
+    const field = createFacetField()
+    tapFacetField(field, { ...CURSOR })
+    run(field, 0.3)
+    expect(facetsOf(field).length).toBeGreaterThan(100)
+
+    tapFacetField(field, { ...CURSOR })
+    run(field, 1 / 60)
+
+    for (const facet of facetsOf(field)) {
+      expect(Math.hypot(facet.x - CURSOR.x, facet.y - CURSOR.y)).toBeLessThanOrEqual(field.front + MAX_DRIFT)
+    }
+  })
+
   it('does not read a tap far from the last pointer position as a flick', () => {
     const field = settledAt()
     run(field, 0.2, { move: { x: 800, y: 0 } })
