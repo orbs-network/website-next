@@ -89,6 +89,14 @@ const TEXT_ON_SURFACE = [
   ['--color-accent-primary-hover', '--color-bg'],
   ['--color-link', '--color-bg'],
   /*
+    The per-card eyebrow accents (#272, #273). They render on the card fill,
+    and are held to the page as well so the token survives a move off the card.
+  */
+  ['--color-accent-pink', '--color-bg'],
+  ['--color-accent-pink', '--color-card-fill'],
+  ['--color-accent-cyan', '--color-bg'],
+  ['--color-accent-cyan', '--color-card-fill'],
+  /*
     Destructive is checked as TEXT, not as a fill, because that is the only
     way it is used — `text-destructive` on the newsletter's error message.
     `bg-destructive` has no call sites at all, so `--destructive-foreground`
