@@ -275,13 +275,32 @@ export const MarqueeStopsWhenReducedMotionIsPreferred: Story = {
   },
 }
 
-/** Pointer and keyboard both stop the loop, on the element running it. */
-export const MarqueePausesOnHoverAndFocus: Story = {
+/**
+ * A keyboard can stop the loop: the strip is a named tab stop, and focusing it
+ * pauses the animation.
+ *
+ * The marks themselves are not focusable, so a `focus-within` pause with no
+ * tab stop of its own could never fire. Tested by focusing the strip and
+ * reading the computed play state, not by looking for the class.
+ */
+export const MarqueePausesOnKeyboardFocus: Story = {
   args: marqueeArgs,
   play: async ({ canvasElement }) => {
-    const track = canvasElement.querySelector('[data-testid="logo-marquee-track"]')
+    const canvas = within(canvasElement)
+    const strip = canvas.getByRole('group', { name: marqueeArgs.title })
+    const track = canvasElement.querySelector('[data-testid="logo-marquee-track"]') as HTMLElement
 
-    await expect(track).toHaveClass('hover:[animation-play-state:paused]')
-    await expect(track).toHaveClass('focus-within:[animation-play-state:paused]')
+    await expect(strip).toHaveAttribute('tabindex', '0')
+    await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('running'))
+
+    strip.focus()
+    await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('paused'))
+
+    strip.blur()
+    await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('running'))
+
+    // The pointer gets the same through `:hover` on the same group, which a
+    // synthetic event cannot trigger — so that half is checked by class.
+    await expect(track).toHaveClass('group-hover/marquee:[animation-play-state:paused]')
   },
 }

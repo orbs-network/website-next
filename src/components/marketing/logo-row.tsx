@@ -135,7 +135,7 @@ export function LogoRow({
       )}
 
       {marquee ? (
-        <LogoMarquee items={items} locale={locale} />
+        <LogoMarquee items={items} label={title} locale={locale} />
       ) : (
         <ul
           className={cn(
@@ -173,11 +173,27 @@ export function LogoRow({
  * The duplicate is `aria-hidden` and `inert`: a screen reader meets each venue
  * once, and nothing in the copy can take focus.
  *
- * It stops on hover and on focus within, and does not move at all for readers
- * who prefer reduced motion. They get the first copy alone, wrapped as a
- * centred cluster so every mark is on screen, with the edge fade removed.
+ * It stops on hover, and on keyboard focus: the strip itself is a tab stop.
+ * The marks are images and text, nothing focusable, so without that a
+ * `focus-within` pause could never fire and a keyboard user would have no way
+ * to stop it. A tab stop rather than a Pause button, because the client
+ * declined a visible control on the other marquee (see `Marquee`); this keeps
+ * the strip clean while still giving the keyboard what hover gives the mouse.
+ *
+ * It does not move at all for readers who prefer reduced motion. They get the
+ * first copy alone, wrapped as a centred cluster so every mark is on screen,
+ * with the edge fade removed.
  */
-function LogoMarquee({ items, locale }: { items: readonly LogoRowItem[]; locale: Locale }) {
+function LogoMarquee({
+  items,
+  label,
+  locale,
+}: {
+  items: readonly LogoRowItem[]
+  /** Names the tab stop — the row's heading. */
+  label: string
+  locale: Locale
+}) {
   const copy = (duplicate: boolean) => (
     <ul
       aria-hidden={duplicate || undefined}
@@ -195,29 +211,43 @@ function LogoMarquee({ items, locale }: { items: readonly LogoRowItem[]; locale:
   )
 
   return (
+    /*
+      The tab stop. Outside the masked box on purpose: the edge fade would
+      fade its focus ring out along with the marks.
+    */
     <div
-      className={cn(
-        // Clips the track, so the moving strip cannot widen the page.
-        'mt-12 overflow-hidden',
-        // Marks fade in and out at the column edges rather than being cut off.
-        '[mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
-        'motion-reduce:[mask-image:none]'
-      )}
+      role="group"
+      aria-label={label}
+      lang={textLang(label, locale)}
+      tabIndex={0}
+      data-testid="logo-marquee"
+      className="group/marquee mt-12 ring-offset-background focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring focus-visible:ring-offset-8"
     >
-      {/*
-        Play state goes on the element running the animation — on a wrapper
-        it does nothing to the child (see `Marquee`).
-      */}
       <div
-        data-testid="logo-marquee-track"
         className={cn(
-          'flex w-max animate-marquee-slow',
-          'hover:[animation-play-state:paused] focus-within:[animation-play-state:paused]',
-          'motion-reduce:w-full motion-reduce:animate-none'
+          // Clips the track, so the moving strip cannot widen the page.
+          'overflow-hidden',
+          // Marks fade in and out at the column edges rather than being cut off.
+          '[mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
+          'motion-reduce:[mask-image:none]'
         )}
       >
-        {copy(false)}
-        {copy(true)}
+        {/*
+          The play state is set on the element running the animation — on a
+          wrapper it does nothing to the child (see `Marquee`) — and keyed off
+          the tab stop's hover and focus through the group.
+        */}
+        <div
+          data-testid="logo-marquee-track"
+          className={cn(
+            'flex w-max animate-marquee-slow',
+            'group-hover/marquee:[animation-play-state:paused] group-focus-within/marquee:[animation-play-state:paused]',
+            'motion-reduce:w-full motion-reduce:animate-none'
+          )}
+        >
+          {copy(false)}
+          {copy(true)}
+        </div>
       </div>
     </div>
   )
