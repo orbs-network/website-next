@@ -86,9 +86,15 @@ export async function Header({ locale }: { locale: Locale }) {
               already carries an `aria-label` would be a second piece of content
               in one link — so it is hidden and the link keeps one accessible
               name. Sized by font size: the lockup scales its mark from `em`.
-              Half size on the 60px bar — the mobile frames draw it 50x15.
+
+              One size at every width (#270). The mobile frames drew it 50x15,
+              half the desktop size, and on a phone that read as too small.
+              docs.orbs.com draws the same mark at 28x28 on its mobile bar, and
+              `text-xl` is what makes ours 28px too (1.4em). It is also the
+              desktop size, so nothing jumps at `xl`. Only the burger shares the
+              row below `sm`, so even at 320px there are ~140px to spare.
             */}
-            <OrbsLogo className="text-[0.625rem] xl:text-xl" aria-hidden />
+            <OrbsLogo className="text-xl" aria-hidden />
           </Link>
 
           {/*
