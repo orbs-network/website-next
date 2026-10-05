@@ -1,6 +1,8 @@
 import Image from 'next/image'
 import { getAssetUrl, type MediaMentionFields } from '@/app/lib/api'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { cn } from '@/lib/utils'
 
 /**
  * A press mention links OUT to the publisher — there is no page of our own to
@@ -23,13 +25,18 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
         aria-label={`${mention.headline} (opens on the publisher's site)`}
       >
         <CardHeader className="p-0 pb-4">
-          <div className="aspect-video overflow-hidden relative bg-muted">
+          {/*
+            The blog's cover frame. Most thumbnails here are the same 2:1
+            banners as the posts (11 of the 24 newest; 8 are 16:9), and a 16:9
+            crop cut the brand names off them the same way (#223).
+          */}
+          <div className={cn('relative overflow-hidden', COVER_FRAME)}>
             {thumbnailUrl && (
               <Image
                 src={thumbnailUrl}
                 alt=""
                 fill
-                className="object-cover transition-transform group-hover:scale-105"
+                className={cn(COVER_IMAGE, 'transition-transform group-hover:scale-105')}
                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
               />
             )}

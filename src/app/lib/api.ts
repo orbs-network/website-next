@@ -32,6 +32,23 @@ export function getAssetUrl(asset: MaybeAsset): string | null {
   return url ? `https:${url}` : null
 }
 
+export type AssetImage = { url: string; width: number; height: number }
+
+/**
+ * A Contentful image asset's URL with its pixel size, or null when the asset
+ * is unresolved or Contentful reports no dimensions for it.
+ */
+export function getAssetImage(asset: MaybeAsset): AssetImage | null {
+  const url = getAssetUrl(asset)
+  if (!url || !asset || !('fields' in asset)) {
+    return null
+  }
+  // The SDK types `file` as maybe-localised; this client fetches one locale.
+  const details = asset.fields.file?.details
+  const size = details && 'image' in details ? details.image : undefined
+  return size?.width && size.height ? { url, width: size.width, height: size.height } : null
+}
+
 /**
  * Safely extract author info from a Contentful entry that may be unresolved
  */

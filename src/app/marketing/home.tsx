@@ -27,7 +27,7 @@ import {
   type HomeCard,
 } from '@/content/pages/home'
 import { postPath } from '@/app/lib/routes'
-import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { COVER_FRAME, coverImage } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
 import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import { readingMinutes } from '@/lib/reading-time'
@@ -657,7 +657,7 @@ function NewsCard({
    */
   locale: Locale
 }) {
-  const image = getAssetUrl(post.heroImage)
+  const cover = coverImage(getAssetUrl(post.heroImage))
   const author = getAuthorInfo(post.author)
 
   return (
@@ -673,12 +673,12 @@ function NewsCard({
           so alt text here would have a screen reader read the article twice.
         */}
         <Image
-          src={image || '/blog/placeholder.png'}
+          src={cover.src}
           alt=""
           width={352}
           height={176}
           sizes="(min-width: 640px) 22rem, 19rem"
-          className={cn('w-full rounded-sm', COVER_FRAME, COVER_IMAGE)}
+          className={cn('w-full rounded-sm', COVER_FRAME, cover.fit)}
         />
 
         <p className="mt-4 flex flex-wrap gap-x-3 text-detail uppercase tracking-widest text-fg-muted">
