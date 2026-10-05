@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { H1, H2, H4 } from '@/app/components/typography'
-import { Button } from '@/components/ui/button'
+import { Button, type ButtonProps } from '@/components/ui/button'
 import { CardRail } from '@/components/marketing/card-rail'
 import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
@@ -139,8 +139,12 @@ export async function HomePage({ locale }: { locale: Locale }) {
                   {t('hero.cta')}
                 </Link>
               </Button>
-              {/* Same destination as the SDK buttons below; the design keeps its own wording here. */}
-              <SdkButton label={t('sdk')} locale={locale} />
+              {/*
+                Same destination as the SDK buttons below; the design keeps its
+                own wording here. `overlay` because the facet field moves behind
+                this one and not the others (#268).
+              */}
+              <SdkButton label={t('sdk')} locale={locale} variant="overlay" />
             </div>
           </div>
         </div>
@@ -520,10 +524,23 @@ export async function HomePage({ locale }: { locale: Locale }) {
  * (#214). The hero used to say "Read the docs", which read as the network's
  * developer docs rather than the SDK the page is selling (Eran). The product
  * heroes carry the SDK wording through `devDocs.sdk`.
+ *
+ * `variant` is passed through for the hero, whose copy sits over the facet
+ * field; the other two sit on a flat page and keep the default outline.
  */
-function SdkButton({ label, locale, className }: { label: string; locale: Locale; className?: string }) {
+function SdkButton({
+  label,
+  locale,
+  className,
+  variant,
+}: {
+  label: string
+  locale: Locale
+  className?: string
+  variant?: ButtonProps['variant']
+}) {
   return (
-    <Button asChild className={className}>
+    <Button asChild variant={variant} className={className}>
       <a href={SDK_DOCS_URL} target="_blank" rel="noopener noreferrer" lang={textLang(label, locale)}>
         {label}
       </a>

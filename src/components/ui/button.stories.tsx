@@ -1,6 +1,8 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, within } from 'storybook/test'
+import { expect, fn, waitFor, within } from 'storybook/test'
 import { Download } from 'lucide-react'
+
+import { FACET_GRADIENT_STOPS } from '@/components/marketing/hero-facets'
 
 import { Button } from './button'
 
@@ -14,7 +16,7 @@ const meta = {
   argTypes: {
     variant: {
       control: 'select',
-      options: ['primary', 'secondary', 'solid'],
+      options: ['primary', 'secondary', 'solid', 'overlay'],
       description: 'Visual style of the button',
     },
     size: {
@@ -106,6 +108,145 @@ export const Solid: Story = {
     await expect(style.backgroundColor).not.toBe('rgba(0, 0, 0, 0)')
     await expect(style.color).not.toBe(style.backgroundColor)
     await expect(button.querySelector('svg')).toBeTruthy()
+  },
+}
+
+/** Relative luminance, per WCAG 2.1, of an `rgb()`/`rgba()` string. */
+function luminance(colour: string): number {
+  const channel = (value: number) => {
+    const v = value / 255
+    return v <= 0.03928 ? v / 12.92 : ((v + 0.055) / 1.055) ** 2.4
+  }
+  const [r, g, b] = rgba(colour)
+
+  return 0.2126 * channel(r) + 0.7152 * channel(g) + 0.0722 * channel(b)
+}
+
+function rgba(colour: string): [number, number, number, number] {
+  const parts = colour.match(/\d+(\.\d+)?/g)
+  if (!parts || parts.length < 3) throw new Error(`cannot parse colour: ${colour}`)
+  const [r, g, b, a = 1] = parts.map(Number)
+
+  return [r, g, b, a]
+}
+
+function contrast(a: string, b: string): number {
+  const [x, y] = [luminance(a), luminance(b)]
+  const [light, dark] = x > y ? [x, y] : [y, x]
+
+  return (light + 0.05) / (dark + 0.05)
+}
+
+/** Every stylesheet rule this page can read, flattened out of `@media` and `@layer`. */
+function styleRules(): CSSStyleRule[] {
+  const rules: CSSStyleRule[] = []
+  const walk = (list: CSSRuleList) => {
+    for (const rule of Array.from(list)) {
+      if (rule instanceof CSSStyleRule) rules.push(rule)
+      if (rule instanceof CSSGroupingRule) walk(rule.cssRules)
+    }
+  }
+
+  for (const sheet of Array.from(document.styleSheets)) {
+    // The Google Fonts sheet is cross-origin; reading its rules throws, and it has no `:hover` in it.
+    if (sheet.href && new URL(sheet.href).origin !== location.origin) continue
+    walk(sheet.cssRules)
+  }
+
+  return rules
+}
+
+/**
+ * The colours `el` would compute to while hovered.
+ *
+ * A play function cannot put a real pointer over an element — `userEvent.hover`
+ * dispatches events, and `:hover` is decided by the browser from the actual
+ * pointer — so this applies the element's own `:hover` rules to a clone and
+ * reads the clone. The clone sits beside the original, so `var()` resolves
+ * against the same theme.
+ */
+function hoverColours(el: HTMLElement): { color: string; backgroundColor: string } {
+  const clone = el.cloneNode(true) as HTMLElement
+
+  for (const rule of styleRules()) {
+    for (const selector of rule.selectorText.split(',')) {
+      // Skips a `\:hover` inside an escaped class name such as `dark\:hover\:x`.
+      const resting = selector.replace(/(?<!\\):hover/g, '').trim()
+      if (resting === selector.trim() || resting === '' || !el.matches(resting)) continue
+
+      for (const property of Array.from(rule.style)) {
+        clone.style.setProperty(property, rule.style.getPropertyValue(property))
+      }
+    }
+  }
+
+  clone.style.transition = 'none'
+  el.after(clone)
+  const { color, backgroundColor } = getComputedStyle(clone)
+  clone.remove()
+
+  return { color, backgroundColor }
+}
+
+/** The facet field's own gradient, so the story shows the button over what it sits on in the hero. */
+const FACET_BACKDROP = `linear-gradient(to bottom, ${FACET_GRADIENT_STOPS.map((stop) => `${stop.color} ${stop.offset * 100}%`).join(', ')})`
+
+function OverlayOnFacets() {
+  return (
+    <div className="p-10" style={{ backgroundImage: FACET_BACKDROP }}>
+      <Button variant="overlay" asChild>
+        <a href="https://example.com">Explore SDK</a>
+      </Button>
+    </div>
+  )
+}
+
+/**
+ * Hover and focus must read at 4.5:1 or better, on a fill that is opaque —
+ * opaque is what makes the number independent of whatever the facets are
+ * doing behind it (#268). Focus is checked live; hover through its rules.
+ */
+async function expectOverlayReadable(canvasElement: HTMLElement) {
+  const link = within(canvasElement).getByRole('link')
+
+  const resting = getComputedStyle(link)
+  await expect(rgba(resting.backgroundColor)[3]).toBe(1)
+
+  const hover = hoverColours(link)
+  await expect(rgba(hover.backgroundColor)[3]).toBe(1)
+  await expect(hover.backgroundColor).not.toBe(resting.backgroundColor)
+  await expect(contrast(hover.color, hover.backgroundColor)).toBeGreaterThanOrEqual(4.5)
+
+  link.focus()
+  await expect(link.matches(':focus-visible')).toBe(true)
+  await waitFor(() => expect(getComputedStyle(link).backgroundColor).toBe(hover.backgroundColor))
+  const focused = getComputedStyle(link)
+  await expect(focused.color).toBe(hover.color)
+  // Focus adds the ring on top of the hover look, so it is never the weaker state.
+  await expect(focused.boxShadow).not.toBe('none')
+  link.blur()
+}
+
+/**
+ * Overlay: the home hero's "Explore SDK", over the facet field (#268). Looks
+ * like `primary` at rest, but opaque; white fill with an indigo label on hover
+ * and focus, the same pair in both themes.
+ */
+export const Overlay: Story = {
+  render: () => <OverlayOnFacets />,
+  play: async ({ canvasElement }) => {
+    await expect(document.documentElement.classList.contains('dark')).toBe(false)
+    await expectOverlayReadable(canvasElement)
+  },
+}
+
+export const OverlayDark: Story = {
+  globals: { backgrounds: { value: '#121214' } },
+  render: () => <OverlayOnFacets />,
+  play: async ({ canvasElement }) => {
+    // Asserted, not assumed: a "dark" story still in light passes for the wrong reason.
+    await expect(document.documentElement.classList.contains('dark')).toBe(true)
+    await expectOverlayReadable(canvasElement)
   },
 }
 
