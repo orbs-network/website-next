@@ -4,13 +4,15 @@ import { cva, type VariantProps } from 'class-variance-authority'
 import { cn } from '@/lib/utils'
 
 /**
- * Orbs brand button. Three variants:
+ * Orbs brand button. Four variants:
  *
  * - `primary` (default) — bordered, uppercase, trailing arrow.
  * - `secondary` — identical styling minus the trailing arrow.
  * - `solid` — filled with the foreground colour, trailing arrow. The design
  *   uses it once per page at most, for the hero's main action, so it reads as
  *   THE action beside an outline one. Inverts with the theme like the text.
+ * - `overlay` — `primary` made opaque, with a white fill on hover and focus,
+ *   for a button over an animated backdrop (the home hero). See below.
  *
  * Shared states: default / disabled / hover (border + text + arrow all switch
  * to the accent colour on hover, or `fg-muted` when disabled).
@@ -61,6 +63,30 @@ const buttonVariants = cva(
         primary: '',
         secondary: '',
         solid: 'border-fg bg-fg text-bg hover:border-fg-muted hover:bg-fg-muted hover:text-bg',
+        /*
+          For a button over a moving backdrop — the home hero's facet field
+          (#268). The default variant is transparent, so on hover its indigo
+          label sat directly on indigo-and-violet facets and all but vanished.
+
+          OPAQUE AT EVERY STATE, which is the actual fix. At rest the fill is the
+          page colour, so it looks exactly like the outline button beside it
+          while keeping the facets from ever passing behind the label — the
+          field follows the cursor, so it is under this button whenever the
+          reader is reaching for it or the CTA next to it. On hover and
+          keyboard focus the fill goes white and the label and border go
+          indigo/400.
+
+          Palette stops, not the semantic tokens, and on purpose: the
+          semantic accent flips to periwinkle in dark, which is 3.2:1 on white.
+          White and indigo/400 are the same in both themes, so the pair holds
+          at 6.4:1 in either. Focus gets the same fill as hover plus the ring,
+          so it is never the weaker of the two.
+        */
+        overlay: [
+          'bg-bg',
+          'hover:border-indigo-400 hover:bg-neutral-100 hover:text-indigo-400',
+          'focus-visible:border-indigo-400 focus-visible:bg-neutral-100 focus-visible:text-indigo-400',
+        ].join(' '),
       },
       size: {
         sm: 'px-3 py-1.5 text-detail',
