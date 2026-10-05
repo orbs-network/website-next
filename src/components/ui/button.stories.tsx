@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, fn, waitFor, within } from 'storybook/test'
+import { expect, fn, within } from 'storybook/test'
 import { Download } from 'lucide-react'
 
 import { FACET_GRADIENT_STOPS } from '@/components/marketing/hero-facets'
@@ -217,10 +217,16 @@ async function expectOverlayReadable(canvasElement: HTMLElement) {
   await expect(hover.backgroundColor).not.toBe(resting.backgroundColor)
   await expect(contrast(hover.color, hover.backgroundColor)).toBeGreaterThanOrEqual(4.5)
 
+  /*
+    No transition, so the focused colours are final the moment they are read.
+    Waiting on one of them is not enough: `transition-colors` settles the fill
+    and the label on different frames, and the label was caught at 240 of 242.
+  */
+  link.style.transition = 'none'
   link.focus()
   await expect(link.matches(':focus-visible')).toBe(true)
-  await waitFor(() => expect(getComputedStyle(link).backgroundColor).toBe(hover.backgroundColor))
   const focused = getComputedStyle(link)
+  await expect(focused.backgroundColor).toBe(hover.backgroundColor)
   await expect(focused.color).toBe(hover.color)
   // Focus adds the ring on top of the hover look, so it is never the weaker state.
   await expect(focused.boxShadow).not.toBe('none')
