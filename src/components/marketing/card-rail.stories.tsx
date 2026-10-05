@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, within } from 'storybook/test'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
 import { CardRail } from './card-rail'
 
 const meta = {
@@ -65,5 +65,38 @@ export const TheStripIsKeyboardReachable: Story = {
     await expect(strip).toBeTruthy()
     await expect((strip as HTMLElement).tabIndex).toBe(0)
     await expect(strip).toHaveAttribute('aria-label', args.label)
+  },
+}
+
+/**
+ * No visible scrollbar, and the strip still scrolls (#271).
+ *
+ * A scrollbar under a row of cards read as a layout bug in QA, so it is
+ * hidden. Hiding it must not stop the scrolling: the next arrow still moves
+ * the strip, and so does a programmatic scroll, which is what a wheel,
+ * trackpad or arrow key ends up as.
+ */
+export const ScrollbarIsHiddenButTheStripScrolls: Story = {
+  args,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const strip = canvasElement.querySelector<HTMLElement>('ul[aria-label]')
+
+    await expect(strip).toBeTruthy()
+    if (!strip) return
+
+    // The computed style, not a measured scrollbar: headless Chromium hides
+    // scrollbars itself, so a size check would pass with or without the fix.
+    await expect(getComputedStyle(strip).scrollbarWidth).toBe('none')
+    await expect(strip.scrollWidth).toBeGreaterThan(strip.clientWidth)
+
+    await userEvent.click(canvas.getByRole('button', { name: args.nextLabel }))
+    await waitFor(() => expect(strip.scrollLeft).toBeGreaterThan(0))
+    await waitFor(() => expect(canvas.getByRole('button', { name: args.previousLabel })).toBeEnabled())
+
+    strip.scrollTo({ left: 0, behavior: 'instant' })
+    await waitFor(() => expect(strip.scrollLeft).toBe(0))
+    strip.scrollBy({ left: 200, behavior: 'instant' })
+    await waitFor(() => expect(strip.scrollLeft).toBeGreaterThan(0))
   },
 }
