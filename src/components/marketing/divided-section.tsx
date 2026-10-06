@@ -27,6 +27,7 @@ export function DividedSection({
   intro,
   children,
   locale,
+  className,
 }: {
   /** Anchor target, e.g. a hero call to action scrolling down to it. */
   id?: string
@@ -36,9 +37,11 @@ export function DividedSection({
   intro?: string
   children?: React.ReactNode
   locale: Locale
+  /** Page-specific spacing without changing the shared section defaults. */
+  className?: string
 }) {
   return (
-    <section id={id} className="container scroll-mt-32 border-t border-border pt-3 pb-section">
+    <section id={id} className={cn('container scroll-mt-32 border-t border-border pt-3 pb-section', className)}>
       {eyebrow && <Eyebrow text={eyebrow} locale={locale} />}
 
       {(heading || intro) && (

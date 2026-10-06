@@ -64,6 +64,32 @@ const NEAR_WHITE = 230
  */
 const MAX_WHITE_SHARE = 0.9
 
+describe('Agentic monochrome chain marks', () => {
+  it('use black ink and transparent negative space, so inversion preserves each mark', async () => {
+    for (const chain of AGENTIC_CHAINS) {
+      const { data } = await sharp(join(REPO, 'public', chain.logo!.src))
+        .resize({ width: 96, height: 96, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let ink = 0
+      let coloured = 0
+      let transparent = 0
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] < OPAQUE) {
+          transparent++
+          continue
+        }
+        ink++
+        if (Math.max(data[i], data[i + 1], data[i + 2]) > 10) coloured++
+      }
+      expect(ink, chain.name).toBeGreaterThan(96)
+      expect(coloured, chain.name).toBe(0)
+      expect(transparent / (data.length / 4), chain.name).toBeGreaterThan(0.1)
+    }
+  })
+})
+
 /** Share of a mark's opaque pixels that are near-white. Downscaled: a 1800px chain icon needs no more than this. */
 async function whiteShare(src: string): Promise<number> {
   const { data } = await sharp(join(REPO, 'public', src))

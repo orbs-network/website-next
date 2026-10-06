@@ -53,7 +53,7 @@ export function PartnerShowcase({
   return (
     <div className="space-y-16">
       {partners.map((partner) => (
-        <div key={partner.id} className="grid items-center gap-10 lg:grid-cols-2">
+        <div key={partner.id} className="grid items-start gap-10 lg:grid-cols-2 lg:gap-16">
           <div>
             {/*
                 This logo's alt IS the partner's name — unlike the screenshot

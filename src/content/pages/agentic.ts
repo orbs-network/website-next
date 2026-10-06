@@ -41,14 +41,14 @@ export const AGENTIC_TOOLS = ['autoswap', 'autolimit', 'secureswap', 'twap'] as 
  * translate.
  */
 export const AGENTIC_CHAINS: readonly LogoRowItem[] = [
-  { name: 'Ethereum', logo: { src: '/marketing/agentic/chains/ethereum.png', width: 250, height: 250 } },
-  { name: 'BSC', logo: { src: '/marketing/agentic/chains/bnb.png', width: 1800, height: 1800 } },
-  { name: 'Polygon', logo: { src: '/marketing/agentic/chains/polygon.png', width: 250, height: 241 } },
-  { name: 'Avalanche', logo: { src: '/marketing/agentic/chains/avalanche.png', width: 250, height: 250 } },
-  { name: 'Arbitrum', logo: { src: '/marketing/agentic/chains/arbitrum.jpg', width: 250, height: 250 } },
-  { name: 'Base', logo: { src: '/marketing/agentic/chains/base.png', width: 200, height: 200 } },
-  { name: 'Linea', logo: { src: '/marketing/agentic/chains/linea.png', width: 250, height: 250 } },
-  { name: 'Sonic', logo: { src: '/marketing/agentic/chains/sonic.png', width: 250, height: 250 } },
+  { name: 'Ethereum', logo: { src: '/marketing/agentic/chains/ethereum-mono.svg', width: 24, height: 24 } },
+  { name: 'BSC', logo: { src: '/marketing/agentic/chains/bnb-mono.svg', width: 24, height: 24 } },
+  { name: 'Polygon', logo: { src: '/marketing/agentic/chains/polygon-mono.svg', width: 20, height: 18 } },
+  { name: 'Avalanche', logo: { src: '/marketing/agentic/chains/avalanche-mono.svg', width: 257, height: 227 } },
+  { name: 'Arbitrum', logo: { src: '/marketing/agentic/chains/arbitrum-mono.svg', width: 1080, height: 1218.5 } },
+  { name: 'Base', logo: { src: '/marketing/agentic/chains/base-mono.svg', width: 111, height: 111 } },
+  { name: 'Linea', logo: { src: '/marketing/agentic/chains/linea-mono.svg', width: 37, height: 38 } },
+  { name: 'Sonic', logo: { src: '/marketing/agentic/chains/sonic-mono.svg', width: 60, height: 57 } },
 ]
 
 /** The four verification steps. Order is the content — see `NumberedSteps`. */

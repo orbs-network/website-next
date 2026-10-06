@@ -46,6 +46,7 @@ import { textLang } from '@/i18n/script'
 export async function LiquidityHubPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.liquidityHub' })
   const devDocs = await getDevDocsLink('liquidityHub', locale)
+  const sectionSpacing = '[&>div]:mt-10 [&>div]:lg:mt-16'
 
   return (
     <>
@@ -59,7 +60,12 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <DividedSection eyebrow={t('sources.eyebrow')} intro={t('sources.intro')} locale={locale}>
+      <DividedSection
+        eyebrow={t('sources.eyebrow')}
+        intro={t('sources.intro')}
+        locale={locale}
+        className={sectionSpacing}
+      >
         {/* `h2`: the section has no heading, so the boxes are its top level. */}
         <PlainCards
           headingLevel="h2"
@@ -73,7 +79,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         <Prose
           text={t('fallback.body')}
           locale={locale}
-          className="mt-16 max-w-3xl lg:mt-24 [&_p]:text-p [&_p]:text-fg"
+          className="mt-10 max-w-3xl lg:mt-16 [&_p]:text-p [&_p]:text-fg"
         />
         <Image
           src={LIQUIDITY_HUB_DIAGRAM.src}
@@ -86,7 +92,12 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         />
       </DividedSection>
 
-      <DividedSection eyebrow={t('benefits.eyebrow')} heading={t('benefits.title')} locale={locale}>
+      <DividedSection
+        eyebrow={t('benefits.eyebrow')}
+        heading={t('benefits.title')}
+        locale={locale}
+        className={sectionSpacing}
+      >
         <PlainCards
           columns={3}
           cards={LIQUIDITY_HUB_BENEFITS.map((id) => ({
@@ -103,6 +114,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         heading={t('audiences.title')}
         intro={t('audiences.intro')}
         locale={locale}
+        className={sectionSpacing}
       >
         <AudienceColumns
           columns={LIQUIDITY_HUB_AUDIENCES.map((id) => ({
@@ -116,7 +128,12 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         />
       </DividedSection>
 
-      <DividedSection eyebrow={t('partners.eyebrow')} heading={t('partners.title')} locale={locale}>
+      <DividedSection
+        eyebrow={t('partners.eyebrow')}
+        heading={t('partners.title')}
+        locale={locale}
+        className={sectionSpacing}
+      >
         <PartnerShowcase
           partners={LIQUIDITY_HUB_PARTNERS.map((partner) => ({
             ...partner,
@@ -133,6 +150,7 @@ export async function LiquidityHubPage({ locale }: { locale: Locale }) {
         heading={t('decentralization.title')}
         intro={t('decentralization.body')}
         locale={locale}
+        className={sectionSpacing}
       >
         <CtaButton
           link={{ label: t('decentralization.terms'), href: LIQUIDITY_HUB_LINKS.terms.href }}

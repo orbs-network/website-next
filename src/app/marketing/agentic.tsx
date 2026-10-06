@@ -81,25 +81,22 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         />
       </DividedSection>
 
-      <DividedSection eyebrow={t('eyebrows.chains')} heading={t('chains.title')} locale={locale}>
+      <DividedSection eyebrow={t('eyebrows.chains')} locale={locale} className="[&>div]:mt-8">
         {/*
-          Left-aligned like the master's `09` strip, rather than `LogoRow`'s
-          centred cluster. Chain names are proper nouns, English in every
-          locale, so each carries its own `lang`.
+          Equal tiles keep differently shaped marks balanced. Chain names are
+          proper nouns, English in every locale, so each carries its own `lang`.
         */}
-        <ul className="flex flex-wrap items-center gap-x-10 gap-y-8">
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:grid-cols-8">
           {AGENTIC_CHAINS.map((chain) => (
-            <li key={chain.name} className="flex items-center gap-3">
+            <li key={chain.name} className="flex flex-col items-center gap-4">
               {chain.logo && (
                 <Image
                   src={chain.logo.src}
                   alt=""
                   width={chain.logo.width}
                   height={chain.logo.height}
-                  // Rendered 32px high; without `sizes` next/image fetches the
-                  // intrinsic width (up to 1800px) for each mark.
-                  sizes="2rem"
-                  className="size-8 object-contain"
+                  sizes="4rem"
+                  className="h-12 w-16 object-contain brightness-0 dark:invert"
                 />
               )}
               <span
