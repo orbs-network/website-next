@@ -1,5 +1,5 @@
 import Image from 'next/image'
-import { H3 } from '@/app/components/typography'
+import { H4 } from '@/app/components/typography'
 import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -69,9 +69,9 @@ export function PartnerShowcase({
               className="h-10 w-auto"
             />
 
-            <H3 weight="medium" className="mt-6" lang={textLang(partner.subtitle, locale)}>
-              {partner.subtitle}
-            </H3>
+            <H4 asChild className="mt-6" lang={textLang(partner.subtitle, locale)}>
+              <h3>{partner.subtitle}</h3>
+            </H4>
 
             <ul className="mt-6 space-y-3 text-muted-foreground">
               {partner.items.map((item) => (

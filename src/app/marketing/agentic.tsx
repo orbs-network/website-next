@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { H1, H3 } from '@/app/components/typography'
+import { H1, H4 } from '@/app/components/typography'
 import { GithubIcon } from '@/components/icons'
 import { DividedSection, PlainCards } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
@@ -61,10 +61,10 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
             <li key={card.id} className="flex flex-col bg-surface p-6 lg:p-8">
               {/* Decorative: the heading beneath names the same thing. */}
               <Image src={card.icon} alt="" width={48} height={48} className="size-12" />
-              <H3 className="mt-10" weight="medium" lang={lang(`breaks.items.${card.id}.title`)}>
-                {t(`breaks.items.${card.id}.title`)}
-              </H3>
-              <Prose text={t(`breaks.items.${card.id}.body`)} locale={locale} className="mt-6 [&_p]:text-fg" />
+              <H4 asChild className="mt-10" lang={lang(`breaks.items.${card.id}.title`)}>
+                <h3>{t(`breaks.items.${card.id}.title`)}</h3>
+              </H4>
+              <Prose text={t(`breaks.items.${card.id}.body`)} locale={locale} className="mt-10 [&_p]:text-fg" />
             </li>
           ))}
         </ul>
@@ -156,18 +156,20 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
 
             return (
               <li key={card.id} className="relative flex flex-col bg-surface p-6 lg:p-8">
-                <H3 weight="medium" lang={textLang(title, locale)}>
-                  {external ? (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
-                      {title}
-                    </a>
-                  ) : (
-                    <Link href={href} className={linkClassName}>
-                      {title}
-                    </Link>
-                  )}
-                </H3>
-                <Prose text={t(`getStarted.items.${card.id}.body`)} locale={locale} className="mt-6 [&_p]:text-fg" />
+                <H4 asChild lang={textLang(title, locale)}>
+                  <h3>
+                    {external ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+                        {title}
+                      </a>
+                    ) : (
+                      <Link href={href} className={linkClassName}>
+                        {title}
+                      </Link>
+                    )}
+                  </h3>
+                </H4>
+                <Prose text={t(`getStarted.items.${card.id}.body`)} locale={locale} className="mt-10 [&_p]:text-fg" />
                 <span aria-hidden="true" className="mt-auto pt-10 text-p">
                   &rarr;
                 </span>

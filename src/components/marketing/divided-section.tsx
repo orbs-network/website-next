@@ -1,4 +1,4 @@
-import { H2, H3 } from '@/app/components/typography'
+import { H2, H4 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
@@ -88,10 +88,10 @@ export function PlainCards({
     <ul className={cn('grid grid-cols-1 gap-4 md:grid-cols-2', columns === 3 && 'lg:grid-cols-3')}>
       {cards.map((card) => (
         <li key={card.id} className="flex flex-col bg-surface p-6 lg:p-8">
-          <H3 asChild weight="medium">
+          <H4 asChild>
             <Heading lang={textLang(card.title, locale)}>{card.title}</Heading>
-          </H3>
-          <Prose text={card.body} locale={locale} className="mt-6 [&_p]:text-fg" />
+          </H4>
+          <Prose text={card.body} locale={locale} className="mt-10 [&_p]:text-fg" />
         </li>
       ))}
     </ul>

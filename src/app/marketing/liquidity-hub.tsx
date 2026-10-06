@@ -1,6 +1,6 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
-import { H3 } from '@/app/components/typography'
+import { H4 } from '@/app/components/typography'
 import { DividedSection, PlainCards } from '@/components/marketing/divided-section'
 import { PartnerShowcase } from '@/components/marketing/partner-showcase'
 import { Prose } from '@/components/marketing/prose'
@@ -165,10 +165,10 @@ function AudienceColumns({
     <div className="grid grid-cols-1 gap-10 sm:grid-cols-3">
       {columns.map((column) => (
         <div key={column.id} className="border-t border-border pt-6">
-          <H3 weight="medium" lang={textLang(column.title, locale)}>
-            {column.title}
-          </H3>
-          <ul className="mt-6 space-y-3 text-p text-fg-muted">
+          <H4 asChild lang={textLang(column.title, locale)}>
+            <h3>{column.title}</h3>
+          </H4>
+          <ul className="mt-10 space-y-3 text-p text-fg-muted">
             {column.items.map((item) => (
               <li key={item} lang={textLang(item, locale)}>
                 {item}

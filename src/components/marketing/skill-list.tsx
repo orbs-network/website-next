@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { H3 } from '@/app/components/typography'
+import { H4 } from '@/app/components/typography'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { Prose } from './prose'
 import type { Locale } from '@/i18n/locales'
@@ -58,12 +58,12 @@ export function SkillList({
             Flat `bg-surface`, no border: the master's card (#227).
           */}
           <Card className="relative h-full rounded-none border-0 bg-surface shadow-none">
-            <CardHeader>
+            <CardHeader className="pb-10">
               {/*
                 `h2`: the section around the list has no heading of its own —
                 the page `h1` introduces it — so a skill is the next level.
               */}
-              <H3 asChild weight="medium">
+              <H4 asChild>
                 <h2>
                   {/*
                     Skill names are product identifiers and stay Latin. This
@@ -78,7 +78,7 @@ export function SkillList({
                     {skill.name}
                   </Link>
                 </h2>
-              </H3>
+              </H4>
             </CardHeader>
 
             <CardContent>

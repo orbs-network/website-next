@@ -447,15 +447,15 @@
         "intro": "A single execution tool with flexible, composable parameters. The agent defines the order configuration, and Orbs handles the execution flow.",
         "items": {
           "autoswap": {
-            "title": "AUTOSWAP",
+            "title": "Auto Swap",
             "body": "Agent-driven token swaps with smart routing and slippage protection. The default for most trades."
           },
           "autolimit": {
-            "title": "AUTOLIMIT",
+            "title": "Auto Limit",
             "body": "Limit orders with on-chain execution guarantees. Set a price, walk away."
           },
           "secureswap": {
-            "title": "SECURESWAP",
+            "title": "Secure Swap",
             "body": "Additional cosigned oracle verification for higher-stakes trades. Extra checks before anything moves."
           },
           "twap": {

@@ -448,15 +448,15 @@
         "intro": "유연하고 조합 가능한 파라미터를 갖춘 단일 실행 도구입니다. 에이전트가 주문 구성을 정의하면 Orbs가 실행 흐름을 처리합니다.",
         "items": {
           "autoswap": {
-            "title": "AUTOSWAP",
+            "title": "Auto Swap",
             "body": "에이전트 주도형 토큰 스왑으로, 스마트 라우팅과 슬리피지 보호를 제공합니다. 대부분의 거래에 적합한 기본 옵션입니다."
           },
           "autolimit": {
-            "title": "AUTOLIMIT",
+            "title": "Auto Limit",
             "body": "온체인 실행 보장된 지정가 주문입니다. 가격을 설정해두면 나머지는 맡겨두세요."
           },
           "secureswap": {
-            "title": "SECURESWAP",
+            "title": "Secure Swap",
             "body": "더 중요한 규모의 거래를 위한 추가 공동 서명 오라클 검증입니다. 실제 실행 전에 한 단계 더 점검합니다."
           },
           "twap": {

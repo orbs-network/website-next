@@ -2,7 +2,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import { cn } from '@/lib/utils'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { H2, H3 } from '@/app/components/typography'
+import { H2, H4 } from '@/app/components/typography'
 import { Prose } from './prose'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -117,14 +117,26 @@ export function FeatureGrid({
         {intro && <Prose text={intro} locale={locale} className={cn('[&_p]:text-lg', title && 'mt-6')} />}
       </div>
 
-      <div className="mt-16 grid gap-8 md:grid-cols-2">
-        {features.map((feature) => (
+      <div
+        className={cn(
+          'mt-16 grid gap-8 md:grid-cols-2',
+          features.length === 3 && 'lg:grid-cols-3',
+          features.length === 5 && 'lg:grid-cols-6'
+        )}
+      >
+        {features.map((feature, index) => (
           <Card
             key={feature.id}
             // `relative` so the stretched link below is bounded by the card.
-            className={cn('h-full', feature.href && 'relative transition-colors hover:border-accent-primary')}
+            className={cn(
+              'h-full',
+              feature.href && 'relative transition-colors hover:border-accent-primary',
+              features.length === 5 && 'lg:col-span-2',
+              features.length === 5 && index === 3 && 'lg:col-start-2',
+              features.length === 5 && index === 4 && 'lg:col-start-4'
+            )}
           >
-            <CardHeader>
+            <CardHeader className="pb-10">
               {feature.icon && (
                 // Decorative: the heading beneath states the same thing in
                 // words, so an alt would be read twice.
@@ -134,8 +146,8 @@ export function FeatureGrid({
                 `h3` under a section heading, `h2` without one. With no section
                 title these cards ARE the top level of their section, and
                 rendering them as `h3` straight after the page `h1` skips a
-                level — readers navigating by heading hit a gap. `asChild` keeps
-                the `h3` styling either way, so only the outline changes.
+                level — readers navigating by heading hit a gap. `H4 asChild`
+                applies the homepage card size without changing the outline.
               */}
               {/*
                 The link wraps the TITLE but is stretched over the card by
@@ -143,7 +155,7 @@ export function FeatureGrid({
                 accessible name stays the title alone rather than the title plus
                 the body text.
               */}
-              <H3 asChild weight="medium">
+              <H4 asChild>
                 {title ? (
                   <h3 lang={textLang(feature.title, locale)}>
                     {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
@@ -153,7 +165,7 @@ export function FeatureGrid({
                     {feature.href ? <FeatureLink href={feature.href}>{feature.title}</FeatureLink> : feature.title}
                   </h2>
                 )}
-              </H3>
+              </H4>
             </CardHeader>
             <CardContent>
               <Prose text={feature.body} locale={locale} />

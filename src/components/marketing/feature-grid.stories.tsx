@@ -72,3 +72,70 @@ export const UnlinkedCardsAreNotLinks: Story = {
     await expect(within(canvasElement).queryAllByRole('link')).toHaveLength(0)
   },
 }
+
+const FIVE_FEATURES = [
+  ...FEATURES,
+  { id: 'three', title: 'Third', body: 'Body three.' },
+  { id: 'four', title: 'Fourth', body: 'Body four.' },
+  { id: 'five', title: 'Fifth', body: 'Body five.' },
+]
+
+const desktop = {
+  viewport: { options: { desktop1440: { name: 'Desktop 1440', styles: { width: '1440px', height: '1000px' } } } },
+}
+
+/** Three-card products use the full row, rather than leaving the third card alone. */
+export const ThreeCardsFillOneDesktopRow: Story = {
+  parameters: desktop,
+  globals: { viewport: { value: 'desktop1440' } },
+  args: { title: 'Benefits', features: FIVE_FEATURES.slice(0, 3), locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector('section > .grid')!
+    const cards = [...grid.children].map((card) => card.getBoundingClientRect())
+    await expect(cards).toHaveLength(3)
+    await expect(cards.every((card) => Math.abs(card.top - cards[0].top) < 1)).toBe(true)
+    await expect(Math.abs(cards[0].left - grid.getBoundingClientRect().left)).toBeLessThan(1)
+    await expect(Math.abs(cards[2].right - grid.getBoundingClientRect().right)).toBeLessThan(1)
+    await expect(cards.every((card) => Math.abs(card.width - cards[0].width) < 1)).toBe(true)
+  },
+}
+
+/** Five cards keep equal widths, with the final pair centred below the first three. */
+export const FiveCardsHaveACentredSecondRow: Story = {
+  parameters: desktop,
+  globals: { viewport: { value: 'desktop1440' } },
+  args: { title: 'Benefits', features: FIVE_FEATURES, locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector('section > .grid')!.getBoundingClientRect()
+    const cards = [...canvasElement.querySelector('section > .grid')!.children].map((card) =>
+      card.getBoundingClientRect()
+    )
+    await expect(cards).toHaveLength(5)
+    await expect(cards.slice(0, 3).every((card) => Math.abs(card.top - cards[0].top) < 1)).toBe(true)
+    await expect(cards[3].top).toBeGreaterThan(cards[0].bottom)
+    await expect(Math.abs(cards[3].top - cards[4].top)).toBeLessThan(1)
+    await expect(cards.every((card) => Math.abs(card.width - cards[0].width) < 1)).toBe(true)
+    await expect(Math.abs((cards[3].left + cards[4].right) / 2 - (grid.left + grid.right) / 2)).toBeLessThan(1)
+  },
+}
+
+/** Desktop spans must not create empty columns or reorder the cards on a phone. */
+export const FiveCardsStackOnPhones: Story = {
+  parameters: {
+    viewport: { options: { phone390: { name: 'Phone 390', styles: { width: '390px', height: '844px' } } } },
+  },
+  globals: { viewport: { value: 'phone390' } },
+  args: { title: 'Benefits', features: FIVE_FEATURES, locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector('section > .grid')!.getBoundingClientRect()
+    const cards = [...canvasElement.querySelector('section > .grid')!.children].map((card) =>
+      card.getBoundingClientRect()
+    )
+    await expect(cards).toHaveLength(5)
+    for (const [index, card] of cards.entries()) {
+      await expect(Math.abs(card.left - grid.left)).toBeLessThan(1)
+      await expect(Math.abs(card.right - grid.right)).toBeLessThan(1)
+      if (index) await expect(card.top).toBeGreaterThan(cards[index - 1].bottom)
+    }
+  },
+}

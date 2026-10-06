@@ -3,7 +3,7 @@ import { Disclaimer } from '@/components/marketing/disclaimer'
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
 import { CtaButton } from '@/components/marketing/section-parts'
-import { H2, H3 } from '@/app/components/typography'
+import { H2, H4 } from '@/app/components/typography'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Image from 'next/image'
 import { ProductHero } from '@/components/marketing/product-hero'
@@ -52,14 +52,14 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
       />
 
       <DividedSection heading={t('benefits.title')} locale={locale}>
-        <div className="grid gap-8 md:grid-cols-2">
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
           {DPERPS_BENEFITS.map((benefit) => (
             <Card key={benefit.id} className="h-full">
-              <CardHeader>
+              <CardHeader className="pb-10">
                 <Image src={benefit.icon} alt="" width={48} height={48} className="mb-4 size-12" />
-                <H3 weight="medium" lang={textLang(t(`benefits.items.${benefit.id}.title`), locale)}>
-                  {t(`benefits.items.${benefit.id}.title`)}
-                </H3>
+                <H4 asChild lang={textLang(t(`benefits.items.${benefit.id}.title`), locale)}>
+                  <h3>{t(`benefits.items.${benefit.id}.title`)}</h3>
+                </H4>
               </CardHeader>
               <CardContent>
                 <Prose text={t(`benefits.items.${benefit.id}.body`)} locale={locale} className="[&_p]:text-lg" />
