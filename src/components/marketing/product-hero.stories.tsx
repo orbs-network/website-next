@@ -13,7 +13,7 @@ export default meta
 type Story = StoryObj<typeof meta>
 
 const BASE = {
-  headline: 'LIMIT ORDERS PROTOCOL FOR\nDECENTRALIZED EXCHANGES',
+  headline: 'Limit orders protocol for\ndecentralized exchanges',
   intro: 'A decentralized on-chain protocol for price-efficient and reliable execution of limit orders.',
   ctaLabel: 'GET STARTED',
   ctaHref: '#get-started',
@@ -79,9 +79,11 @@ export const HeadlineKeepsAuthoredLineBreaks: Story = {
     const canvas = within(canvasElement)
     const heading = canvas.getByRole('heading', { level: 1 })
 
-    await expect(heading).toHaveTextContent('LIMIT ORDERS PROTOCOL FOR')
-    await expect(heading).toHaveTextContent('DECENTRALIZED EXCHANGES')
+    await expect(heading).toHaveTextContent('Limit orders protocol for')
+    await expect(heading).toHaveTextContent('decentralized exchanges')
     await expect(heading.textContent).toContain('\n')
+    await expect(getComputedStyle(heading).fontWeight).toBe('400')
+    await expect(getComputedStyle(heading).textTransform).toBe('none')
   },
 }
 

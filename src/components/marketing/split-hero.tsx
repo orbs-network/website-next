@@ -8,7 +8,7 @@ import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLin
  * right.
  *
  * Not `ProductHero`. That component is the legacy product pages' header —
- * uppercase black headline, image on the right, repo and Telegram icons — and
+ * image on the right, repo and Telegram icons — and
  * the 3.4 pages share none of it. Bending one component into both would make
  * every prop a question about which design the caller is on.
  *
