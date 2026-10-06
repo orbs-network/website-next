@@ -30,6 +30,10 @@ const PUBLISHERS = [
     name: 'ZyCrypto',
     logo: 'https://images.ctfassets.net/ivp9qsr6kthp/img-028654c0df5649bf1b08bfdb3c2d0a1f38dd9ec0/7d087083fe1ec804d5bed51b40504a3d/zycrypto.png',
   },
+  {
+    name: 'iHODL',
+    logo: 'https://images.ctfassets.net/ivp9qsr6kthp/img-d50f2c98554a68e8642da3e6260216196924fa79/b1c0a5800d0df14e7a1d62fdffe94841/ihodi.png',
+  },
 ]
 
 export const PublisherBackings: Story = {
@@ -55,9 +59,10 @@ export const PublisherBackings: Story = {
       for (const dark of [false, true]) {
         html.classList.toggle('dark', dark)
         const logos = [...canvasElement.querySelectorAll('img')]
-        await expect(logos).toHaveLength(3)
+        await expect(logos).toHaveLength(4)
         await expect(logos.map((logo) => getComputedStyle(logo.parentElement!).backgroundColor)).toEqual([
           'rgb(255, 255, 255)',
+          'rgb(18, 18, 20)',
           'rgb(18, 18, 20)',
           'rgb(18, 18, 20)',
         ])

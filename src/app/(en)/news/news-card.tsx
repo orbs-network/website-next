@@ -15,7 +15,8 @@ const DARK_PUBLISHER_LOGOS = new Set([
   'zycrypto.png',
   'cryptodaily.svg',
   'cryptodaily.png',
-  'ihodl.png',
+  'ihodi.png', // iHODL's filename in the CMS.
+  'orbs.svg',
   'coinquora.svg',
   'cryptopotato.png',
 ])
