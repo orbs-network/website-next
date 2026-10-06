@@ -1,6 +1,7 @@
 import { Separator } from '@/components/ui/separator'
 import type { Locale } from '@/i18n/locales'
 import { Prose } from './prose'
+import { cn } from '@/lib/utils'
 
 /**
  * Legal fine print at the foot of a page.
@@ -15,10 +16,10 @@ import { Prose } from './prose'
  * collapsed — it is a risk disclosure, and burying it would be the one styling
  * choice with consequences beyond taste.
  */
-export function Disclaimer({ text, locale }: { text: string; locale: Locale }) {
+export function Disclaimer({ text, locale, className }: { text: string; locale: Locale; className?: string }) {
   return (
     <section className="container pb-20">
-      <div className="mx-auto max-w-3xl">
+      <div className={cn('mx-auto max-w-3xl', className)}>
         <Separator className="mb-8" />
         {/*
           `Prose` marks each paragraph. A disclaimer is one catalog string, so

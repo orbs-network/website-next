@@ -6,8 +6,7 @@
  * Shape follows the legacy page: header, cards, an "Integrate" diagram, a
  * partners diagram, a closing "Powered by Orbs Network" block, and a legal
  * disclaimer. Two of those sections are a heading, prose and a picture with
- * nothing to click, which is why `ArchitectureSection` takes its links
- * optionally.
+ * nothing to click. The page composes these in the shared divided layout.
  */
 
 export const DPERPS_HERO = {

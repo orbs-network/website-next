@@ -30,7 +30,7 @@ export function DividedSection({
 }: {
   /** Anchor target, e.g. a hero call to action scrolling down to it. */
   id?: string
-  eyebrow: string
+  eyebrow?: string
   heading?: string
   /** Markdown-lite: blank lines split paragraphs, `**` bolds (see `Prose`). */
   intro?: string
@@ -39,7 +39,7 @@ export function DividedSection({
 }) {
   return (
     <section id={id} className="container scroll-mt-32 border-t border-border pt-3 pb-section">
-      <Eyebrow text={eyebrow} locale={locale} />
+      {eyebrow && <Eyebrow text={eyebrow} locale={locale} />}
 
       {(heading || intro) && (
         <div
