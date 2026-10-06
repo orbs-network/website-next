@@ -4,6 +4,22 @@ import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
 
+// These CMS assets have white or pale lettering. Keep their original colours
+// on a dark backing; the remaining publisher logos need a light one.
+const DARK_PUBLISHER_LOGOS = new Set([
+  'cryptonews.svg',
+  'crypto-news-flash.webp',
+  'coinpedia.webp',
+  'investing.webp',
+  'crypto-briefing.png',
+  'zycrypto.png',
+  'cryptodaily.svg',
+  'cryptodaily.png',
+  'ihodl.png',
+  'coinquora.svg',
+  'cryptopotato.png',
+])
+
 /**
  * A press mention links OUT to the publisher — there is no page of our own to
  * navigate to, so this is a plain `<a>` with `target="_blank"`, not a
@@ -12,6 +28,7 @@ import { cn } from '@/lib/utils'
 export function MediaCard({ mention }: { mention: MediaMentionFields }) {
   const thumbnailUrl = getAssetUrl(mention.thumbnail)
   const logoUrl = getAssetUrl(mention.publisherLogo)
+  const darkLogoBacking = logoUrl && DARK_PUBLISHER_LOGOS.has(new URL(logoUrl).pathname.split('/').pop()!.toLowerCase())
 
   return (
     <Card className="p-0 group overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -51,7 +68,12 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
               // Decorative: the publisher is already conveyed by the link
               // target and the headline, and the legacy data has no publisher
               // NAME to put in alt text — only a logo filename.
-              <span className="inline-flex shrink-0 items-center bg-white px-2 py-1">
+              <span
+                className={cn(
+                  'inline-flex shrink-0 items-center px-2 py-1',
+                  darkLogoBacking ? 'bg-neutral-900' : 'bg-white'
+                )}
+              >
                 <Image src={logoUrl} alt="" width={72} height={20} className="h-5 w-auto max-w-[6rem] object-contain" />
               </span>
             )}
