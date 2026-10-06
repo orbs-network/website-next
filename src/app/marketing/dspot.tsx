@@ -32,7 +32,7 @@ import type { Locale } from '@/i18n/locales'
  * "LIQUIDITY HUB", and it has no lowercase "d" to protect.
  */
 const MODULE_PRESENTATION: Record<DspotModuleId, { accentClassName: string; titleClassName?: string }> = {
-  dlimit: { accentClassName: 'text-indigo-400' },
+  dlimit: { accentClassName: 'text-indigo-400 dark:text-indigo-200' },
   dtwap: { accentClassName: 'text-[#545fbb] dark:text-periwinkle-400' },
   dsltp: { accentClassName: 'text-[#b73d42] dark:text-[#f27272]' },
   liquidityHub: { accentClassName: 'text-[#06737b] dark:text-cyan-400', titleClassName: 'uppercase' },

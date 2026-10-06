@@ -30,7 +30,7 @@ import { textLang } from '@/i18n/script'
 const PRODUCT_PRESENTATION: Record<InstitutionalProductId, { accentClassName: string; titleClassName?: string }> = {
   liquidityHub: { accentClassName: 'text-cyan-600 dark:text-cyan-400', titleClassName: 'uppercase' },
   dtwap: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
-  dlimit: { accentClassName: 'text-indigo-400' },
+  dlimit: { accentClassName: 'text-indigo-400 dark:text-indigo-200' },
   dsltp: { accentClassName: 'text-coral-600 dark:text-[#f17171]' },
 }
 

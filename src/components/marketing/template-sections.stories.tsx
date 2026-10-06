@@ -224,7 +224,7 @@ const MODULES = (
       {
         id: 'dlimit',
         eyebrow: 'dLIMIT',
-        accentClassName: 'text-indigo-400',
+        accentClassName: 'text-indigo-400 dark:text-indigo-200',
         title: 'dLIMIT',
         body: 'Place orders at a target price or better.',
         link: { label: 'Discover dLIMIT', href: '/dlimit' },
