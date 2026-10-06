@@ -31,10 +31,8 @@ export const LogosInBothThemes: Story = {
           const visible = images.filter((image) => getComputedStyle(image).display !== 'none')
           await expect(visible).toHaveLength(1)
           await expect(visible[0]).toHaveAttribute('alt', '')
-          await expect(visible[0].getAttribute('src')).toContain(dark && entry.darkLogo ? entry.darkLogo : entry.logo)
-          if (!entry.darkLogo) {
-            await expect(getComputedStyle(visible[0].parentElement!).backgroundColor).toBe('rgb(255, 255, 255)')
-          }
+          await expect(visible[0].getAttribute('src')).toContain(entry.logo)
+          await expect(getComputedStyle(visible[0].parentElement!).backgroundColor).toBe('rgb(255, 255, 255)')
         }
       }
     } finally {

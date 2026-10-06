@@ -18,8 +18,6 @@ export type EcosystemEntry = {
   url: string
   /** Absent for one entry: the legacy dataset has no logo for ANTirex. */
   logo?: string
-  /** Dark-theme wordmark; the coloured artwork is identical to `logo`. */
-  darkLogo?: string
 }
 
 export type EcosystemCategory = {
@@ -37,13 +35,11 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
         name: 'TON Minter',
         url: 'https://www.orbs.com/Announcing-TON-Minter-by-Orbs/',
         logo: '/ecosystem/useCases/minter.svg',
-        darkLogo: '/ecosystem/useCases/minter-dark.svg',
       },
       {
         name: 'TON Verifier',
         url: 'https://www.orbs.com/Announcing-TON-Verifier-by-Orbs/',
         logo: '/ecosystem/useCases/verifier.svg',
-        darkLogo: '/ecosystem/useCases/verifier-dark.svg',
       },
       {
         name: 'The Open DeFi Notifications Protocol',
@@ -54,13 +50,11 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
         name: 'TON Access',
         url: 'https://www.orbs.com/ton-access',
         logo: '/ecosystem/useCases/ton-access.svg',
-        darkLogo: '/ecosystem/useCases/ton-access-dark.svg',
       },
       {
         name: 'TON.vote',
         url: 'https://www.orbs.com/Orbs-Introduces-TON-vote/',
         logo: '/ecosystem/useCases/ton-vote.svg',
-        darkLogo: '/ecosystem/useCases/ton-vote-dark.svg',
       },
       {
         name: 'TON Unfreezer',

@@ -7,7 +7,6 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
 import { AGENTIC_CHAINS } from '@/content/pages/agentic'
 import { HOME_VENUES } from '@/content/pages/home'
 import { INSTITUTIONAL_SIGNERS, INSTITUTIONAL_VENUES } from '@/content/pages/institutional'
-import { ECOSYSTEM_CATEGORIES } from '@/content/pages/ecosystem'
 import { EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
 import { readFile } from 'node:fs/promises'
 
@@ -35,21 +34,19 @@ const ROWS: Record<string, readonly LogoRowItem[]> = {
 }
 
 describe('dark-theme wordmarks', () => {
-  it('change neutral ink while preserving the coloured artwork and geometry', async () => {
-    const variants = [
-      ...ECOSYSTEM_CATEGORIES.flatMap((category) =>
-        category.entries.flatMap((entry) => (entry.logo && entry.darkLogo ? [[entry.logo, entry.darkLogo]] : []))
-      ),
-      ...EXECUTION_SERVICES_PRODUCTS.map((product) => [product.image, product.darkImage]),
-    ]
-    const neutralInk = /fill="(?:black|#000000|#454545|#F6F6F6)"/g
-
-    for (const [light, dark] of variants) {
-      const original = await readFile(join(REPO, 'public', light), 'utf8')
-      const variant = await readFile(join(REPO, 'public', dark), 'utf8')
-      expect(variant, dark).not.toBe(original)
-      expect(variant, dark).toContain('fill="#F6F6F6"')
-      expect(variant.replace(neutralInk, ''), dark).toBe(original.replace(neutralInk, ''))
+  it('make all execution-service lettering white while preserving the coloured icons and geometry', async () => {
+    for (const product of EXECUTION_SERVICES_PRODUCTS) {
+      const original = await readFile(join(REPO, 'public', product.image), 'utf8')
+      const variant = await readFile(join(REPO, 'public', product.darkImage), 'utf8')
+      const lightPaths = original.match(/<path\b[^>]*>/g)!
+      const darkPaths = variant.match(/<path\b[^>]*>/g)!
+      // In these assets, the coloured icon precedes the outlined wordmark.
+      const iconPaths = product.id === 'lambdaProduct' ? 6 : 10
+      expect(darkPaths.slice(0, iconPaths), product.darkImage).toEqual(lightPaths.slice(0, iconPaths))
+      expect(darkPaths.slice(iconPaths).length).toBeGreaterThan(0)
+      expect(darkPaths.slice(iconPaths).every((path) => path.includes('fill="#F6F6F6"'))).toBe(true)
+      const ink = /fill="#[0-9A-Fa-f]{6}"/g
+      expect(variant.replace(ink, ''), product.darkImage).toBe(original.replace(ink, ''))
     }
   })
 })

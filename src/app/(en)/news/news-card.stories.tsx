@@ -34,6 +34,10 @@ const PUBLISHERS = [
     name: 'iHODL',
     logo: 'https://images.ctfassets.net/ivp9qsr6kthp/img-d50f2c98554a68e8642da3e6260216196924fa79/b1c0a5800d0df14e7a1d62fdffe94841/ihodi.png',
   },
+  {
+    name: 'CryptoDaily (opaque)',
+    logo: 'https://images.ctfassets.net/ivp9qsr6kthp/img-bd311fef9ea0cfc8901f6af316af7176eeaf2651/850f11eeb5f0bb58649cb7491cf0b03d/cryptodaily.png',
+  },
 ]
 
 export const PublisherBackings: Story = {
@@ -47,6 +51,7 @@ export const PublisherBackings: Story = {
             date: '2026-10-06T00:00:00Z',
             url: 'https://example.com/article',
             publisherLogo: publisherLogo(publisher.logo),
+            thumbnail: publisherLogo(PUBLISHERS[0].logo),
           }}
         />
       ))}
@@ -58,14 +63,25 @@ export const PublisherBackings: Story = {
     try {
       for (const dark of [false, true]) {
         html.classList.toggle('dark', dark)
-        const logos = [...canvasElement.querySelectorAll('img')]
-        await expect(logos).toHaveLength(4)
+        const logos = [...canvasElement.querySelectorAll('span > img')]
+        await expect(logos).toHaveLength(5)
         await expect(logos.map((logo) => getComputedStyle(logo.parentElement!).backgroundColor)).toEqual([
           'rgb(255, 255, 255)',
-          'rgb(18, 18, 20)',
-          'rgb(18, 18, 20)',
-          'rgb(18, 18, 20)',
+          'rgb(255, 255, 255)',
+          'rgb(255, 255, 255)',
+          'rgb(255, 255, 255)',
+          'rgb(255, 255, 255)',
         ])
+        await expect(logos.map((logo) => getComputedStyle(logo).filter)).toEqual([
+          'none',
+          'brightness(0)',
+          'brightness(0)',
+          'brightness(0)',
+          'none',
+        ])
+        const thumbnails = [...canvasElement.querySelectorAll('img.object-cover')]
+        await expect(thumbnails).toHaveLength(5)
+        await expect(thumbnails.every((image) => getComputedStyle(image).objectFit === 'cover')).toBe(true)
       }
     } finally {
       html.classList.toggle('dark', wasDark)

@@ -1,12 +1,12 @@
 import Image from 'next/image'
 import { getAssetUrl, type MediaMentionFields } from '@/app/lib/api'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
-import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
+import { COVER_FRAME } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
 
-// These CMS assets have white or pale lettering. Keep their original colours
-// on a dark backing; the remaining publisher logos need a light one.
-const DARK_PUBLISHER_LOGOS = new Set([
+// These CMS marks have pale lettering. Render them in dark ink so every
+// publisher can use the same white backing in both themes.
+const WHITE_PUBLISHER_LOGOS = new Set([
   'cryptonews.svg',
   'crypto-news-flash.webp',
   'coinpedia.webp',
@@ -14,7 +14,6 @@ const DARK_PUBLISHER_LOGOS = new Set([
   'crypto-briefing.png',
   'zycrypto.png',
   'cryptodaily.svg',
-  'cryptodaily.png',
   'ihodi.png', // iHODL's filename in the CMS.
   'orbs.svg',
   'coinquora.svg',
@@ -29,7 +28,7 @@ const DARK_PUBLISHER_LOGOS = new Set([
 export function MediaCard({ mention }: { mention: MediaMentionFields }) {
   const thumbnailUrl = getAssetUrl(mention.thumbnail)
   const logoUrl = getAssetUrl(mention.publisherLogo)
-  const darkLogoBacking = logoUrl && DARK_PUBLISHER_LOGOS.has(new URL(logoUrl).pathname.split('/').pop()!.toLowerCase())
+  const darkLogoInk = logoUrl && WHITE_PUBLISHER_LOGOS.has(new URL(logoUrl).pathname.split('/').pop()!.toLowerCase())
 
   return (
     <Card className="p-0 group overflow-hidden hover:shadow-lg transition-shadow duration-200">
@@ -43,18 +42,14 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
         aria-label={`${mention.headline} (opens on the publisher's site)`}
       >
         <CardHeader className="p-0 pb-4">
-          {/*
-            The blog's cover frame. Most thumbnails here are the same 2:1
-            banners as the posts (11 of the 24 newest; 8 are 16:9), and a 16:9
-            crop cut the brand names off them the same way (#223).
-          */}
+          {/* Match the blog listing: fill the cover frame, cropping as needed. */}
           <div className={cn('relative overflow-hidden', COVER_FRAME)}>
             {thumbnailUrl && (
               <Image
                 src={thumbnailUrl}
                 alt=""
                 fill
-                className={cn(COVER_IMAGE, 'transition-transform group-hover:scale-105')}
+                className="object-cover transition-transform group-hover:scale-105"
                 sizes="(min-width: 1024px) 33vw, (min-width: 768px) 50vw, 100vw"
               />
             )}
@@ -69,13 +64,14 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
               // Decorative: the publisher is already conveyed by the link
               // target and the headline, and the legacy data has no publisher
               // NAME to put in alt text — only a logo filename.
-              <span
-                className={cn(
-                  'inline-flex shrink-0 items-center px-2 py-1',
-                  darkLogoBacking ? 'bg-neutral-900' : 'bg-white'
-                )}
-              >
-                <Image src={logoUrl} alt="" width={72} height={20} className="h-5 w-auto max-w-[6rem] object-contain" />
+              <span className="inline-flex shrink-0 items-center bg-white px-2 py-1">
+                <Image
+                  src={logoUrl}
+                  alt=""
+                  width={72}
+                  height={20}
+                  className={cn('h-5 w-auto max-w-[6rem] object-contain', darkLogoInk && 'brightness-0')}
+                />
               </span>
             )}
             <time dateTime={mention.date}>
