@@ -7,6 +7,9 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
 import { AGENTIC_CHAINS } from '@/content/pages/agentic'
 import { HOME_VENUES } from '@/content/pages/home'
 import { INSTITUTIONAL_SIGNERS, INSTITUTIONAL_VENUES } from '@/content/pages/institutional'
+import { ECOSYSTEM_CATEGORIES } from '@/content/pages/ecosystem'
+import { EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
+import { readFile } from 'node:fs/promises'
 
 /**
  * Guards against a white-only logo reaching the light theme.
@@ -30,6 +33,26 @@ const ROWS: Record<string, readonly LogoRowItem[]> = {
   INSTITUTIONAL_SIGNERS,
   AGENTIC_CHAINS,
 }
+
+describe('dark-theme wordmarks', () => {
+  it('change neutral ink while preserving the coloured artwork and geometry', async () => {
+    const variants = [
+      ...ECOSYSTEM_CATEGORIES.flatMap((category) =>
+        category.entries.flatMap((entry) => (entry.logo && entry.darkLogo ? [[entry.logo, entry.darkLogo]] : []))
+      ),
+      ...EXECUTION_SERVICES_PRODUCTS.map((product) => [product.image, product.darkImage]),
+    ]
+    const neutralInk = /fill="(?:black|#000000|#454545|#F6F6F6)"/g
+
+    for (const [light, dark] of variants) {
+      const original = await readFile(join(REPO, 'public', light), 'utf8')
+      const variant = await readFile(join(REPO, 'public', dark), 'utf8')
+      expect(variant, dark).not.toBe(original)
+      expect(variant, dark).toContain('fill="#F6F6F6"')
+      expect(variant.replace(neutralInk, ''), dark).toBe(original.replace(neutralInk, ''))
+    }
+  })
+})
 
 /** Alpha at or above which a pixel counts as part of the mark. */
 const OPAQUE = 128

@@ -4,12 +4,9 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 import { cn } from '@/lib/utils'
 import { Eyebrow } from './section-parts'
+import type { EcosystemEntry } from '@/content/pages/ecosystem'
 
-export type EcosystemCard = {
-  name: string
-  url: string
-  logo?: string
-}
+export type EcosystemCard = EcosystemEntry
 
 export type EcosystemGroup = {
   key: string
@@ -110,14 +107,33 @@ function EcosystemTile({ entry, locale }: { entry: EcosystemCard; locale: Locale
         the project name as `alt` would have a screen reader announce it twice.
       */}
       {entry.logo && (
-        <Image
-          src={entry.logo}
-          alt=""
-          width={96}
-          height={40}
-          sizes="96px"
-          className="h-10 w-auto max-w-[6rem] object-contain"
-        />
+        <div
+          className={cn(
+            'flex h-14 w-28 items-center justify-center',
+            // Legacy partner rasters have no theme variant. A light backing
+            // preserves their brand colours and the dark lettering inside them.
+            !entry.darkLogo && 'bg-white'
+          )}
+        >
+          <Image
+            src={entry.logo}
+            alt=""
+            width={96}
+            height={40}
+            sizes="96px"
+            className={cn('h-10 w-auto max-w-[6rem] object-contain', entry.darkLogo && 'dark:hidden')}
+          />
+          {entry.darkLogo && (
+            <Image
+              src={entry.darkLogo}
+              alt=""
+              width={96}
+              height={40}
+              sizes="96px"
+              className="hidden h-10 w-auto max-w-[6rem] object-contain dark:block"
+            />
+          )}
+        </div>
       )}
       {/*
         The name is the accessible label — the logo beside it is `alt=""` — so

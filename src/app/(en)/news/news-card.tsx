@@ -51,7 +51,9 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
               // Decorative: the publisher is already conveyed by the link
               // target and the headline, and the legacy data has no publisher
               // NAME to put in alt text — only a logo filename.
-              <Image src={logoUrl} alt="" width={72} height={20} className="h-5 w-auto object-contain" />
+              <span className="inline-flex shrink-0 items-center bg-white px-2 py-1">
+                <Image src={logoUrl} alt="" width={72} height={20} className="h-5 w-auto max-w-[6rem] object-contain" />
+              </span>
             )}
             <time dateTime={mention.date}>
               {new Date(mention.date).toLocaleDateString('en-US', {

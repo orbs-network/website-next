@@ -8,8 +8,12 @@
  */
 
 export const EXECUTION_SERVICES_PRODUCTS = [
-  { id: 'lambdaProduct', image: '/marketing/execution-services/lambda.svg' },
-  { id: 'vm', image: '/marketing/execution-services/vm.svg' },
+  {
+    id: 'lambdaProduct',
+    image: '/marketing/execution-services/lambda.svg',
+    darkImage: '/marketing/execution-services/lambda-dark.svg',
+  },
+  { id: 'vm', image: '/marketing/execution-services/vm.svg', darkImage: '/marketing/execution-services/vm-dark.svg' },
 ] as const
 
 export const EXECUTION_SERVICES_DIAGRAMS = [
