@@ -47,6 +47,8 @@ describe('venues and ecosystem handoff', () => {
   it('uses the supplied venue CTAs and SushiSwap four-chain rollout', async () => {
     const html = renderToStaticMarkup(await VenuesPage({ locale: 'en' }))
     expect(html).toContain('Your venue. More ways to trade.')
+    expect(html).toContain('$14B+')
+    expect(html).toContain('Processed')
     expect(html).toContain('href="/contact/"')
     expect(html).toContain('href="https://docs.orbs.com/"')
     expect(html).toContain('Ethereum, Base, Arbitrum and Katana')

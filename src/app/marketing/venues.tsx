@@ -25,8 +25,8 @@ export async function VenuesPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
       <StatsRow
-        columns={2}
-        stats={(['venues', 'chains'] as const).map((id) => ({
+        columns={3}
+        stats={(['venues', 'chains', 'processed'] as const).map((id) => ({
           id,
           value: t(`stats.${id}.value`),
           label: t(`stats.${id}.label`),
