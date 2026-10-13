@@ -45,6 +45,7 @@ export function ModuleCards({
   heading,
   body,
   cards,
+  columns = 4,
   locale,
 }: {
   /** The anchor the hero's "Discover order types" scrolls to. */
@@ -52,6 +53,7 @@ export function ModuleCards({
   eyebrow: string
   heading: string
   body: string
+  columns?: 3 | 4
   cards: readonly ModuleCard[]
   locale: Locale
 }) {
@@ -70,7 +72,12 @@ export function ModuleCards({
         {body}
       </p>
 
-      <ul className="mt-16 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:mt-44 lg:grid-cols-4">
+      <ul
+        className={cn(
+          'mt-16 grid grid-cols-1 gap-2.5 sm:grid-cols-2 lg:mt-44',
+          columns === 3 ? 'lg:grid-cols-3' : 'lg:grid-cols-4'
+        )}
+      >
         {cards.map((card) => (
           /*
             Recessed in light, not lifted: the design fills these #E7E7E7 on

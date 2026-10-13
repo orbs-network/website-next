@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/locales'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 
 /**
@@ -18,6 +20,8 @@ export type HomeCard = {
   /** Message key under its section's namespace. */
   id: string
   href: string
+  /** The content refresh starts in English; other locales retain their current cards. */
+  englishOnly?: true
   /**
    * Product mark, where the card has one.
    *
@@ -40,7 +44,7 @@ export type HomeCard = {
 }
 
 /**
- * [THE STACK] — the two product cards.
+ * [THE STACK] — three products in English; localised refreshes follow.
  *
  * `dSPOT` groups dTWAP, dLIMIT, dSLTP and Liquidity Hub in the navigation, but
  * it is its own page rather than a replacement for theirs: those four keep
@@ -70,7 +74,19 @@ export const HOME_STACK: readonly HomeCard[] = [
     icon: { src: '/marketing/home/icons/dperps.svg', width: 42, height: 51 },
     accent: 'pink',
   },
+  { id: 'executionServices', href: '/execution-services', accent: 'cyan', englishOnly: true },
 ]
+
+export function homeStackForLocale(locale: Locale) {
+  return HOME_STACK.filter((card) => !card.englishOnly || locale === 'en')
+}
+
+/** The three access paths in the English content handoff. */
+export const HOME_ACCESS_PATHS = [
+  { id: 'whiteLabel', href: '/contact' },
+  { id: 'startBuilding', href: SDK_DOCS_URL },
+  { id: 'agentic', href: '/agentic' },
+] as const
 
 /** [SOLUTIONS] — three audience cards. */
 export const HOME_SOLUTIONS: readonly HomeCard[] = [

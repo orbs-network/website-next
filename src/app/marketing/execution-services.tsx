@@ -3,7 +3,8 @@ import { getTranslations } from 'next-intl/server'
 import { H1, H2 } from '@/app/components/typography'
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
-import { Eyebrow } from '@/components/marketing/section-parts'
+import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
+import { CtaButton, Eyebrow } from '@/components/marketing/section-parts'
 import { EXECUTION_SERVICES_DIAGRAMS, EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -43,6 +44,11 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
         <H1 className="mt-3 max-w-5xl text-balance" lang={lang('hero.headline')}>
           {t('hero.headline')}
         </H1>
+        {locale === 'en' && (
+          <div className="mt-10">
+            <CtaButton link={{ label: t('hero.cta'), href: NETWORK_DOCS_URL }} locale={locale} />
+          </div>
+        )}
       </section>
 
       {EXECUTION_SERVICES_PRODUCTS.map((product) => (

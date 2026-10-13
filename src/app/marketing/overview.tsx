@@ -10,7 +10,7 @@ import {
   OVERVIEW_BENEFITS,
   OVERVIEW_LINKS,
   OVERVIEW_MARQUEE,
-  OVERVIEW_PRODUCTS,
+  overviewProductsForLocale,
   type OverviewProductId,
 } from '@/content/pages/overview'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
@@ -20,6 +20,9 @@ import type { Locale } from '@/i18n/locales'
  * Each protocol's colour, as on dSPOT (see `MODULE_PRESENTATION` there).
  */
 const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string; titleClassName?: string }> = {
+  dspot: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
+  dperps: { accentClassName: 'text-pink-600 dark:text-pink-400' },
+  executionServices: { accentClassName: 'text-cyan-600 dark:text-cyan-400' },
   dtwap: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
   dlimit: { accentClassName: 'text-indigo-400 dark:text-indigo-200' },
   liquidityHub: { accentClassName: 'text-cyan-600 dark:text-cyan-400', titleClassName: 'uppercase' },
@@ -31,8 +34,8 @@ const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string;
  *
  * On the inner-page MASTER's sections (#227): split hero, a rule and bracketed
  * eyebrow on every section, left-aligned headings, borderless cards, and the
- * shared closing block. The four protocols use dSPOT's card row, so they now
- * link on the same "Discover" pattern as everywhere else.
+ * shared closing block. English groups the three products; other locales
+ * retain their four protocol cards until their content refresh.
  *
  * Every string is tagged individually with `textLang`. Japanese is a PARTIAL
  * translation — `jp/overview/md/why-section.md` is an empty file — so those
@@ -50,7 +53,7 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         eyebrow={t('hero.eyebrow')}
         headline={t('hero.headline')}
         intro={t('hero.intro')}
-        cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.protocols }}
+        cta={{ label: t('hero.cta'), href: locale === 'en' ? OVERVIEW_LINKS.products : OVERVIEW_LINKS.protocols }}
         graphic={HERO_GRAPHICS.overview}
         locale={locale}
       />
@@ -88,7 +91,8 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         eyebrow={t('tech.eyebrow')}
         heading={t('products.title')}
         body={t('tech.body')}
-        cards={OVERVIEW_PRODUCTS.map((product) => {
+        columns={locale === 'en' ? 3 : 4}
+        cards={overviewProductsForLocale(locale).map((product) => {
           const name = t(`products.items.${product.id}.title`)
           return {
             id: product.id,

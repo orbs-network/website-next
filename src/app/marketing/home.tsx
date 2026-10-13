@@ -14,6 +14,7 @@ import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing
 import { StatsRow } from '@/components/marketing/stats-row'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
+  HOME_ACCESS_PATHS,
   HOME_DISCOVER,
   HOME_FEATURES,
   HOME_IMAGES,
@@ -21,7 +22,7 @@ import {
   HOME_MARQUEE,
   HOME_NEWS_COUNT,
   HOME_SOLUTIONS,
-  HOME_STACK,
+  homeStackForLocale,
   HOME_STATS,
   HOME_VENUES,
   type HomeCard,
@@ -38,10 +39,9 @@ import { textLang } from '@/i18n/script'
 /**
  * The home page, design 3.4.
  *
- * All-new copy — none of it exists in the legacy site in any language — so
- * Japanese and Korean mirror English and both routes stay `placeholder`, which
- * is what they already were. `textLang` marks each string English inside those
- * documents rather than a single `lang` on the page.
+ * Japanese and Korean keep their earlier English placeholder copy while the
+ * content refresh starts in English. Both routes remain `placeholder`.
+ * `textLang` marks each English string inside those documents.
  *
  * One destination is not built yet (`/ai-agents`). It is in
  * `link-integrity.test.ts`'s `PENDING`, so the guard knows and will fail the
@@ -166,7 +166,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <section className="container border-t border-border py-section">
+      <section id="products" className="container scroll-mt-32 border-t border-border py-section">
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('stack.eyebrow')}>
           {t('stack.eyebrow')}
         </p>
@@ -196,7 +196,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </div>
 
           <ul className="grid auto-rows-fr gap-5">
-            {HOME_STACK.map((card) => (
+            {homeStackForLocale(locale).map((card) => (
               <HighlightCard
                 key={card.id}
                 card={card}
@@ -212,6 +212,26 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </ul>
         </div>
       </section>
+
+      {locale === 'en' && (
+        <section className="container border-t border-border py-section">
+          <p className="text-detail font-medium uppercase tracking-widest text-fg-muted">{t('access.eyebrow')}</p>
+          <H2 className="mt-6 text-balance">{t('access.title')}</H2>
+          <ul className="mt-12 grid gap-5 md:grid-cols-3">
+            {HOME_ACCESS_PATHS.map((path) => (
+              <HighlightCard
+                key={path.id}
+                card={path}
+                locale={locale}
+                title={t(`access.${path.id}.title`)}
+                body={t(`access.${path.id}.body`)}
+                cta={t(`access.${path.id}.cta`)}
+                className="p-6"
+              />
+            ))}
+          </ul>
+        </section>
+      )}
 
       {/*
         The design draws this as a bare strip of marks between two rules, with
@@ -521,10 +541,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
 /**
  * A link off-site to the SDK docs, outline with the line arrow.
  *
- * "Explore SDK" in the hero, under the stack intro and on the solutions cards
+ * "Start building" in English, under the stack intro and on the solutions cards
  * (#214). The hero used to say "Read the docs", which read as the network's
  * developer docs rather than the SDK the page is selling (Eran). The product
- * heroes carry the SDK wording through `devDocs.sdk`.
+ * heroes resolve their developer CTA through `getDevDocsLink`.
  *
  * `variant` is passed through for the hero, whose copy sits over the facet
  * field; the other two sit on a flat page and keep the default outline.
@@ -579,7 +599,7 @@ function HighlightCard({
 }: {
   card: HomeCard
   locale: Locale
-  eyebrow: string
+  eyebrow?: string
   title: string
   body: string
   cta: string
@@ -588,11 +608,13 @@ function HighlightCard({
 }) {
   return (
     <li className={cn('flex flex-col bg-card-fill', className)} lang={lang}>
-      <p className={cn('text-detail font-medium uppercase tracking-widest', CARD_ACCENT[card.accent ?? 'primary'])}>
-        {eyebrow}
-      </p>
+      {eyebrow && (
+        <p className={cn('text-detail font-medium uppercase tracking-widest', CARD_ACCENT[card.accent ?? 'primary'])}>
+          {eyebrow}
+        </p>
+      )}
 
-      <div className="mt-9 flex items-center gap-3">
+      <div className={cn('flex items-center gap-3', eyebrow && 'mt-9')}>
         {card.icon && (
           /*
             Fixed HEIGHT, width follows. `size-8` forced both marks into the
@@ -617,7 +639,7 @@ function HighlightCard({
       <p className="mt-10 flex-1 text-p text-fg">{body}</p>
 
       <Link
-        href={localeHref(card.href, locale)}
+        href={card.href.startsWith('/') ? localeHref(card.href, locale) : card.href}
         className="mt-10 inline-flex self-start items-center gap-2 text-detail font-medium uppercase tracking-widest transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
       >
         {cta}

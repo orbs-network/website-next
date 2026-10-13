@@ -181,6 +181,12 @@ function isInternalPath(value: string): boolean {
   return value.startsWith('/') && !value.startsWith('//') && !/\s/.test(value)
 }
 
+function linkedRoute(value: string): string {
+  // Queries and fragments identify content within a route, not another page.
+  // Anchor existence is checked against the rendered page in browser review.
+  return value.split(/[?#]/, 1)[0].replace(/\/$/, '') || '/'
+}
+
 async function linkedPaths(): Promise<Map<string, string[]>> {
   const found = new Map<string, string[]>()
 
@@ -197,7 +203,7 @@ async function linkedPaths(): Promise<Map<string, string[]>> {
       if (isAsset(value)) continue
 
       // Written without a trailing slash by convention; `localeHref` adds one.
-      const path = value.replace(/\/$/, '') || '/'
+      const path = linkedRoute(value)
       found.set(path, [...(found.get(path) ?? []), source])
     }
   }
@@ -208,6 +214,12 @@ async function linkedPaths(): Promise<Map<string, string[]>> {
 describe('internal links', () => {
   let routes: Set<string>
   let linked: Map<string, string[]>
+
+  it('checks the destination route even when a link has a fragment or query', () => {
+    expect(linkedRoute('/#products')).toBe('/')
+    expect(linkedRoute('/overview/?ref=home#protocols')).toBe('/overview')
+    expect(linkedRoute('/missing#products')).toBe('/missing')
+  })
 
   /**
    * Scanned once for all three assertions.

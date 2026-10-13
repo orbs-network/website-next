@@ -1,3 +1,5 @@
+import type { Locale } from '@/i18n/locales'
+
 /**
  * Structural data for the Overview page — destinations and ordering. Copy lives
  * under `pages.overview` in the message catalogs.
@@ -14,7 +16,18 @@ export const OVERVIEW_PRODUCTS = [
   { id: 'perpetualHub', href: '/dperps' },
 ] as const
 
-export type OverviewProductId = (typeof OVERVIEW_PRODUCTS)[number]['id']
+export const OVERVIEW_REFRESH_PRODUCTS = [
+  { id: 'dspot', href: '/dspot' },
+  { id: 'dperps', href: '/dperps' },
+  { id: 'executionServices', href: '/execution-services' },
+] as const
+
+export function overviewProductsForLocale(locale: Locale) {
+  return locale === 'en' ? OVERVIEW_REFRESH_PRODUCTS : OVERVIEW_PRODUCTS
+}
+
+export type OverviewProductId =
+  (typeof OVERVIEW_PRODUCTS)[number]['id'] | (typeof OVERVIEW_REFRESH_PRODUCTS)[number]['id']
 
 /**
  * The three reader benefits, in legacy order. Text only: the legacy icons were
@@ -25,6 +38,7 @@ export const OVERVIEW_BENEFITS = ['access', 'pricing', 'decentralization'] as co
 export const OVERVIEW_LINKS = {
   /** The hero's button scrolls to the protocol cards on this page. */
   protocols: '#protocols',
+  products: '/#products',
   contact: '/contact',
 } as const
 
