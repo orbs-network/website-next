@@ -36,7 +36,7 @@ export function StatsRow({
   title?: string
   stats: readonly Stat[]
   /** How many across on a wide viewport. Three unless told otherwise. */
-  columns?: 3 | 5
+  columns?: 2 | 3 | 5
   /** `start` is the institutional page's row, under a left-aligned hero. */
   align?: 'center' | 'start'
   /**
@@ -70,7 +70,7 @@ export function StatsRow({
         className={cn(
           'grid gap-10',
           align === 'center' && 'text-center',
-          columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
+          columns === 2 ? 'grid-cols-2' : columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
         )}
       >
         {stats.map((stat) => (

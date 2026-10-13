@@ -986,27 +986,50 @@
     "ecosystem": {
       "meta": {
         "title": "Ecosystem",
-        "description": "Projects, exchanges, wallets and chains building on or integrated with the Orbs network."
+        "description": "Explore Orbs spot and perpetual futures integrations across 30+ venues and 10+ chains, with product and feature availability varying by integration."
       },
       "hero": {
-        "eyebrow": "[ECOSYSTEM]"
+        "eyebrow": "[Ecosystem]",
+        "headline": "Orbs execution, across the ecosystem.",
+        "intro": "Production integrations put the Orbs execution stack to work across established trading venues. Explore the spot and perpetual futures deployments behind that track record: 30+ venues and 10+ chains, with product and feature availability varying by integration."
       },
-      "categories": {
-        "useCases": "Use-cases and Applications",
-        "exchanges": "Exchanges",
-        "transparencyAndData": "Transparency and Data",
-        "socialImpact": "Social Impact",
-        "nft": "NFT",
-        "chains": "Supported Chains",
-        "cloud": "Cloud Dev. Environment",
-        "explorers": "Explorers",
-        "oracles": "Oracles",
-        "partnerships": "Partnerships",
-        "staking": "Staking",
-        "wallets": "Wallets",
-        "defi": "DeFi",
-        "media": "Media",
-        "governance": "Governance"
+      "browse": "Browse integrations",
+      "partnerHeader": "Venue",
+      "chainHeader": "Chains",
+      "featured": {
+        "eyebrow": "[Partners]",
+        "title": "Featured partners"
+      },
+      "perps": {
+        "eyebrow": "[dPERPS]",
+        "title": "dPERPS partners and chains"
+      },
+      "spot": {
+        "eyebrow": "[dSPOT]",
+        "title": "dSPOT integrations",
+        "intro": "Selected spot integrations. Product and feature availability vary by venue and chain."
+      },
+      "sltp": {
+        "eyebrow": "[Advanced spot orders]",
+        "title": "Stop loss and take profit",
+        "intro": "Recorded stop loss and take profit integrations. Availability varies by integration."
+      },
+      "status": {
+        "eyebrow": "[Integration history]",
+        "title": "Historical and upcoming integrations",
+        "historical": {
+          "title": "Earlier dSPOT deployment",
+          "body": "SpookySwap: Fantom, in addition to the Sonic deployment listed above."
+        },
+        "upcoming": {
+          "title": "Upcoming",
+          "body": "Ocelex is recorded as an upcoming integration."
+        }
+      },
+      "chains": {
+        "eyebrow": "[Chains]",
+        "title": "Across established chains",
+        "intro": "Product and feature availability vary by integration."
       }
     },
     "executionServices": {
@@ -1683,34 +1706,45 @@
     "venues": {
       "meta": {
         "title": "Venues",
-        "description": "The proven standard for DEX execution. Bring advanced orders and additional liquidity routes to your DEX without replacing your core AMM contracts."
+        "description": "Bring aggregated liquidity, advanced spot orders and perpetual futures into your venue. Explore Orbs execution and the SushiSwap case study."
       },
       "hero": {
-        "eyebrow": "[VENUES]",
-        "headline": "The proven standard for DEX execution",
-        "intro": "Bring advanced orders and additional liquidity routes to your DEX without replacing your core AMM contracts.",
-        "cta": "Explore the UI kit"
+        "eyebrow": "[Venues]",
+        "headline": "Your venue. More ways to trade.",
+        "intro": "Give professional traders, institutional desks and asset managers the execution tools they expect within your platform. Orbs combines aggregated liquidity, advanced spot orders and perpetual futures, so your team can focus on its clients and trading experience rather than building the underlying stack.",
+        "cta": "Talk to us",
+        "secondaryCta": "Start building"
       },
-      "capabilities": {
-        "eyebrow": "[CAPABILITIES]",
-        "heading": "Extend your DEX’s trading capabilities",
-        "body": "Give traders more control and competitive pricing, while creating additional revenue opportunities for your venue.\n\nAdvanced orders and additional liquidity routes extend the trading experience without replacing your core AMM contracts."
+      "stats": {
+        "venues": {
+          "value": "30+",
+          "label": "Venues"
+        },
+        "chains": {
+          "value": "10+",
+          "label": "Chains"
+        }
       },
-      "band": "Your brand and user experience.",
-      "frontend": {
-        "eyebrow": "[FRONTEND]",
-        "heading": "Your frontend, powered by Orbs",
-        "body": "Customizable React components fit your existing design. Orbs provides the execution infrastructure while you retain your brand and user experience.",
-        "cta": "Explore the UI kit"
+      "partners": {
+        "title": "[Partner venues]"
+      },
+      "caseStudy": {
+        "eyebrow": "[Case study / SushiSwap]",
+        "title": "Advanced spot execution, inside SushiSwap.",
+        "body": "SushiSwap brings Orbs-powered spot execution into its trading experience, combining liquidity aggregation with advanced order types. Traders can place limit orders, spread trades over time and set automated stop loss and take profit conditions from the venue they already use.\n\nControl over price, timing and exits is central to professional execution. Within SushiSwap, dSPOT lets traders set a target price, split larger orders over time to help reduce price impact, and automate exit conditions without moving to a separate application.",
+        "rollout": "SushiSwap’s stop loss and take profit rollout covered {chains}.",
+        "calloutsLabel": "SushiSwap case-study highlights",
+        "callouts": {
+          "execution": "Aggregated liquidity and advanced spot orders.",
+          "orders": "Limit, TWAP, stop loss and take profit.",
+          "chains": "Stop loss and take profit rollout across four chains."
+        },
+        "cta": "Bring dSPOT to your venue"
       },
       "marquee": {
         "advancedOrders": "Advanced orders.",
         "liquidityRoutes": "More liquidity routes.",
         "yourBrand": "Your brand."
-      },
-      "closing": {
-        "uiKit": "Explore the UI kit",
-        "contact": "Talk to the team"
       }
     },
     "dspot": {

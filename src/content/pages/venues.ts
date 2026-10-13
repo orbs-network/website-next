@@ -4,15 +4,14 @@
  * From the `Desktop / Solutions / Venues` template frame, 2026-09-28 — the SDK
  * page's skeleton with venue-facing copy.
  *
- * "Explore the UI kit" goes to the brand assets page, per Sarbloc. The closing
- * block's copy of that button carries an X (Twitter) mark in the frame; that
- * is a slip in the design, and it renders with the standard arrow here.
+ * The new content handoff supplies Contact and trading-documentation CTAs.
+ * The earlier UI-kit pitch and frontend diagram have been replaced by the
+ * SushiSwap case study.
  */
 
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 
 export const VENUES_LINKS = {
-  uiKit: '/brand-assets',
   contact: '/contact',
 } as const
 
@@ -20,13 +19,6 @@ export const VENUES_LINKS = {
 export const VENUES_GRAPHICS = {
   /** The bow-tie of order routes through one venue. */
   hero: HERO_GRAPHICS.venues,
-  /** The sphere network, shared with dSPOT. */
-  frontend: {
-    src: '/marketing/shared/network-sphere.svg',
-    lightSrc: '/marketing/shared/network-sphere-light.svg',
-    width: 677,
-    height: 660,
-  },
 } as const
 
 /** The closing block's scrolling phrases, in design order. */
