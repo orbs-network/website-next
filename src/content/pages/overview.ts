@@ -36,9 +36,10 @@ export type OverviewProductId =
 export const OVERVIEW_BENEFITS = ['access', 'pricing', 'decentralization'] as const
 
 export const OVERVIEW_LINKS = {
-  /** The hero's button scrolls to the protocol cards on this page. */
+  /** Legacy locale heroes scroll to the protocol cards on this page. */
   protocols: '#protocols',
   products: '/#products',
+  staking: '/pos',
   contact: '/contact',
 } as const
 
@@ -47,3 +48,6 @@ export const OVERVIEW_LINKS = {
  * the network provides, so the marquee repeats the page rather than new copy.
  */
 export const OVERVIEW_MARQUEE = ['liquidity', 'orders', 'derivatives'] as const
+
+/** Project and mainnet launch dates are distinct facts. */
+export const OVERVIEW_HISTORY = ['project', 'mainnet', 'staked'] as const

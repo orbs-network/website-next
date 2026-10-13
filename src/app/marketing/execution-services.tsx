@@ -1,6 +1,7 @@
 import Image from 'next/image'
 import { getTranslations } from 'next-intl/server'
 import { H1, H2 } from '@/app/components/typography'
+import { InnerSection, PointColumns } from '@/components/marketing/inner-section'
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
 import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
@@ -15,8 +16,8 @@ import { InnerClosingCta } from './inner-closing'
  * Execution Services — Orbs Lambda and Orbs VM.
  *
  * On the inner-page master (#227): ruled sections opening on a bracketed
- * eyebrow, text left, and the shared closing block. The copy is the legacy
- * page's; only the eyebrows are new.
+ * eyebrow, text left, and the shared closing block. English uses the new
+ * trading-focused handoff; other locales retain their existing content.
  *
  * Laid out here rather than through `ArchitectureSection` or `GraphicSplit`:
  *
@@ -34,7 +35,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
   return (
     <>
       {/*
-        The hero carries no intro. Its first version reused the Lambda lead
+        The legacy locale hero carries no intro. Its first version reused the Lambda lead
         paragraph, which the product section below then rendered again in full —
         the same sentence twice in succession, in every locale. The legacy page
         has a bare title here too, and no illustration, so no graphic column.
@@ -44,6 +45,11 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
         <H1 className="mt-3 max-w-5xl text-balance" lang={lang('hero.headline')}>
           {t('hero.headline')}
         </H1>
+        {locale === 'en' && (
+          <p className="mt-10 max-w-3xl text-p text-fg" lang={lang('hero.intro')}>
+            {t('hero.intro')}
+          </p>
+        )}
         {locale === 'en' && (
           <div className="mt-10">
             <CtaButton link={{ label: t('hero.cta'), href: NETWORK_DOCS_URL }} locale={locale} />
@@ -59,6 +65,11 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
               <H2 className="text-balance" lang={lang(`${product.id}.title`)}>
                 {t(`${product.id}.title`)}
               </H2>
+              {locale === 'en' && (
+                <p className="mt-8 text-p font-medium text-fg" lang={lang(`${product.id}.tagline`)}>
+                  {t(`${product.id}.tagline`)}
+                </p>
+              )}
               <Prose text={t(`${product.id}.body`)} className="mt-10 [&_p]:text-p [&_p]:text-fg" />
             </div>
 
@@ -83,30 +94,49 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
         </DividedSection>
       ))}
 
-      {EXECUTION_SERVICES_DIAGRAMS.map((diagram) => (
-        <DividedSection
-          key={diagram.id}
-          eyebrow={t(`eyebrows.${diagram.id}`)}
-          heading={t(`${diagram.id}.title`)}
-          intro={t(`${diagram.id}.body`)}
+      {locale === 'en' ? (
+        <InnerSection
+          eyebrow={t('eyebrows.comparison')}
+          heading={t('comparison.title')}
+          intro={t('comparison.intro')}
           locale={locale}
         >
-          {/* Each transparent diagram uses the backing its lettering needs. */}
-          <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-32">
-            <div className={cn('p-6 lg:col-start-2', diagram.background)}>
-              <Image
-                src={diagram.src}
-                alt={t(`${diagram.id}.title`)}
-                lang={lang(`${diagram.id}.title`)}
-                width={diagram.width}
-                height={diagram.height}
-                sizes="(min-width: 1024px) 50vw, 100vw"
-                className="h-auto w-full"
-              />
+          <PointColumns
+            columns={2}
+            points={EXECUTION_SERVICES_PRODUCTS.map(({ id }) => ({
+              id,
+              title: t(`comparison.items.${id}.title`),
+              body: t(`comparison.items.${id}.body`),
+            }))}
+            locale={locale}
+          />
+        </InnerSection>
+      ) : (
+        EXECUTION_SERVICES_DIAGRAMS.map((diagram) => (
+          <DividedSection
+            key={diagram.id}
+            eyebrow={t(`eyebrows.${diagram.id}`)}
+            heading={t(`${diagram.id}.title`)}
+            intro={t(`${diagram.id}.body`)}
+            locale={locale}
+          >
+            {/* Each transparent diagram uses the backing its lettering needs. */}
+            <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-32">
+              <div className={cn('p-6 lg:col-start-2', diagram.background)}>
+                <Image
+                  src={diagram.src}
+                  alt={t(`${diagram.id}.title`)}
+                  lang={lang(`${diagram.id}.title`)}
+                  width={diagram.width}
+                  height={diagram.height}
+                  sizes="(min-width: 1024px) 50vw, 100vw"
+                  className="h-auto w-full"
+                />
+              </div>
             </div>
-          </div>
-        </DividedSection>
-      ))}
+          </DividedSection>
+        ))
+      )}
 
       <InnerClosingCta locale={locale} />
     </>

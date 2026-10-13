@@ -5,9 +5,12 @@ import { ModuleCards } from '@/components/marketing/module-cards'
 import { CtaButton, Eyebrow } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
+import { StatsRow } from '@/components/marketing/stats-row'
+import { InnerClosingCta } from './inner-closing'
 import { HOME_LINKS } from '@/content/pages/home'
 import {
   OVERVIEW_BENEFITS,
+  OVERVIEW_HISTORY,
   OVERVIEW_LINKS,
   OVERVIEW_MARQUEE,
   overviewProductsForLocale,
@@ -47,13 +50,74 @@ const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string;
 export async function OverviewPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.overview' })
 
+  // The English handoff replaces the legacy sections; localised catalogs and
+  // compositions stay intact until their own refresh is approved.
+  if (locale === 'en') {
+    return (
+      <>
+        <SplitHero
+          eyebrow={t('hero.eyebrow')}
+          headline={t('hero.headline')}
+          intro={t('hero.intro')}
+          cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.products }}
+          secondaryCta={{ label: t('hero.secondaryCta'), href: OVERVIEW_LINKS.staking }}
+          graphic={HERO_GRAPHICS.overview}
+          locale={locale}
+        />
+        <SplitStatement
+          eyebrow={t('execution.eyebrow')}
+          heading={t('execution.title')}
+          body={t('execution.body')}
+          locale={locale}
+        />
+        <SplitStatement
+          eyebrow={t('decentralisation.eyebrow')}
+          heading={t('decentralisation.title')}
+          body={t('decentralisation.body')}
+          locale={locale}
+        />
+        <ModuleCards
+          id={OVERVIEW_LINKS.protocols.slice(1)}
+          eyebrow={t('tech.eyebrow')}
+          heading={t('products.title')}
+          body={t('tech.body')}
+          columns={3}
+          cards={overviewProductsForLocale(locale).map((product) => {
+            const name = t(`products.items.${product.id}.title`)
+            return {
+              id: product.id,
+              eyebrow: name,
+              title: name,
+              ...PRODUCT_PRESENTATION[product.id],
+              body: t(`products.items.${product.id}.body`),
+              link: { label: t('products.cta', { name }), href: product.href },
+            }
+          })}
+          locale={locale}
+        />
+        <div className="border-t border-border">
+          <StatsRow
+            title={t('history.title')}
+            stats={OVERVIEW_HISTORY.map((id) => ({
+              id,
+              value: t(`history.stats.${id}.value`),
+              label: t(`history.stats.${id}.label`),
+            }))}
+            locale={locale}
+          />
+        </div>
+        <InnerClosingCta locale={locale} />
+      </>
+    )
+  }
+
   return (
     <>
       <SplitHero
         eyebrow={t('hero.eyebrow')}
         headline={t('hero.headline')}
         intro={t('hero.intro')}
-        cta={{ label: t('hero.cta'), href: locale === 'en' ? OVERVIEW_LINKS.products : OVERVIEW_LINKS.protocols }}
+        cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.protocols }}
         graphic={HERO_GRAPHICS.overview}
         locale={locale}
       />
@@ -91,7 +155,6 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         eyebrow={t('tech.eyebrow')}
         heading={t('products.title')}
         body={t('tech.body')}
-        columns={locale === 'en' ? 3 : 4}
         cards={overviewProductsForLocale(locale).map((product) => {
           const name = t(`products.items.${product.id}.title`)
           return {
