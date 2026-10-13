@@ -25,7 +25,8 @@
       "developers": "Developers",
       "docs": "Docs",
       "ecosystem": "Ecosystem",
-      "blog": "Blog"
+      "blog": "Blog",
+      "securityAndAudits": "Security & Audits"
     },
     "menuLabel": "Open menu",
     "menuTitle": "Menu",
@@ -71,7 +72,8 @@
       "termsOfUse": "Terms of Use",
       "cookies": "Cookies",
       "privacyPolicy": "Privacy Policy",
-      "accessibility": "Accessibility Declaration"
+      "accessibility": "Accessibility Declaration",
+      "securityAndAudits": "Security & Audits"
     },
     "socials": {
       "github": "GitHub",
@@ -784,7 +786,7 @@
     "faq": {
       "meta": {
         "title": "FAQ",
-        "description": "Answers to common questions about Orbs, its Layer-3 network, Proof-of-Stake, staking and the TON tooling."
+        "description": "Answers about Orbs trading infrastructure, dSPOT, dPERPS, Execution Services, custody, staking, integrations and security."
       }
     },
     "dtwapDlimitFaq": {
@@ -1519,7 +1521,8 @@
         "blog": "Blog",
         "whitePapers": "Whitepapers",
         "faq": "FAQ",
-        "cta": "View resources"
+        "cta": "View resources",
+        "securityAndAudits": "Security & Audits"
       },
       "marquee": {
         "oneApi": "One API.",
@@ -1813,6 +1816,54 @@
         "follow": "Follow us",
         "community": "Join Community",
         "contact": "Talk to the team"
+      }
+    },
+    "securityAndAudits": {
+      "meta": {
+        "title": "Security & Audits",
+        "description": "Product-specific execution controls, Orbs network security, dSPOT smart-contract audit reports and source code."
+      },
+      "hero": {
+        "eyebrow": "[Security & Audits]",
+        "headline": "Security & Audits",
+        "intro": "Institutional adoption depends on understanding how assets are authorised, how orders are constrained and which components have been reviewed. Orbs combines decentralised infrastructure with product-specific execution controls, published smart-contract audits and source code to support that due diligence."
+      },
+      "browse": "Security resources",
+      "scope": "Each audit applies to the code and version described in its report.",
+      "orders": {
+        "eyebrow": "[Execution controls]",
+        "title": "Order authorisation and execution",
+        "body": "With dSPOT, trading teams define execution permissions through signed orders. Price limits, slippage settings and expiry constrain how an order can be filled, while funds remain in the wallet until execution. This separates order authorisation from asset movement; dPERPS uses a different collateral and settlement model."
+      },
+      "network": {
+        "eyebrow": "[Orbs L3]",
+        "title": "Network security",
+        "body": "Independent validators, known as Guardians, operate Orbs L3. The network uses proof of stake, with ORBS holders delegating stake to Guardians. 1.1B ORBS is staked in the network, supporting the infrastructure that runs Orbs services."
+      },
+      "spotAudits": {
+        "eyebrow": "[dSPOT]",
+        "title": "dSPOT smart-contract audits",
+        "body": "AstraSec has audited the Spot contracts. The initial and updated reports are available below, with the scope and findings documented in each report.",
+        "reports": {
+          "astraInitial": "dSPOT contracts: AstraSec initial audit",
+          "astraUpdated": "dSPOT contracts: AstraSec updated audit"
+        }
+      },
+      "earlierAudits": {
+        "eyebrow": "[Earlier spot contracts]",
+        "title": "Earlier spot contract audits",
+        "reports": {
+          "peckShield": "PeckShield report",
+          "rdAuditors": "RD Auditors report"
+        }
+      },
+      "sources": {
+        "eyebrow": "[Source code]",
+        "title": "Source code and technical documentation",
+        "links": {
+          "spot": "dSPOT contracts and documentation",
+          "network": "Orbs network repositories"
+        }
       }
     }
   },

@@ -47,6 +47,8 @@ export const MARKETING_PAGE_PATHS = [
   // section and `###` a question.
   '/faq',
   '/dtwap-and-dlimit-faq',
+  // English-first contract audit reports and product-specific security controls.
+  '/security-and-audits',
   // The white-paper index. Individual papers live at /white-papers/<slug> as a
   // separate English-only route, not through this registry — each is a wrapper
   // around one PDF that exists in a single language.

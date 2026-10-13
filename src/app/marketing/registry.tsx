@@ -25,6 +25,7 @@ import { SpotOrdersPage } from './spot-orders'
 import { DtwapPage } from './dtwap'
 import { DspotPage } from './dspot'
 import { VenuesPage } from './venues'
+import { SecurityAndAuditsPage } from './security-and-audits'
 
 /**
  * Renders a page for a locale.
@@ -200,6 +201,10 @@ const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   },
   '/dspot': { render: (locale) => <DspotPage locale={locale} />, namespace: 'pages.dspot' },
   '/venues': { render: (locale) => <VenuesPage locale={locale} />, namespace: 'pages.venues' },
+  '/security-and-audits': {
+    render: (locale) => <SecurityAndAuditsPage locale={locale} />,
+    namespace: 'pages.securityAndAudits',
+  },
 }
 
 /**

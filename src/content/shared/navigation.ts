@@ -105,6 +105,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
       // Third, as the design has it (#213).
       { key: 'governance', href: '/governance-blog' },
       { key: 'status', href: 'https://status.orbs.network/' },
+      { key: 'securityAndAudits', href: '/security-and-audits', locales: ['en'] },
       { key: 'github', href: 'https://github.com/orbs-network' },
       // The design labels this "Docs". It is the network's docs, and the bar's
       // own "Docs" now opens the SDK's, so two "Docs" would open two sites.

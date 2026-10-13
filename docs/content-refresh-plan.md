@@ -23,9 +23,16 @@ Source: Sara's “Orbs Website Refresh: Content Handoff” and [Orbs Website 3.0
 
 - Venues: SushiSwap case study, supplied hero, callouts and CTAs. Ecosystem: curated integrations and chain lists. **Confirmed by Sara on 13 October:** the new English Ecosystem replaces the old broad directory entirely.
 
-## Remaining batch
+## Batch 4: FAQ and Security & Audits
 
-General FAQ and a new Security & Audits page: fourteen answers, product-specific security explanations and scoped current/historical audit links.
+- Replace the English general FAQ with the fourteen handoff answers. Preserve the Korean documents and the Japanese English fallback, with language tags and noindex still applied by the existing renderer and availability map.
+- Add English-only `/security-and-audits/`: product-specific order authorisation, Guardians/PoS and staking, two AstraSec dSPOT reports, two earlier spot-contract reports, and source repositories. Each report's scope and version remain distinct from whole-platform coverage.
+- Link from the FAQ, English Network menu, footer and homepage Discover section. The marketing registry supplies metadata, reserved-slug protection and sitemap inclusion.
+- Keep the separate technical FAQ. Correct unconditional market/stop-loss execution promises, retain the conditional price-impact explanation, and align the staking figure with 1.1B ORBS.
+
+## Follow-up
+
+Ecosystem needs further design refinement, requested after Batch 3. Handle it in a separate PR.
 
 ## Hold: dSPOT and dPERPS
 

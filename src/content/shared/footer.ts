@@ -55,7 +55,7 @@ export type FooterColumnSpec = {
  * is simply the last column, so the reading order and the data agree.
  *
  * Links in the design that are NOT here, because nothing exists behind them:
- * GOVERNANCE, TEAM and AUDITS. Same rule as the nav — ship the page, then the
+ * GOVERNANCE and TEAM. Same rule as the nav — ship the page, then the
  * link — rather than more `PENDING` entries in the chrome of every page. Each
  * is a one-line addition when its page lands.
  *
@@ -126,6 +126,7 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
     links: [
       { key: 'contact', href: '/contact' },
       { key: 'faq', href: '/faq' },
+      { key: 'securityAndAudits', href: '/security-and-audits', locales: ['en'] },
       { key: 'docs', href: SDK_DOCS_URL },
       { key: 'github', href: 'https://github.com/orbs-network' },
     ],
