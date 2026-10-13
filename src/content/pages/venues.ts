@@ -10,6 +10,21 @@
  */
 
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
+import { FEATURED_INTEGRATIONS, integrationPartner } from '@/content/shared/integrations'
+import type { LogoRowItem } from '@/components/marketing/logo-row'
+
+export const VENUES_PARTNERS: readonly LogoRowItem[] = FEATURED_INTEGRATIONS.map((id) => {
+  const partner = integrationPartner(id)
+  return {
+    name: partner.name,
+    logo: partner.logo && {
+      ...partner.logo,
+      src: partner.logo.src.replace('-on-light.', '.'),
+      onLight: partner.logo.src,
+    },
+    wordmark: true,
+  }
+})
 
 export const VENUES_LINKS = {
   contact: '/contact',

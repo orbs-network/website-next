@@ -199,7 +199,9 @@ function LogoMarquee({
       aria-hidden={duplicate || undefined}
       inert={duplicate}
       className={cn(
-        'flex shrink-0 items-center gap-x-16 px-8',
+        // A shorter roster must still fill the column, or the loop exposes a gap.
+        // Extra space is shared equally between marks and across the copy seam.
+        'flex min-w-[100cqw] shrink-0 items-center justify-around gap-x-16 px-8',
         'motion-reduce:w-full motion-reduce:shrink motion-reduce:flex-wrap motion-reduce:justify-center motion-reduce:gap-y-8',
         duplicate && 'motion-reduce:hidden'
       )}
@@ -226,7 +228,7 @@ function LogoMarquee({
       <div
         className={cn(
           // Clips the track, so the moving strip cannot widen the page.
-          'overflow-hidden',
+          'overflow-hidden [container-type:inline-size]',
           // Marks fade in and out at the column edges rather than being cut off.
           '[mask-image:linear-gradient(to_right,transparent,#000_8%,#000_92%,transparent)]',
           'motion-reduce:[mask-image:none]'

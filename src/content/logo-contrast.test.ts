@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest'
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 import { AGENTIC_CHAINS } from '@/content/pages/agentic'
 import { HOME_VENUES } from '@/content/pages/home'
+import { VENUES_PARTNERS } from '@/content/pages/venues'
 import { INSTITUTIONAL_SIGNERS, INSTITUTIONAL_VENUES } from '@/content/pages/institutional'
 import { EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
 import { readFile } from 'node:fs/promises'
@@ -28,6 +29,7 @@ const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 
 const ROWS: Record<string, readonly LogoRowItem[]> = {
   HOME_VENUES,
+  VENUES_PARTNERS,
   INSTITUTIONAL_VENUES,
   INSTITUTIONAL_SIGNERS,
   AGENTIC_CHAINS,

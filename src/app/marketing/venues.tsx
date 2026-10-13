@@ -1,12 +1,12 @@
 import { getTranslations } from 'next-intl/server'
 import { ClosingCta } from '@/components/marketing/closing-cta'
-import { FeaturedIntegrations } from '@/components/marketing/integration-list'
-import { CtaButton, Eyebrow } from '@/components/marketing/section-parts'
+import { LogoRow } from '@/components/marketing/logo-row'
+import { CtaButton } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatsRow } from '@/components/marketing/stats-row'
-import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE } from '@/content/pages/venues'
-import { FEATURED_INTEGRATIONS, SUSHISWAP_SLTP_CHAINS, INTEGRATION_CHAINS } from '@/content/shared/integrations'
+import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE, VENUES_PARTNERS } from '@/content/pages/venues'
+import { SUSHISWAP_SLTP_CHAINS, INTEGRATION_CHAINS } from '@/content/shared/integrations'
 import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import type { Locale } from '@/i18n/locales'
 
@@ -33,12 +33,14 @@ export async function VenuesPage({ locale }: { locale: Locale }) {
         }))}
         locale={locale}
       />
-      <section className="container border-t border-border py-section" aria-label={t('partners.title')}>
-        <Eyebrow text={t('partners.title')} locale={locale} />
-        <div className="mt-12">
-          <FeaturedIntegrations partners={FEATURED_INTEGRATIONS} />
-        </div>
-      </section>
+      <LogoRow
+        title={t('partners.title')}
+        titleHidden
+        marquee
+        className="border-t border-border"
+        items={VENUES_PARTNERS}
+        locale={locale}
+      />
       <SplitStatement
         eyebrow={t('caseStudy.eyebrow')}
         heading={t('caseStudy.title')}

@@ -1,6 +1,7 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, waitFor, within } from 'storybook/test'
 import { HOME_VENUES } from '@/content/pages/home'
+import { VENUES_PARTNERS } from '@/content/pages/venues'
 import { LogoRow } from './logo-row'
 
 const meta = {
@@ -173,6 +174,49 @@ const marqueeArgs = {
 
 /** The home venue strip: a slow, continuous loop (#275). */
 export const Marquee: Story = { args: marqueeArgs }
+
+/** Venues shares the home loop, using transparent theme-specific wordmarks. */
+export const VenuesMarquee: Story = {
+  args: { ...marqueeArgs, items: VENUES_PARTNERS },
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    await expect(canvas.getAllByRole('listitem')).toHaveLength(6)
+    await expect(canvas.getAllByRole('listitem').map((item) => item.textContent)).toEqual(
+      VENUES_PARTNERS.map((item) => item.name)
+    )
+    const track = canvasElement.querySelector('[data-testid="logo-marquee-track"]') as HTMLElement
+    const [first, copy] = [...track.querySelectorAll(':scope > ul')] as HTMLElement[]
+    await waitFor(() => {
+      expect(getComputedStyle(track).animationName).toBe('marquee')
+      expect(copy.offsetWidth).toBe(first.offsetWidth)
+      expect(track.scrollWidth).toBe(first.offsetWidth * 2)
+      expect(first.offsetWidth).toBeGreaterThan(track.parentElement!.clientWidth)
+    })
+    // Six wordmarks are shorter than a wide desktop column. Each copy must
+    // still fill it so the end of the loop never exposes blank space.
+    const originalWidth = canvasElement.style.width
+    canvasElement.style.width = '1600px'
+    await expect(first.offsetWidth).toBeGreaterThanOrEqual(track.parentElement!.clientWidth)
+    await expect(copy.offsetWidth).toBe(first.offsetWidth)
+    await expect(track.scrollWidth).toBe(first.offsetWidth * 2)
+    canvasElement.style.width = originalWidth
+    for (const dark of [false, true]) {
+      canvasElement.classList.toggle('dark', dark)
+      const visible = [...first.querySelectorAll('img')].filter((image) => getComputedStyle(image).display !== 'none')
+      await expect(visible).toHaveLength(6)
+      for (const [index, image] of visible.entries()) {
+        const logo = VENUES_PARTNERS[index].logo!
+        await expect(decodeURIComponent(image.getAttribute('src')!)).toContain(dark ? logo.src : logo.onLight!)
+        await expect(getComputedStyle(image.parentElement!).backgroundColor).toBe('rgba(0, 0, 0, 0)')
+      }
+    }
+    canvasElement.classList.remove('dark')
+    const strip = canvas.getByRole('group', { name: marqueeArgs.title })
+    strip.focus()
+    await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('paused'))
+    strip.blur()
+  },
+}
 
 /**
  * The marks exist twice so the loop has no seam — and a screen reader must
