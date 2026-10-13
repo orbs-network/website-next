@@ -13,11 +13,16 @@ Source: Sara's “Orbs Website Refresh: Content Handoff” and [Orbs Website 3.0
 - Homepage access paths: White label (Contact), Start building (trading docs), Orbs Agentic.
 - Scope custody claims by product. Use “Any major custody provider” and “TWAP helps reduce price impact”.
 
+## Batch 2: Network Overview and Execution Services
+
+- Replace the English Overview's legacy pain/solution/mission/benefit narrative with the supplied L3, institutional execution and Guardians copy. Retain the three product destinations and add a staking CTA. Show project launch, mainnet launch and ORBS staking as separate figures.
+- Replace English Execution Services copy with the supplied hero, Lambda/VM descriptions and two-model comparison. Preserve both logo variants and the existing split layout; replace the legacy AWS/evolution sections and graphs on English only.
+- Preserve Japanese/Korean catalogs and page compositions. The retrieved Figma Network canvas supplies an Execution Services content-only frame, not a new dedicated Overview frame; Overview uses the approved shared inner-page layout.
+
 ## Remaining batches
 
-1. Network Overview and Execution Services: apply the supplied full page copy and reconcile their Figma layouts.
-2. Venues: SushiSwap case study, supplied hero, callouts and CTAs. Ecosystem: curated integrations and chain lists. **Pending Sara:** replace the existing broad directory or retain it as a secondary section.
-3. General FAQ and a new Security & Audits page: fourteen answers, product-specific security explanations and scoped current/historical audit links.
+1. Venues: SushiSwap case study, supplied hero, callouts and CTAs. Ecosystem: curated integrations and chain lists. **Confirmed by Sara on 13 October:** the new English Ecosystem replaces the old broad directory entirely.
+2. General FAQ and a new Security & Audits page: fourteen answers, product-specific security explanations and scoped current/historical audit links.
 
 ## Hold: dSPOT and dPERPS
 

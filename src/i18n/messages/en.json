@@ -923,54 +923,33 @@
     },
     "overview": {
       "meta": {
-        "title": "Overview",
-        "description": "What Orbs is: a decentralized Layer-3 blockchain infrastructure built for advanced on-chain trading."
+        "title": "Network Overview",
+        "description": "Orbs extends smart contract capabilities for institutional onchain finance. Its decentralised Layer 3 network powers dSPOT, dPERPS and Execution Services alongside existing chains."
       },
       "hero": {
-        "eyebrow": "[Overview]",
-        "headline": "Bringing CeFi-level\nexecution to DeFi",
-        "intro": "L3 For Advanced On-chain Trading",
-        "cta": "Explore the products"
+        "eyebrow": "[Network Overview]",
+        "headline": "The L3 powering onchain finance",
+        "intro": "Orbs extends smart contract capabilities to meet the demands of institutional trading. Its decentralised Layer 3 network powers dSPOT, dPERPS and Execution Services, bringing advanced execution to onchain finance.",
+        "cta": "Explore the products",
+        "secondaryCta": "Learn about staking"
       },
-      "what": {
-        "eyebrow": "[Introduction]",
-        "title": "What is Orbs?",
-        "body": "Orbs is a decentralized Layer-3 (L3) blockchain infrastructure designed specifically for advanced on-chain trading. Orbs improves on-chain trading by providing technology for aggregated liquidity, advanced trading orders, and decentralized derivatives.\n\nThis is made possible by Orbs enhancing the capabilities of both EVM and non-EVM smart contracts without moving liquidity onto a new chain. This unique setup creates a decentralized backend that brings CeFi-level execution to DeFi trading."
+      "execution": {
+        "eyebrow": "[Execution]",
+        "title": "Institutional-grade execution. Same underlying chains",
+        "body": "Professional trading requires continuous monitoring, conditional orders and coordinated execution beyond individual transactions. Orbs provides these capabilities alongside existing Layer 1 and Layer 2 networks, without requiring applications to move their liquidity to a new chain."
       },
-      "challenge": {
-        "eyebrow": "[Pain]",
-        "title": "On-chain Trading Challenges",
-        "body": "People prefer on-chain trading for enhanced privacy, security, anonymity, ease of onboarding, and lack of counterparty risk. However, on-chain execution often lags behind due to limitations in smart contract functionality, interoperability issues, liquidity fragmentation, inferior user experience, and suboptimal pricing."
-      },
-      "solution": {
-        "eyebrow": "[Solution]",
-        "title": "Layer 3 Technology Stack",
-        "body": "Orbs Layer 3 brings CeFi-level capabilities to DeFi by providing DeFi platforms with a decentralized backend, delivering scalable, efficient, and secure trading solutions without the need for centralized backends."
+      "decentralisation": {
+        "eyebrow": "[Network security]",
+        "title": "Decentralised execution. Built for institutions.",
+        "body": "Independent Guardians operate the Orbs network, secured through proof of stake and ORBS token delegation. This distributed architecture provides the resilience and decentralisation institutional onchain finance demands, without relying on a single operator."
       },
       "tech": {
-        "eyebrow": "[Tech]",
-        "title": "Layer 3 Technology Stack",
-        "body": "Three products powered by the Orbs network: dSPOT, dPERPS and Execution Services."
+        "eyebrow": "[Products]",
+        "body": "dSPOT, dPERPS and Execution Services."
       },
       "products": {
         "title": "Built for onchain finance execution",
         "items": {
-          "dtwap": {
-            "title": "dTWAP",
-            "body": "Advanced order type for DEXs allowing for time-based orders to be executed on chain."
-          },
-          "dlimit": {
-            "title": "dLIMIT",
-            "body": "Advanced order type for DEXs allowing for limit orders to be executed on chain."
-          },
-          "liquidityHub": {
-            "title": "Liquidity Hub",
-            "body": "Decentralized optimization layer for DEXs enabling DEXs to tap into external liquidity sources in order to provide CeFi-competitive prices on swaps."
-          },
-          "perpetualHub": {
-            "title": "dPERPS",
-            "body": "Full suite of services for decentralized perpetuals platforms, including hedger, liquidator and oracle, enabling intent-based on-chain perpetual futures trading."
-          },
           "dspot": {
             "title": "dSPOT",
             "body": "Aggregated liquidity and advanced spot orders, built into your platform."
@@ -986,45 +965,22 @@
         },
         "cta": "Discover {name}"
       },
-      "why": {
-        "title": "Why?",
-        "body": "Orbs' mission is to revolutionize on-chain trading by delivering CeFi-level pricing and execution capabilities to the decentralized finance (DeFi) ecosystem.",
-        "howTitle": "How?",
-        "howBody": "This is achieved by leveraging Orbs' innovative Layer-3 blockchain infrastructure, which enhances existing Layer-1 and Layer-2 solutions and enables complex logic to be implemented on a fully decentralized stack without moving liquidity to a new chain. Utilizing proof-of-stake consensus, Orbs provides DEXs with a decentralized backend that powers unique protocols such as dLIMIT, dTWAP, Liquidity Hub, and dPERPS. These, in turn, optimize trading with aggregated liquidity, advanced trading orders, and on-chain derivatives, which push the boundaries of DeFi and on-chain trading."
-      },
-      "mission": {
-        "eyebrow": "[Purpose]",
-        "title": "Mission",
-        "body": "Orbs is dedicated to transforming the DeFi landscape by bringing CeFi-level execution to on-chain trading. Orbs Layer-3 blockchain infrastructure supports protocols that empower traders with advanced tools and platforms, ensuring secure, scalable, and efficient trading solutions without centralized intermediaries."
-      },
-      "benefits": {
-        "eyebrow": "[Benefits]",
-        "title": "How do Users Benefit from\nProtocols Powered by Orbs",
-        "intro": "Users benefit from protocols powered by Orbs in several key ways:",
-        "items": {
-          "access": {
-            "title": "On-chain Access to Advanced Trading Products and Services",
-            "body": "Orbs enables on-chain availability of sophisticated trading features found in CeFi Venues. Protocols such as dLIMIT and dTWAP offer advanced order types like TWAP and limit orders directly on decentralized exchanges, which were previously unavailable on-chain. This advancement allows traders to execute more strategic and controlled trades, enhancing their trading experience and capabilities."
+      "history": {
+        "title": "Built for the long run",
+        "stats": {
+          "project": {
+            "value": "2017",
+            "label": "Project live since"
           },
-          "pricing": {
-            "title": "Competitive Pricing and Lower Fees",
-            "body": "By utilizing Liquidity Hub, Orbs allows DEXs to provide their users with access to aggregated liquidity from multiple sources, ensuring more competitive pricing on swaps. This means users can achieve better prices and lower fees compared to traditional decentralized exchanges that may suffer from liquidity fragmentation. Additionally, the dPERPS offers more capital-efficient perpetual trading, translating to better pricing and reduced costs for users engaging in perpetual futures trading."
+          "mainnet": {
+            "value": "2019",
+            "label": "Mainnet live since"
           },
-          "decentralization": {
-            "title": "Decentralization and Privacy",
-            "body": "Protocols powered by Orbs maintain the core principles of decentralization, providing users with enhanced privacy, security, and anonymity. By eliminating the need for centralized backends, Orbs ensures that users can trade in a decentralized manner, protecting their data and maintaining control over their assets."
+          "staked": {
+            "value": "1.1B",
+            "label": "ORBS staked"
           }
         }
-      },
-      "marquee": {
-        "liquidity": "Aggregated liquidity.",
-        "orders": "Advanced trading orders.",
-        "derivatives": "Decentralized derivatives."
-      },
-      "closing": {
-        "follow": "Follow us",
-        "community": "Join community",
-        "contact": "Talk to the team"
       }
     },
     "ecosystem": {
@@ -1056,34 +1012,42 @@
     "executionServices": {
       "meta": {
         "title": "Execution Services",
-        "description": "Orbs Lambda and Orbs VM: decentralized serverless functions and container-based compute."
+        "description": "Run application logic beyond your smart contracts with Orbs Lambda event-driven JavaScript functions and Orbs VM persistent Docker services on the decentralised Orbs network."
       },
       "eyebrows": {
-        "hero": "[NETWORK / COMPUTE]",
-        "lambdaProduct": "[ORBS LAMBDA]",
-        "vm": "[ORBS VM]",
-        "alternatives": "[COMPARISON]",
-        "evolution": "[EVOLUTION]"
+        "hero": "[Network / Compute]",
+        "lambdaProduct": "[Orbs Lambda]",
+        "vm": "[Orbs VM]",
+        "comparison": "[Execution models]"
       },
       "hero": {
-        "headline": "Execution Services",
+        "headline": "Run the logic beyond your smart contracts.",
+        "intro": "Institutional trading applications need execution logic that keeps working beyond individual transactions. Orbs Lambda and Orbs VM provide the decentralised compute behind event-driven automation and persistent services, using familiar development tools.",
         "cta": "Start building"
       },
-      "vm": {
-        "title": "Orbs VM - Decentralized Docker-Based Virtual Machine",
-        "body": "**Dedicated decentralized virtual machine, similar in concept to AWS EC2 - but decentralized.**\n\nImplement your custom service as a Docker container, without any blockchain specific knowledge. Use any programming language you like, such as Go, C++, Rust, JavaScript, Java, Python and more. Deploy your container to have it executed as an always-on service on dozens of independent decentralized validator nodes."
-      },
-      "alternatives": {
-        "title": "Compute Cloud Alternatives",
-        "body": "Amazon Web Services (AWS) is the leading centralized compute cloud platform in the world today. AWS segments the compute cloud market according to the flexibility/complexity tradeoff. For simplicity - AWS offers the serverless AWS Lamda. For flexibility - AWS offers the powerful AWS EC2.\n\nThe Orbs network aspires to be the leading decentralized compute cloud platform. Orbs segments the decentralized compute cloud market in a similar way. For simplicity - Orbs offers the serverless AWS Lambda. For flexibility - Orbs offers the powerful Orbs VM."
-      },
-      "evolution": {
-        "title": "Evolution of Decentralized Execution",
-        "body": "The first decentralized execution platform in the world that was truly Turing-complete is the Ethereum Virtual Machine (EVM). The EVM was a marvel of innovation, but for security considerations as a base layer, had to limit its execution capabilities in a tight security sandbox.\n\nOrbs Lambda expands these capabilities significantly by allowing developers to use the world's most popular language - JavaScript - without limits and fully access data outside the chain.\nOrbs VM takes execution capabilities a step further and allows developers to use any programming language over the world's most popular container - Docker."
-      },
       "lambdaProduct": {
-        "title": "Orbs Lambda - Decentralized Serverless Cloud Function",
-        "body": "**Event driven, serverless and decentralized computing solution, similar in concept to AWS Lambda - but decentralized.**\n\nWrite your cloud function in regular JavaScript, without any blockchain specific knowledge. Code can utilize familiar node.js libraries such as node-fetch. Select a trigger for execution, like running on a new L1/L2 block or on a new L1/L2 on-chain event, and deploy. Your function will be executed on dozens of independent decentralized validator nodes."
+        "title": "Orbs Lambda",
+        "tagline": "Functions that respond to onchain events.",
+        "body": "Write a JavaScript function, choose a trigger and deploy it to the Orbs network. Respond to new blocks or onchain events and connect application logic to external data using familiar Node.js libraries.\n\nUse Lambda to monitor onchain events and trigger application workflows without managing a dedicated application server. Trading teams can connect these functions to their own data and execution logic."
+      },
+      "vm": {
+        "title": "Orbs VM",
+        "tagline": "Your service. Your language. Distributed execution.",
+        "body": "Package your application as a Docker container and deploy it as a persistent service on Orbs. Use the language and libraries that fit your application, including Go, Rust, JavaScript, Python, Java or C++.\n\nUse VM for ongoing monitoring and custom trading services that need a continuous runtime, specific dependencies or more control over their environment."
+      },
+      "comparison": {
+        "title": "Choose the execution model that fits",
+        "intro": "Both extend onchain applications with logic executed by the Orbs network.",
+        "items": {
+          "lambdaProduct": {
+            "title": "Lambda",
+            "body": "A function, a trigger and a focused task."
+          },
+          "vm": {
+            "title": "VM",
+            "body": "A container, a persistent runtime and a custom service."
+          }
+        }
       }
     },
     "pos": {
