@@ -430,7 +430,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
           <div className="mt-16 grid gap-10 lg:mt-48 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-5">
             <ul className="flex min-w-0 flex-col lg:col-start-2 lg:row-start-1">
-              {HOME_DISCOVER.map((item) => (
+              {HOME_DISCOVER.filter((item) => !item.locales || item.locales.includes(locale)).map((item) => (
                 <li key={item.id}>
                   <Link
                     href={localeHref(item.href, locale)}

@@ -2,7 +2,7 @@
 
 ### When should I use a dTWAP order?
 
-TWAP (Time-weighted Average Price) is a common order used in CeFi that breaks an order into smaller trade sizes and executes them at regular intervals. The main goal of a TWAP order is to reduce the order’s price impact. It can also be useful if a user wants to implement a dollar-cost averaging strategy (DCA) and buy a certain token on a consistent schedule (i.e. once a month).
+TWAP (Time-weighted Average Price) is a common order used in CeFi that breaks an order into smaller trade sizes and executes them at regular intervals. A TWAP order can help reduce the order’s price impact. Execution depends on market conditions and available liquidity. It can also be useful if a user wants to implement a dollar-cost averaging strategy (DCA) and buy a certain token on a consistent schedule (i.e. once a month).
 
 Therefore, dTWAP is best used when the order size is large compared to the available liquidity, or when a user anticipates a high price volatility period with no clear up or downward trend.
 
@@ -41,7 +41,7 @@ When choosing between a dTWAP-market and dTWAP-limit order, consider the followi
 A dTWAP-limit order provides a safeguard by ensuring a minimum output token amount based on a specified limit price.
 
 However, if the market price at execution is less favorable than the limit price, the order may only partially fill or remain unfilled by the order's expiration.
-Conversely, a dTWAP-market order guarantees full execution by the order's expiry, but each segment of the order is executed at the available market price. This can result in unexpected prices, especially during periods of high volatility or when liquidity drops, potentially causing significant price impact.
+Conversely, a dTWAP-market order prioritises execution at the available market price, but does not guarantee a full fill by the order's expiry. Execution depends on market conditions and available liquidity. This can result in unexpected prices, especially during periods of high volatility or when liquidity drops, potentially causing significant price impact.
 
 ## dSLTP
 
@@ -49,7 +49,7 @@ Conversely, a dTWAP-market order guarantees full execution by the order's expiry
 
 Both order types have their advantages and risks, and choosing between them depends on your priorities.
 
--   **Stop-loss market orders** ensure that your order will be executed once the stop price is triggered. However, in fast or volatile markets, slippage can occur, and the executed price may be significantly worse than the trigger price. This means the amount of output tokens received could be lower than expected.
+-   **Stop-loss market orders** attempt to execute once the stop price is triggered. Execution depends on market conditions and available liquidity. However, in fast or volatile markets, slippage can occur, and the executed price may be significantly worse than the trigger price. This means the amount of output tokens received could be lower than expected.
 
 -   **Stop-loss limit orders** protect against receiving a worse price than your specified limit. Once the stop price is triggered, the order will execute only at the limit price or better. The downside is that if the market price falls below your limit, the order may not execute at all.
 
@@ -93,7 +93,7 @@ It should be noted that at present, dTWAP and dLIMIT do not impose any additiona
 
 ### What is the role of the Orbs network in the protocol?
 
-The [Orbs Network](https://www.orbs.com/) is an open, decentralized and public blockchain infrastructure executed by a secure network of permissionless validators (known as “Guardians”) using Proof-of-Stake (PoS) consensus. Orbs is optimized to provide “L3” services, working in conjunction with existing L1 and L2 layers and acting as a “decentralized backend” that enhances the capabilities of EVM smart contracts. Orbs Network mainnet is live since 2019 and has dozens of active validators staked with over $100M.
+The [Orbs Network](https://www.orbs.com/) is an open, decentralized and public blockchain infrastructure executed by a secure network of permissionless validators (known as “Guardians”) using Proof-of-Stake (PoS) consensus. Orbs is optimized to provide “L3” services, working in conjunction with existing L1 and L2 layers and acting as a “decentralized backend” that enhances the capabilities of EVM smart contracts. Orbs Network mainnet is live since 2019 and is secured through proof of stake, with 1.1B ORBS staked.
 
 The network provides its [L3 services](https://www.orbs.com/overview/) by operating as a decentralized serverless cloud that allows developers to design applications that extend the capabilities of their smart contracts without relying on traditional centralized server solutions. These applications are deployed to be executed by the Orbs Guardians in a decentralized way.
 

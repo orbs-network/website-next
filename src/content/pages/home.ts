@@ -159,11 +159,12 @@ function venue(slug: string, width: number, height: number, ext: 'svg' | 'png' =
   return { src: `${base}.${ext}`, onLight: `${base}-on-light.${ext}`, width, height }
 }
 
-/** "Discover." — three large links out to the reading material. */
-export const HOME_DISCOVER = [
+/** "Discover." — reading material and English-first security resources. */
+export const HOME_DISCOVER: readonly { id: string; href: string; locales?: readonly Locale[] }[] = [
   { id: 'blog', href: '/blog' },
   { id: 'whitePapers', href: '/white-papers' },
   { id: 'faq', href: '/faq' },
+  { id: 'securityAndAudits', href: '/security-and-audits', locales: ['en'] },
 ] as const
 
 /**
