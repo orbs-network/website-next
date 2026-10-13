@@ -1,60 +1,75 @@
 import { getTranslations } from 'next-intl/server'
 import { ClosingCta } from '@/components/marketing/closing-cta'
-import { GraphicSplit } from '@/components/marketing/graphic-split'
+import { LogoRow } from '@/components/marketing/logo-row'
 import { CtaButton } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
-import { StatementBand } from '@/components/marketing/statement-band'
-import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE } from '@/content/pages/venues'
+import { StatsRow } from '@/components/marketing/stats-row'
+import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE, VENUES_PARTNERS } from '@/content/pages/venues'
+import { SUSHISWAP_SLTP_CHAINS, INTEGRATION_CHAINS } from '@/content/shared/integrations'
+import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import type { Locale } from '@/i18n/locales'
 
-/**
- * The Venues page (#157), from the 3.4 `Desktop / Solutions / Venues` frame.
- *
- * The 3.4 section library: hero, statement, gradient band, graphic split,
- * closing block. English only: the copy is new with 3.4.
- */
+/** English venue handoff, using the approved inner-page layout and assets. */
 export async function VenuesPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.venues' })
-
-  const uiKit = (label: string) => ({ label, href: VENUES_LINKS.uiKit })
-
   return (
     <>
       <SplitHero
         eyebrow={t('hero.eyebrow')}
         headline={t('hero.headline')}
         intro={t('hero.intro')}
-        cta={uiKit(t('hero.cta'))}
+        cta={{ label: t('hero.cta'), href: VENUES_LINKS.contact }}
+        secondaryCta={{ label: t('hero.secondaryCta'), href: SDK_DOCS_URL }}
         graphic={VENUES_GRAPHICS.hero}
         locale={locale}
       />
-
+      <StatsRow
+        columns={3}
+        stats={(['venues', 'chains', 'processed'] as const).map((id) => ({
+          id,
+          value: t(`stats.${id}.value`),
+          label: t(`stats.${id}.label`),
+        }))}
+        locale={locale}
+      />
+      <LogoRow
+        title={t('partners.title')}
+        titleHidden
+        marquee
+        className="border-t border-border"
+        items={VENUES_PARTNERS}
+        locale={locale}
+      />
       <SplitStatement
-        eyebrow={t('capabilities.eyebrow')}
-        heading={t('capabilities.heading')}
-        body={t('capabilities.body')}
+        eyebrow={t('caseStudy.eyebrow')}
+        heading={t('caseStudy.title')}
+        body={`${t('caseStudy.body')}\n\n${t('caseStudy.rollout', { chains: new Intl.ListFormat('en-GB').format(SUSHISWAP_SLTP_CHAINS.map((id) => INTEGRATION_CHAINS[id].name)) })}`}
         locale={locale}
       />
-
-      <StatementBand text={t('band')} locale={locale} />
-
-      <GraphicSplit
-        eyebrow={t('frontend.eyebrow')}
-        heading={t('frontend.heading')}
-        body={t('frontend.body')}
-        cta={uiKit(t('frontend.cta'))}
-        graphic={VENUES_GRAPHICS.frontend}
-        locale={locale}
-      />
-
+      <section className="container pb-section" aria-label={t('caseStudy.calloutsLabel')}>
+        <ul className="grid gap-8 sm:grid-cols-3">
+          {(['execution', 'orders', 'chains'] as const).map((id) => (
+            <li key={id} className="border-t border-border pt-6 text-p text-fg">
+              {t(`caseStudy.callouts.${id}`)}
+            </li>
+          ))}
+        </ul>
+        <div className="mt-12">
+          <CtaButton link={{ label: t('caseStudy.cta'), href: VENUES_LINKS.contact }} locale={locale} />
+        </div>
+      </section>
       <ClosingCta
         phrases={VENUES_MARQUEE.map((id) => t(`marquee.${id}`))}
         locale={locale}
         actions={
           <>
-            <CtaButton link={uiKit(t('closing.uiKit'))} locale={locale} />
-            <CtaButton link={{ label: t('closing.contact'), href: VENUES_LINKS.contact }} locale={locale} />
+            <CtaButton link={{ label: t('hero.cta'), href: VENUES_LINKS.contact }} locale={locale} />
+            <CtaButton
+              link={{ label: t('hero.secondaryCta'), href: SDK_DOCS_URL }}
+              locale={locale}
+              variant="secondary"
+            />
           </>
         }
       />
