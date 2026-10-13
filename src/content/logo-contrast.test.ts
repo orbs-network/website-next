@@ -7,6 +7,8 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
 import { AGENTIC_CHAINS } from '@/content/pages/agentic'
 import { HOME_VENUES } from '@/content/pages/home'
 import { INSTITUTIONAL_SIGNERS, INSTITUTIONAL_VENUES } from '@/content/pages/institutional'
+import { EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
+import { readFile } from 'node:fs/promises'
 
 /**
  * Guards against a white-only logo reaching the light theme.
@@ -31,6 +33,24 @@ const ROWS: Record<string, readonly LogoRowItem[]> = {
   AGENTIC_CHAINS,
 }
 
+describe('dark-theme wordmarks', () => {
+  it('make all execution-service lettering white while preserving the coloured icons and geometry', async () => {
+    for (const product of EXECUTION_SERVICES_PRODUCTS) {
+      const original = await readFile(join(REPO, 'public', product.image), 'utf8')
+      const variant = await readFile(join(REPO, 'public', product.darkImage), 'utf8')
+      const lightPaths = original.match(/<path\b[^>]*>/g)!
+      const darkPaths = variant.match(/<path\b[^>]*>/g)!
+      // In these assets, the coloured icon precedes the outlined wordmark.
+      const iconPaths = product.id === 'lambdaProduct' ? 6 : 10
+      expect(darkPaths.slice(0, iconPaths), product.darkImage).toEqual(lightPaths.slice(0, iconPaths))
+      expect(darkPaths.slice(iconPaths).length).toBeGreaterThan(0)
+      expect(darkPaths.slice(iconPaths).every((path) => path.includes('fill="#F6F6F6"'))).toBe(true)
+      const ink = /fill="#[0-9A-Fa-f]{6}"/g
+      expect(variant.replace(ink, ''), product.darkImage).toBe(original.replace(ink, ''))
+    }
+  })
+})
+
 /** Alpha at or above which a pixel counts as part of the mark. */
 const OPAQUE = 128
 
@@ -43,6 +63,32 @@ const NEAR_WHITE = 230
  * files were 100%.
  */
 const MAX_WHITE_SHARE = 0.9
+
+describe('Agentic monochrome chain marks', () => {
+  it('use black ink and transparent negative space, so inversion preserves each mark', async () => {
+    for (const chain of AGENTIC_CHAINS) {
+      const { data } = await sharp(join(REPO, 'public', chain.logo!.src))
+        .resize({ width: 96, height: 96, fit: 'contain', background: { r: 0, g: 0, b: 0, alpha: 0 } })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let ink = 0
+      let coloured = 0
+      let transparent = 0
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] < OPAQUE) {
+          transparent++
+          continue
+        }
+        ink++
+        if (Math.max(data[i], data[i + 1], data[i + 2]) > 10) coloured++
+      }
+      expect(ink, chain.name).toBeGreaterThan(96)
+      expect(coloured, chain.name).toBe(0)
+      expect(transparent / (data.length / 4), chain.name).toBeGreaterThan(0.1)
+    }
+  })
+})
 
 /** Share of a mark's opaque pixels that are near-white. Downscaled: a 1800px chain icon needs no more than this. */
 async function whiteShare(src: string): Promise<number> {

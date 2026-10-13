@@ -18,9 +18,7 @@ import { textLang } from '@/i18n/script'
  * would make it a landmark named with the very sentence it contains, read
  * twice on the way in.
  *
- * Text starts a third of the way across on a wide screen — the design puts a
- * 446px spacer in front of it — and left-aligned on a phone, where a third of
- * 390px is not a margin anyone would recognise.
+ * The message sits in the centre of the full panel, in both views.
  */
 export function StatementBand({ text, locale }: { text: string; locale: Locale }) {
   const lang = textLang(text, locale)
@@ -28,7 +26,7 @@ export function StatementBand({ text, locale }: { text: string; locale: Locale }
   return (
     <section lang={lang} className="flex min-h-[26rem] items-center bg-statement-band py-section lg:min-h-[44.5rem]">
       <div className="container">
-        <p className="text-balance text-h3 text-neutral-900 sm:text-h2 lg:ml-[33%]">{text}</p>
+        <p className="mx-auto max-w-5xl text-center text-balance text-h3 text-neutral-900 sm:text-h2">{text}</p>
       </div>
     </section>
   )

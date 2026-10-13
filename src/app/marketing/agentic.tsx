@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { H1, H3 } from '@/app/components/typography'
+import { H1, H4 } from '@/app/components/typography'
 import { GithubIcon } from '@/components/icons'
 import { DividedSection, PlainCards } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
@@ -61,10 +61,10 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
             <li key={card.id} className="flex flex-col bg-surface p-6 lg:p-8">
               {/* Decorative: the heading beneath names the same thing. */}
               <Image src={card.icon} alt="" width={48} height={48} className="size-12" />
-              <H3 className="mt-10" weight="medium" lang={lang(`breaks.items.${card.id}.title`)}>
-                {t(`breaks.items.${card.id}.title`)}
-              </H3>
-              <Prose text={t(`breaks.items.${card.id}.body`)} locale={locale} className="mt-6 [&_p]:text-fg" />
+              <H4 asChild className="mt-10" lang={lang(`breaks.items.${card.id}.title`)}>
+                <h3>{t(`breaks.items.${card.id}.title`)}</h3>
+              </H4>
+              <Prose text={t(`breaks.items.${card.id}.body`)} locale={locale} className="mt-10 [&_p]:text-fg" />
             </li>
           ))}
         </ul>
@@ -81,25 +81,22 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
         />
       </DividedSection>
 
-      <DividedSection eyebrow={t('eyebrows.chains')} heading={t('chains.title')} locale={locale}>
+      <DividedSection eyebrow={t('eyebrows.chains')} locale={locale} className="[&>div]:mt-8">
         {/*
-          Left-aligned like the master's `09` strip, rather than `LogoRow`'s
-          centred cluster. Chain names are proper nouns, English in every
-          locale, so each carries its own `lang`.
+          Equal tiles keep differently shaped marks balanced. Chain names are
+          proper nouns, English in every locale, so each carries its own `lang`.
         */}
-        <ul className="flex flex-wrap items-center gap-x-10 gap-y-8">
+        <ul className="grid grid-cols-2 gap-x-6 gap-y-8 sm:grid-cols-4 lg:grid-cols-8">
           {AGENTIC_CHAINS.map((chain) => (
-            <li key={chain.name} className="flex items-center gap-3">
+            <li key={chain.name} className="flex flex-col items-center gap-4">
               {chain.logo && (
                 <Image
                   src={chain.logo.src}
                   alt=""
                   width={chain.logo.width}
                   height={chain.logo.height}
-                  // Rendered 32px high; without `sizes` next/image fetches the
-                  // intrinsic width (up to 1800px) for each mark.
-                  sizes="2rem"
-                  className="size-8 object-contain"
+                  sizes="4rem"
+                  className="h-12 w-16 object-contain brightness-0 dark:invert"
                 />
               )}
               <span
@@ -156,18 +153,20 @@ export async function AgenticPage({ locale }: { locale: Locale }) {
 
             return (
               <li key={card.id} className="relative flex flex-col bg-surface p-6 lg:p-8">
-                <H3 weight="medium" lang={textLang(title, locale)}>
-                  {external ? (
-                    <a href={href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
-                      {title}
-                    </a>
-                  ) : (
-                    <Link href={href} className={linkClassName}>
-                      {title}
-                    </Link>
-                  )}
-                </H3>
-                <Prose text={t(`getStarted.items.${card.id}.body`)} locale={locale} className="mt-6 [&_p]:text-fg" />
+                <H4 asChild lang={textLang(title, locale)}>
+                  <h3>
+                    {external ? (
+                      <a href={href} target="_blank" rel="noopener noreferrer" className={linkClassName}>
+                        {title}
+                      </a>
+                    ) : (
+                      <Link href={href} className={linkClassName}>
+                        {title}
+                      </Link>
+                    )}
+                  </h3>
+                </H4>
+                <Prose text={t(`getStarted.items.${card.id}.body`)} locale={locale} className="mt-10 [&_p]:text-fg" />
                 <span aria-hidden="true" className="mt-auto pt-10 text-p">
                   &rarr;
                 </span>

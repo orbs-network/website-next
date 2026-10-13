@@ -46,7 +46,11 @@ export const ECOSYSTEM_CATEGORIES: readonly EcosystemCategory[] = [
         url: 'https://www.orbs.com/Introducing-Open-DeFi-Notification-Protocol/',
         logo: '/ecosystem/useCases/defi-notifications.png',
       },
-      { name: 'TON Access', url: 'https://www.orbs.com/ton-access', logo: '/ecosystem/useCases/ton-access.svg' },
+      {
+        name: 'TON Access',
+        url: 'https://www.orbs.com/ton-access',
+        logo: '/ecosystem/useCases/ton-access.svg',
+      },
       {
         name: 'TON.vote',
         url: 'https://www.orbs.com/Orbs-Introduces-TON-vote/',

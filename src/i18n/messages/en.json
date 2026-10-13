@@ -163,7 +163,7 @@
         "description": "A decentralized on-chain protocol for price-efficient and reliable execution of limit orders for DEX/AMMs. The optimal limit order solution for DEXs over existing alternatives."
       },
       "hero": {
-        "headline": "LIMIT ORDERS PROTOCOL FOR\nDECENTRALIZED EXCHANGES",
+        "headline": "Limit orders protocol for\ndecentralized exchanges",
         "intro": "A decentralized on-chain protocol for price-efficient and reliable execution of limit orders for DEX/AMMs. The optimal limit order solution for DEXs over existing alternatives.",
         "cta": "GET STARTED"
       },
@@ -447,15 +447,15 @@
         "intro": "A single execution tool with flexible, composable parameters. The agent defines the order configuration, and Orbs handles the execution flow.",
         "items": {
           "autoswap": {
-            "title": "AUTOSWAP",
+            "title": "Auto Swap",
             "body": "Agent-driven token swaps with smart routing and slippage protection. The default for most trades."
           },
           "autolimit": {
-            "title": "AUTOLIMIT",
+            "title": "Auto Limit",
             "body": "Limit orders with on-chain execution guarantees. Set a price, walk away."
           },
           "secureswap": {
-            "title": "SECURESWAP",
+            "title": "Secure Swap",
             "body": "Additional cosigned oracle verification for higher-stakes trades. Extra checks before anything moves."
           },
           "twap": {
@@ -527,7 +527,7 @@
         "description": "Install this AI skill in any AI coding agent. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit and TWAP orders on-chain, powered by Orbs L3."
       },
       "hero": {
-        "headline": "GASLESS ADVANCED\nSWAP ORDERS FOR\nAI AGENTS & HUMANS",
+        "headline": "Gasless advanced\nswap orders for\nAI agents & humans",
         "intro": "Install this AI skill in any AI coding agent like Claude Code, Cursor, or Codex. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit, and TWAP orders on-chain — powered by Orbs L3.",
         "cta": "Get Started"
       },

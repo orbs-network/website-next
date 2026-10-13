@@ -21,7 +21,7 @@ import type { Locale } from '@/i18n/locales'
  */
 const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string; titleClassName?: string }> = {
   dtwap: { accentClassName: 'text-periwinkle-600 dark:text-periwinkle-400' },
-  dlimit: { accentClassName: 'text-indigo-400' },
+  dlimit: { accentClassName: 'text-indigo-400 dark:text-indigo-200' },
   liquidityHub: { accentClassName: 'text-cyan-600 dark:text-cyan-400', titleClassName: 'uppercase' },
   perpetualHub: { accentClassName: 'text-pink-600 dark:text-pink-400' },
 }

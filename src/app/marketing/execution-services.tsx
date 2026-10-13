@@ -7,6 +7,7 @@ import { Eyebrow } from '@/components/marketing/section-parts'
 import { EXECUTION_SERVICES_DIAGRAMS, EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
 import { InnerClosingCta } from './inner-closing'
 
 /**
@@ -21,10 +22,9 @@ import { InnerClosingCta } from './inner-closing'
  *  - The product marks are hero-scale illustrations, not icons. At the 896px
  *    `ArchitectureSection` gives an image they made the page 6,570px tall for
  *    five sections, so they are capped at 320px.
- *  - Both diagrams have WHITE labels on transparency — "Simple",
- *    "Centralized", "AWS Lambda" — which are close to invisible on light. They
- *    need a dark panel whatever the theme, which is a property of these two
- *    images rather than of any shared section.
+ *  - The alternatives diagram has white labels and needs a dark panel. The
+ *    final evolution graph has dark labels and needs white. Each asset keeps
+ *    its backing in both themes.
  */
 export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.executionServices' })
@@ -63,7 +63,15 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
               width={320}
               height={320}
               sizes="(min-width: 1024px) 320px, 60vw"
-              className="mx-auto h-auto w-full max-w-[320px] lg:order-last"
+              className="mx-auto h-auto w-full max-w-[320px] dark:hidden lg:order-last"
+            />
+            <Image
+              src={product.darkImage}
+              alt=""
+              width={320}
+              height={320}
+              sizes="(min-width: 1024px) 320px, 60vw"
+              className="mx-auto hidden h-auto w-full max-w-[320px] dark:block lg:order-last"
             />
           </div>
         </DividedSection>
@@ -77,14 +85,9 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
           intro={t(`${diagram.id}.body`)}
           locale={locale}
         >
-          {/*
-            In the right-hand column, under the body it illustrates. Dark panel
-            in both themes: the labels inside these PNGs are white on
-            transparency. `bg-neutral-900` rather than a token because it is not
-            theming — it is the background the artwork was drawn for.
-          */}
+          {/* Each transparent diagram uses the backing its lettering needs. */}
           <div className="grid lg:grid-cols-[minmax(0,5fr)_minmax(0,7fr)] lg:gap-32">
-            <div className="bg-neutral-900 p-6 lg:col-start-2">
+            <div className={cn('p-6 lg:col-start-2', diagram.background)}>
               <Image
                 src={diagram.src}
                 alt={t(`${diagram.id}.title`)}

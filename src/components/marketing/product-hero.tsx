@@ -1,4 +1,5 @@
 import { Button } from '@/components/ui/button'
+import { H1 } from '@/app/components/typography'
 import { Prose } from './prose'
 import { GithubIcon, TelegramIcon } from '@/components/icons'
 import { cn } from '@/lib/utils'
@@ -121,12 +122,9 @@ export function ProductHero({
             </p>
           )}
 
-          <h1
-            lang={textLang(headline, locale)}
-            className="whitespace-pre-line text-balance text-3xl font-black uppercase leading-tight tracking-tight sm:text-4xl lg:text-5xl"
-          >
+          <H1 lang={textLang(headline, locale)} className="whitespace-pre-line text-balance break-words">
             {headline}
-          </h1>
+          </H1>
 
           {/*
             Through `Prose`, not a bare `<p>`. Perpetual Hub's intro is two

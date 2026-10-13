@@ -13,7 +13,7 @@ const dirname = typeof __dirname !== 'undefined' ? __dirname : path.dirname(file
 export default defineConfig({
   // Pre-bundle deps that otherwise trigger a mid-run Vite reload on cold starts (CI).
   optimizeDeps: {
-    include: ['@opentelemetry/api'],
+    include: ['@opentelemetry/api', 'contentful'],
   },
   // Matches the `@/*` -> `./src/*` alias in tsconfig.json. Storybook supplies
   // this to its own project via the Next.js framework config; the node project

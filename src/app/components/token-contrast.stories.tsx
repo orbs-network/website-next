@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect } from 'storybook/test'
+import { ModuleCards } from '@/components/marketing/module-cards'
 
 /**
  * Contrast of the semantic colour tokens, computed rather than eyeballed.
@@ -165,5 +166,41 @@ export const DarkTheme: Story = {
     expect(getComputedStyle(root).backgroundColor).toBe(DARK_BG)
 
     expect(check(root, 'dark')).toEqual([])
+  },
+}
+
+/** dLIMIT's small label sits on the card fill, rather than on the page. */
+export const ProductLabelOnCard: Story = {
+  render: () => (
+    <ModuleCards
+      eyebrow="[PRODUCTS]"
+      heading="Advanced orders"
+      body="Execution services for venues"
+      cards={[
+        {
+          id: 'dlimit',
+          eyebrow: 'dLIMIT',
+          title: 'dLIMIT',
+          body: 'Place orders at a target price or better.',
+          accentClassName: 'text-indigo-400 dark:text-indigo-200',
+          link: { label: 'Discover dLIMIT', href: '/dlimit' },
+        },
+      ]}
+      locale="en"
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const html = document.documentElement
+    const wasDark = html.classList.contains('dark')
+    const card = canvasElement.querySelector('li') as HTMLElement
+    const label = card.querySelector('p') as HTMLElement
+    try {
+      for (const dark of [false, true]) {
+        html.classList.toggle('dark', dark)
+        expect(ratio(getComputedStyle(label).color, getComputedStyle(card).backgroundColor)).toBeGreaterThanOrEqual(4.5)
+      }
+    } finally {
+      html.classList.toggle('dark', wasDark)
+    }
   },
 }

@@ -8,11 +8,27 @@
  */
 
 export const EXECUTION_SERVICES_PRODUCTS = [
-  { id: 'lambdaProduct', image: '/marketing/execution-services/lambda.svg' },
-  { id: 'vm', image: '/marketing/execution-services/vm.svg' },
+  {
+    id: 'lambdaProduct',
+    image: '/marketing/execution-services/lambda.svg',
+    darkImage: '/marketing/execution-services/lambda-dark.svg',
+  },
+  { id: 'vm', image: '/marketing/execution-services/vm.svg', darkImage: '/marketing/execution-services/vm-dark.svg' },
 ] as const
 
 export const EXECUTION_SERVICES_DIAGRAMS = [
-  { id: 'alternatives', src: '/marketing/execution-services/graph-1.png', width: 1800, height: 1032 },
-  { id: 'evolution', src: '/marketing/execution-services/graph-2.png', width: 1800, height: 1179 },
+  {
+    id: 'alternatives',
+    src: '/marketing/execution-services/graph-1.png',
+    width: 1800,
+    height: 1032,
+    background: 'bg-neutral-900',
+  },
+  {
+    id: 'evolution',
+    src: '/marketing/execution-services/graph-2.png',
+    width: 1800,
+    height: 1179,
+    background: 'bg-white',
+  },
 ] as const

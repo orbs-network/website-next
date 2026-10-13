@@ -1,7 +1,11 @@
 import { getTranslations } from 'next-intl/server'
-import { ArchitectureSection } from '@/components/marketing/architecture-section'
 import { Disclaimer } from '@/components/marketing/disclaimer'
-import { FeatureGrid } from '@/components/marketing/feature-grid'
+import { DividedSection } from '@/components/marketing/divided-section'
+import { Prose } from '@/components/marketing/prose'
+import { CtaButton } from '@/components/marketing/section-parts'
+import { H2, H4 } from '@/app/components/typography'
+import { Card, CardContent, CardHeader } from '@/components/ui/card'
+import Image from 'next/image'
 import { ProductHero } from '@/components/marketing/product-hero'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import {
@@ -23,10 +27,8 @@ import { textLang } from '@/i18n/script'
  * the same treatment dSLTP got in #99, and for the same reason. Korean is a
  * full translation.
  *
- * Composed entirely from existing components. The only new piece is
- * `Disclaimer`, because the legacy page carries a beta/risk notice that is a
- * legal disclosure rather than marketing copy and should not read like the
- * pitch above it.
+ * The body keeps the hero's left gutter, copy width and 18px body text.
+ * Diagrams sit beside the copy on desktop and below it on mobile.
  */
 export async function DperpsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dperps' })
@@ -49,52 +51,62 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         locale={locale}
       />
 
-      <FeatureGrid
-        title={t('benefits.title')}
-        features={DPERPS_BENEFITS.map((benefit) => ({
-          id: benefit.id,
-          icon: benefit.icon,
-          title: t(`benefits.items.${benefit.id}.title`),
-          body: t(`benefits.items.${benefit.id}.body`),
-        }))}
-        locale={locale}
-      />
+      <DividedSection heading={t('benefits.title')} locale={locale}>
+        <div className="grid gap-8 md:grid-cols-2 lg:grid-cols-3">
+          {DPERPS_BENEFITS.map((benefit) => (
+            <Card key={benefit.id} className="h-full">
+              <CardHeader className="pb-10">
+                <Image src={benefit.icon} alt="" width={48} height={48} className="mb-4 size-12" />
+                <H4 asChild lang={textLang(t(`benefits.items.${benefit.id}.title`), locale)}>
+                  <h3>{t(`benefits.items.${benefit.id}.title`)}</h3>
+                </H4>
+              </CardHeader>
+              <CardContent>
+                <Prose text={t(`benefits.items.${benefit.id}.body`)} locale={locale} className="[&_p]:text-lg" />
+              </CardContent>
+            </Card>
+          ))}
+        </div>
+      </DividedSection>
 
-      {/* Heading, prose and a diagram — nothing to click, hence no `links`. */}
-      <ArchitectureSection
-        title={t('integrate.title')}
-        body={t('integrate.body')}
-        image={DPERPS_DIAGRAM.src}
-        imageWidth={DPERPS_DIAGRAM.width}
-        imageHeight={DPERPS_DIAGRAM.height}
-        imageAlt={t('integrate.alt')}
-        locale={locale}
-      />
+      {[
+        { key: 'integrate', image: DPERPS_DIAGRAM },
+        { key: 'partners', image: DPERPS_PARTNERS_IMAGE },
+      ].map(({ key, image }) => (
+        <DividedSection key={key} locale={locale}>
+          <div className="grid gap-12 lg:grid-cols-[minmax(0,3fr)_minmax(0,2fr)] lg:items-start">
+            <div>
+              <H2 className="text-balance" lang={textLang(t(`${key}.title`), locale)}>
+                {t(`${key}.title`)}
+              </H2>
+              <Prose text={t(`${key}.body`)} locale={locale} className="mt-6 max-w-xl [&_p]:text-lg" />
+            </div>
+            <Image
+              src={image.src}
+              width={image.width}
+              height={image.height}
+              alt={t(`${key}.alt`)}
+              lang={textLang(t(`${key}.alt`), locale)}
+              sizes="(min-width: 1440px) 531px, (min-width: 1024px) 40vw, 100vw"
+              className="h-auto w-full"
+            />
+          </div>
+        </DividedSection>
+      ))}
 
-      <ArchitectureSection
-        title={t('partners.title')}
-        body={t('partners.body')}
-        image={DPERPS_PARTNERS_IMAGE.src}
-        imageWidth={DPERPS_PARTNERS_IMAGE.width}
-        imageHeight={DPERPS_PARTNERS_IMAGE.height}
-        imageAlt={t('partners.alt')}
-        locale={locale}
-      />
+      <DividedSection heading={t('poweredBy.title')} locale={locale}>
+        <Prose text={t('poweredBy.body')} locale={locale} className="max-w-xl [&_p]:text-lg" />
+        <div className="mt-10 flex flex-wrap gap-4">
+          <CtaButton link={{ label: t('poweredBy.contact'), href: contact.href }} locale={locale} variant="secondary" />
+          <CtaButton
+            link={{ label: t('poweredBy.onePager'), href: onePager.href }}
+            locale={locale}
+            variant="secondary"
+          />
+        </div>
+      </DividedSection>
 
-      <ArchitectureSection
-        title={t('poweredBy.title')}
-        body={t('poweredBy.body')}
-        links={[
-          { label: t('poweredBy.contact'), href: contact.href },
-          { label: t('poweredBy.onePager'), href: onePager.href },
-        ]}
-        // Body, not title: "Powered by Orbs Network" stays English in the
-        // Korean catalog, so deriving the section language from it would mark
-        // the Korean prose English — the bug #99 fixed.
-        locale={locale}
-      />
-
-      <Disclaimer text={t('disclaimer')} locale={locale} />
+      <Disclaimer text={t('disclaimer')} locale={locale} className="mx-0 max-w-xl" />
     </>
   )
 }
