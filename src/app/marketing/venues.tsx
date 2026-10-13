@@ -6,7 +6,7 @@ import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatsRow } from '@/components/marketing/stats-row'
 import { VENUES_GRAPHICS, VENUES_LINKS, VENUES_MARQUEE } from '@/content/pages/venues'
-import { FEATURED_INTEGRATIONS, SUSHISWAP_CHAINS, INTEGRATION_CHAINS } from '@/content/shared/integrations'
+import { FEATURED_INTEGRATIONS, SUSHISWAP_SLTP_CHAINS, INTEGRATION_CHAINS } from '@/content/shared/integrations'
 import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import type { Locale } from '@/i18n/locales'
 
@@ -42,7 +42,7 @@ export async function VenuesPage({ locale }: { locale: Locale }) {
       <SplitStatement
         eyebrow={t('caseStudy.eyebrow')}
         heading={t('caseStudy.title')}
-        body={`${t('caseStudy.body')}\n\n${t('caseStudy.rollout', { chains: new Intl.ListFormat('en-GB').format(SUSHISWAP_CHAINS.map((id) => INTEGRATION_CHAINS[id].name)) })}`}
+        body={`${t('caseStudy.body')}\n\n${t('caseStudy.rollout', { chains: new Intl.ListFormat('en-GB').format(SUSHISWAP_SLTP_CHAINS.map((id) => INTEGRATION_CHAINS[id].name)) })}`}
         locale={locale}
       />
       <section className="container pb-section" aria-label={t('caseStudy.calloutsLabel')}>

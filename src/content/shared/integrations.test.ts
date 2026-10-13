@@ -5,6 +5,8 @@ import {
   SPOT_INTEGRATIONS,
   SLTP_INTEGRATIONS,
   INTEGRATION_CHAINS,
+  INTEGRATION_PARTNERS,
+  SUSHISWAP_SLTP_CHAINS,
   integrationPartner,
 } from './integrations'
 
@@ -32,6 +34,11 @@ describe('approved integration inventory', () => {
       const partner = integrationPartner(id)
       for (const chain of partner.stopLossTakeProfit!) expect(partner.dspot).toContain(chain)
     }
+  })
+
+  it('sources the SushiSwap rollout from its stop loss / take profit chains', () => {
+    // These lists currently contain the same chains; identity catches a general-spot source regression.
+    expect(SUSHISWAP_SLTP_CHAINS).toBe(INTEGRATION_PARTNERS.sushiswap.stopLossTakeProfit)
   })
 
   it('keeps historical and upcoming entries out of the production chain lists', () => {

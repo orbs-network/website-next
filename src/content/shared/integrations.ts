@@ -129,4 +129,4 @@ export const SLTP_INTEGRATIONS = [
   'kodiak',
   'sushiswap',
 ] as const satisfies readonly IntegrationPartnerId[]
-export const SUSHISWAP_CHAINS = INTEGRATION_PARTNERS.sushiswap.dspot
+export const SUSHISWAP_SLTP_CHAINS = INTEGRATION_PARTNERS.sushiswap.stopLossTakeProfit
