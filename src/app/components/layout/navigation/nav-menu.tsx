@@ -69,7 +69,12 @@ export async function resolveNavigation(locale: Locale) {
   const groups = NAV_GROUPS.map((group): ResolvedNavGroup => {
     const label = t(`groups.${group.key}`)
 
-    return { key: group.key, label, lang: textLang(label, locale), links: group.links.map(resolveLink) }
+    return {
+      key: group.key,
+      label,
+      lang: textLang(label, locale),
+      links: group.links.filter((link) => !link.locales || link.locales.includes(locale)).map(resolveLink),
+    }
   })
 
   return {

@@ -302,10 +302,14 @@ export function shouldShowSelector(pathname: string): boolean {
  * English. One page, one URL — no duplicate for search engines to reconcile.
  */
 export function localeHref(pathname: string, target: Locale): string {
-  const path = normalize(pathname)
+  // Resolve availability from the path, not the query/fragment. Keep the
+  // trailing slash before the fragment so /#products never becomes /#products/.
+  const suffixAt = pathname.search(/[?#]/)
+  const suffix = suffixAt === -1 ? '' : pathname.slice(suffixAt)
+  const path = normalize(suffixAt === -1 ? pathname : pathname.slice(0, suffixAt))
   const locale = localesFor(path).includes(target) ? target : DEFAULT_LOCALE
 
-  return localePath(locale, withTrailingSlash(path))
+  return `${localePath(locale, withTrailingSlash(path))}${suffix}`
 }
 
 /**

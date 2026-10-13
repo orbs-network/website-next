@@ -1,3 +1,4 @@
+import type { Locale } from '@/i18n/locales'
 import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
@@ -17,6 +18,8 @@ import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 export type NavLinkSpec = {
   /** Message key under `nav.links`. */
   key: string
+  /** English content refresh; other locales follow separately. */
+  locales?: readonly Locale[]
   /**
    * A locale-independent internal path (leading `/`, no trailing slash), or an
    * absolute external URL. The `startsWith('/')` test decides which, matching
@@ -80,6 +83,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
         ],
       },
       { key: 'dperps', href: '/dperps', icon: 'dperps' },
+      { key: 'executionServices', href: '/execution-services', locales: ['en'] },
       { key: 'agentic', href: '/agentic', icon: 'agentic' },
     ],
   },

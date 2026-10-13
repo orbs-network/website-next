@@ -1,7 +1,5 @@
 import { describe, expect, it } from 'vitest'
 import en from '@/i18n/messages/en.json'
-import ja from '@/i18n/messages/ja.json'
-import ko from '@/i18n/messages/ko.json'
 import { HOME_FEATURES } from './home'
 
 /**
@@ -15,14 +13,5 @@ describe('home feature panels', () => {
     expect(en.pages.home.features[id].panel).toBe(en.pages.institutional.features.items[id].body)
   })
 
-  // ja and ko carry the English home copy as a placeholder until translated.
-  // Once a real translation lands, delete that locale from this list.
-  it.each([
-    ['ja', ja],
-    ['ko', ko],
-  ] as const)('%s carries the same placeholder panels as English', (_, catalog) => {
-    for (const id of HOME_FEATURES) {
-      expect(catalog.pages.home.features[id].panel).toBe(en.pages.home.features[id].panel)
-    }
-  })
+  // The English-first refresh intentionally leaves Japanese/Korean catalogs unchanged.
 })

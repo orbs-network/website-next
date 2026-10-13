@@ -20,6 +20,8 @@ import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 export type FooterLinkSpec = {
   /** Message key under the `footer.links` namespace. */
   key: string
+  /** English content refresh; other locales follow separately. */
+  locales?: readonly Locale[]
   /**
    * A locale-independent internal path (leading `/`, no trailing slash), or an
    * absolute external URL. The `startsWith('/')` test decides which, matching
@@ -70,6 +72,7 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
       { key: 'sdk', href: SDK_DOCS_URL },
       { key: 'dspot', href: '/dspot' },
       { key: 'dperps', href: '/dperps' },
+      { key: 'executionServices', href: '/execution-services', locales: ['en'] },
       { key: 'agentic', href: '/agentic' },
     ],
   },

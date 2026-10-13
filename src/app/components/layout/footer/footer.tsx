@@ -43,7 +43,9 @@ export async function Footer({ locale }: { locale: Locale }) {
       key={column.key}
       id={`footer-${column.key}`}
       title={t(`columns.${column.key}`)}
-      items={column.links.map((spec) => ({ spec, label: t(`links.${spec.key}`) }))}
+      items={column.links
+        .filter((spec) => !spec.locales || spec.locales.includes(locale))
+        .map((spec) => ({ spec, label: t(`links.${spec.key}`) }))}
       locale={locale}
     />
   ))
