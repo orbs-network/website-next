@@ -22,52 +22,27 @@ export type EcosystemCard = {
 /** Publication inventory stays in integrations.ts; this adds presentation and social destinations. */
 const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo']; xUrl: string }> = {
   pancakeswap: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/pancakeswap.png',
-      onDark: '/marketing/ecosystem/wordmarks/pancakeswap-dark.png',
-      width: 398,
-      height: 62,
-    },
+    logo: { src: '/marketing/ecosystem/cards/pancakeswap-colour.png', width: 256, height: 256 },
     xUrl: 'https://x.com/pancakeswap',
   },
   sushiswap: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/sushiswap.png',
-      onDark: '/marketing/ecosystem/wordmarks/sushiswap-dark.png',
-      width: 334,
-      height: 68,
-    },
+    logo: { src: '/marketing/ecosystem/cards/sushiswap-colour.png', width: 180, height: 180 },
     xUrl: 'https://x.com/SushiSwap',
   },
   thena: {
-    logo: { src: '/marketing/ecosystem/wordmarks/thena.svg', width: 164, height: 33 },
+    logo: { src: '/marketing/ecosystem/cards/thena-colour.png', width: 180, height: 180 },
     xUrl: 'https://x.com/ThenaFi',
   },
   quickswap: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/quickswap.png',
-      onDark: '/marketing/ecosystem/wordmarks/quickswap-dark.png',
-      width: 318,
-      height: 68,
-    },
+    logo: { src: '/marketing/ecosystem/cards/quickswap-colour.png', width: 60, height: 60 },
     xUrl: 'https://x.com/QuickswapDEX',
   },
   spookyswap: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/spookyswap.svg',
-      onDark: '/marketing/ecosystem/wordmarks/spookyswap-dark.svg',
-      width: 157,
-      height: 31,
-    },
+    logo: { src: '/marketing/ecosystem/cards/spookyswap-colour.svg', width: 31, height: 31 },
     xUrl: 'https://x.com/Spookyswap',
   },
   swapx: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/swapx.svg',
-      onDark: '/marketing/ecosystem/wordmarks/swapx-dark.svg',
-      width: 128,
-      height: 30,
-    },
+    logo: { src: '/marketing/ecosystem/cards/swapx-colour.svg', width: 16, height: 16 },
     xUrl: 'https://x.com/SwapXfi',
   },
   carbon: {
@@ -92,12 +67,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
     xUrl: 'https://x.com/atlantisdex_xyz',
   },
   lynex: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/lynex.svg',
-      onDark: '/marketing/ecosystem/wordmarks/lynex-dark.svg',
-      width: 117,
-      height: 24,
-    },
+    logo: { src: '/marketing/ecosystem/cards/lynex.png', width: 32, height: 32 },
     xUrl: 'https://x.com/LynexFi',
   },
   ramses: {
@@ -121,21 +91,11 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
     xUrl: 'https://x.com/ShadowOnSonic',
   },
   blackhole: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/blackhole.png',
-      onDark: '/marketing/ecosystem/wordmarks/blackhole-dark.png',
-      width: 640,
-      height: 55,
-    },
+    logo: { src: '/marketing/ecosystem/cards/blackhole.png', width: 256, height: 256 },
     xUrl: 'https://x.com/BlackHoleDEX',
   },
   ring: {
-    logo: {
-      src: '/marketing/ecosystem/wordmarks/ring-mark.png',
-      onDark: '/marketing/ecosystem/wordmarks/ring-mark-dark.png',
-      width: 120,
-      height: 120,
-    },
+    logo: { src: '/marketing/ecosystem/cards/ring.png', width: 192, height: 192 },
     xUrl: 'https://x.com/ProtocolRing',
   },
 }
