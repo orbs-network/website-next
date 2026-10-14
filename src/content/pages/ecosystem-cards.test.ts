@@ -101,7 +101,6 @@ describe('published ecosystem cards', () => {
       'partner:quickswap',
       'partner:spookyswap',
       'partner:thena',
-      'partner:swapx',
       'chain:ethereum',
       'chain:bnb',
       'chain:polygon',
@@ -130,6 +129,48 @@ describe('published ecosystem cards', () => {
           coloured++
       }
       expect(coloured, id).toBeGreaterThan(20)
+    }
+  })
+  it('uses full wordmarks where the approved source contains them', () => {
+    for (const id of [
+      'pancakeswap',
+      'sushiswap',
+      'quickswap',
+      'spookyswap',
+      'thena',
+      'swapx',
+      'lynex',
+      'carbon',
+      'gryps',
+      'blackhole',
+    ]) {
+      const logo = ECOSYSTEM_CARDS.find((card) => card.id === `partner:${id}`)!.logo
+      expect(logo.width / logo.height, id).toBeGreaterThan(2.5)
+    }
+  })
+
+  it('keeps coloured symbols and the lettering silhouette identical between raster theme variants', async () => {
+    for (const [id, split] of Object.entries({ pancakeswap: 66, sushiswap: 73, quickswap: 67 })) {
+      const logo = ECOSYSTEM_CARDS.find((card) => card.id === `partner:${id}`)!.logo
+      const light = await sharp(join(process.cwd(), 'public', logo.src))
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      const dark = await sharp(join(process.cwd(), 'public', logo.onDark!))
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      expect(dark.info, id).toEqual(light.info)
+      let transparent = 0
+      for (let y = 0; y < light.info.height; y++)
+        for (let x = 0; x < light.info.width; x++) {
+          const offset = (y * light.info.width + x) * 4
+          expect(dark.data[offset + 3], id).toBe(light.data[offset + 3])
+          if (light.data[offset + 3] === 0) transparent++
+          if (x < split)
+            expect(dark.data.subarray(offset, offset + 4), id).toEqual(light.data.subarray(offset, offset + 4))
+        }
+      expect(transparent / (light.info.width * light.info.height), id).toBeGreaterThan(0.5)
     }
   })
 })
