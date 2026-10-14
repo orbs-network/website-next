@@ -12,8 +12,14 @@ export const EXECUTION_SERVICES_PRODUCTS = [
     id: 'lambdaProduct',
     image: '/marketing/execution-services/lambda.svg',
     darkImage: '/marketing/execution-services/lambda-dark.svg',
+    illustration: { src: '/marketing/execution-services/lambda-illustration.svg', width: 452, height: 405 },
   },
-  { id: 'vm', image: '/marketing/execution-services/vm.svg', darkImage: '/marketing/execution-services/vm-dark.svg' },
+  {
+    id: 'vm',
+    image: '/marketing/execution-services/vm.svg',
+    darkImage: '/marketing/execution-services/vm-dark.svg',
+    illustration: { src: '/marketing/execution-services/vm-illustration.svg', width: 467, height: 372 },
+  },
 ] as const
 
 export const EXECUTION_SERVICES_DIAGRAMS = [
