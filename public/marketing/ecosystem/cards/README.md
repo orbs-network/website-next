@@ -31,3 +31,7 @@ Profiles are taken from project websites, their official documentation or reposi
 The eight solver/liquidity-source names were explicitly approved by the operator on 14 October 2026. Their inclusion does not declare every-chain or every-order support. Product membership for venues remains sourced from src/content/shared/integrations.ts. Historical and upcoming entries are excluded from the current grid.
 
 The reused Sei SVG now uses the default SVG namespace instead of `ns0:` prefixes, retaining every path and fill. This lets image tooling inspect the same native vector served to browsers.
+
+## Dark cards
+
+Cards use the existing surface token: white in light mode and Orbs neutral-700 (#29292b) in dark. The seven homepage venue pairs supply the existing dark-background wordmarks. Gryps, OpenOcean and eleven monochrome chain vectors render with white ink through a dark-only brightness/invert filter; their geometry and transparent negative space are preserved. Multicolour marks keep their source colours and alpha. No blanket colour inversion is applied to coloured branding.

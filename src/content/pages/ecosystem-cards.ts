@@ -15,20 +15,43 @@ export type EcosystemCard = {
   id: string
   name: string
   xUrl: string
-  logo: IntegrationLogo
+  logo: IntegrationLogo & { onDark?: string; invertOnDark?: boolean }
   categories: readonly EcosystemCategory[]
 }
 
 /** Publication inventory stays in integrations.ts; this adds presentation and social destinations. */
-const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: IntegrationLogo; xUrl: string }> = {
-  pancakeswap: { logo: INTEGRATION_PARTNERS.pancakeswap.logo, xUrl: 'https://x.com/pancakeswap' },
-  sushiswap: { logo: INTEGRATION_PARTNERS.sushiswap.logo, xUrl: 'https://x.com/SushiSwap' },
-  thena: { logo: INTEGRATION_PARTNERS.thena.logo, xUrl: 'https://x.com/ThenaFi' },
-  quickswap: { logo: INTEGRATION_PARTNERS.quickswap.logo, xUrl: 'https://x.com/QuickswapDEX' },
-  spookyswap: { logo: INTEGRATION_PARTNERS.spookyswap.logo, xUrl: 'https://x.com/Spookyswap' },
-  swapx: { logo: INTEGRATION_PARTNERS.swapx.logo, xUrl: 'https://x.com/SwapXfi' },
+const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo']; xUrl: string }> = {
+  pancakeswap: {
+    logo: { ...INTEGRATION_PARTNERS.pancakeswap.logo, onDark: '/marketing/home/venues/pancakeswap.svg' },
+    xUrl: 'https://x.com/pancakeswap',
+  },
+  sushiswap: {
+    logo: { ...INTEGRATION_PARTNERS.sushiswap.logo, onDark: '/marketing/home/venues/sushiswap.png' },
+    xUrl: 'https://x.com/SushiSwap',
+  },
+  thena: {
+    logo: { ...INTEGRATION_PARTNERS.thena.logo, onDark: '/marketing/home/venues/thena.svg' },
+    xUrl: 'https://x.com/ThenaFi',
+  },
+  quickswap: {
+    logo: { ...INTEGRATION_PARTNERS.quickswap.logo, onDark: '/marketing/home/venues/quickswap.svg' },
+    xUrl: 'https://x.com/QuickswapDEX',
+  },
+  spookyswap: {
+    logo: { ...INTEGRATION_PARTNERS.spookyswap.logo, onDark: '/marketing/home/venues/spookyswap.svg' },
+    xUrl: 'https://x.com/Spookyswap',
+  },
+  swapx: {
+    logo: { ...INTEGRATION_PARTNERS.swapx.logo, onDark: '/marketing/home/venues/swapx.svg' },
+    xUrl: 'https://x.com/SwapXfi',
+  },
   carbon: {
-    logo: { src: '/marketing/home/venues/carbon-on-light.svg', width: 149, height: 32 },
+    logo: {
+      src: '/marketing/home/venues/carbon-on-light.svg',
+      onDark: '/marketing/home/venues/carbon.svg',
+      width: 149,
+      height: 32,
+    },
     xUrl: 'https://x.com/IntentX_',
   },
   trebleswap: {
@@ -36,7 +59,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: IntegrationLogo; xU
     xUrl: 'https://x.com/TrebleSwap',
   },
   gryps: {
-    logo: { src: '/marketing/ecosystem/cards/gryps.svg', width: 145, height: 30 },
+    logo: { src: '/marketing/ecosystem/cards/gryps.svg', invertOnDark: true, width: 145, height: 30 },
     xUrl: 'https://x.com/gryps_finance',
   },
   atlantis: {
@@ -118,6 +141,7 @@ const SOLVER_CARDS: EcosystemCard[] = [
     xUrl: 'https://x.com/de1_ai',
     logo: {
       src: '/marketing/ecosystem/cards/openocean.svg',
+      invertOnDark: true,
       width: 140,
       height: 28,
     },
@@ -199,6 +223,8 @@ const CHAIN_CARDS: EcosystemCard[] = (
 ).map(([id, chain]) => ({
   id: `chain:${id}`,
   ...chain,
+  // Only monochrome vectors are inverted; coloured Berachain/Monad marks keep their brand colours.
+  logo: { ...chain.logo, invertOnDark: id !== 'berachain' && id !== 'monad' },
   xUrl: `https://x.com/${CHAIN_PROFILES[id]}`,
   categories: ['chains'],
 }))

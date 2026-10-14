@@ -61,4 +61,37 @@ describe('published ecosystem cards', () => {
       expect(ink, card.name).toBeGreaterThan(20)
     }
   })
+  it('keeps recognisable logo pixels above 3:1 contrast on the off-black surface', async () => {
+    const luminance = (rgb: number[]) =>
+      rgb
+        .map((value) => {
+          const channel = value / 255
+          return channel <= 0.04045 ? channel / 12.92 : ((channel + 0.055) / 1.055) ** 2.4
+        })
+        .reduce((sum, value, index) => sum + value * [0.2126, 0.7152, 0.0722][index], 0)
+    const background = [41, 41, 43]
+    const bgLuminance = luminance(background)
+    for (const card of ECOSYSTEM_CARDS) {
+      const logo = card.logo
+      expect(Boolean(logo.onDark && logo.invertOnDark), card.name).toBe(false)
+      const image = sharp(join(process.cwd(), 'public', logo.onDark ?? logo.src))
+      const meta = await image.metadata()
+      expect(meta.width, card.name).toBe(logo.width)
+      expect(meta.height, card.name).toBe(Math.round(logo.height))
+      const { data } = await image
+        .resize({ width: 96, height: 96, fit: 'inside' })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let visible = 0
+      for (let i = 0; i < data.length; i += 4) {
+        const alpha = data[i + 3] / 255
+        const rgb = background.map(
+          (channel, j) => (logo.invertOnDark ? 255 : data[i + j]) * alpha + channel * (1 - alpha)
+        )
+        if ((luminance(rgb) + 0.05) / (bgLuminance + 0.05) >= 3) visible++
+      }
+      expect(visible, card.name).toBeGreaterThan(20)
+    }
+  })
 })

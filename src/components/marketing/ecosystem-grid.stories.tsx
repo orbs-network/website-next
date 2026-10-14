@@ -67,3 +67,35 @@ export const NarrowLayoutKeepsAllFiltersReachable: Story = {
     canvasElement.style.width = ''
   },
 }
+
+/** Each card shows exactly one logo, with contrast against its actual theme surface. */
+export const ThemeSwitchKeepsEveryLogoVisible: Story = {
+  play: async ({ canvasElement }) => {
+    const html = document.documentElement
+    const wasDark = html.classList.contains('dark')
+    try {
+      for (const dark of [false, true]) {
+        html.classList.toggle('dark', dark)
+        const cards = within(canvasElement).getAllByRole('link')
+        await expect(cards).toHaveLength(39)
+        for (const [index, card] of cards.entries()) {
+          const logo = ECOSYSTEM_CARDS[index].logo
+          const visible = [...card.querySelectorAll('img')].filter(
+            (image) => getComputedStyle(image).display !== 'none'
+          )
+          await expect(visible).toHaveLength(1)
+          await expect(decodeURIComponent(visible[0].getAttribute('src')!)).toContain(
+            dark && logo.onDark ? logo.onDark : logo.src
+          )
+          const filter = getComputedStyle(visible[0]).filter
+          if (dark && logo.invertOnDark) await expect(filter).toContain('invert(1)')
+          else await expect(filter).toBe('none')
+          await expect(getComputedStyle(card).backgroundColor).toBe(dark ? 'rgb(41, 41, 43)' : 'rgb(255, 255, 255)')
+          await expect(getComputedStyle(card).color).toBe(dark ? 'rgb(246, 246, 246)' : 'rgb(18, 18, 20)')
+        }
+      }
+    } finally {
+      html.classList.toggle('dark', wasDark)
+    }
+  },
+}

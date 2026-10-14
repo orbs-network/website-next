@@ -1,6 +1,7 @@
 'use client'
 
 import Image from 'next/image'
+import { cn } from '@/lib/utils'
 import { XIcon } from '@/components/icons'
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs'
 import type { EcosystemCard, EcosystemFilter } from '@/content/pages/ecosystem-cards'
@@ -42,7 +43,7 @@ export function EcosystemGrid({ cards, labels }: { cards: readonly EcosystemCard
                     target="_blank"
                     rel="noopener noreferrer"
                     aria-label={`${card.name}: ${labels.viewOnX}`}
-                    className="relative flex h-full min-h-40 flex-col items-center justify-center bg-white p-5 text-center text-neutral-900 transition-transform duration-200 motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none"
+                    className="relative flex h-full min-h-40 flex-col items-center justify-center bg-surface p-5 text-center text-fg transition-transform duration-200 motion-safe:hover:-translate-y-1 focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 motion-reduce:transition-none"
                   >
                     <span className="flex h-16 w-full items-center justify-center">
                       <Image
@@ -51,8 +52,22 @@ export function EcosystemGrid({ cards, labels }: { cards: readonly EcosystemCard
                         height={card.logo.height}
                         alt=""
                         sizes="(min-width: 1024px) 12rem, 40vw"
-                        className="h-14 w-full object-contain"
+                        className={cn(
+                          'h-14 w-full object-contain',
+                          card.logo.onDark && 'dark:hidden',
+                          card.logo.invertOnDark && 'dark:brightness-0 dark:invert'
+                        )}
                       />
+                      {card.logo.onDark && (
+                        <Image
+                          src={card.logo.onDark}
+                          width={card.logo.width}
+                          height={card.logo.height}
+                          alt=""
+                          sizes="(min-width: 1024px) 12rem, 40vw"
+                          className="hidden h-14 w-full object-contain dark:block"
+                        />
+                      )}
                     </span>
                     <span className="mt-4 max-w-full text-detail leading-normal font-medium [overflow-wrap:anywhere]">
                       {card.name}
