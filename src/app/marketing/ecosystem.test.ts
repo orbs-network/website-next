@@ -23,19 +23,30 @@ vi.mock('next-intl/server', () => ({
 vi.mock('./inner-closing', () => ({ InnerClosingCta: () => null }))
 
 describe('venues and ecosystem handoff', () => {
-  it('replaces the English directory and separates current, historical and upcoming data', async () => {
+  it('replaces the English sections with one deduplicated, filterable logo grid', async () => {
     const html = renderToStaticMarkup(await EcosystemPage({ locale: 'en' }))
-    expect(html).toContain('Orbs execution, across the ecosystem.')
-    expect(html).toContain('id="dperps"')
-    expect(html).toContain('id="dspot"')
-    expect(html).toContain('Carbon')
+    expect(html).toContain('Filter ecosystem')
+    expect((html.match(/role="tab"/g) ?? []).length).toBe(6)
+    expect((html.match(/target="_blank"/g) ?? []).length).toBe(39)
     expect(html.indexOf('Carbon')).toBeLessThan(html.indexOf('TrebleSwap'))
-    expect(html).toContain('Upcoming')
-    expect(html).toContain('Ocelex is recorded as an upcoming integration.')
-    expect(html).toContain('SpookySwap: Fantom')
-    for (const name of ['Pangolin', 'BaseSwap', 'ArbiDex', 'Chronos', 'SyncSwap']) expect(html).not.toContain(name)
-    expect(html).not.toContain('TON Minter')
-    expect(html).not.toContain('Bybit')
+    for (const name of [
+      'Featured partners',
+      'Upcoming',
+      'Ocelex',
+      'Fantom',
+      'Pangolin',
+      'BaseSwap',
+      'ArbiDex',
+      'Chronos',
+      'SyncSwap',
+      'TON Minter',
+      'Bybit',
+    ])
+      expect(html).not.toContain(name)
+    expect(html).not.toContain('<table')
+    expect(html).not.toContain('id="dspot"')
+    expect(html).toContain('https://x.com/IntentX_')
+    expect(html).toContain('https://x.com/BuildOnLumia')
   })
   it.each(['ja', 'ko'] as const)('retains the existing %s directory', async (locale) => {
     const html = renderToStaticMarkup(await EcosystemPage({ locale }))
