@@ -988,50 +988,20 @@
     "ecosystem": {
       "meta": {
         "title": "Ecosystem",
-        "description": "Explore Orbs spot and perpetual futures integrations across 30+ venues and 10+ chains, with product and feature availability varying by integration."
+        "description": "Explore Orbs ecosystem venues, solvers and chains."
       },
       "hero": {
-        "eyebrow": "[Ecosystem]",
-        "headline": "Orbs execution, across the ecosystem.",
-        "intro": "Production integrations put the Orbs execution stack to work across established trading venues. Explore the spot and perpetual futures deployments behind that track record: 30+ venues and 10+ chains, with product and feature availability varying by integration."
+        "headline": "Ecosystem"
       },
-      "browse": "Browse integrations",
-      "partnerHeader": "Venue",
-      "chainHeader": "Chains",
-      "featured": {
-        "eyebrow": "[Partners]",
-        "title": "Featured partners"
-      },
-      "perps": {
-        "eyebrow": "[dPERPS]",
-        "title": "dPERPS partners and chains"
-      },
-      "spot": {
-        "eyebrow": "[dSPOT]",
-        "title": "dSPOT integrations",
-        "intro": "Selected spot integrations. Product and feature availability vary by venue and chain."
-      },
-      "sltp": {
-        "eyebrow": "[Advanced spot orders]",
-        "title": "Stop loss and take profit",
-        "intro": "Recorded stop loss and take profit integrations. Availability varies by integration."
-      },
-      "status": {
-        "eyebrow": "[Integration history]",
-        "title": "Historical and upcoming integrations",
-        "historical": {
-          "title": "Earlier dSPOT deployment",
-          "body": "SpookySwap: Fantom, in addition to the Sonic deployment listed above."
-        },
-        "upcoming": {
-          "title": "Upcoming",
-          "body": "Ocelex is recorded as an upcoming integration."
-        }
-      },
-      "chains": {
-        "eyebrow": "[Chains]",
-        "title": "Across established chains",
-        "intro": "Product and feature availability vary by integration."
+      "filterLabel": "Filter ecosystem",
+      "viewOnX": "View on X (opens in a new tab)",
+      "filters": {
+        "all": "All",
+        "dperps": "dPERPS",
+        "dspot": "dSPOT",
+        "dsltp": "dSLTP",
+        "solvers": "Solvers",
+        "chains": "Chains"
       }
     },
     "executionServices": {

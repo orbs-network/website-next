@@ -1,0 +1,69 @@
+import type { Meta, StoryObj } from '@storybook/nextjs-vite'
+import { expect, userEvent, waitFor, within } from 'storybook/test'
+import en from '@/i18n/messages/en.json'
+import { ECOSYSTEM_CARDS, type EcosystemCategory } from '@/content/pages/ecosystem-cards'
+import { EcosystemGrid } from './ecosystem-grid'
+
+const meta = {
+  title: 'Marketing/EcosystemGrid',
+  component: EcosystemGrid,
+  args: { cards: ECOSYSTEM_CARDS, labels: en.pages.ecosystem },
+} satisfies Meta<typeof EcosystemGrid>
+export default meta
+type Story = StoryObj<typeof meta>
+
+export const FiltersShowOnlyTheirMembers: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    for (const [filter, label] of Object.entries(en.pages.ecosystem.filters)) {
+      await userEvent.click(canvas.getByRole('tab', { name: label }))
+      const expected = ECOSYSTEM_CARDS.filter(
+        (card) => filter === 'all' || card.categories.includes(filter as EcosystemCategory)
+      )
+      await waitFor(() => expect(canvas.getAllByRole('link')).toHaveLength(expected.length))
+      const links = canvas.getAllByRole('link')
+      await expect(links.map((link) => link.textContent)).toEqual(expected.map((card) => card.name))
+      for (const [i, link] of links.entries()) {
+        await expect(link).toHaveAttribute('href', expected[i].xUrl)
+        await expect(link).toHaveAttribute('target', '_blank')
+        await expect(link).toHaveAttribute('rel', 'noopener noreferrer')
+        await expect(link).toHaveAccessibleName(`${expected[i].name}: ${en.pages.ecosystem.viewOnX}`)
+      }
+      await expect(canvas.queryAllByRole('img')).toHaveLength(0)
+      await expect(canvas.getByRole('tabpanel')).toHaveAccessibleName(label)
+    }
+  },
+}
+
+export const KeyboardCanSelectEveryFilter: Story = {
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const first = canvas.getByRole('tab', { name: 'All' })
+    first.focus()
+    await userEvent.keyboard('{ArrowRight}')
+    await waitFor(() => expect(canvas.getByRole('tab', { name: 'dPERPS' })).toHaveAttribute('aria-selected', 'true'))
+    await expect(canvas.getAllByRole('link')).toHaveLength(7)
+    await userEvent.keyboard('{End}')
+    await waitFor(() => expect(canvas.getByRole('tab', { name: 'Chains' })).toHaveFocus())
+    await expect(canvas.getAllByRole('link')).toHaveLength(13)
+    await userEvent.keyboard('{Home}')
+    await waitFor(() => expect(first).toHaveFocus())
+    await expect(canvas.getAllByRole('link')).toHaveLength(39)
+  },
+}
+
+export const NarrowLayoutKeepsAllFiltersReachable: Story = {
+  play: async ({ canvasElement }) => {
+    canvasElement.style.width = '280px'
+    const tabs = within(canvasElement).getAllByRole('tab')
+    for (const tab of tabs) {
+      const bounds = tab.getBoundingClientRect()
+      const container = canvasElement.getBoundingClientRect()
+      await expect(bounds.left).toBeGreaterThanOrEqual(container.left)
+      await expect(bounds.right).toBeLessThanOrEqual(container.right + 1)
+      await userEvent.click(tab)
+      await expect(tab).toHaveAttribute('aria-selected', 'true')
+    }
+    canvasElement.style.width = ''
+  },
+}
