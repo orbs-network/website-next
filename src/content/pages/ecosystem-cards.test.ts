@@ -94,4 +94,42 @@ describe('published ecosystem cards', () => {
       expect(visible, card.name).toBeGreaterThan(20)
     }
   })
+  it('preserves coloured artwork instead of applying monochrome filters', async () => {
+    const expectedColour = [
+      'partner:pancakeswap',
+      'partner:sushiswap',
+      'partner:quickswap',
+      'partner:spookyswap',
+      'partner:thena',
+      'partner:swapx',
+      'chain:ethereum',
+      'chain:bnb',
+      'chain:polygon',
+      'chain:base',
+      'chain:arbitrum',
+      'chain:linea',
+      'chain:avalanche',
+      'chain:sei',
+      'chain:flare',
+      'chain:katana',
+    ]
+    for (const id of expectedColour) {
+      const card = ECOSYSTEM_CARDS.find((card) => card.id === id)!
+      expect(card.logo.invertOnDark, id).not.toBe(true)
+      const { data } = await sharp(join(process.cwd(), 'public', card.logo.onDark ?? card.logo.src))
+        .resize({ width: 96, height: 96, fit: 'inside' })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let coloured = 0
+      for (let i = 0; i < data.length; i += 4) {
+        if (
+          data[i + 3] >= 128 &&
+          Math.max(data[i], data[i + 1], data[i + 2]) - Math.min(data[i], data[i + 1], data[i + 2]) > 40
+        )
+          coloured++
+      }
+      expect(coloured, id).toBeGreaterThan(20)
+    }
+  })
 })

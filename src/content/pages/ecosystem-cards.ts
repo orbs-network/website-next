@@ -22,27 +22,27 @@ export type EcosystemCard = {
 /** Publication inventory stays in integrations.ts; this adds presentation and social destinations. */
 const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo']; xUrl: string }> = {
   pancakeswap: {
-    logo: { ...INTEGRATION_PARTNERS.pancakeswap.logo, onDark: '/marketing/home/venues/pancakeswap.svg' },
+    logo: { src: '/marketing/ecosystem/cards/pancakeswap-colour.png', width: 256, height: 256 },
     xUrl: 'https://x.com/pancakeswap',
   },
   sushiswap: {
-    logo: { ...INTEGRATION_PARTNERS.sushiswap.logo, onDark: '/marketing/home/venues/sushiswap.png' },
+    logo: { src: '/marketing/ecosystem/cards/sushiswap-colour.png', width: 180, height: 180 },
     xUrl: 'https://x.com/SushiSwap',
   },
   thena: {
-    logo: { ...INTEGRATION_PARTNERS.thena.logo, onDark: '/marketing/home/venues/thena.svg' },
+    logo: { src: '/marketing/ecosystem/cards/thena-colour.png', width: 180, height: 180 },
     xUrl: 'https://x.com/ThenaFi',
   },
   quickswap: {
-    logo: { ...INTEGRATION_PARTNERS.quickswap.logo, onDark: '/marketing/home/venues/quickswap.svg' },
+    logo: { src: '/marketing/ecosystem/cards/quickswap-colour.png', width: 60, height: 60 },
     xUrl: 'https://x.com/QuickswapDEX',
   },
   spookyswap: {
-    logo: { ...INTEGRATION_PARTNERS.spookyswap.logo, onDark: '/marketing/home/venues/spookyswap.svg' },
+    logo: { src: '/marketing/ecosystem/cards/spookyswap-colour.svg', width: 31, height: 31 },
     xUrl: 'https://x.com/Spookyswap',
   },
   swapx: {
-    logo: { ...INTEGRATION_PARTNERS.swapx.logo, onDark: '/marketing/home/venues/swapx.svg' },
+    logo: { src: '/marketing/ecosystem/cards/swapx-colour.svg', width: 16, height: 16 },
     xUrl: 'https://x.com/SwapXfi',
   },
   carbon: {
@@ -218,13 +218,38 @@ const CHAIN_PROFILES: Record<IntegrationChainId, string> = {
   katana: 'katana',
   monad: 'monad',
 }
+/** Original brand colours; inherent monochrome marks retain their theme treatment. */
+const CHAIN_LOGOS: Record<IntegrationChainId, EcosystemCard['logo']> = {
+  ethereum: { src: '/marketing/ecosystem/cards/ethereum-colour.png', width: 250, height: 250 },
+  bnb: { src: '/marketing/ecosystem/cards/bnb-colour.png', width: 256, height: 256 },
+  polygon: { src: '/marketing/ecosystem/cards/polygon-colour.png', width: 250, height: 241 },
+  base: { src: '/marketing/ecosystem/cards/base-colour.png', width: 200, height: 200 },
+  arbitrum: { src: '/marketing/ecosystem/cards/arbitrum-colour.jpg', width: 250, height: 250 },
+  linea: { src: '/marketing/ecosystem/cards/linea-colour.png', width: 250, height: 250 },
+  avalanche: { src: '/marketing/ecosystem/cards/avalanche-colour.png', width: 250, height: 250 },
+  sei: {
+    src: '/marketing/ecosystem/cards/sei-colour-on-light.svg',
+    onDark: '/marketing/ecosystem/cards/sei-colour.svg',
+    width: 178,
+    height: 24,
+  },
+  flare: { src: '/marketing/ecosystem/cards/flare-colour.svg', width: 29, height: 30 },
+  katana: {
+    src: '/marketing/ecosystem/chains/katana.svg',
+    onDark: '/marketing/ecosystem/cards/katana-colour.svg',
+    width: 27,
+    height: 32,
+  },
+  sonic: { ...INTEGRATION_CHAINS.sonic.logo, invertOnDark: true },
+  berachain: INTEGRATION_CHAINS.berachain.logo,
+  monad: INTEGRATION_CHAINS.monad.logo,
+}
 const CHAIN_CARDS: EcosystemCard[] = (
   Object.entries(INTEGRATION_CHAINS) as [IntegrationChainId, (typeof INTEGRATION_CHAINS)[IntegrationChainId]][]
 ).map(([id, chain]) => ({
   id: `chain:${id}`,
   ...chain,
-  // Only monochrome vectors are inverted; coloured Berachain/Monad marks keep their brand colours.
-  logo: { ...chain.logo, invertOnDark: id !== 'berachain' && id !== 'monad' },
+  logo: CHAIN_LOGOS[id],
   xUrl: `https://x.com/${CHAIN_PROFILES[id]}`,
   categories: ['chains'],
 }))

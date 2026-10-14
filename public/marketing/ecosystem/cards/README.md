@@ -34,4 +34,21 @@ The reused Sei SVG now uses the default SVG namespace instead of `ns0:` prefixes
 
 ## Dark cards
 
-Cards use the existing surface token: white in light mode and Orbs neutral-700 (#29292b) in dark. The seven homepage venue pairs supply the existing dark-background wordmarks. Gryps, OpenOcean and eleven monochrome chain vectors render with white ink through a dark-only brightness/invert filter; their geometry and transparent negative space are preserved. Multicolour marks keep their source colours and alpha. No blanket colour inversion is applied to coloured branding.
+Cards use the existing surface token: white in light mode and Orbs neutral-700 (#29292b) in dark. Theme-specific sources keep lettering readable where required. Native monochrome Gryps, OpenOcean and Sonic artwork can render white through a dark-only brightness/invert filter; geometry and transparent negative space are preserved. Multicolour marks keep their source colours and alpha. The approved Carbon wordmark retains its existing light/dark source pair. No blanket colour inversion is applied to coloured branding.
+
+## Colour refinement (14 October 2026)
+
+The Ecosystem grid now prefers original brand colours. Other pages retain their current assets.
+
+- PancakeSwap: https://pancakeswap.finance/logo.png
+- SushiSwap: https://www.sushi.com/apple-touch-icon.png?v=1
+- QuickSwap: https://quickswap.exchange/logo_circle.png
+- SpookySwap: reuse the existing `/ecosystem/defi/spookyswap.svg`; crop its viewBox to the 31px colour symbol without changing paths or fills.
+- THENA: https://thena.fi/favicon/apple-touch-icon.png
+- SwapX: https://swapx.fi/swapx-logo.svg
+- Ethereum, BNB Chain, Polygon PoS, Base, Arbitrum, Linea and Avalanche: reuse the original colour assets already held in `/marketing/agentic/chains/`, resized without enlargement to at most 256px in the card copies.
+- Sei: https://cdn.sei.io/web-v2/sei-network-logo.svg. Retain the gold Network lettering. In the light variant only the white symbol/Sei lettering changes to dark ink; the site's original white/gold lockup is used in dark mode.
+- Flare: https://flare.network/api/media/file/Flare.svg, retaining the official pink fill.
+- Katana: https://katana.network/images/logomark.svg, retaining the official yellow in dark mode. Keep the existing dark-ink variant in light mode: fluorescent yellow on white would be invisible.
+
+Carbon retains the approved Carbon bird wordmark; the older red IntentX favicon is a different identity and is not substituted. Gryps, OpenOcean and Sonic retain their native monochrome artwork and theme treatment. All other previously sourced multicolour marks retain their original colours. No colours are invented or inverted on multicolour marks.
