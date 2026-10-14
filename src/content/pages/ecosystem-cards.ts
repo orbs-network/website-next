@@ -59,7 +59,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
     xUrl: 'https://x.com/TrebleSwap',
   },
   gryps: {
-    logo: { src: '/marketing/ecosystem/cards/gryps.svg', invertOnDark: true, width: 145, height: 30 },
+    logo: { src: '/marketing/ecosystem/cards/gryps.svg', invertOnDark: true, width: 145, height: 37 },
     xUrl: 'https://x.com/gryps_finance',
   },
   atlantis: {
