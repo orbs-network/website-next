@@ -74,22 +74,35 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
             </div>
 
             {/* Decorative brand illustrations, so `alt=""`: the heading names the product. */}
-            <Image
-              src={product.image}
-              alt=""
-              width={320}
-              height={320}
-              sizes="(min-width: 1024px) 320px, 60vw"
-              className="mx-auto h-auto w-full max-w-[320px] dark:hidden lg:order-last"
-            />
-            <Image
-              src={product.darkImage}
-              alt=""
-              width={320}
-              height={320}
-              sizes="(min-width: 1024px) 320px, 60vw"
-              className="mx-auto hidden h-auto w-full max-w-[320px] dark:block lg:order-last"
-            />
+            {locale === 'en' ? (
+              <Image
+                src={product.illustration.src}
+                alt=""
+                width={product.illustration.width}
+                height={product.illustration.height}
+                sizes="(min-width: 1024px) 320px, 60vw"
+                className="mx-auto h-auto w-full max-w-[320px] lg:order-last"
+              />
+            ) : (
+              <>
+                <Image
+                  src={product.image}
+                  alt=""
+                  width={320}
+                  height={320}
+                  sizes="(min-width: 1024px) 320px, 60vw"
+                  className="mx-auto h-auto w-full max-w-[320px] dark:hidden lg:order-last"
+                />
+                <Image
+                  src={product.darkImage}
+                  alt=""
+                  width={320}
+                  height={320}
+                  sizes="(min-width: 1024px) 320px, 60vw"
+                  className="mx-auto hidden h-auto w-full max-w-[320px] dark:block lg:order-last"
+                />
+              </>
+            )}
           </div>
         </DividedSection>
       ))}
