@@ -268,45 +268,67 @@
     "dperps": {
       "meta": {
         "title": "dPERPS",
-        "description": "A turn-key on-chain perpetual futures platform any builder, frontend or protocol can adopt and deploy, with a customizable interface and modular components powered by Orbs Layer 3."
+        "description": "Professional perpetual futures infrastructure built in-house by Orbs: execution, hedging, liquidation, oracles, settlement and a white-label trading interface."
       },
       "hero": {
-        "headline": "Turn-key on-chain\nperpetual futures platform\nfor any venue or developer",
-        "intro": "dPERPS is a fully integrated, chain-native perps trading protocol that any builder, frontend, or protocol can adopt and deploy, complete with a customizable user interface and modular components. Powered by Orbs' advanced Layer 3 infrastructure, Ultra unlocks seamless access to high-performance perpetual futures with minimal lift.\n\ndPERPS is built on top of Symm.io's smart contract infrastructure, which serves as the foundation for intent based perpetual trading. Its modular design allowed us to build a tailored implementation on top, combining execution logic, UI, and liquidity systems into a complete, ready to deploy solution.",
-        "cta": "Learn more"
+        "eyebrow": "[dPERPS]",
+        "headline": "Perpetual futures.\nUnder your brand.",
+        "intro": "dPERPS brings the components required for professional perpetual futures trading into one stack, built in-house by Orbs: execution, hedging, liquidation, oracles, settlement and a white-label trading interface. Venues can serve institutional clients and active traders without assembling the infrastructure from separate providers.",
+        "cta": "Talk to the team"
       },
-      "benefits": {
-        "title": "dPERPS is purpose-built for seamless, rapid deployment. Its comprehensive modular stack includes:",
+      "overview": {
+        "eyebrow": "[OVERVIEW]",
+        "title": "The trading tools your users expect",
+        "body": "Professional trading requires precise control over entries, exits and exposure. dPERPS supports market and limit orders, stop loss and take profit brackets, partial position closes and per-symbol leverage, bringing these controls together in one interface.",
+        "markets": "Offer crypto perpetuals and tokenized equity markets through your venue, with liquidity sourced across multiple venues."
+      },
+      "features": {
+        "eyebrow": "[KEY FEATURES & BENEFITS]",
+        "title": "A complete stack,\nnot a collection of integrations",
         "items": {
-          "tradingUi": {
-            "title": "Customizable Trading UI",
-            "body": "White-label interface easily tailored to any brand."
+          "pricing": {
+            "title": "Pricing",
+            "body": "Accurate market pricing for trades and positions."
           },
-          "hedger": {
-            "title": "Automated L3 Hedger & Liquidator",
-            "body": "Efficient risk management systems."
+          "execution": {
+            "title": "Execution",
+            "body": "Seamless opening, adjusting and closing of trades."
           },
-          "oracles": {
-            "title": "Reliable Oracles",
-            "body": "Real-time and secure price feeds ensuring precise market data."
+          "positions": {
+            "title": "Position Management",
+            "body": "Track positions, leverage, margin and exposure."
+          },
+          "hedging": {
+            "title": "Hedging",
+            "body": "Manage market exposure and trading risk."
+          },
+          "liquidation": {
+            "title": "Liquidation",
+            "body": "Manage positions that breach risk thresholds."
+          },
+          "settlement": {
+            "title": "Settlement",
+            "body": "Process trades and update balances accurately."
           }
         }
       },
-      "integrate": {
-        "title": "Integrate",
-        "body": "With dPERPS, any platform can integrate a complete perpetual trading stack powered by Orbs Layer 3, without relying on multiple third-party providers.\n\nOnce integrated, participants can act as Hedgers or Liquidators and tap into built-in oracles and a fully managed trading UI, all packaged in a single, modular solution.",
-        "alt": "A user sends a trade intent to DEX frontends such as Thena and SpookySwap, which route through dPERPS's white-label UI and execution engine — hedger, liquidator and price oracle — where solvers bid, settling on Symmio's smart contract layer."
+      "network": {
+        "eyebrow": "[NETWORK]",
+        "title": "Execution powered\nby Orbs L3.",
+        "body": "Matching, position management and settlement run on Orbs L3, while deposits and withdrawals take place on the underlying blockchain. This architecture keeps routine trading actions off the base-chain transaction path."
+      },
+      "security": {
+        "eyebrow": "[SECURITY]",
+        "title": "TEE-secured execution.\nWallet-authorised\nwithdrawals.",
+        "body": "The dPERPS engine runs inside a Trusted Execution Environment (TEE). Trading session keys can authorise trading but cannot withdraw funds. Withdrawals require the user’s wallet signature."
       },
       "partners": {
-        "title": "Partners & Integrations",
-        "body": "dPERPS is already powering intent-based perpetual futures on some of the most innovative DeFi trading platforms.\n\nDeployed across multiple chains and rapidly expanding, Ultra delivers a full-stack perpetuals infrastructure, including execution, hedging, liquidation, oracles, and UI, with minimal lift for integrators.",
-        "alt": "dPERPS at the centre of an orbital diagram, with Gryps, QuickSwap, Ionex, SpookySwap, Atlantis, Thena and Treble around it."
+        "title": "Already powering perpetual futures venues"
       },
-      "poweredBy": {
-        "title": "Powered by Orbs Network",
-        "body": "Through its novel Layer 3 technology, the Orbs Network enhances the capabilities of smart contract platforms, providing essential services to DEXs across DeFi.\n\nTools utilizing Orbs L3 technology include Liquidity Hub for aggregated liquidity and lower price impact, as well as Advanced Trading Orders, such as decentralized limit and TWAP orders, for efficient execution. The release of dPERPS establishes Orbs' technology as a key DeFi infrastructure for DEXs in spot and futures markets.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus, with over $100 million staked. It has been running on the mainnet since 2019.\n\nReady to integrate? Bring dPERPS to your protocol, frontend, or chain. Contact us to get started or explore the integration docs below.",
-        "contact": "Contact the team",
-        "onePager": "Read the one pager"
+      "venue": {
+        "eyebrow": "[FOR VENUES]",
+        "title": "Your venue.\nYour trading experience.",
+        "body": "Offer crypto perpetuals and tokenised equity markets through an interface branded for your venue. dPERPS provides the execution infrastructure behind the experience."
       },
       "disclaimer": "The dPERPS software will leverage the power of the decentralized Orbs Network, with its Guardians and proof-of-stake ecosystem, to allow platforms, market participants and other third parties to provide and operate this suite of decentralized services. Orbs will not be engaging in trading, hedging or serving as a liquidator. The dPERPS is a beta version that is still under active development and all underlying digital assets, blockchain networks and DEX platforms are also subject to ongoing development and to various risks, and as such, dPERPS or the underlying platforms:\n\n(a) may contain bugs, errors, and defects,\n\n(b) may function improperly or be subject to periods of downtime and unavailability,\n\n(c) may result in total or partial loss of funds.\n\nAny use of any platform, application and/or services described here is at your own risk and you are solely responsible for all transaction decisions."
     },
@@ -1743,8 +1765,8 @@
         "description": "Limit, TWAP, stop-loss/take-profit and best-price liquidity aggregation — one non-custodial execution stack powered by Orbs L3."
       },
       "hero": {
-        "eyebrow": "[ADVANCED ORDER EXECUTION]",
-        "headline": "dSPOT",
+        "eyebrow": "[dSPOT]",
+        "headline": "Advanced spot trading.\nUnified execution.",
         "intro": "Limit, TWAP, stop-loss/take-profit and best-price liquidity aggregation — one non-custodial execution stack powered by Orbs L3.",
         "cta": "Discover order types"
       },
@@ -1759,7 +1781,7 @@
         },
         "dtwap": {
           "name": "dTWAP",
-          "body": "Split larger trades over time to reduce price impact.",
+          "body": "Split larger trades over time to help reduce price impact.",
           "cta": "Discover dTWAP"
         },
         "dsltp": {

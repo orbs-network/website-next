@@ -558,7 +558,8 @@
 
 @layer components {
   /* Sara's October 15 light lavender band has dark type in either page theme. */
-  .institutional-benefits {
+  .institutional-benefits,
+  .product-benefits {
     --color-fg: #121214;
     --color-fg-muted: #33333a;
     --color-control-border: #121214;
