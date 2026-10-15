@@ -111,8 +111,13 @@ export const LabelsAlignWithOrWithoutAMark: Story = {
   play: async ({ canvasElement }) => {
     const canvas = await openGroup(canvasElement, /Products/)
 
-    const labelX = (name: string) =>
-      (canvas.getByRole('link', { name }).lastElementChild as HTMLElement).getBoundingClientRect().left
+    const labelX = (name: string) => {
+      const link = canvas.getByRole('link', { name })
+      const text = [...link.childNodes].find((node) => node.nodeType === Node.TEXT_NODE && node.textContent === name)!
+      const range = document.createRange()
+      range.selectNodeContents(text)
+      return range.getBoundingClientRect().left
+    }
     await waitFor(() => canvas.getByRole('link', { name: 'Execution SDK/API' }))
     await expect(labelX('Execution SDK/API')).toBe(labelX('dSPOT'))
   },
@@ -140,9 +145,12 @@ export const ExternalRowsOpenSafely: Story = {
     const external = await waitFor(() => canvas.getByRole('link', { name: 'Status' }))
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+    await expect(external.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
 
     await expect(canvas.getByRole('link', { name: 'Proof of Stake' })).not.toHaveAttribute('target')
-    // Top-level external links too.
+    await expect(canvas.getByRole('link', { name: 'Proof of Stake' }).querySelector('svg')).toBeNull()
+    // Top-level external links stay free of secondary-link markers.
+    await expect(canvas.getByRole('link', { name: 'GitHub' }).querySelector('svg')).toBeNull()
     await expect(canvas.getByRole('link', { name: 'GitHub' })).toHaveAttribute('rel', 'noopener noreferrer')
   },
 }

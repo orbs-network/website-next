@@ -13,7 +13,7 @@ import { FACET_GRADIENT_STOPS, FACET_RADIUS, FACET_SIZE_MAX, type Facet } from '
 
 /**
  * The hero's interactive backdrop: a dot grid that fans out into Orbs facets
- * under the cursor, or in a brief ripple from a tap on a touch screen.
+ * under the cursor, or in a brief ripple from a primary click or touch tap.
  *
  * The maths lives in `hero-facets.ts` (what the field looks like at rest) and
  * `hero-facet-physics.ts` (the springs that bloom, stir and collapse it), and
@@ -36,7 +36,7 @@ const FINE_POINTER = '(hover: hover) and (pointer: fine)'
 const REDUCED_MOTION = '(prefers-reduced-motion: reduce)'
 
 /**
- * How far a touch may wander between down and up and still count as a tap,
+ * How far a press may wander between down and up and still count as a tap,
  * in CSS px. Past this it is a swipe, and a swipe belongs to the page's
  * scrolling — usually the browser has already taken it with `pointercancel`,
  * but a short drag it did not claim must not ripple either.
@@ -95,7 +95,7 @@ function useFieldMode(): FieldMode {
  * ROUNDED WITH `arcTo`, AND NOT BY STROKING THE PATH. Stroking with a round
  * line join is the shorter way to round a polygon and it was the first version
  * here, but it requires painting the shape twice — `fill()` then `stroke()` —
- * and these facets are drawn at an alpha between 0.17 and 0.89. Two
+ * and these facets are drawn with a translucent alpha. Two
  * translucent passes composite over each other wherever they overlap, so every
  * facet got a denser rim than its middle. Measured against the design's own
  * render of the same cluster, that read as roughly 15% too bright overall.
@@ -326,75 +326,51 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     }
 
     /*
-      THE TAP. A touch screen has no hover to follow, so a tap ripples the
-      field from the finger instead — modelled on galaxy.com's mobile hero,
-      which answers a tap with a ring that pushes its dots outward and fades
-      within a second.
-
-      DECIDED ON `pointerup`, NOT `pointerdown`. Every vertical swipe starts
-      with a pointerdown, and rippling on it would set the field off each time
-      the reader scrolled past the hero. A swipe the browser takes for
-      scrolling ends in `pointercancel`; one it does not is caught by
-      `TAP_SLOP`. Either way, only a touch that stays put is a tap.
-
-      NOTHING HERE CALLS `preventDefault`, and the listeners are passive. The
-      page scrolls exactly as it did; this only watches. Listening on the
-      window for the same reason as the mouse above — the field itself is
-      `pointer-events-none` and must stay that way.
+      A primary click or tap ripples the field. Decide on pointerup so swipes
+      and drags never fire it. Passive listeners preserve native scrolling.
+      The field is pointer-events-none, so watch the hero's subtree from window;
+      overlaid navigation and interactive controls must not activate it.
     */
-    let touch: { id: number; x: number; y: number } | null = null
+    let press: { id: number; x: number; y: number } | null = null
 
-    const onTouchDown = (event: PointerEvent) => {
-      if (event.pointerType !== 'touch' || !event.isPrimary) return
-
-      /*
-        Only a touch that lands on the hero itself. The rect alone is not
-        enough: the site header and the mobile menu sit OVER the hero, and a
-        tap on one of them must not ripple the background underneath. The
-        field's parent is the box it backs, so its subtree is the hero.
-      */
+    const onHero = (event: PointerEvent) => {
       const host = root.parentElement
       const rect = root.getBoundingClientRect()
-      const inside =
+      return (
+        event.target instanceof Element &&
+        host?.contains(event.target) &&
+        !event.target.closest('a, button, input, select, textarea, summary, [role="button"], [role="link"]') &&
         event.clientX >= rect.left &&
         event.clientX <= rect.right &&
         event.clientY >= rect.top &&
         event.clientY <= rect.bottom
-      const onHero = host !== null && event.target instanceof Node && host.contains(event.target)
-
-      touch = inside && onHero ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null
+      )
     }
 
-    const onTouchUp = (event: PointerEvent) => {
-      if (!touch || event.pointerId !== touch.id) return
+    const onPressDown = (event: PointerEvent) => {
+      if (!event.isPrimary || event.button !== 0) return
+      press = onHero(event) ? { id: event.pointerId, x: event.clientX, y: event.clientY } : null
+    }
 
-      const down = touch
-      touch = null
-
+    const onPressUp = (event: PointerEvent) => {
+      if (!press || event.pointerId !== press.id) return
+      const down = press
+      press = null
+      if (event.button !== 0 || !onHero(event)) return
       if (Math.hypot(event.clientX - down.x, event.clientY - down.y) > TAP_SLOP) return
 
-      /*
-        Resolved against the rect NOW rather than at pointerdown: the page can
-        have moved between the two (momentum from an earlier fling), and the
-        ripple belongs where the finger is on the hero, not where it was.
-      */
+      // Resolve against the current rect: momentum scrolling may have moved it.
       const rect = root.getBoundingClientRect()
       tapFacetField(field, { x: event.clientX - rect.left, y: event.clientY - rect.top })
 
-      /*
-        Forget the mouse. On a hybrid device the last mouse position is still
-        remembered, and a scroll during the ripple would re-resolve it through
-        `resolvePointer` — cancelling the tap and holding the disc up at a
-        cursor nobody has moved since. Hover resumes on the next real move.
-      */
+      // Forget stale hybrid-device hover coordinates until the next real move.
       clientX = -1
       clientY = -1
-
       start()
     }
 
-    const onTouchCancel = (event: PointerEvent) => {
-      if (touch && event.pointerId === touch.id) touch = null
+    const onPressCancel = (event: PointerEvent) => {
+      if (press && event.pointerId === press.id) press = null
     }
 
     resize()
@@ -406,9 +382,9 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     })
     observer.observe(root)
 
-    window.addEventListener('pointerdown', onTouchDown, { passive: true })
-    window.addEventListener('pointerup', onTouchUp, { passive: true })
-    window.addEventListener('pointercancel', onTouchCancel, { passive: true })
+    window.addEventListener('pointerdown', onPressDown, { passive: true })
+    window.addEventListener('pointerup', onPressUp, { passive: true })
+    window.addEventListener('pointercancel', onPressCancel, { passive: true })
 
     // Hover is for a fine pointer only, exactly as before taps existed.
     const hover = mode === 'hover'
@@ -427,9 +403,9 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
     return () => {
       if (frame !== 0) cancelAnimationFrame(frame)
       observer.disconnect()
-      window.removeEventListener('pointerdown', onTouchDown)
-      window.removeEventListener('pointerup', onTouchUp)
-      window.removeEventListener('pointercancel', onTouchCancel)
+      window.removeEventListener('pointerdown', onPressDown)
+      window.removeEventListener('pointerup', onPressUp)
+      window.removeEventListener('pointercancel', onPressCancel)
       if (hover) {
         window.removeEventListener('pointermove', onPointerMove)
         document.removeEventListener('pointerleave', onPointerLeave)

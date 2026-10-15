@@ -2,6 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { AgenticGlyph, DPerpsGlyph, DSpotMenuGlyph, SdkApiGlyph } from '@/components/icons'
 import { MenuItemW } from '@/components/ui/menu-item'
@@ -362,6 +363,7 @@ function NavRow({
         {link.external ? (
           <a href={link.href} target="_blank" rel="noopener noreferrer">
             {link.label}
+            <ExternalLink aria-hidden="true" className="size-3 shrink-0" />
           </a>
         ) : (
           <Link href={link.href}>{link.label}</Link>

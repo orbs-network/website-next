@@ -1,7 +1,7 @@
 'use client'
 
 import * as DialogPrimitive from '@radix-ui/react-dialog'
-import { ArrowRight, MenuIcon, X } from 'lucide-react'
+import { ArrowRight, ExternalLink, MenuIcon, X } from 'lucide-react'
 import Link from 'next/link'
 import { usePathname } from 'next/navigation'
 import { useId, useState } from 'react'
@@ -476,6 +476,7 @@ function MobileNavRow({
     >
       <NavLinkElement link={link} onNavigate={onNavigate} current={current}>
         {link.label}
+        {link.external && <ExternalLink aria-hidden="true" className="size-3 shrink-0" />}
       </NavLinkElement>
     </MenuItemW>
   )

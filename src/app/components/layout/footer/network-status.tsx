@@ -1,6 +1,7 @@
 'use client'
 
 import * as React from 'react'
+import { ExternalLink } from 'lucide-react'
 import type { NetworkStatus } from './read-network-status'
 import { cn } from '@/lib/utils'
 
@@ -83,6 +84,7 @@ export function NetworkStatusIndicator({ labels, href }: { labels: NetworkStatus
         className={cn('size-2 shrink-0 rounded-full', status === 'good' ? 'bg-emerald-500' : 'bg-amber-500')}
       />
       {label}
+      <ExternalLink aria-hidden="true" className="size-3 shrink-0" />
     </a>
   )
 }
