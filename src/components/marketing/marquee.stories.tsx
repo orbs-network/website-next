@@ -1,5 +1,5 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
-import { expect, within } from 'storybook/test'
+import { expect, within, waitFor } from 'storybook/test'
 import { Marquee } from './marquee'
 
 const meta = {
@@ -65,4 +65,35 @@ export const HasNoPauseControl: Story = {
   play: async ({ canvasElement }) => {
     await expect(within(canvasElement).queryByRole('button')).toBeNull()
   },
+}
+
+/** Measure the painted seam, rather than asserting the width utility's name. */
+export const LoopsByExactlyOneCopy: Story = {
+  args,
+  play: async ({ canvasElement }) => {
+    await document.fonts.ready
+    const track = canvasElement.querySelector('.animate-marquee') as HTMLElement
+    const [first, copy] = [...track.querySelectorAll('ul')]
+    await waitFor(() => {
+      expect(getComputedStyle(track).animationName).toBe('marquee')
+      expect(getComputedStyle(track).animationDuration).toBe('22s')
+      expect(Math.abs(track.getBoundingClientRect().width - first.getBoundingClientRect().width * 2)).toBeLessThan(1)
+      expect(Math.abs(copy.getBoundingClientRect().width - first.getBoundingClientRect().width)).toBeLessThan(1)
+    })
+    const animation = track.getAnimations()[0]
+    animation.pause()
+    animation.currentTime = 0
+    const start = first.getBoundingClientRect().left
+    // Just before restart, the duplicate occupies the first copy's start.
+    animation.currentTime = 21999
+    expect(Math.abs(copy.getBoundingClientRect().left - start)).toBeLessThan(1)
+  },
+}
+
+export const PhoneLoop: Story = {
+  ...LoopsByExactlyOneCopy,
+  parameters: {
+    viewport: { options: { phone: { name: 'Phone', styles: { width: '390px', height: '844px' } } } },
+  },
+  globals: { viewport: { value: 'phone' } },
 }
