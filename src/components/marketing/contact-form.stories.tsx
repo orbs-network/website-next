@@ -14,13 +14,13 @@ type Story = StoryObj<typeof meta>
 /** The English catalog copy, so the assertions read like the page does. */
 const LABELS: ContactFormLabels = {
   firstName: 'First Name',
-  firstNamePlaceholder: 'Enter your first name here',
+  firstNamePlaceholder: 'First name',
   lastName: 'Last Name',
-  lastNamePlaceholder: 'Enter your last name here',
+  lastNamePlaceholder: 'Last name',
   email: 'Email',
-  emailPlaceholder: 'Enter your email here',
+  emailPlaceholder: 'Email',
   phone: 'Phone Number (optional)',
-  phonePlaceholder: 'Enter your phone number',
+  phonePlaceholder: 'Phone number',
   message: 'Message',
   messagePlaceholder: 'Something you want to tell us? Or maybe to ask?',
   submit: 'Submit',
