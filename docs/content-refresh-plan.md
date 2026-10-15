@@ -34,11 +34,11 @@ Source: Sara's “Orbs Website Refresh: Content Handoff” and [Orbs Website 3.0
 
 Ecosystem needs further design refinement, requested after Batch 3. Handle it in a separate PR.
 
-## Hold: dSPOT and dPERPS
+## Product pages: October 15 handoff
 
-Sara is finishing both designs. Leave their page copy, layouts and artwork unchanged until she is ready. Shared chrome may reflect the new product grouping; shared renderer/data edits must preserve the existing product-page content and layout.
+Sarbloc supplied the dark/light dSPOT and working dPERPS PDFs on October 15. Use “Advanced spot trading. Unified execution.” in both themes, as explicitly confirmed. The dSPOT layout largely matches the existing page; keep its approved SDK CTA and corrected Liquidity Hub copy. Refresh the English dPERPS hero, overview, six-feature grid, L3 and TEE sections, six-partner strip and branded-venue section. Preserve the Korean composition and legal disclaimer.
 
-Before resuming, retrieve the completed Figma frames. Confirm the active solver roster and approved marks, obtain an official integration example, and reconcile diagrams with the new in-house/TEE narrative. Never publish placeholder code or restore struck-out integrations from old design comments.
+The supplied dPERPS overview diagram still labels Symmio. Sarbloc confirmed Sara will supply a replacement: omit it from the English page rather than displaying the outdated diagram or a visitor-facing placeholder. Keep one TODO at its insertion point. The other illustrations reuse the matching themed SVGs; Treble and Atlantis wordmarks come directly from the supplied PDF. The active dSPOT solver roster and approved marks still require confirmation before adding that section. Never publish placeholder code or restore struck-out integrations from old design comments.
 
 ## Delivery
 

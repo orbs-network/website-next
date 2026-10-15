@@ -2,7 +2,10 @@ import { getTranslations } from 'next-intl/server'
 import { Disclaimer } from '@/components/marketing/disclaimer'
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
-import { CtaButton } from '@/components/marketing/section-parts'
+import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic } from '@/components/marketing/section-parts'
+import { SplitHero } from '@/components/marketing/split-hero'
+import { LogoRow } from '@/components/marketing/logo-row'
+import { DperpsFeaturesGrid } from '@/components/marketing/dperps-features-grid'
 import { H2, H4 } from '@/app/components/typography'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import Image from 'next/image'
@@ -10,6 +13,9 @@ import { ProductHero } from '@/components/marketing/product-hero'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import {
   DPERPS_BENEFITS,
+  DPERPS_FEATURES,
+  DPERPS_GRAPHICS,
+  DPERPS_PARTNERS,
   DPERPS_DIAGRAM,
   DPERPS_HERO,
   DPERPS_LINKS,
@@ -20,18 +26,82 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
 /**
- * The Perpetual Hub Ultra page body, rendered by the English and Korean routes.
+ * dPERPS: the October English design and the existing Korean product page.
  *
  * No Japanese: `content/jp/perpetual-hub` does not exist in the legacy repo, so
  * `ja` is absent from the availability entry rather than marked `placeholder` —
  * the same treatment dSLTP got in #99, and for the same reason. Korean is a
  * full translation.
  *
- * The body keeps the hero's left gutter, copy width and 18px body text.
- * Diagrams sit beside the copy on desktop and below it on mobile.
+ * The English architecture diagram is awaiting Sara’s replacement; the legacy
+ * Korean diagrams and destinations remain in that locale’s composition.
  */
 export async function DperpsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dperps' })
+
+  if (locale === 'en') {
+    return (
+      <>
+        <SplitHero
+          eyebrow={t('hero.eyebrow')}
+          headline={t('hero.headline')}
+          intro={t('hero.intro')}
+          cta={{ label: t('hero.cta'), href: DPERPS_LINKS.contact.href }}
+          graphic={HERO_GRAPHICS.dperps}
+          locale={locale}
+        />
+        <section className="container border-t border-border py-section text-center">
+          <Eyebrow text={t('overview.eyebrow')} locale={locale} />
+          <H2 className="mx-auto mt-6 max-w-5xl text-balance">{t('overview.title')}</H2>
+          <p className="mx-auto mt-8 max-w-5xl text-p text-fg">{t('overview.body')}</p>
+          <p className="mx-auto mt-4 max-w-5xl text-p text-fg">{t('overview.markets')}</p>
+          {/* TODO #318: Add Sara's replacement dPERPS architecture diagram when supplied. */}
+        </section>
+        <section className="product-benefits py-section">
+          <div className="container">
+            <div className="mb-16 text-center lg:mb-24">
+              <Eyebrow text={t('features.eyebrow')} locale={locale} />
+              <H2 className="mx-auto mt-6 max-w-5xl whitespace-pre-line text-balance">{t('features.title')}</H2>
+            </div>
+            <DperpsFeaturesGrid
+              features={DPERPS_FEATURES.map((id) => ({
+                id,
+                title: t(`features.items.${id}.title`),
+                body: t(`features.items.${id}.body`),
+              }))}
+              locale={locale}
+            />
+          </div>
+        </section>
+        {(['network', 'security'] as const).map((id) => (
+          <DperpsDetail
+            key={id}
+            eyebrow={t(`${id}.eyebrow`)}
+            heading={t(`${id}.title`)}
+            body={t(`${id}.body`)}
+            graphic={DPERPS_GRAPHICS[id]}
+            locale={locale}
+          />
+        ))}
+        <LogoRow
+          title={t('partners.title')}
+          titleHidden
+          items={DPERPS_PARTNERS}
+          spread
+          locale={locale}
+          className="border-b border-border"
+        />
+        <DperpsDetail
+          eyebrow={t('venue.eyebrow')}
+          heading={t('venue.title')}
+          body={t('venue.body')}
+          graphic={DPERPS_GRAPHICS.venue}
+          locale={locale}
+        />
+        <Disclaimer text={t('disclaimer')} locale={locale} className="mx-0 max-w-xl" />
+      </>
+    )
+  }
 
   // Korean sends both the hero button and the one-pager to a Naver article
   // rather than to the English announcement post, so destinations resolve per
@@ -108,5 +178,39 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
 
       <Disclaimer text={t('disclaimer')} locale={locale} className="mx-0 max-w-xl" />
     </>
+  )
+}
+
+/** The new dPERPS frame centres the copy beside its art in equal-width columns. */
+function DperpsDetail({
+  eyebrow,
+  heading,
+  body,
+  graphic,
+  locale,
+}: {
+  eyebrow: string
+  heading: string
+  body: string
+  graphic: SectionGraphic
+  locale: Locale
+}) {
+  return (
+    <section className="container border-b border-border py-section">
+      <Eyebrow text={eyebrow} locale={locale} />
+      <div className="mt-12 grid items-center gap-12 lg:mt-16 lg:grid-cols-2 lg:gap-16">
+        <div>
+          <H2 className="whitespace-pre-line text-balance" lang={textLang(heading, locale)}>
+            {heading}
+          </H2>
+          <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(body, locale)}>
+            {body}
+          </p>
+        </div>
+        <div className="relative mx-auto w-full max-w-md lg:max-w-none">
+          <ThemedGraphic graphic={graphic} sizes="(min-width: 1024px) 50vw, 28rem" className="h-auto w-full" />
+        </div>
+      </div>
+    </section>
   )
 }
