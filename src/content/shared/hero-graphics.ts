@@ -20,7 +20,9 @@ import type { SectionGraphic } from '@/components/marketing/section-parts'
  * `width`/`height` are the crop box, rounded. `ThemedGraphic` lays them out
  * `object-contain` in a square, so they only set the aspect ratio.
  *
- * Not here: the SDK illustration on the same sheet. There is no SDK page (#206).
+ * Execution Services uses the supplied SDK illustration (October 15). Its
+ * light export has an 800px square canvas; its viewBox is cropped to the same
+ * 502x640 artwork box as the dark export so switching theme preserves scale.
  */
 function hero(dir: string, width: number, height: number): SectionGraphic {
   return { src: `/marketing/${dir}/hero.svg`, lightSrc: `/marketing/${dir}/hero-light.svg`, width, height }
@@ -38,4 +40,5 @@ export const HERO_GRAPHICS = {
   venues: hero('venues', 654, 624),
   overview: hero('overview', 651, 571),
   aiSkills: hero('ai-skills', 604, 489),
+  executionServices: hero('execution-services', 502, 640),
 } as const satisfies Record<string, SectionGraphic>
