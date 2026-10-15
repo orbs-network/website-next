@@ -1,3 +1,5 @@
+import type { LogoRowItem } from '@/components/marketing/logo-row'
+
 /**
  * Structural data for the dSPOT page (#155). Copy lives under `pages.dspot`.
  *
@@ -62,3 +64,63 @@ export const DSPOT_GRAPHICS = {
 
 /** The closing block's scrolling phrases, in design order. */
 export const DSPOT_MARQUEE = ['control', 'liquidity', 'custody'] as const
+
+/** Sara's October 15 approved solver/liquidity-source strip, in design order. */
+export const DSPOT_SOLVERS: readonly LogoRowItem[] = [
+  {
+    name: 'Odos',
+    logo: { src: '/marketing/dspot/solvers/odos.svg', width: 136, height: 48 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'Velora (formerly ParaSwap)',
+    logo: { src: '/marketing/dspot/solvers/velora.svg', width: 130, height: 34 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'OpenOcean',
+    logo: {
+      src: '/marketing/dspot/solvers/openocean-dark.svg',
+      onLight: '/marketing/ecosystem/cards/openocean.svg',
+      width: 140,
+      height: 28,
+    },
+    wordmark: true,
+  },
+  {
+    name: 'KyberSwap',
+    logo: {
+      src: '/marketing/dspot/solvers/kyberswap-dark.svg',
+      onLight: '/marketing/dspot/solvers/kyberswap-light.svg',
+      width: 160,
+      height: 53,
+    },
+    wordmark: true,
+  },
+  {
+    name: 'Rango',
+    logo: { src: '/marketing/dspot/solvers/rango.svg', width: 942, height: 345 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'DODO',
+    logo: {
+      src: '/marketing/dspot/solvers/dodo-dark.svg',
+      onLight: '/marketing/dspot/solvers/dodo-light.svg',
+      width: 141,
+      height: 30,
+    },
+    wordmark: true,
+  },
+  {
+    name: 'Lumia',
+    logo: { src: '/marketing/dspot/solvers/lumia.svg', width: 136, height: 37 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  // The supplied Magpie mark is retained; its current website has Fly.trade branding.
+  { name: 'Magpie', logo: { src: '/marketing/ecosystem/cards/magpie.png', width: 256, height: 256 } },
+]
