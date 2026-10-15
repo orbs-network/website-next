@@ -67,7 +67,6 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
       />
 
       <StatsRow
-        align="start"
         glow
         stats={INSTITUTIONAL_STATS.map((id) => ({
           id,

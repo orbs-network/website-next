@@ -48,7 +48,7 @@ Keep the earlier QA PR #291 separate. Use a fresh content-refresh branch. Check 
 
 Apply the English four-group Products / Tools / Solutions / Network menu and the new footer grouping. Playground is `https://swap.orbs.network/`; Team is explicitly omitted. Japanese/Korean menus, footer structure and homepage feature tabs retain their previous versions.
 
-The corrected stats PDF controls the five figures, left alignment and “Project live” label. Replace English institutional tabs with the eight-item, four-by-two desktop grid, decorative icons, a light lavender gradient and centred CTAs; use a readable single-column phone layout.
+The corrected stats PDF controls the five figures and “Project live” label. Sarbloc's October 15 correction supersedes its left alignment: every stat value and label is centred within its container, including the homepage and Institutional page. Replace English institutional tabs with the eight-item, four-by-two desktop grid, decorative icons, a light lavender gradient and centred CTAs; use a readable single-column phone layout.
 
 Where the full homepage PDF still contains older material, preserve the approved three products, integration-path section, hero eyebrow/intro, product-qualified custody wording, 1.1B ORBS staking figure, launch dates and Security & Audits link. Keep real CMS articles instead of PDF placeholders. The new grid uses concise summaries while retaining product-specific custody and audit scope. These dispositions are part of the reviewable refresh rather than restoring the PDF's old 8-chain/100%-fill/$100M copy.
 

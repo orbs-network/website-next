@@ -162,7 +162,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <StatsRow
         columns={5}
-        align={locale === 'en' ? 'start' : 'center'}
         glow
         stats={HOME_STATS.map((id) => ({
           id,
