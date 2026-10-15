@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { ExternalLink } from 'lucide-react'
 import { FooterLink1 } from '@/components/ui/footer-link'
 import type { FooterLinkSpec } from '@/content/shared/footer'
 import { localeHref } from '@/i18n/availability'
@@ -67,8 +68,9 @@ export function FooterNavLink({ label, locale, spec }: FooterNavItem & { locale:
 
   if (external) {
     return (
-      <FooterLink1 href={href} target="_blank" rel="noopener noreferrer" lang={lang} className={className}>
+      <FooterLink1 href={href} target="_blank" rel="noopener noreferrer" lang={lang} className={`${className} gap-1.5`}>
         {label}
+        <ExternalLink aria-hidden="true" className="size-3 shrink-0" />
       </FooterLink1>
     )
   }

@@ -1,3 +1,4 @@
+import { ExternalLink } from 'lucide-react'
 import * as React from 'react'
 import Markdown from 'react-markdown'
 import { H1, H2, H3 } from '@/app/components/typography'
@@ -146,7 +147,7 @@ function anchor(locale?: Locale) {
     // resolves as a RELATIVE PATH, so the contact link on a privacy policy
     // navigated to /hello@orbs.com instead of opening a mail client. Normalised
     // here rather than in each document, since it is a property of the link.
-    const resolved = href && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(href) ? `mailto:${href}` : href
+    const resolved = href && !href.includes(':') && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(href) ? `mailto:${href}` : href
     const external = !resolved?.startsWith('/')
     const text = locale === undefined ? undefined : nodeText(children)
 
@@ -158,6 +159,9 @@ function anchor(locale?: Locale) {
         className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
       >
         {children}
+        {resolved && /^https?:\/\//i.test(resolved) && (
+          <ExternalLink aria-hidden="true" className="ms-1 inline size-3 align-[-0.1em]" />
+        )}
       </a>
     )
   }

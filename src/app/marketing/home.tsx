@@ -134,7 +134,11 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </p>
 
             <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button asChild variant="solid">
+              <Button
+                asChild
+                variant="solid"
+                className="hover:border-indigo-400 hover:bg-neutral-100 hover:text-indigo-400 focus-visible:border-indigo-400 focus-visible:bg-neutral-100 focus-visible:text-indigo-400"
+              >
                 <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('hero.cta')}>
                   {t('hero.cta')}
                 </Link>
@@ -363,7 +367,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             width={508}
             height={311}
             sizes="(min-width: 1024px) 50vw, 100vw"
-            className="h-auto w-full rounded-sm"
+            className="h-auto w-full rounded-sm lg:w-[85%] lg:justify-self-center"
           />
         </div>
       </section>
@@ -607,7 +611,15 @@ function HighlightCard({
   className?: string
 }) {
   return (
-    <li className={cn('flex flex-col bg-card-fill', className)} lang={lang}>
+    <li
+      className={cn(
+        'group/card relative flex flex-col bg-card-fill [outline-style:solid] outline-1 -outline-offset-1 outline-transparent',
+        '[@media(hover:hover)]:hover:outline-accent-primary focus-within:outline-accent-primary active:outline-accent-primary',
+        'motion-safe:transition-transform motion-safe:duration-200 motion-safe:[@media(hover:hover)]:hover:-translate-y-1 motion-safe:active:translate-y-0.5',
+        className
+      )}
+      lang={lang}
+    >
       {eyebrow && (
         <p className={cn('text-detail font-medium uppercase tracking-widest', CARD_ACCENT[card.accent ?? 'primary'])}>
           {eyebrow}
@@ -633,18 +645,26 @@ function HighlightCard({
           />
         )}
         {/* A product name next to its mark is a lockup: letter-spaced, as drawn. */}
-        <H4 className={cn(card.icon && 'tracking-[0.12em]')}>{title}</H4>
+        <H4 className={cn(card.icon && 'tracking-[0.12em]')}>
+          <Link
+            href={card.href.startsWith('/') ? localeHref(card.href, locale) : card.href}
+            lang={textLang(title, locale)}
+            className="after:absolute after:inset-0 focus-visible:outline-none"
+          >
+            {title}
+          </Link>
+        </H4>
       </div>
 
       <p className="mt-10 flex-1 text-p text-fg">{body}</p>
 
-      <Link
-        href={card.href.startsWith('/') ? localeHref(card.href, locale) : card.href}
-        className="mt-10 inline-flex self-start items-center gap-2 text-detail font-medium uppercase tracking-widest transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+      <span
+        aria-hidden="true"
+        className="mt-10 inline-flex self-start items-center gap-2 text-detail font-medium uppercase tracking-widest group-hover/card:text-accent-primary group-focus-within/card:text-accent-primary"
       >
         {cta}
-        <span aria-hidden="true">&rarr;</span>
-      </Link>
+        <span>&rarr;</span>
+      </span>
     </li>
   )
 }
@@ -695,14 +715,19 @@ function NewsCard({
           Decorative: the title directly beneath is the link's accessible name,
           so alt text here would have a screen reader read the article twice.
         */}
-        <Image
-          src={cover.src}
-          alt=""
-          width={352}
-          height={176}
-          sizes="(min-width: 640px) 22rem, 19rem"
-          className={cn('w-full rounded-sm', COVER_FRAME, cover.fit)}
-        />
+        <div className={cn('overflow-hidden rounded-sm', COVER_FRAME)}>
+          <Image
+            src={cover.src}
+            alt=""
+            width={352}
+            height={176}
+            sizes="(min-width: 640px) 22rem, 19rem"
+            className={cn(
+              'h-full w-full motion-safe:transition-transform motion-safe:duration-300 motion-safe:[@media(hover:hover)]:group-hover:scale-105',
+              cover.fit
+            )}
+          />
+        </div>
 
         <p className="mt-4 flex flex-wrap gap-x-3 text-detail uppercase tracking-widest text-fg-muted">
           {/* A person's name — English in any document. */}

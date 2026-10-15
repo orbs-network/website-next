@@ -71,12 +71,11 @@ export const FACET_SIZE_MIN = 3.7
 /**
  * Facet alpha at the cursor and at the rim.
  *
- * Node opacity in the design runs 0.888 down to 0.173, and it tracks size at a
- * correlation of 0.992 — near enough to proportional that treating them as one
- * curve is a description of the design rather than a simplification of it.
+ * Preserve the design's proportional falloff, softened to 65% of its original
+ * intensity per Sara's homepage review (#303). Text and CTAs stay prominent.
  */
-export const FACET_OPACITY_MAX = 0.89
-export const FACET_OPACITY_MIN = 0.17
+export const FACET_OPACITY_MAX = 0.89 * 0.65
+export const FACET_OPACITY_MIN = 0.17 * 0.65
 
 /**
  * The brand gradient painted across the disc, top to bottom.

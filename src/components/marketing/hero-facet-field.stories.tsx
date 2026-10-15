@@ -199,3 +199,72 @@ export const SwipeDoesNotRipple: Story = {
     expect(getComputedStyle(root).getPropertyValue('--hero-facet-hole').trim()).toMatch(/^(0px)?$/)
   },
 }
+
+/** Desktop clicks use the same transient ripple as touch, then release it. */
+export const MouseClickRipplesAndSettles: Story = {
+  args: { children: <SectionBackdrop variant="dots" /> },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector('[aria-hidden="true"]') as HTMLElement
+    const copy = within(canvasElement).getByText('Trading infrastructure')
+    const box = copy.getBoundingClientRect()
+    const pointer = {
+      pointerType: 'mouse',
+      pointerId: 1,
+      button: 0,
+      isPrimary: true,
+      bubbles: true,
+      clientX: box.left + 40,
+      clientY: box.top + box.height / 2,
+    }
+    const hole = () => Number.parseFloat(getComputedStyle(root).getPropertyValue('--hero-facet-hole')) || 0
+    await waitFor(() => expect(root.querySelector('canvas')).not.toBeNull())
+    copy.dispatchEvent(new PointerEvent('pointerdown', pointer))
+    copy.dispatchEvent(new PointerEvent('pointerup', pointer))
+    await waitFor(() => expect(hole()).toBeGreaterThan(40))
+    await waitFor(() => expect(hole()).toBe(0), { timeout: 3000 })
+  },
+}
+
+/** Navigation, secondary buttons and dragged clicks must not fire a ripple. */
+export const ControlsAndDragsDoNotRipple: Story = {
+  args: { children: <SectionBackdrop variant="dots" /> },
+  play: async ({ canvasElement }) => {
+    const root = canvasElement.querySelector('[aria-hidden="true"]') as HTMLElement
+    const copy = within(canvasElement).getByText('Trading infrastructure')
+    const box = copy.getBoundingClientRect()
+    const base = {
+      pointerType: 'mouse',
+      pointerId: 1,
+      button: 0,
+      isPrimary: true,
+      bubbles: true,
+      clientX: box.left + 40,
+      clientY: box.top + box.height / 2,
+    }
+    await waitFor(() => expect(root.querySelector('canvas')).not.toBeNull())
+    const click = (target: Element, props = base) => {
+      target.dispatchEvent(new PointerEvent('pointerdown', props))
+      target.dispatchEvent(new PointerEvent('pointerup', props))
+    }
+    click(copy, { ...base, button: 2 })
+    click(copy, { ...base, isPrimary: false })
+    copy.dispatchEvent(new PointerEvent('pointerdown', base))
+    copy.dispatchEvent(new PointerEvent('pointerup', { ...base, clientX: base.clientX + 30 }))
+    // A header can overlap the hero's rectangle without being in its subtree.
+    click(canvasElement)
+    const cta = document.createElement('a')
+    cta.href = '/contact/'
+    const label = document.createElement('span')
+    label.textContent = 'Contact'
+    cta.append(label)
+    copy.append(cta)
+    try {
+      click(label)
+      click(label, { ...base, pointerType: 'touch' })
+      await new Promise((resolve) => setTimeout(resolve, 300))
+      expect(getComputedStyle(root).getPropertyValue('--hero-facet-hole').trim()).toMatch(/^(0px)?$/)
+    } finally {
+      cta.remove()
+    }
+  },
+}

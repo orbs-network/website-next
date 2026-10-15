@@ -39,10 +39,12 @@ export const InternalAndExternalLinks: Story = {
 
     await expect(internal).toHaveAttribute('href', '/faq/')
     await expect(internal).not.toHaveAttribute('target')
+    await expect(internal.querySelector('svg')).toBeNull()
 
     await expect(external).toHaveAttribute('href', 'https://docs.orbs.network/')
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+    await expect(external.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
   },
 }
 

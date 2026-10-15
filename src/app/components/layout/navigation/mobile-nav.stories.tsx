@@ -193,6 +193,7 @@ export const ExternalRowsOpenSafely: Story = {
     const external = panel.getByRole('link', { name: 'Status' })
     await expect(external).toHaveAttribute('target', '_blank')
     await expect(external).toHaveAttribute('rel', 'noopener noreferrer')
+    await expect(external.querySelector('svg')).toHaveAttribute('aria-hidden', 'true')
   },
 }
 
