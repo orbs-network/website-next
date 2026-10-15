@@ -25,14 +25,17 @@ describe('dSPOT solver strip', () => {
     expect(end).toBeGreaterThan(start)
     const strip = html.slice(start, end)
     const names = ['Odos', 'Velora (formerly ParaSwap)', 'OpenOcean', 'KyberSwap', 'Rango', 'DODO', 'Lumia', 'Magpie']
-    expect((strip.match(/<li\b/g) ?? []).length).toBe(8)
+    // The visual loop repeats the list; only the first copy is announced.
+    const firstList = strip.slice(strip.indexOf('<ul'), strip.indexOf('</ul>'))
+    expect((firstList.match(/<li\b/g) ?? []).length).toBe(8)
     for (let i = 0; i < names.length; i++) {
-      expect(strip).toContain(names[i])
-      if (i) expect(strip.indexOf(names[i])).toBeGreaterThan(strip.indexOf(names[i - 1]))
+      expect(firstList).toContain(names[i])
+      if (i) expect(firstList.indexOf(names[i])).toBeGreaterThan(firstList.indexOf(names[i - 1]))
     }
     for (const venue of ['TrebleSwap', 'Gryps', 'THENA', 'SpookySwap', 'Atlantis']) expect(strip).not.toContain(venue)
     expect(html).toContain('Advanced spot trading.')
     expect(html).toContain('Unified execution.')
-    expect(strip).not.toContain('animate-marquee')
+    expect(strip).toContain('animate-marquee-slow')
+    expect(strip).toContain('aria-hidden="true" inert=""')
   })
 })

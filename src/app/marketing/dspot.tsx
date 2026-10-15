@@ -87,9 +87,10 @@ export async function DspotPage({ locale }: { locale: Locale }) {
       <LogoRow
         title={t('solvers.title')}
         titleHidden
+        marquee
         items={DSPOT_SOLVERS}
         locale={locale}
-        className="pt-0 pb-section [&>ul]:mt-0"
+        className="pt-0 pb-section [&>div]:mt-0"
       />
 
       <SplitStatement

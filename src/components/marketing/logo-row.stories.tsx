@@ -350,9 +350,16 @@ export const MarqueePausesOnKeyboardFocus: Story = {
   },
 }
 
-/** The dSPOT PDF's static strip uses the approved solver roster in both themes. */
+/** dSPOT uses the homepage carousel with the approved solver roster in both themes. */
 export const DspotSolvers: Story = {
-  args: { title: 'Solvers and liquidity sources', titleHidden: true, items: DSPOT_SOLVERS, locale: 'en' },
+  args: {
+    title: 'Solvers and liquidity sources',
+    titleHidden: true,
+    marquee: true,
+    items: DSPOT_SOLVERS,
+    locale: 'en',
+    className: 'pt-0 pb-section [&>div]:mt-0',
+  },
   play: async ({ canvasElement }) => {
     const wasDark = document.documentElement.classList.contains('dark')
     try {
@@ -371,7 +378,16 @@ export const DspotSolvers: Story = {
         }
         const section = canvasElement.querySelector('section')!
         expect(section.scrollWidth).toBeLessThanOrEqual(section.clientWidth)
-        expect(canvasElement.querySelector('.animate-marquee-slow')).toBeNull()
+        const track = canvasElement.querySelector('.animate-marquee-slow')!
+        await waitFor(() => expect(getComputedStyle(track).animationName).toBe('marquee'))
+        const [first, copy] = track.querySelectorAll('ul')
+        expect(copy).toHaveAttribute('aria-hidden', 'true')
+        expect(copy).toHaveAttribute('inert')
+        expect(copy.getBoundingClientRect().width).toBeCloseTo(first.getBoundingClientRect().width, 1)
+        const strip = within(canvasElement).getByRole('group', { name: 'Solvers and liquidity sources' })
+        strip.focus()
+        await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('paused'))
+        strip.blur()
       }
     } finally {
       document.documentElement.classList.toggle('dark', wasDark)
