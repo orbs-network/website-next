@@ -44,6 +44,8 @@ describe('English network content refresh', () => {
   it('renders Lambda/VM models and the network docs, without the legacy graphs', async () => {
     const html = renderToStaticMarkup(await ExecutionServicesPage({ locale: 'en' }))
     expect(html).toContain('Run the logic beyond your smart contracts.')
+    expect(html).toContain('/marketing/execution-services/hero.svg')
+    expect(html).toContain('/marketing/execution-services/hero-light.svg')
     expect(html).toContain('href="https://docs.orbs.network/v3"')
     expect(html).toContain('A function, a trigger and a focused task.')
     expect(html).toContain('A container, a persistent runtime and a custom service.')
@@ -63,6 +65,7 @@ describe('English network content refresh', () => {
     expect(overview).not.toContain('Built for the long run')
 
     const execution = renderToStaticMarkup(await ExecutionServicesPage({ locale }))
+    expect(execution).not.toContain('/marketing/execution-services/hero')
     expect(execution).toContain('/marketing/execution-services/lambda-dark.svg')
     expect(execution).toContain('/marketing/execution-services/vm-dark.svg')
     expect(execution).not.toContain('-illustration.svg')

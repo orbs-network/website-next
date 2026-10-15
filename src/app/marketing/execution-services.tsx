@@ -5,7 +5,9 @@ import { InnerSection, PointColumns } from '@/components/marketing/inner-section
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
 import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
-import { CtaButton, Eyebrow } from '@/components/marketing/section-parts'
+import { Eyebrow } from '@/components/marketing/section-parts'
+import { SplitHero } from '@/components/marketing/split-hero'
+import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { EXECUTION_SERVICES_DIAGRAMS, EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -34,28 +36,24 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      {/*
-        The legacy locale hero carries no intro. Its first version reused the Lambda lead
-        paragraph, which the product section below then rendered again in full —
-        the same sentence twice in succession, in every locale. The legacy page
-        has a bare title here too, and no illustration, so no graphic column.
-      */}
-      <section className="container pt-16 pb-section lg:pt-24">
-        <Eyebrow text={t('eyebrows.hero')} locale={locale} />
-        <H1 className="mt-3 max-w-5xl text-balance" lang={lang('hero.headline')}>
-          {t('hero.headline')}
-        </H1>
-        {locale === 'en' && (
-          <p className="mt-10 max-w-3xl text-p text-fg" lang={lang('hero.intro')}>
-            {t('hero.intro')}
-          </p>
-        )}
-        {locale === 'en' && (
-          <div className="mt-10">
-            <CtaButton link={{ label: t('hero.cta'), href: NETWORK_DOCS_URL }} locale={locale} />
-          </div>
-        )}
-      </section>
+      {locale === 'en' ? (
+        <SplitHero
+          eyebrow={t('eyebrows.hero')}
+          headline={t('hero.headline')}
+          intro={t('hero.intro')}
+          cta={{ label: t('hero.cta'), href: NETWORK_DOCS_URL }}
+          graphic={HERO_GRAPHICS.executionServices}
+          locale={locale}
+        />
+      ) : (
+        // Legacy locales retain their bare title, without repeating the Lambda intro.
+        <section className="container pt-16 pb-section lg:pt-24">
+          <Eyebrow text={t('eyebrows.hero')} locale={locale} />
+          <H1 className="mt-3 max-w-5xl text-balance" lang={lang('hero.headline')}>
+            {t('hero.headline')}
+          </H1>
+        </section>
+      )}
 
       {EXECUTION_SERVICES_PRODUCTS.map((product) => (
         <DividedSection key={product.id} eyebrow={t(`eyebrows.${product.id}`)} locale={locale}>
