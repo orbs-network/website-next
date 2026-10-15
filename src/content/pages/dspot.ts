@@ -1,3 +1,5 @@
+import type { LogoRowItem } from '@/components/marketing/logo-row'
+
 /**
  * Structural data for the dSPOT page (#155). Copy lives under `pages.dspot`.
  *
@@ -62,3 +64,67 @@ export const DSPOT_GRAPHICS = {
 
 /** The closing block's scrolling phrases, in design order. */
 export const DSPOT_MARQUEE = ['control', 'liquidity', 'custody'] as const
+
+/** Sara's October 15 approved solver/liquidity-source strip, in design order. */
+export const DSPOT_SOLVERS: readonly LogoRowItem[] = [
+  {
+    name: 'Odos',
+    logo: { src: '/marketing/dspot/solvers/odos.svg', width: 136, height: 48 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'Velora (formerly ParaSwap)',
+    logo: { src: '/marketing/dspot/solvers/velora.svg', width: 130, height: 34 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'OpenOcean',
+    logo: {
+      src: '/marketing/dspot/solvers/openocean-dark.svg',
+      width: 140,
+      height: 28,
+    },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'KyberSwap',
+    logo: {
+      src: '/marketing/dspot/solvers/kyberswap.svg',
+      width: 160,
+      height: 53,
+    },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'Rango',
+    logo: { src: '/marketing/dspot/solvers/rango.svg', width: 942, height: 345 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'DODO',
+    logo: {
+      src: '/marketing/dspot/solvers/dodo.svg',
+      width: 141,
+      height: 30,
+    },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  {
+    name: 'Lumia',
+    logo: { src: '/marketing/dspot/solvers/lumia.svg', width: 136, height: 37 },
+    invertOnLight: true,
+    wordmark: true,
+  },
+  // Bird outline traced from the existing mark, without its purple tile.
+  {
+    name: 'Magpie',
+    logo: { src: '/marketing/dspot/solvers/magpie.svg', width: 109, height: 176 },
+    invertOnLight: true,
+  },
+]

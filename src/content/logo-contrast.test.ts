@@ -6,6 +6,7 @@ import { describe, expect, it } from 'vitest'
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 import { AGENTIC_CHAINS } from '@/content/pages/agentic'
 import { HOME_VENUES } from '@/content/pages/home'
+import { DSPOT_SOLVERS } from '@/content/pages/dspot'
 import { DPERPS_PARTNERS } from '@/content/pages/dperps'
 import { VENUES_PARTNERS } from '@/content/pages/venues'
 import { INSTITUTIONAL_SIGNERS, INSTITUTIONAL_VENUES } from '@/content/pages/institutional'
@@ -32,6 +33,7 @@ const ROWS: Record<string, readonly LogoRowItem[]> = {
   HOME_VENUES,
   VENUES_PARTNERS,
   DPERPS_PARTNERS,
+  DSPOT_SOLVERS,
   INSTITUTIONAL_VENUES,
   INSTITUTIONAL_SIGNERS,
   AGENTIC_CHAINS,
@@ -67,6 +69,33 @@ const NEAR_WHITE = 230
  * files were 100%.
  */
 const MAX_WHITE_SHARE = 0.9
+
+describe('dSPOT monochrome solver logos', () => {
+  it('use white ink on transparent with a black light-theme inversion', async () => {
+    for (const item of DSPOT_SOLVERS) {
+      const { data } = await sharp(join(REPO, 'public', item.logo!.src))
+        .resize({ width: 200, height: 200, fit: 'inside' })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let ink = 0
+      let nonWhite = 0
+      let transparent = 0
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] < OPAQUE) {
+          transparent++
+          continue
+        }
+        ink++
+        if (Math.min(data[i], data[i + 1], data[i + 2]) < NEAR_WHITE) nonWhite++
+      }
+      expect(ink, item.name).toBeGreaterThan(20)
+      expect(nonWhite, item.name).toBe(0)
+      expect(transparent / (data.length / 4), item.name).toBeGreaterThan(0.1)
+      expect(item.invertOnLight, item.name).toBe(true)
+    }
+  })
+})
 
 describe('Agentic monochrome chain marks', () => {
   it('use black ink and transparent negative space, so inversion preserves each mark', async () => {

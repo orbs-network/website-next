@@ -1,5 +1,6 @@
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, waitFor, within } from 'storybook/test'
+import { DSPOT_SOLVERS } from '@/content/pages/dspot'
 import { HOME_VENUES } from '@/content/pages/home'
 import { VENUES_PARTNERS } from '@/content/pages/venues'
 import { LogoRow } from './logo-row'
@@ -346,5 +347,51 @@ export const MarqueePausesOnKeyboardFocus: Story = {
     // The pointer gets the same through `:hover` on the same group, which a
     // synthetic event cannot trigger — so that half is checked by class.
     await expect(track).toHaveClass('group-hover/marquee:[animation-play-state:paused]')
+  },
+}
+
+/** dSPOT uses the homepage carousel with the approved solver roster in both themes. */
+export const DspotSolvers: Story = {
+  args: {
+    title: 'Solvers and liquidity sources',
+    titleHidden: true,
+    marquee: true,
+    items: DSPOT_SOLVERS,
+    locale: 'en',
+    className: 'pt-0 pb-section [&>div]:mt-0',
+  },
+  play: async ({ canvasElement }) => {
+    const wasDark = document.documentElement.classList.contains('dark')
+    try {
+      canvasElement.querySelectorAll('img').forEach((img) => {
+        img.loading = 'eager'
+      })
+      await Promise.all([...canvasElement.querySelectorAll('img')].map((img) => img.decode()))
+      for (const dark of [false, true]) {
+        document.documentElement.classList.toggle('dark', dark)
+        const items = within(canvasElement).getAllByRole('listitem')
+        expect(items).toHaveLength(8)
+        for (const item of items) {
+          const visible = [...item.querySelectorAll('img')].filter((img) => img.getClientRects().length > 0)
+          expect(visible).toHaveLength(1)
+          expect(visible[0].naturalWidth).toBeGreaterThan(0)
+          expect(getComputedStyle(visible[0]).filter).toBe(dark ? 'invert(0)' : 'invert(1)')
+        }
+        const section = canvasElement.querySelector('section')!
+        expect(section.scrollWidth).toBeLessThanOrEqual(section.clientWidth)
+        const track = canvasElement.querySelector('.animate-marquee-slow')!
+        await waitFor(() => expect(getComputedStyle(track).animationName).toBe('marquee'))
+        const [first, copy] = track.querySelectorAll('ul')
+        expect(copy).toHaveAttribute('aria-hidden', 'true')
+        expect(copy).toHaveAttribute('inert')
+        expect(copy.getBoundingClientRect().width).toBeCloseTo(first.getBoundingClientRect().width, 1)
+        const strip = within(canvasElement).getByRole('group', { name: 'Solvers and liquidity sources' })
+        strip.focus()
+        await waitFor(() => expect(getComputedStyle(track).animationPlayState).toBe('paused'))
+        strip.blur()
+      }
+    } finally {
+      document.documentElement.classList.toggle('dark', wasDark)
+    }
   },
 }

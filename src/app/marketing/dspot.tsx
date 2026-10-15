@@ -2,6 +2,7 @@ import { getDevDocsLink } from './dev-docs'
 import { getTranslations } from 'next-intl/server'
 import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { GraphicSplit } from '@/components/marketing/graphic-split'
+import { LogoRow } from '@/components/marketing/logo-row'
 import { ModuleCards } from '@/components/marketing/module-cards'
 import { CtaButton } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
@@ -13,6 +14,7 @@ import {
   DSPOT_MARQUEE,
   DSPOT_MODULES,
   DSPOT_POINTS,
+  DSPOT_SOLVERS,
   type DspotModuleId,
 } from '@/content/pages/dspot'
 import type { Locale } from '@/i18n/locales'
@@ -80,6 +82,15 @@ export async function DspotPage({ locale }: { locale: Locale }) {
           ...MODULE_PRESENTATION[module.id],
         }))}
         locale={locale}
+      />
+
+      <LogoRow
+        title={t('solvers.title')}
+        titleHidden
+        marquee
+        items={DSPOT_SOLVERS}
+        locale={locale}
+        className="pt-0 pb-section [&>div]:mt-0"
       />
 
       <SplitStatement
