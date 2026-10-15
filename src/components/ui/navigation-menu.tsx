@@ -9,15 +9,17 @@ const NavigationMenu = React.forwardRef<
   React.ComponentPropsWithoutRef<typeof NavigationMenuPrimitive.Root> & {
     /** Styles for the panel, which the root renders itself and so is otherwise unreachable. */
     viewportClassName?: string
+    /** Render content at its item instead of moving it into one shared viewport. */
+    viewport?: boolean
   }
->(({ className, viewportClassName, children, ...props }, ref) => (
+>(({ className, viewportClassName, viewport = true, children, ...props }, ref) => (
   <NavigationMenuPrimitive.Root
     ref={ref}
     className={cn('relative z-10 flex max-w-max flex-1 items-center justify-center', className)}
     {...props}
   >
     {children}
-    <NavigationMenuViewport className={viewportClassName} />
+    {viewport && <NavigationMenuViewport className={viewportClassName} />}
   </NavigationMenuPrimitive.Root>
 ))
 NavigationMenu.displayName = NavigationMenuPrimitive.Root.displayName
