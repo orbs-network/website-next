@@ -4,6 +4,7 @@ import { getTranslations } from 'next-intl/server'
 import { H1, H2, H4 } from '@/app/components/typography'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { CardRail } from '@/components/marketing/card-rail'
+import { HomeBenefitsGrid } from '@/components/marketing/home-benefits-grid'
 import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
@@ -161,6 +162,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
       */}
       <StatsRow
         columns={5}
+        align={locale === 'en' ? 'start' : 'center'}
         glow
         stats={HOME_STATS.map((id) => ({
           id,
@@ -291,52 +293,83 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {/*
-        The white band. `bg-surface` rather than `bg-bg` because the design
-        gives this section the brighter of the two light tones — #ffffff
-        against the news run's #f6f6f6 — and the pair inverts with the theme.
-      */}
-      <div className="band-contrast bg-surface">
-        {/*
+      {locale === 'en' ? (
+        <div className="institutional-benefits">
+          <section className="container py-section">
+            <div className="mx-auto max-w-3xl text-center">
+              <p className="text-detail font-medium uppercase tracking-widest text-fg-muted">{t('features.eyebrow')}</p>
+              <H2 className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-balance">{t('features.title')}</H2>
+            </div>
+            <div className="mt-16">
+              <HomeBenefitsGrid
+                locale={locale}
+                features={HOME_FEATURES.map((id) => ({
+                  id,
+                  title: t(`features.${id}.title`),
+                  body: t(`features.grid.${id}`),
+                }))}
+              />
+            </div>
+            <div className="mt-14 flex flex-wrap justify-center gap-4">
+              <Button asChild>
+                <Link href={localeHref(HOME_LINKS.contact, locale)}>{t('features.cta')}</Link>
+              </Button>
+              <Button asChild>
+                <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer">
+                  {t('features.github')}
+                </a>
+              </Button>
+            </div>
+          </section>
+        </div>
+      ) : (
+        <div className="band-contrast bg-surface">
+          {/*
           No bottom padding at `lg`: the list's vertical rule runs to the foot
           of the band, so `FeatureTabs` carries that space inside its columns.
         */}
-        <section className="container pt-section pb-section lg:pb-0">
-          <p
-            className="text-detail font-medium uppercase tracking-widest text-fg-muted"
-            lang={lang('features.eyebrow')}
-          >
-            {t('features.eyebrow')}
-          </p>
-          <H2 className="mt-6 text-balance" lang={lang('features.title')}>
-            {t('features.title')}
-          </H2>
+          <section className="container pt-section pb-section lg:pb-0">
+            <p
+              className="text-detail font-medium uppercase tracking-widest text-fg-muted"
+              lang={lang('features.eyebrow')}
+            >
+              {t('features.eyebrow')}
+            </p>
+            <H2 className="mt-6 text-balance" lang={lang('features.title')}>
+              {t('features.title')}
+            </H2>
 
-          <FeatureTabs
-            className="mt-16"
-            tabs={HOME_FEATURES.map((id) => ({
-              id,
-              title: t(`features.${id}.title`),
-              panel: t(`features.${id}.panel`),
-            }))}
-            locale={locale}
-            footer={
-              <>
-                <Button asChild>
-                  <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
-                    {t('features.cta')}
-                  </Link>
-                </Button>
-                <Button asChild>
-                  <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer" lang={lang('features.github')}>
-                    {t('features.github')}
-                  </a>
-                </Button>
-              </>
-            }
-          />
-        </section>
-      </div>
+            <FeatureTabs
+              className="mt-16"
+              tabs={HOME_FEATURES.map((id) => ({
+                id,
+                title: t(`features.${id}.title`),
+                panel: t(`features.${id}.panel`),
+              }))}
+              locale={locale}
+              footer={
+                <>
+                  <Button asChild>
+                    <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
+                      {t('features.cta')}
+                    </Link>
+                  </Button>
+                  <Button asChild>
+                    <a
+                      href={HOME_LINKS.github}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      lang={lang('features.github')}
+                    >
+                      {t('features.github')}
+                    </a>
+                  </Button>
+                </>
+              }
+            />
+          </section>
+        </div>
+      )}
 
       <section className="container border-t border-border py-section" lang={lang('network.body')}>
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('network.eyebrow')}>

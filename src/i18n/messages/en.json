@@ -3,7 +3,8 @@
     "groups": {
       "products": "Products",
       "solutions": "Solutions",
-      "network": "Network"
+      "network": "Network",
+      "tools": "Tools"
     },
     "links": {
       "sdk": "Start building",
@@ -17,16 +18,18 @@
       "venues": "For Exchanges & Wallets",
       "institutions": "For Institutions",
       "aiAgents": "For AI Agents",
-      "pos": "Proof of Stake",
+      "pos": "Proof of Stake & Staking",
       "executionServices": "Execution Services",
       "governance": "Governance",
       "status": "Status",
       "github": "GitHub",
-      "developers": "Developers",
+      "developers": "Docs",
       "docs": "Docs",
       "ecosystem": "Ecosystem",
       "blog": "Blog",
-      "securityAndAudits": "Security & Audits"
+      "securityAndAudits": "Audits",
+      "overview": "Overview",
+      "playground": "Playground"
     },
     "menuLabel": "Open menu",
     "menuTitle": "Menu",
@@ -56,7 +59,7 @@
       "institutions": "Institutions",
       "aiAgents": "AI Agents",
       "overview": "Overview",
-      "pos": "Proof of Stake",
+      "pos": "PoS & Staking",
       "executionServices": "Execution Services",
       "governance": "Governance",
       "status": "Status",
@@ -73,7 +76,7 @@
       "cookies": "Cookies",
       "privacyPolicy": "Privacy Policy",
       "accessibility": "Accessibility Declaration",
-      "securityAndAudits": "Security & Audits"
+      "securityAndAudits": "Audits"
     },
     "socials": {
       "github": "GitHub",
@@ -1375,7 +1378,7 @@
         },
         "liveSince": {
           "value": "2017",
-          "label": "Project live since"
+          "label": "Project live"
         },
         "venues": {
           "value": "30+",
@@ -1438,7 +1441,7 @@
       },
       "features": {
         "eyebrow": "[Key features & benefits]",
-        "title": "Institutional-grade, by default.",
+        "title": "Institutional-grade,\nby default.",
         "cta": "Talk to the team",
         "github": "View on GitHub",
         "nonCustodial": {
@@ -1472,6 +1475,16 @@
         "audited": {
           "title": "Audited, immutable, ownerless contracts",
           "panel": "No admin keys. No upgrade paths. No kill switches. Audited by leading firms — the code is the contract."
+        },
+        "grid": {
+          "nonCustodial": "dSPOT funds stay in your wallet until execution. dPERPS uses self-custodial smart contracts for collateral.",
+          "gasless": "Execute advanced orders without paying network fees for each trade.",
+          "mev": "Built-in safeguards help protect execution from exploit risk and price manipulation.",
+          "permissionless": "Open access for builders across chains and venues.",
+          "robust": "High-performance infrastructure designed for institutional scale.",
+          "whiteLabel": "Integrate Orbs and deliver a seamless branded experience.",
+          "reporting": "Onchain execution records support reporting and audit trails.",
+          "audited": "Published smart-contract audits and source code support your due diligence. Each report covers its specified code and version."
         }
       },
       "network": {

@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { ExternalLink } from 'lucide-react'
+import { ArrowRight, ExternalLink } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { AgenticGlyph, DPerpsGlyph, DSpotMenuGlyph, SdkApiGlyph } from '@/components/icons'
 import { MenuItemW } from '@/components/ui/menu-item'
@@ -27,6 +27,7 @@ import { cn } from '@/lib/utils'
  */
 export const GLYPHS: Record<NonNullable<NavLinkSpec['icon']>, React.ComponentType<{ className?: string }>> = {
   sdk: SdkApiGlyph,
+  executionServices: SdkApiGlyph,
   dspot: DSpotMenuGlyph,
   dperps: DPerpsGlyph,
   agentic: AgenticGlyph,
@@ -299,6 +300,7 @@ function NavPanel({
         className="flex h-[3.125rem] items-center border-b border-neutral-400 px-[1.125rem] text-field dark:border-neutral-600"
       >
         {title}
+        <ArrowRight aria-hidden="true" strokeWidth={1} className="ms-auto size-5" />
       </p>
       <ul className="px-[1.125rem] pb-8 pt-2">
         {links.map((link) => (
