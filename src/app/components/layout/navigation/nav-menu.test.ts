@@ -26,13 +26,13 @@ describe('English-first navigation', () => {
 })
 
 describe('October menu destinations', () => {
-  it('keeps Tools separate, preserves the Playground query and uses the network docs', async () => {
+  it('keeps Tools separate, links Playground to Swap and uses the network docs', async () => {
     const { groups, topLevel } = await resolveNavigation('en')
     expect(groups.map((group) => group.key)).toEqual(['products', 'tools', 'solutions', 'network'])
     const tools = groups.find((group) => group.key === 'tools')!.links
     expect(tools.map((link) => link.key)).toEqual(['sdk', 'playground', 'agentic', 'securityAndAudits'])
     expect(tools.find((link) => link.key === 'playground')).toMatchObject({
-      href: 'https://playground.orbs.network/?tab=twap',
+      href: 'https://swap.orbs.network/',
       external: true,
     })
     const network = groups.find((group) => group.key === 'network')!.links

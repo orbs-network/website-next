@@ -127,7 +127,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     key: 'tools',
     links: [
       { key: 'sdk', href: SDK_DOCS_URL },
-      { key: 'playground', href: 'https://playground.orbs.network/?tab=twap' },
+      { key: 'playground', href: 'https://swap.orbs.network/' },
       { key: 'agentic', href: '/agentic' },
       { key: 'securityAndAudits', href: '/security-and-audits' },
     ],

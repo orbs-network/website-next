@@ -46,7 +46,7 @@ Keep the earlier QA PR #291 separate. Use a fresh content-refresh branch. Check 
 
 ## October 15 supplied homepage/menu PDFs
 
-Apply the English four-group Products / Tools / Solutions / Network menu and the new footer grouping. Playground is `https://playground.orbs.network/?tab=twap`; Team is explicitly omitted. Japanese/Korean menus, footer structure and homepage feature tabs retain their previous versions.
+Apply the English four-group Products / Tools / Solutions / Network menu and the new footer grouping. Playground is `https://swap.orbs.network/`; Team is explicitly omitted. Japanese/Korean menus, footer structure and homepage feature tabs retain their previous versions.
 
 The corrected stats PDF controls the five figures, left alignment and “Project live” label. Replace English institutional tabs with the eight-item, four-by-two desktop grid, decorative icons, a light lavender gradient and centred CTAs; use a readable single-column phone layout.
 
