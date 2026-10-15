@@ -96,15 +96,7 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'aiAgents', href: '/ai/skills', accent: 'pink' },
 ]
 
-/**
- * [KEY FEATURES & BENEFITS] — the tab list.
- *
- * Eight tabs. The design draws only one panel, so each panel carries the same
- * one-line summary as the matching card on /institutional (#221, Sara's call).
- * The two are separate catalog entries because the Japanese and Korean
- * catalogs have no institutional page, and `home-features.test.ts` fails if
- * they drift apart.
- */
+/** The shared feature order: English grid, Japanese/Korean legacy tabs. */
 export const HOME_FEATURES = [
   'nonCustodial',
   'gasless',
@@ -115,6 +107,8 @@ export const HOME_FEATURES = [
   'reporting',
   'audited',
 ] as const
+
+export type HomeFeatureId = (typeof HOME_FEATURES)[number]
 
 /**
  * Venues using the stack, in the design's order.

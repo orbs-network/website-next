@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { OrbsLogo } from '@/components/icons'
 import { FooterLink2 } from '@/components/ui/footer-link'
-import { FOOTER_COLUMNS, FOOTER_POLICY_LINKS, FOOTER_SOCIALS, FOOTER_STATUS_URL } from '@/content/shared/footer'
+import { footerColumnsForLocale, FOOTER_POLICY_LINKS, FOOTER_SOCIALS, FOOTER_STATUS_URL } from '@/content/shared/footer'
 import { NetworkStatusIndicator } from './network-status'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
@@ -38,7 +38,7 @@ export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
 
   const socialLabels = Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, t(`socials.${social.key}`)]))
-  const columns = FOOTER_COLUMNS.map((column) => (
+  const columns = footerColumnsForLocale(locale).map((column) => (
     <FooterNavColumn
       key={column.key}
       id={`footer-${column.key}`}

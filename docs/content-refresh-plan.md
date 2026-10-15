@@ -43,3 +43,13 @@ Before resuming, retrieve the completed Figma frames. Confirm the active solver 
 ## Delivery
 
 Keep the earlier QA PR #291 separate. Use a fresh content-refresh branch. Check desktop/mobile and light/dark rendering, locale isolation, links and anchors; run tests, typecheck, lint, formatting, build and overflow checks. Obtain independent review of the final commit. Deployment remains with the operator; Friday is the target, not an automatic deployment instruction.
+
+## October 15 supplied homepage/menu PDFs
+
+Apply the English four-group Products / Tools / Solutions / Network menu and the new footer grouping. Playground is `https://playground.orbs.network/?tab=twap`; Team is explicitly omitted. Japanese/Korean menus, footer structure and homepage feature tabs retain their previous versions.
+
+The corrected stats PDF controls the five figures, left alignment and “Project live” label. Replace English institutional tabs with the eight-item, four-by-two desktop grid, decorative icons, a light lavender gradient and centred CTAs; use a readable single-column phone layout.
+
+Where the full homepage PDF still contains older material, preserve the approved three products, integration-path section, hero eyebrow/intro, product-qualified custody wording, 1.1B ORBS staking figure, launch dates and Security & Audits link. Keep real CMS articles instead of PDF placeholders. The new grid uses concise summaries while retaining product-specific custody and audit scope. These dispositions are part of the reviewable refresh rather than restoring the PDF's old 8-chain/100%-fill/$100M copy.
+
+The mobile static dot grid uses native SVG patterns and is unmasked at rest, including without JavaScript and with reduced motion. Only an active ripple applies the hole mask. `node scripts/check-hero-grid.mjs --base <running-site>` checks actual painted pixels in Chromium; add `--browser webkit` for Safari's engine (`--executable` supports a local test wrapper). A physical iPhone check remains appropriate because Sara's exact device failure did not reproduce in current WebKit.

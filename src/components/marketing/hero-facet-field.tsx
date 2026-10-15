@@ -219,6 +219,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         root.style.setProperty('--hero-facet-y', `${centre.y}px`)
       }
       root.style.setProperty('--hero-facet-hole', `${field.front}px`)
+      root.toggleAttribute('data-facet-active', field.front > 0)
     }
 
     const tick = (now: number) => {
@@ -412,6 +413,7 @@ export function HeroFacetField({ children }: { children?: React.ReactNode }) {
         window.removeEventListener('blur', onPointerLeave)
         window.removeEventListener('scroll', resolvePointer, { capture: true })
       }
+      root.removeAttribute('data-facet-active')
       root.style.removeProperty('--hero-facet-x')
       root.style.removeProperty('--hero-facet-y')
       root.style.removeProperty('--hero-facet-hole')

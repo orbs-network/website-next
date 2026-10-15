@@ -2,18 +2,9 @@ import type { Locale } from '@/i18n/locales'
 import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
- * The header menu's structure, from the 3.4 designs (`Main Menu / Product`,
- * `/ Solutions`, `/ Network`, and the header bar on `3.4 Home`, #153).
- *
- * Products / Solutions / Network dropdowns, then plain links. This replaced the
- * Products / Resources / Developers menu; resources that no longer have a place
- * in the header (white papers, FAQ, the TON tools) are still in the footer.
- *
- * Same split as `footer.ts`: structure here, labels in the message catalogs
- * under `nav.*`, keyed by the `key` fields. Internal `href`s are
- * locale-independent and carry no trailing slash — the component runs them
- * through `localeHref`, which resolves the locale prefix and adds the slash
- * `trailingSlash: true` requires.
+ * English navigation follows Sara's October 15 menu PDFs. Japanese/Korean
+ * retain the previous menu until their content refresh. Structure is data;
+ * labels live under nav.* in each message catalog. Existing routes do not move.
  */
 export type NavLinkSpec = {
   /** Message key under `nav.links`. */
@@ -34,7 +25,7 @@ export type NavLinkSpec = {
    * without, rather than inventing marks — an invented icon is harder to
    * remove later than a missing one is to add.
    */
-  icon?: 'sdk' | 'dspot' | 'dperps' | 'agentic'
+  icon?: 'sdk' | 'dspot' | 'dperps' | 'agentic' | 'executionServices'
   /**
    * Links nested under this one. dSPOT is a product AND the family of order
    * types it bundles, so the design lists those beneath it, indented and
@@ -65,7 +56,7 @@ export type NavGroupSpec = {
  * The Network design also opens with "What is Orbs L3", overlapping the next
  * row in the frame; read as a leftover, not a row.
  */
-export const NAV_GROUPS: readonly NavGroupSpec[] = [
+export const LEGACY_NAV_GROUPS: readonly NavGroupSpec[] = [
   {
     key: 'products',
     links: [
@@ -115,9 +106,61 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
 ]
 
 /** The plain links after the dropdowns, in design order. */
-export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
+export const LEGACY_NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
   { key: 'ecosystem', href: '/ecosystem' },
   { key: 'blog', href: '/blog' },
   { key: 'docs', href: SDK_DOCS_URL, desktopOnly: true },
   { key: 'github', href: 'https://github.com/orbs-network', desktopOnly: true },
 ]
+
+/** English menu from Sara's October 15 PDFs; existing routes are retained. */
+export const NAV_GROUPS: readonly NavGroupSpec[] = [
+  {
+    key: 'products',
+    links: [
+      { key: 'dspot', href: '/dspot', icon: 'dspot' },
+      { key: 'dperps', href: '/dperps', icon: 'dperps' },
+      { key: 'executionServices', href: '/execution-services', icon: 'executionServices' },
+    ],
+  },
+  {
+    key: 'tools',
+    links: [
+      { key: 'sdk', href: SDK_DOCS_URL },
+      { key: 'playground', href: 'https://playground.orbs.network/?tab=twap' },
+      { key: 'agentic', href: '/agentic' },
+      { key: 'securityAndAudits', href: '/security-and-audits' },
+    ],
+  },
+  {
+    key: 'solutions',
+    links: [
+      { key: 'venues', href: '/venues' },
+      { key: 'institutions', href: '/institutional' },
+      { key: 'aiAgents', href: '/ai/skills' },
+    ],
+  },
+  {
+    key: 'network',
+    links: [
+      { key: 'overview', href: '/overview' },
+      { key: 'pos', href: '/pos' },
+      { key: 'governance', href: '/governance-blog' },
+      { key: 'status', href: 'https://status.orbs.network/' },
+      { key: 'github', href: 'https://github.com/orbs-network' },
+      { key: 'developers', href: NETWORK_DOCS_URL },
+    ],
+  },
+]
+
+export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
+  { key: 'ecosystem', href: '/ecosystem' },
+  { key: 'blog', href: '/blog' },
+  { key: 'github', href: 'https://github.com/orbs-network', desktopOnly: true },
+]
+
+export function navigationForLocale(locale: Locale) {
+  return locale === 'en'
+    ? { groups: NAV_GROUPS, topLevel: NAV_TOP_LEVEL_LINKS }
+    : { groups: LEGACY_NAV_GROUPS, topLevel: LEGACY_NAV_TOP_LEVEL_LINKS }
+}

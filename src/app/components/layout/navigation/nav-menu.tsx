@@ -1,5 +1,5 @@
 import { getTranslations } from 'next-intl/server'
-import { NAV_GROUPS, NAV_TOP_LEVEL_LINKS, type NavLinkSpec } from '@/content/shared/navigation'
+import { navigationForLocale, type NavLinkSpec } from '@/content/shared/navigation'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -37,11 +37,8 @@ function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; exte
  *
  * The structure comes from the 3.4 designs — see `navigation.ts`.
  *
- * The panels have no title and no arrow, which is a DECISION rather than an
- * omission. The designs head each panel with "Products →", implying a landing
- * page for the group — but there is no `/products`, `/solutions` or `/network`
- * page, and none is planned (#30 settled the same question for the previous
- * menu). The group name lives on the dropdown trigger only.
+ * Panel titles are decorative: the design's arrow does not create new
+ * landing pages for the menu groups.
  *
  * The locale is a prop for the same reason as in `Header`: with no `[locale]`
  * segment and no middleware, next-intl's hooks cannot resolve it from the
@@ -49,6 +46,7 @@ function resolveNavHref(spec: NavLinkSpec, locale: Locale): { href: string; exte
  */
 export async function resolveNavigation(locale: Locale) {
   const t = await getTranslations({ locale, namespace: 'nav' })
+  const spec = navigationForLocale(locale)
 
   const resolveLink = (spec: NavLinkSpec): ResolvedNavLink => {
     const label = t(`links.${spec.key}`)
@@ -66,7 +64,7 @@ export async function resolveNavigation(locale: Locale) {
     }
   }
 
-  const groups = NAV_GROUPS.map((group): ResolvedNavGroup => {
+  const groups = spec.groups.map((group): ResolvedNavGroup => {
     const label = t(`groups.${group.key}`)
 
     return {
@@ -79,6 +77,6 @@ export async function resolveNavigation(locale: Locale) {
 
   return {
     groups,
-    topLevel: NAV_TOP_LEVEL_LINKS.map(resolveLink),
+    topLevel: spec.topLevel.map(resolveLink),
   }
 }

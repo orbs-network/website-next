@@ -49,32 +49,20 @@ export const Resting: Story = {
     expect(field).not.toBeNull()
     expect(getComputedStyle(field as Element).pointerEvents).toBe('none')
 
-    // The dots survive to the DOM as real masked layers rather than as an
-    // empty div waiting for script to fill it.
+    // Native SVG patterns paint without hydration or CSS image masks.
     const small = canvasElement.querySelector('.hero-dot-grid-small')
     const large = canvasElement.querySelector('.hero-dot-grid-large')
     expect(small).not.toBeNull()
     expect(large).not.toBeNull()
 
-    const maskOf = (el: Element) => {
-      const s = getComputedStyle(el)
-
-      return { image: s.maskImage || s.webkitMaskImage, size: s.maskSize || s.webkitMaskSize }
-    }
-
-    expect(maskOf(small!).image).toContain('url(')
-    expect(maskOf(small!).size).toContain('40.5px')
-
-    /*
-      The larger dots land on every FIFTH lattice point, so their tile must be
-      exactly five cells across. Asserted as the arithmetic rather than as the
-      literal 202.5, because the relationship is the design fact — a tile at
-      any other multiple still tiles cleanly and still looks like a grid, just
-      not this one.
-    */
-    expect(maskOf(large!).image).toContain('url(')
-    const largePitch = Number.parseFloat(maskOf(large!).size)
-    expect(largePitch).toBeCloseTo(40.5 * 5, 5)
+    expect(small!.tagName.toLowerCase()).toBe('pattern')
+    expect(small).toHaveAttribute('width', '40.5')
+    expect(small).toHaveAttribute('height', '40.5')
+    expect(small!.querySelector('rect')).toHaveAttribute('width', '2')
+    expect(large).toHaveAttribute('width', '202.5')
+    expect(large).toHaveAttribute('height', '202.5')
+    expect(large!.querySelector('rect')).toHaveAttribute('width', '4.5')
+    expect(canvasElement.querySelector('.hero-dot-field')).toHaveStyle({ maskImage: 'none' })
 
     /*
       Opacity belongs to the container, not the layers: applied to each, the
@@ -99,11 +87,8 @@ export const Resting: Story = {
  * With no hole punched, which is the state every reader without a mouse sees
  * permanently.
  *
- * `--hero-facet-hole` defaults to `0px`, and at zero the radial gradient is
- * its final stop everywhere — fully opaque, so the grid is untouched. Asserted
- * because the obvious reading of a zero-radius gradient is "transparent", and
- * getting it backwards would erase the entire grid for exactly the readers who
- * never get the enhancement.
+ * The static SVG grid is unmasked until an interaction starts. No zero-radius
+ * gradient or repeating CSS image mask can suppress the no-pointer fallback.
  */
 export const NoPointerLeavesTheGridIntact: Story = {
   args: {
@@ -124,10 +109,8 @@ export const NoPointerLeavesTheGridIntact: Story = {
     const hole = getComputedStyle(field).getPropertyValue('--hero-facet-hole').trim()
     expect(['', '0px']).toContain(hole)
 
-    const mask = getComputedStyle(field).maskImage || getComputedStyle(field).webkitMaskImage
-    expect(mask).toContain('radial-gradient')
-    // The 0px default, resolved.
-    expect(mask).toContain('0px')
+    expect(getComputedStyle(field).maskImage).toBe('none')
+    expect(canvasElement.querySelector('[data-facet-active]')).toBeNull()
   },
 }
 
