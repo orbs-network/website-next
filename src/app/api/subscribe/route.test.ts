@@ -10,16 +10,12 @@ import { resetRateLimit } from '@/lib/rate-limit'
  *
  * The first version of this route reproduced it. It answered 200 on ANY Resend
  * error, reasoning that the realistic case was an address already on the list —
- * which also covered a revoked key, a wrong audience id and an outage.
+ * which also covered a revoked key, a wrong segment id and an outage.
  */
 
-const create = vi.fn()
-
-vi.mock('resend', () => ({
-  Resend: class {
-    contacts = { create }
-  },
-}))
+// Exercise the installed SDK as well as the handler. Stub only the HTTP
+// transport so a legacy audience request cannot pass as a segment signup.
+const fetchResend = vi.fn()
 
 /** A same-origin JSON POST, which is what the guards expect to see. */
 function post(body: unknown) {
@@ -38,53 +34,67 @@ async function handle(body: unknown) {
 beforeEach(() => {
   vi.resetModules()
   resetRateLimit()
-  create.mockReset()
+  fetchResend.mockReset()
+  vi.stubGlobal('fetch', fetchResend)
   vi.stubEnv('RESEND_API_KEY', 'test-key')
-  vi.stubEnv('RESEND_AUDIENCE_ID', 'test-audience')
+  vi.stubEnv('RESEND_SEGMENT_ID', '  test-segment  ')
 })
 
 afterEach(() => {
   vi.unstubAllEnvs()
+  vi.unstubAllGlobals()
 })
 
 describe('POST /api/subscribe', () => {
-  it('adds the contact and reports success', async () => {
-    create.mockResolvedValue({ data: { id: 'c_1' }, error: null })
+  it('creates a contact in the configured segment through the current API', async () => {
+    fetchResend.mockResolvedValue(Response.json({ id: 'c_1', object: 'contact' }))
 
     const response = await handle({ name: 'Ada Lovelace', email: 'ada@example.com' })
 
     expect(response.status).toBe(200)
-    expect(create).toHaveBeenCalledWith({
-      audienceId: 'test-audience',
+    expect(fetchResend).toHaveBeenCalledTimes(1)
+    const [url, options] = fetchResend.mock.calls[0]
+    expect(url).toBe('https://api.resend.com/contacts')
+    expect(options.method).toBe('POST')
+    expect(JSON.parse(options.body)).toEqual({
+      segments: [{ id: 'test-segment' }],
       email: 'ada@example.com',
-      firstName: 'Ada',
-      lastName: 'Lovelace',
+      first_name: 'Ada',
+      last_name: 'Lovelace',
       unsubscribed: false,
     })
   })
 
   it('does NOT claim success when Resend reports an error', async () => {
     // THE regression. The SDK returns failures as an `error` result rather
-    // than throwing, so this branch covers a revoked key, a wrong audience id
+    // than throwing, so this branch covers a revoked key, a wrong segment id
     // and an outage — not just a duplicate.
-    create.mockResolvedValue({ data: null, error: { name: 'validation_error', message: 'nope' } })
+    fetchResend.mockResolvedValue(Response.json({ name: 'validation_error', message: 'nope' }, { status: 422 }))
 
     expect((await handle({ email: 'ada@example.com' })).status).toBe(502)
   })
 
   it('does not claim success when the SDK throws', async () => {
-    create.mockRejectedValue(new Error('ECONNRESET'))
+    fetchResend.mockRejectedValue(new Error('ECONNRESET'))
 
     expect((await handle({ email: 'ada@example.com' })).status).toBe(502)
   })
 
-  it('fails loudly when the audience is not configured', async () => {
+  it('fails loudly when the segment is not configured, even if a legacy audience is set', async () => {
     // Unset, rather than wrong. A form that looks like it works while every
     // address is dropped is the state being replaced.
-    vi.stubEnv('RESEND_AUDIENCE_ID', '')
+    vi.stubEnv('RESEND_SEGMENT_ID', '   ')
+    vi.stubEnv('RESEND_AUDIENCE_ID', 'legacy-audience')
 
     expect((await handle({ email: 'ada@example.com' })).status).toBe(500)
-    expect(create).not.toHaveBeenCalled()
+    expect(fetchResend).not.toHaveBeenCalled()
+  })
+
+  it('does not contact Resend when the API key is missing', async () => {
+    vi.stubEnv('RESEND_API_KEY', '')
+
+    expect((await handle({ email: 'ada@example.com' })).status).toBe(500)
+    expect(fetchResend).not.toHaveBeenCalled()
   })
 
   it('refuses a cross-origin request before doing anything else', async () => {
@@ -98,7 +108,7 @@ describe('POST /api/subscribe', () => {
     )
 
     expect(response.status).toBe(403)
-    expect(create).not.toHaveBeenCalled()
+    expect(fetchResend).not.toHaveBeenCalled()
   })
 
   it('drops a filled honeypot without telling the caller', async () => {
@@ -106,7 +116,7 @@ describe('POST /api/subscribe', () => {
     const response = await handle({ email: 'ada@example.com', company: 'Acme' })
 
     expect(response.status).toBe(200)
-    expect(create).not.toHaveBeenCalled()
+    expect(fetchResend).not.toHaveBeenCalled()
   })
 
   it('accepts an invalid address without creating anything', async () => {
@@ -115,16 +125,16 @@ describe('POST /api/subscribe', () => {
     const response = await handle({ email: 'not-an-email' })
 
     expect(response.status).toBe(200)
-    expect(create).not.toHaveBeenCalled()
+    expect(fetchResend).not.toHaveBeenCalled()
   })
 
   it('stops after the rate limit and creates nothing more', async () => {
-    create.mockResolvedValue({ data: { id: 'c_1' }, error: null })
+    fetchResend.mockImplementation(() => Promise.resolve(Response.json({ id: 'c_1', object: 'contact' })))
 
     for (let i = 0; i < 5; i += 1) await handle({ email: `a${i}@example.com` })
     const blocked = await handle({ email: 'six@example.com' })
 
     expect(blocked.status).toBe(200)
-    expect(create).toHaveBeenCalledTimes(5)
+    expect(fetchResend).toHaveBeenCalledTimes(5)
   })
 })

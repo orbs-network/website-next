@@ -64,9 +64,8 @@ const TO = setting(process.env.CONTACT_TO_EMAIL) ?? 'hello@orbs.com'
  * smoke test passed. Better to have no sender than a sender that only works
  * when you are testing.
  *
- * Set this once `orbs.com` is verified at https://resend.com/domains — it is
- * not today, and sending from it returns `403 The orbs.com domain is not
- * verified`. See #35.
+ * Must belong to a verified Resend sending domain. The operator confirmed
+ * domain verification on 2026-10-15; keep this explicit per environment.
  */
 const FROM = setting(process.env.CONTACT_FROM_EMAIL)
 
