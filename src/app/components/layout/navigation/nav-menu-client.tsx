@@ -2,7 +2,7 @@
 
 import * as React from 'react'
 import Link from 'next/link'
-import { ArrowRight, ExternalLink } from 'lucide-react'
+import { ArrowRight, ChevronDown, ExternalLink } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { AgenticGlyph, DPerpsGlyph, DSpotMenuGlyph, SdkApiGlyph } from '@/components/icons'
 import { MenuItemW } from '@/components/ui/menu-item'
@@ -97,7 +97,8 @@ export function groupIsCurrent(group: ResolvedNavGroup, pathname: string) {
 /*
   One style for every item in the bar, dropdown trigger or plain link, so the
   two kinds cannot drift. From the header frame (#230): 10.875px medium at
-  0.13em, no chevrons, 30px between items.
+  0.13em, 30px between items. Dropdown triggers add a chevron so they are
+  distinguishable from destinations without opening them.
 
   Three states, and the design tells them apart:
   - hover: semibold, with an accent UNDERLINE and the text left in `fg`
@@ -219,7 +220,7 @@ export function NavMenuClient({
             <NavigationMenuTrigger
               className={cn(
                 BAR_ITEM,
-                'w-auto rounded-none py-0',
+                'group/dropdown w-auto gap-1 rounded-none py-0',
                 'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent',
                 'hover:text-fg focus:text-fg data-[state=open]:hover:text-accent-primary data-[current=true]:hover:text-accent-primary'
               )}
@@ -227,6 +228,11 @@ export function NavMenuClient({
               lang={group.lang}
             >
               <BarLabel>{group.label}</BarLabel>
+              <ChevronDown
+                aria-hidden="true"
+                focusable="false"
+                className="size-3 shrink-0 transition-transform duration-150 group-hover/dropdown:rotate-180 group-data-[state=open]/dropdown:rotate-180 motion-reduce:transition-none"
+              />
             </NavigationMenuTrigger>
 
             <NavigationMenuContent>

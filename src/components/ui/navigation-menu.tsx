@@ -50,9 +50,8 @@ const NavigationMenuTrigger = React.forwardRef<
     {...props}
   >
     {/*
-      No chevron. The shadcn default draws one; the Orbs header does not (#230),
-      and this is the menu's only consumer. `aria-expanded` from Radix is what
-      tells assistive tech the trigger opens something.
+      The caller supplies its visual dropdown indicator. `aria-expanded` from
+      Radix tells assistive tech the trigger opens something.
     */}
     {children}
   </NavigationMenuPrimitive.Trigger>

@@ -70,6 +70,48 @@ export const ClosedByDefault: Story = {
   },
 }
 
+/** Only dropdowns get an indicator; hovering one must not turn every arrow. */
+export const DropdownChevronsFollowHoverAndOpenState: Story = {
+  args: BASE,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const products = canvas.getByRole('button', { name: 'Products' })
+    const network = canvas.getByRole('button', { name: 'Network' })
+    const chevron = products.querySelector('svg')!
+    const networkChevron = network.querySelector('svg')!
+    const pointsUp = (icon: SVGElement) => new DOMMatrixReadOnly(getComputedStyle(icon).transform).a < -0.99
+
+    await expect(chevron).toHaveAttribute('aria-hidden', 'true')
+    await expect(pointsUp(chevron)).toBe(false)
+    await expect(pointsUp(networkChevron)).toBe(false)
+    await expect(canvas.getByRole('link', { name: 'Ecosystem' }).querySelector('svg')).toBeNull()
+    await expect(canvas.getByRole('link', { name: 'GitHub' }).querySelector('svg')).toBeNull()
+
+    const before = products.getBoundingClientRect()
+    await userEvent.hover(products)
+    await waitFor(() => expect(pointsUp(chevron)).toBe(true))
+    await expect(pointsUp(networkChevron)).toBe(false)
+    await expect(products.getBoundingClientRect().width).toBeCloseTo(before.width)
+    await expect(products.getBoundingClientRect().x).toBeCloseTo(before.x)
+    await waitFor(() => expect(products).toHaveAttribute('aria-expanded', 'true'))
+
+    // Moving into the panel keeps the open trigger's arrow up.
+    await userEvent.hover(canvas.getByRole('link', { name: 'dSPOT' }))
+    await expect(pointsUp(chevron)).toBe(true)
+    products.focus()
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(products).toHaveAttribute('aria-expanded', 'false'))
+    await waitFor(() => expect(pointsUp(chevron)).toBe(false))
+
+    // Keyboard opening has the same indicator without requiring hover.
+    await userEvent.keyboard('{Enter}')
+    await waitFor(() => expect(products).toHaveAttribute('aria-expanded', 'true'))
+    await waitFor(() => expect(pointsUp(chevron)).toBe(true))
+    await userEvent.keyboard('{Escape}')
+    await waitFor(() => expect(pointsUp(chevron)).toBe(false))
+  },
+}
+
 export const OpensFromTheKeyboard: Story = {
   args: BASE,
   play: async ({ canvasElement }) => {
