@@ -246,3 +246,25 @@ export const TriggersSpanTheBar: Story = {
     await expect(trigger.getBoundingClientRect().height).toBe(100)
   },
 }
+
+/** A later group's panel must sit under that trigger, rather than the first one. */
+export const PanelSitsBelowItsOwnTrigger: Story = {
+  args: BASE,
+  render: (args) => (
+    <div style={{ height: 100 }}>
+      <NavMenuClient {...args} />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const canvas = await openGroup(canvasElement, /Network/)
+    const trigger = canvas.getByRole('button', { name: 'Network' })
+    const link = await waitFor(() => canvas.getByRole('link', { name: 'Proof of Stake' }))
+    const panel = document.getElementById(trigger.getAttribute('aria-controls')!)!
+    const triggerBox = trigger.getBoundingClientRect()
+    await expect(panel.getBoundingClientRect().left).toBeCloseTo(triggerBox.left)
+    await expect(panel.getBoundingClientRect().top).toBeCloseTo(triggerBox.bottom)
+    await expect(getComputedStyle(panel).animationName).toBe('none')
+    await userEvent.hover(link)
+    await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+  },
+}

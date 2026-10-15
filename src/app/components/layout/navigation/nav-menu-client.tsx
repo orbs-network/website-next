@@ -170,21 +170,15 @@ export function NavMenuClient({
     <NavigationMenu
       value={open}
       onValueChange={setOpen}
+      viewport={false}
       /*
         Radix wraps the list in an unstyled `div`, so `h-full` on the list and
         items resolved against an auto height and the triggers came out 16px
         tall — a 40px dead band between a trigger and its panel, where a slow
         pointer closed the menu before it reached a link. The wrapper is the
-        root's only child holding the `ul`; the overlay and viewport are left
-        alone.
+        root's only child holding the `ul`; the overlay is left alone.
       */
       className="h-full [&>div:has(>ul)]:h-full"
-      /*
-        Flush with the header rule: `top-full` of a full-height root is the
-        rule's top edge, and `mt-px` steps past it. Square, borderless and
-        unshadowed, as drawn — the page overlay is what separates it.
-      */
-      viewportClassName="mt-px rounded-none border-0 bg-surface shadow-none"
     >
       {/*
         The design's page overlay: a 20% cyan-to-pink wash with a 10px blur
@@ -206,7 +200,7 @@ export function NavMenuClient({
 
       <NavigationMenuList className="h-full space-x-0">
         {groups.map((group) => (
-          <NavigationMenuItem key={group.key} value={group.key} className="h-full">
+          <NavigationMenuItem key={group.key} value={group.key} className="relative h-full">
             {/*
               The shadcn trigger ships a filled pill — `hover:bg-accent`,
               `data-[state=open]:bg-accent/50` — which renders as a loud blue
@@ -232,8 +226,15 @@ export function NavMenuClient({
               />
             </NavigationMenuTrigger>
 
-            <NavigationMenuContent>
-              <NavPanel title={group.label} titleLang={group.lang} links={group.links} pathname={pathname} />
+            {/*
+              Anchor to this trigger's item, with a transparent 1px bridge over
+              the header rule. The panel stays still while the pointer enters;
+              the shared viewport's sideways transition made it a moving target.
+            */}
+            <NavigationMenuContent className="absolute top-full w-auto pt-px data-[motion^=from-]:animate-none data-[motion^=to-]:animate-none">
+              <div className="bg-surface">
+                <NavPanel title={group.label} titleLang={group.lang} links={group.links} pathname={pathname} />
+              </div>
             </NavigationMenuContent>
           </NavigationMenuItem>
         ))}
