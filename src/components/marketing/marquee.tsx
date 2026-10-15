@@ -59,7 +59,7 @@ export function Marquee({
         `animation-play-state` belongs on the element running the animation.
         On a wrapper it does nothing to the child.
       */}
-      <div className="flex animate-marquee motion-reduce:[animation-play-state:paused]">
+      <div className="flex w-max animate-marquee motion-reduce:[animation-play-state:paused]">
         {track}
         <div aria-hidden="true" className="flex">
           {track}

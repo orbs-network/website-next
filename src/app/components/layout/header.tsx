@@ -79,7 +79,7 @@ export async function Header({ locale }: { locale: Locale }) {
             lang={textLang(t('homeLink'), locale)}
             // Wordmark in `fg`, accent on hover — the design's #121214 / #F6F6F6
             // / #3346F2. It was Tailwind greys that went grey on hover.
-            className="text-fg transition-colors hover:text-accent-primary"
+            className="flex items-center text-fg transition-colors hover:text-accent-primary"
           >
             {/*
               The lockup contains the word "Orbs", which inside a link that
