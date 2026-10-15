@@ -84,12 +84,14 @@ export const DropdownChevronsFollowHoverAndOpenState: Story = {
     await expect(chevron).toHaveAttribute('aria-hidden', 'true')
     await expect(pointsUp(chevron)).toBe(false)
     await expect(pointsUp(networkChevron)).toBe(false)
+    await expect(getComputedStyle(products).textDecorationLine).toBe('none')
     await expect(canvas.getByRole('link', { name: 'Ecosystem' }).querySelector('svg')).toBeNull()
     await expect(canvas.getByRole('link', { name: 'GitHub' }).querySelector('svg')).toBeNull()
 
     const before = products.getBoundingClientRect()
     await userEvent.hover(products)
     await waitFor(() => expect(pointsUp(chevron)).toBe(true))
+    await expect(getComputedStyle(products).textDecorationLine).toBe('none')
     await expect(pointsUp(networkChevron)).toBe(false)
     await expect(products.getBoundingClientRect().width).toBeCloseTo(before.width)
     await expect(products.getBoundingClientRect().x).toBeCloseTo(before.x)
@@ -98,15 +100,18 @@ export const DropdownChevronsFollowHoverAndOpenState: Story = {
     // Moving into the panel keeps the open trigger's arrow up.
     await userEvent.hover(canvas.getByRole('link', { name: 'dSPOT' }))
     await expect(pointsUp(chevron)).toBe(true)
+    await expect(getComputedStyle(products).textDecorationLine).toBe('none')
     products.focus()
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(products).toHaveAttribute('aria-expanded', 'false'))
     await waitFor(() => expect(pointsUp(chevron)).toBe(false))
+    await expect(getComputedStyle(products).textDecorationLine).toBe('none')
 
     // Keyboard opening has the same indicator without requiring hover.
     await userEvent.keyboard('{Enter}')
     await waitFor(() => expect(products).toHaveAttribute('aria-expanded', 'true'))
     await waitFor(() => expect(pointsUp(chevron)).toBe(true))
+    await expect(getComputedStyle(products).textDecorationLine).toBe('none')
     await userEvent.keyboard('{Escape}')
     await waitFor(() => expect(pointsUp(chevron)).toBe(false))
   },
@@ -213,6 +218,7 @@ export const CurrentPageIsMarked: Story = {
     const canvas = within(canvasElement)
 
     await expect(canvas.getByRole('button', { name: /Products/ })).toHaveAttribute('data-current', 'true')
+    await expect(getComputedStyle(canvas.getByRole('button', { name: /Products/ })).textDecorationLine).toBe('none')
     await expect(canvas.getByRole('button', { name: /Network/ })).not.toHaveAttribute('data-current')
 
     await openGroup(canvasElement, /Products/)

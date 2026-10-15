@@ -100,9 +100,10 @@ export function groupIsCurrent(group: ResolvedNavGroup, pathname: string) {
   0.13em, 30px between items. Dropdown triggers add a chevron so they are
   distinguishable from destinations without opening them.
 
-  Three states, and the design tells them apart:
-  - hover: semibold, with an accent UNDERLINE and the text left in `fg`
-  - open (a trigger whose panel is showing): accent text plus underline
+  Three states, and the design tells them apart. Underlines are for plain
+  links only; dropdown triggers override them and use a focus ring instead:
+  - hover: semibold, with the text left in `fg`
+  - open (a trigger whose panel is showing): accent text
   - current page (`data-current`): the same as open, so a reader on /dspot
     sees Products marked without opening anything
 
@@ -221,6 +222,7 @@ export function NavMenuClient({
               className={cn(
                 BAR_ITEM,
                 'group/dropdown w-auto gap-1 rounded-none py-0',
+                'hover:no-underline focus-visible:no-underline data-[state=open]:no-underline data-[current=true]:no-underline focus-visible:ring-1 focus-visible:ring-inset focus-visible:ring-ring',
                 'bg-transparent hover:bg-transparent focus:bg-transparent data-[state=open]:bg-transparent data-[state=open]:hover:bg-transparent data-[state=open]:focus:bg-transparent',
                 'hover:text-fg focus:text-fg data-[state=open]:hover:text-accent-primary data-[current=true]:hover:text-accent-primary'
               )}
