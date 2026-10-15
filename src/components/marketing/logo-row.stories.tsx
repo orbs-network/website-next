@@ -375,6 +375,7 @@ export const DspotSolvers: Story = {
           const visible = [...item.querySelectorAll('img')].filter((img) => img.getClientRects().length > 0)
           expect(visible).toHaveLength(1)
           expect(visible[0].naturalWidth).toBeGreaterThan(0)
+          expect(getComputedStyle(visible[0]).filter).toBe(dark ? 'invert(0)' : 'invert(1)')
         }
         const section = canvasElement.querySelector('section')!
         expect(section.scrollWidth).toBeLessThanOrEqual(section.clientWidth)

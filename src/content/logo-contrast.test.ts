@@ -70,6 +70,33 @@ const NEAR_WHITE = 230
  */
 const MAX_WHITE_SHARE = 0.9
 
+describe('dSPOT monochrome solver logos', () => {
+  it('use white ink on transparent with a black light-theme inversion', async () => {
+    for (const item of DSPOT_SOLVERS) {
+      const { data } = await sharp(join(REPO, 'public', item.logo!.src))
+        .resize({ width: 200, height: 200, fit: 'inside' })
+        .ensureAlpha()
+        .raw()
+        .toBuffer({ resolveWithObject: true })
+      let ink = 0
+      let nonWhite = 0
+      let transparent = 0
+      for (let i = 0; i < data.length; i += 4) {
+        if (data[i + 3] < OPAQUE) {
+          transparent++
+          continue
+        }
+        ink++
+        if (Math.min(data[i], data[i + 1], data[i + 2]) < NEAR_WHITE) nonWhite++
+      }
+      expect(ink, item.name).toBeGreaterThan(20)
+      expect(nonWhite, item.name).toBe(0)
+      expect(transparent / (data.length / 4), item.name).toBeGreaterThan(0.1)
+      expect(item.invertOnLight, item.name).toBe(true)
+    }
+  })
+})
+
 describe('Agentic monochrome chain marks', () => {
   it('use black ink and transparent negative space, so inversion preserves each mark', async () => {
     for (const chain of AGENTIC_CHAINS) {

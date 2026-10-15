@@ -83,20 +83,20 @@ export const DSPOT_SOLVERS: readonly LogoRowItem[] = [
     name: 'OpenOcean',
     logo: {
       src: '/marketing/dspot/solvers/openocean-dark.svg',
-      onLight: '/marketing/ecosystem/cards/openocean.svg',
       width: 140,
       height: 28,
     },
+    invertOnLight: true,
     wordmark: true,
   },
   {
     name: 'KyberSwap',
     logo: {
-      src: '/marketing/dspot/solvers/kyberswap-dark.svg',
-      onLight: '/marketing/dspot/solvers/kyberswap-light.svg',
+      src: '/marketing/dspot/solvers/kyberswap.svg',
       width: 160,
       height: 53,
     },
+    invertOnLight: true,
     wordmark: true,
   },
   {
@@ -108,11 +108,11 @@ export const DSPOT_SOLVERS: readonly LogoRowItem[] = [
   {
     name: 'DODO',
     logo: {
-      src: '/marketing/dspot/solvers/dodo-dark.svg',
-      onLight: '/marketing/dspot/solvers/dodo-light.svg',
+      src: '/marketing/dspot/solvers/dodo.svg',
       width: 141,
       height: 30,
     },
+    invertOnLight: true,
     wordmark: true,
   },
   {
@@ -121,6 +121,10 @@ export const DSPOT_SOLVERS: readonly LogoRowItem[] = [
     invertOnLight: true,
     wordmark: true,
   },
-  // The supplied Magpie mark is retained; its current website has Fly.trade branding.
-  { name: 'Magpie', logo: { src: '/marketing/ecosystem/cards/magpie.png', width: 256, height: 256 } },
+  // Bird outline traced from the existing mark, without its purple tile.
+  {
+    name: 'Magpie',
+    logo: { src: '/marketing/dspot/solvers/magpie.svg', width: 109, height: 176 },
+    invertOnLight: true,
+  },
 ]
