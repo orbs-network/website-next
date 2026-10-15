@@ -5,7 +5,7 @@ import { isSameOrigin } from '@/lib/same-origin'
 import { looksAutomated, splitName, validateSubscribeMessage } from '@/lib/subscribe-message'
 
 /**
- * Adds someone to the newsletter audience.
+ * Adds someone to the newsletter segment.
  *
  * Straight add, no confirmation email — the team's decision (#145). So a
  * submission here puts an address on a list immediately, which is precisely why
@@ -13,7 +13,7 @@ import { looksAutomated, splitName, validateSubscribeMessage } from '@/lib/subsc
  * a mailing list is worth abusing, and every address added by a bot is one the
  * team has to notice and remove.
  *
- * Nothing is SENT from here. The audience is written to and that is all, which
+ * Nothing is SENT from here. The segment is written to and that is all, which
  * keeps this endpoint unable to deliver mail to an address of the caller's
  * choosing — the same property the contact route has, and worth preserving for
  * the same reason.
@@ -30,14 +30,14 @@ function setting(value: string | undefined): string | undefined {
 }
 
 /**
- * The Resend audience that receives subscribers.
+ * The Resend segment that receives subscribers.
  *
  * Required, with no fallback, for the reason `CONTACT_FROM_EMAIL` has none: a
  * default that happens to work in one environment and silently writes to the
- * wrong list in another is worse than a loud failure. An audience ID is not
- * guessable and not shared, so there is no sensible default to pick.
+ * wrong list in another is worse than a loud failure. Each environment must
+ * explicitly choose its newsletter segment.
  */
-const AUDIENCE_ID = setting(process.env.RESEND_AUDIENCE_ID)
+const SEGMENT_ID = setting(process.env.RESEND_SEGMENT_ID)
 
 /**
  * A plain 200 whatever the reason.
@@ -104,9 +104,9 @@ export async function POST(request: Request) {
   // Loud, and a failure the browser surfaces. A signup form that looks like it
   // works while every address is dropped is the exact state the legacy one has
   // been in for years.
-  if (!apiKey || !AUDIENCE_ID) {
+  if (!apiKey || !SEGMENT_ID) {
     console.error(
-      `[subscribe] misconfigured (${!apiKey ? 'RESEND_API_KEY' : 'RESEND_AUDIENCE_ID'} is not set) — "${result.message.email}" was NOT subscribed`
+      `[subscribe] misconfigured (${!apiKey ? 'RESEND_API_KEY' : 'RESEND_SEGMENT_ID'} is not set) — "${result.message.email}" was NOT subscribed`
     )
     return NextResponse.json({ ok: false }, { status: 500 })
   }
@@ -115,7 +115,7 @@ export async function POST(request: Request) {
 
   try {
     const { error } = await new Resend(apiKey).contacts.create({
-      audienceId: AUDIENCE_ID,
+      segments: [{ id: SEGMENT_ID }],
       email: result.message.email,
       firstName,
       lastName,
@@ -138,7 +138,7 @@ export async function POST(request: Request) {
         `restricted_api_key`, `security_error` and `validation_error` — there is
         no duplicate code among them, and the SDK reports network failures the
         same way rather than throwing. So "probably a duplicate" also covered a
-        revoked key, a wrong audience id and an outage, and each of those would
+        revoked key, a wrong segment id and an outage, and each of those would
         have shown a subscriber "you are on the list" while nothing happened.
 
         Which is precisely the legacy newsletter's failure: a success screen
