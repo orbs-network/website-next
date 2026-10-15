@@ -29,6 +29,9 @@ export const IsADescriptionList: Story = {
     await expect(canvasElement.querySelectorAll('dd')).toHaveLength(2)
     await expect(canvas.getByText('$14B+')).toBeInTheDocument()
     await expect(canvas.getByText('Cumulative volume')).toBeInTheDocument()
+    for (const element of canvasElement.querySelectorAll('dt, dd')) {
+      await expect(getComputedStyle(element).textAlign).toBe('center')
+    }
   },
 }
 

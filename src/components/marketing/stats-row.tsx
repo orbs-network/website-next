@@ -28,7 +28,6 @@ export function StatsRow({
   title,
   stats,
   columns = 3,
-  align = 'center',
   glow = false,
   locale,
 }: {
@@ -37,8 +36,6 @@ export function StatsRow({
   stats: readonly Stat[]
   /** How many across on a wide viewport. Three unless told otherwise. */
   columns?: 2 | 3 | 5
-  /** `start` is the institutional page's row, under a left-aligned hero. */
-  align?: 'center' | 'start'
   /**
    * A soft glow behind the figure under the pointer (`Stats Container Area on
    * Hover` in the 2026-09-30 frame). The glow is centred on each stat, so a
@@ -68,8 +65,7 @@ export function StatsRow({
       */}
       <dl
         className={cn(
-          'grid gap-10',
-          align === 'center' && 'text-center',
+          'grid gap-10 text-center',
           columns === 2 ? 'grid-cols-2' : columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
         )}
       >
