@@ -44,6 +44,8 @@ export const MARKETING_PAGE_PATHS = [
   '/orbs-ecosystem-grant-program-terms-and-conditions',
   '/ORBS-NFT-CONTEST-OFFICIAL-RULES',
   '/challenge',
+  // Undated legacy tutorial, preserved outside the dated Contentful feed.
+  '/tetra-orbs-staking-wallet-tutorial',
   // FAQ. Same markdown-document treatment as the legal pages; `##` is a
   // section and `###` a question.
   '/faq',

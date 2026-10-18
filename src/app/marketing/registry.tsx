@@ -26,6 +26,7 @@ import { DtwapPage } from './dtwap'
 import { DspotPage } from './dspot'
 import { VenuesPage } from './venues'
 import { SecurityAndAuditsPage } from './security-and-audits'
+import { TetraArchivePage } from './tetra-archive'
 
 /**
  * Renders a page for a locale.
@@ -72,6 +73,10 @@ export type MarketingPageEntry = {
  * route that exists but is not reserved.
  */
 const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
+  '/tetra-orbs-staking-wallet-tutorial': {
+    render: () => <TetraArchivePage />,
+    namespace: 'pages.tetraArchive',
+  },
   '/challenge': {
     render: (locale) => <LegalPage path="/challenge" locale={locale} namespace="pages.challengeArchive" />,
     namespace: 'pages.challengeArchive',
