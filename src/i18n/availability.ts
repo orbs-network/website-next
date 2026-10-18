@@ -255,7 +255,11 @@ export function isPlaceholder(pathname: string, locale: Locale): boolean {
  * Distinct from a `placeholder` locale, which is about a translation that does
  * not exist. This is about a page whose SUBJECT has expired, in every language.
  */
-const ARCHIVED_PATHS = new Set(['/ORBS-NFT-CONTEST-OFFICIAL-RULES', '/challenge'])
+const ARCHIVED_PATHS = new Set([
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES',
+  '/challenge',
+  '/tetra-orbs-staking-wallet-tutorial',
+])
 
 /** Whether a path is kept for the record rather than advertised. */
 export function isArchived(pathname: string): boolean {

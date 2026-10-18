@@ -46,22 +46,25 @@ English placeholders, with complete English catalog namespaces, `noindex` and
 no Japanese hreflang claim. They preserve reachability rather than pretend to
 be translations.
 
-## Remaining content preservation
+## Historical articles preserved
 
-These have no content-equivalent destination. A generic redirect would hide
-content loss:
+The two dated articles absent from the public blog list were imported into
+Contentful on 18 October and verified through the deployed site's read path:
 
-- `/Orbs-Perpetual-Hub-Ultra-Integrates-with-QuickSwap/` — 24 June 2025 article.
-- `/orbs-team-update-for-feb-2020/` — February 2020 article.
-- `/tetra-orbs-staking-wallet-tutorial/` — historical staking tutorial. Its
-  source date is blank; the existing migrator skips it. Confirm its original
-  publication date before importing, rather than date it as a new post.
+- `/Orbs-Perpetual-Hub-Ultra-Integrates-with-QuickSwap/` — original date
+  24 June 2025.
+- `/orbs-team-update-for-feb-2020/` — original date 1 February 2020.
 
-These are live but unlisted posts and need a targeted Contentful
-import, including their images. No Contentful management capability is
-available in this session. The existing tool is
-`scripts/orbs-website-migration/scripts/migrate-blogposts.mjs`; scope an import
-to these entries and preserve the existing author IDs and asset handling.
+Both return 200, appear in a fresh sitemap response, and retain working hero,
+inline and author images.
+
+`/tetra-orbs-staking-wallet-tutorial/` has no date in its source or publication
+date metadata on the old site. It is preserved as a static, undated archive at
+its original URL, outside the dated Contentful feed. The complete tutorial,
+original author, 12 images and video link are retained. A visible archive
+notice explains that the interface/instructions are historical and links to
+current staking information. No publication date is inferred. The archive is
+`noindex, follow` and excluded from the sitemap, like the expired campaigns.
 
 Sarbloc approved preserving the expired Challenge on 18 October. The three
 original URLs (`/challenge/`, `/jp/challenge/`, `/ko/challenge/`) now serve an

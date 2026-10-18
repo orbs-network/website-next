@@ -37,7 +37,7 @@ const nextConfig: NextConfig = {
   // Enable React Compiler for automatic memoization (Next.js 16)
   reactCompiler: true,
   /**
-   * Keep the legal markdown in the deployment.
+   * Keep the legal and archived-article markdown in the deployment.
    *
    * `src/content/legal/index.ts` reads these with `fs` at module scope. Today
    * that happens at build, because every marketing route is fully static — so
@@ -47,7 +47,7 @@ const nextConfig: NextConfig = {
    * bundle it would fail in production while working locally.
    */
   outputFileTracingIncludes: {
-    '/**': ['./src/content/legal/**'],
+    '/**': ['./src/content/legal/**', './src/content/archive/*.md'],
   },
   /**
    * Permanent redirects for URLs we have moved ourselves.
