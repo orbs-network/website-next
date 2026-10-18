@@ -1,4 +1,5 @@
 import type { Locale } from '@/i18n/locales'
+import { NAV_GROUPS } from './navigation'
 import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
@@ -187,51 +188,18 @@ export const FOOTER_EMAIL = 'hello@orbs.com'
 /** Where the network status indicator links, wherever it is shown. */
 export const FOOTER_STATUS_URL = 'https://status.orbs.network/'
 
-/** English footer from the October 15 export. Team is explicitly omitted. */
+/** English footer shares the header's groups; supporting links follow separately. */
 export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
-  {
-    key: 'products',
-    links: [
-      { key: 'dspot', href: '/dspot' },
-      { key: 'dperps', href: '/dperps' },
-      { key: 'executionServices', href: '/execution-services' },
-    ],
-  },
-  {
-    key: 'solutions',
-    links: [
-      { key: 'venues', href: '/venues' },
-      { key: 'institutions', href: '/institutional' },
-      { key: 'aiAgents', href: '/ai/skills' },
-    ],
-  },
-  {
-    key: 'network',
-    links: [
-      { key: 'overview', href: '/overview' },
-      { key: 'pos', href: '/pos' },
-      { key: 'developers', href: NETWORK_DOCS_URL },
-      { key: 'status', href: 'https://status.orbs.network/' },
-    ],
-  },
-  {
-    key: 'community',
-    links: [
-      { key: 'blog', href: '/blog' },
-      { key: 'ecosystem', href: '/ecosystem' },
-      { key: 'media', href: '/news' },
-      { key: 'governance', href: '/governance-blog' },
-      { key: 'brandAssets', href: '/brand-assets' },
-    ],
-  },
+  ...NAV_GROUPS,
   {
     key: 'company',
     links: [
       { key: 'contact', href: '/contact' },
       { key: 'faq', href: '/faq' },
-      { key: 'docs', href: SDK_DOCS_URL },
-      { key: 'github', href: 'https://github.com/orbs-network' },
-      { key: 'securityAndAudits', href: '/security-and-audits' },
+      { key: 'blog', href: '/blog' },
+      { key: 'ecosystem', href: '/ecosystem' },
+      { key: 'media', href: '/news' },
+      { key: 'brandAssets', href: '/brand-assets' },
     ],
   },
 ]

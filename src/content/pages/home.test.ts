@@ -1,8 +1,13 @@
 import { describe, expect, it } from 'vitest'
-import { homeStackForLocale } from './home'
+import { HOME_DISCOVER, homeStackForLocale } from './home'
 import { overviewProductsForLocale } from './overview'
 
 describe('English-first product grouping', () => {
+  it('links Discover to current developer docs instead of the white-paper archive', () => {
+    expect(HOME_DISCOVER.map(({ id }) => id)).toEqual(['blog', 'developers', 'faq', 'securityAndAudits'])
+    expect(HOME_DISCOVER.find(({ id }) => id === 'developers')!.href).toBe('https://docs.orbs.network/v3')
+  })
+
   it('presents the same three product destinations on Home and Overview', () => {
     const destinations = ['/dspot', '/dperps', '/execution-services']
     expect(homeStackForLocale('en').map((card) => card.href)).toEqual(destinations)

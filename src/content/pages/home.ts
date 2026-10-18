@@ -1,5 +1,5 @@
 import type { Locale } from '@/i18n/locales'
-import { SDK_DOCS_URL } from '@/content/shared/sdk'
+import { NETWORK_DOCS_URL, SDK_DOCS_URL } from '@/content/shared/sdk'
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 
 /**
@@ -156,7 +156,7 @@ function venue(slug: string, width: number, height: number, ext: 'svg' | 'png' =
 /** "Discover." — reading material and English-first security resources. */
 export const HOME_DISCOVER: readonly { id: string; href: string; locales?: readonly Locale[] }[] = [
   { id: 'blog', href: '/blog' },
-  { id: 'whitePapers', href: '/white-papers' },
+  { id: 'developers', href: NETWORK_DOCS_URL },
   { id: 'faq', href: '/faq' },
   { id: 'securityAndAudits', href: '/security-and-audits', locales: ['en'] },
 ] as const
@@ -188,11 +188,6 @@ export const HOME_LINKS = {
   x: 'https://twitter.com/orbs_network',
   telegram: 'https://t.me/OrbsNetwork',
   contact: '/contact',
-  /**
-   * Discover's "View resources". There is no resources index; the blog is the
-   * nearest thing to one, and it is also the first row above the button.
-   */
-  resources: '/blog',
 } as const
 
 /** How many posts the "In the news" rail asks Contentful for. */
