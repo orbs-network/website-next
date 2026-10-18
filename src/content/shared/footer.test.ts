@@ -1,14 +1,21 @@
 import { describe, expect, it } from 'vitest'
 import { footerColumnsForLocale, LEGACY_FOOTER_COLUMNS } from './footer'
+import { NAV_GROUPS } from './navigation'
 
 describe('October English footer', () => {
-  it('moves Governance to Community, keeps Audits and omits Team', () => {
+  it('matches the header groups and keeps the supporting links without Team', () => {
     const columns = footerColumnsForLocale('en')
     const keys = (group: string) => columns.find((column) => column.key === group)!.links.map((link) => link.key)
+    expect(columns.map((column) => column.key)).toEqual(['products', 'tools', 'solutions', 'network', 'company'])
+    for (const group of NAV_GROUPS) {
+      expect(columns.find((column) => column.key === group.key)!.links.map(({ key, href }) => ({ key, href }))).toEqual(
+        group.links.map(({ key, href }) => ({ key, href }))
+      )
+    }
     expect(keys('products')).toEqual(['dspot', 'dperps', 'executionServices'])
-    expect(keys('network')).toEqual(['overview', 'pos', 'developers', 'status'])
-    expect(keys('community')).toEqual(['blog', 'ecosystem', 'media', 'governance', 'brandAssets'])
-    expect(keys('company')).toEqual(['contact', 'faq', 'docs', 'github', 'securityAndAudits'])
+    expect(keys('tools')).toEqual(['sdk', 'playground', 'agentic', 'securityAndAudits'])
+    expect(keys('network')).toEqual(['overview', 'pos', 'governance', 'status', 'github', 'developers'])
+    expect(keys('company')).toEqual(['contact', 'faq', 'blog', 'ecosystem', 'media', 'brandAssets'])
     expect(columns.flatMap((column) => column.links).some((link) => link.key === 'team')).toBe(false)
   })
 

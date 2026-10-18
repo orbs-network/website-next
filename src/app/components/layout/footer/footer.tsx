@@ -7,6 +7,7 @@ import { NetworkStatusIndicator } from './network-status'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { NAV_GROUPS } from '@/content/shared/navigation'
 import { FooterNavColumn } from './footer-nav'
 import { FooterSocials } from './footer-socials'
 
@@ -15,11 +16,11 @@ import { FooterSocials } from './footer-socials'
  *
  * Laid out as the design draws it: the logo and blurb across the top, then a
  * band between two rules, split by a vertical one. Left of it, four sitemap
- * columns over the bottom bar; right of it, Company over the social row. That
+ * columns over the bottom bar; right of it, supporting links over the social row. That
  * band is a two-by-two grid rather than two flex columns so the bottom bar and
  * the socials share a row and stay level whatever either column's height.
  *
- * The DOM order is the reading order on every width — four columns, Company,
+ * The DOM order is the reading order on every width — four columns, supporting links,
  * the bottom bar, socials — so below `lg` the grid simply stacks.
  *
  * Every `t()` call in the footer tree happens here. The children take resolved
@@ -36,21 +37,25 @@ import { FooterSocials } from './footer-socials'
  */
 export async function Footer({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
+  const nav = locale === 'en' ? await getTranslations({ locale, namespace: 'nav' }) : undefined
 
   const socialLabels = Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, t(`socials.${social.key}`)]))
-  const columns = footerColumnsForLocale(locale).map((column) => (
-    <FooterNavColumn
-      key={column.key}
-      id={`footer-${column.key}`}
-      title={t(`columns.${column.key}`)}
-      items={column.links
-        .filter((spec) => !spec.locales || spec.locales.includes(locale))
-        .map((spec) => ({ spec, label: t(`links.${spec.key}`) }))}
-      locale={locale}
-    />
-  ))
+  const columns = footerColumnsForLocale(locale).map((column) => {
+    const sharedNav = nav && NAV_GROUPS.some((group) => group.key === column.key) ? nav : undefined
+    return (
+      <FooterNavColumn
+        key={column.key}
+        id={`footer-${column.key}`}
+        title={sharedNav ? sharedNav(`groups.${column.key}`) : t(`columns.${column.key}`)}
+        items={column.links
+          .filter((spec) => !spec.locales || spec.locales.includes(locale))
+          .map((spec) => ({ spec, label: sharedNav ? sharedNav(`links.${spec.key}`) : t(`links.${spec.key}`) }))}
+        locale={locale}
+      />
+    )
+  })
   const sitemap = columns.slice(0, -1)
-  const company = columns.at(-1)
+  const supportingLinks = columns.at(-1)
   const blurb = t('blurb')
 
   return (
@@ -87,7 +92,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             {sitemap}
           </div>
 
-          <div className="pt-10 lg:border-l lg:border-neutral-500 lg:pl-6 lg:pt-[3.75rem]">{company}</div>
+          <div className="pt-10 lg:border-l lg:border-neutral-500 lg:pl-6 lg:pt-[3.75rem]">{supportingLinks}</div>
 
           <ul className="flex flex-wrap items-center gap-x-8 gap-y-2 pb-7 pt-12 lg:row-start-2 lg:pt-[3.625rem]">
             {/*

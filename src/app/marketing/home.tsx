@@ -445,12 +445,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
           </section>
         )}
 
-        {/*
-          Same 1fr / 2fr split as the features list above: the heading on its
-          own, the rows in the right column, and "View resources" pinned
-          bottom-left level with the last row. In the DOM the button follows
-          the list, so a phone and a screen reader get heading, rows, button.
-        */}
+        {/* Same 1fr / 2fr split as the features list above. */}
         <section className="container py-section">
           <H2 className="text-balance" lang={lang('discover.title')}>
             {t('discover.title')}
@@ -461,7 +456,9 @@ export async function HomePage({ locale }: { locale: Locale }) {
               {HOME_DISCOVER.filter((item) => !item.locales || item.locales.includes(locale)).map((item) => (
                 <li key={item.id}>
                   <Link
-                    href={localeHref(item.href, locale)}
+                    href={item.href.startsWith('/') ? localeHref(item.href, locale) : item.href}
+                    target={item.href.startsWith('/') ? undefined : '_blank'}
+                    rel={item.href.startsWith('/') ? undefined : 'noopener noreferrer'}
                     lang={lang(`discover.${item.id}`)}
                     className="flex items-center justify-between gap-6 border-b border-border py-8 text-h3 transition-colors hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
                   >
@@ -471,12 +468,6 @@ export async function HomePage({ locale }: { locale: Locale }) {
                 </li>
               ))}
             </ul>
-
-            <Button asChild className="self-end justify-self-start lg:col-start-1 lg:row-start-1">
-              <Link href={localeHref(HOME_LINKS.resources, locale)} lang={lang('discover.cta')}>
-                {t('discover.cta')}
-              </Link>
-            </Button>
           </div>
         </section>
       </div>

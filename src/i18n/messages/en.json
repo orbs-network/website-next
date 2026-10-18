@@ -48,7 +48,7 @@
       "solutions": "Solutions",
       "network": "Network",
       "community": "Community",
-      "company": "Company"
+      "company": "Resources"
     },
     "links": {
       "sdk": "Start building",
@@ -1390,7 +1390,7 @@
       "hero": {
         "eyebrow": "[$14B+ in trading volume]",
         "headline": "Trading infrastructure for on-chain finance",
-        "intro": "One execution stack for onchain finance: aggregated liquidity, advanced spot orders, perpetual futures and decentralised compute. Powered by dSPOT, dPERPS and Execution Services, with $14B+ in executed trading volume.",
+        "intro": "One execution stack for onchain finance: aggregated liquidity, advanced spot orders, perpetual futures and decentralised compute. Powering dSPOT, dPERPS and Execution Services, with $14B+ in executed trading volume.",
         "cta": "Talk to the team"
       },
       "stats": {
@@ -1524,9 +1524,8 @@
       "discover": {
         "title": "Discover.",
         "blog": "Blog",
-        "whitePapers": "Whitepapers",
+        "developers": "Developer docs",
         "faq": "FAQ",
-        "cta": "View resources",
         "securityAndAudits": "Security & Audits"
       },
       "marquee": {
