@@ -9,7 +9,7 @@ import { DEFAULT_LOCALE, isLocale, type Locale } from '@/i18n/locales'
  * silently discards it, and the reader is told their message was sent. One
  * module means the two cannot drift.
  *
- * Hand-rolled rather than reaching for a schema library. Five fields with
+ * Hand-rolled rather than reaching for a schema library. A few fields with
  * obvious rules do not justify a runtime dependency on the one code path in
  * this app that accepts input from the public internet, and this way the rules
  * also ship to the browser without dragging a validator bundle with them.
@@ -29,7 +29,10 @@ export const CONTACT_LIMITS = {
   message: 5000,
 } as const
 
-export type ContactField = 'firstName' | 'lastName' | 'email' | 'phone' | 'message'
+export const CONTACT_TYPES = ['venue', 'institution', 'developer'] as const
+export type ContactType = (typeof CONTACT_TYPES)[number]
+
+export type ContactField = 'firstName' | 'lastName' | 'email' | 'phone' | 'contactType' | 'message'
 
 /** Why a field was rejected. Maps to a catalog string in the form. */
 export type ContactFieldError = 'required' | 'invalid' | 'tooLong'
@@ -42,6 +45,8 @@ export type ContactMessage = {
   email: string
   /** Optional on the legacy form, and kept optional. */
   phone: string
+  /** Optional so general enquiries and forms loaded before this field still work. */
+  contactType?: ContactType
   message: string
   /** Which locale the form was submitted from, so the team can reply in kind. */
   locale: Locale
@@ -91,9 +96,17 @@ export function validateContactMessage(body: unknown): ContactValidation {
   const lastName = text(raw.lastName)
   const email = text(raw.email)
   const phone = text(raw.phone)
+  const contactType = CONTACT_TYPES.find((type) => type === text(raw.contactType))
   const message = text(raw.message)
 
   const errors: ContactErrors = {}
+
+  if (
+    raw.contactType !== undefined &&
+    (typeof raw.contactType !== 'string' || (raw.contactType.trim() !== '' && !contactType))
+  ) {
+    errors.contactType = 'invalid'
+  }
 
   const firstNameError = checkRequired(firstName, CONTACT_LIMITS.name)
   if (firstNameError) errors.firstName = firstNameError
@@ -126,6 +139,7 @@ export function validateContactMessage(body: unknown): ContactValidation {
       lastName,
       email,
       phone,
+      contactType,
       // Never trusted from the client beyond being one of the three we serve.
       locale: typeof raw.locale === 'string' && isLocale(raw.locale) ? raw.locale : DEFAULT_LOCALE,
       message,
@@ -169,6 +183,7 @@ export function formatEnquiry(message: ContactMessage): string {
     `Name:    ${message.firstName} ${message.lastName}`,
     `Email:   ${message.email}`,
     message.phone ? `Phone:   ${message.phone}` : null,
+    message.contactType ? `Type:    ${message.contactType}` : null,
     `Locale:  ${message.locale}`,
     '',
     message.message,

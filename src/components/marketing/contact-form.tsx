@@ -7,13 +7,16 @@ import { Textarea } from '@/components/ui/textarea'
 import { H3 } from '@/app/components/typography'
 import {
   CONTACT_LIMITS,
+  CONTACT_TYPES,
   HONEYPOT_FIELD,
   validateContactMessage,
   type ContactErrors,
   type ContactField,
   type ContactFieldError,
+  type ContactType,
 } from '@/lib/contact-message'
 import type { Locale } from '@/i18n/locales'
+import { cn } from '@/lib/utils'
 
 /**
  * The contact form.
@@ -38,6 +41,9 @@ export type ContactFormLabels = {
   emailPlaceholder: string
   phone: string
   phonePlaceholder: string
+  contactType: string
+  contactTypePlaceholder: string
+  contactTypes: Record<ContactType, string>
   message: string
   messagePlaceholder: string
   submit: string
@@ -45,6 +51,7 @@ export type ContactFormLabels = {
   required: string
   invalidEmail: string
   invalidPhone: string
+  invalidContactType: string
   /** Shown when the request itself failed. Already carries the fallback address. */
   failed: string
   successTitle: string
@@ -63,6 +70,7 @@ type Status = 'idle' | 'sending' | 'sent' | 'failed'
 function fieldError(field: ContactField, reason: ContactFieldError, labels: ContactFormLabels): string {
   if (reason === 'invalid' && field === 'email') return labels.invalidEmail
   if (reason === 'invalid' && field === 'phone') return labels.invalidPhone
+  if (reason === 'invalid' && field === 'contactType') return labels.invalidContactType
 
   return labels.required
 }
@@ -93,6 +101,7 @@ function submitted(form: HTMLFormElement, locale: Locale) {
     lastName: field('lastName'),
     email: field('email'),
     phone: field('phone'),
+    contactType: field('contactType'),
     message: field('message'),
     locale,
     [HONEYPOT_FIELD]: field(HONEYPOT_FIELD),
@@ -102,6 +111,8 @@ function submitted(form: HTMLFormElement, locale: Locale) {
 export function ContactForm({ labels, locale }: { labels: ContactFormLabels; locale: Locale }) {
   const [errors, setErrors] = React.useState<ContactErrors>({})
   const [status, setStatus] = React.useState<Status>('idle')
+  const contactTypeId = React.useId()
+  const contactTypeErrorId = errors.contactType ? `${contactTypeId}-error` : undefined
 
   const clearError = (field: ContactField) => () => {
     // Clear this field's error as it is corrected, rather than leaving it until
@@ -218,6 +229,40 @@ export function ContactForm({ labels, locale }: { labels: ContactFormLabels; loc
           error={errors.phone && fieldError('phone', errors.phone, labels)}
           disabled={sending}
         />
+      </div>
+
+      <div className="flex min-w-0 flex-col gap-2">
+        <label htmlFor={contactTypeId} className="text-detail font-medium text-fg-muted">
+          {labels.contactType}
+        </label>
+        <select
+          id={contactTypeId}
+          name="contactType"
+          defaultValue=""
+          disabled={sending}
+          onChange={clearError('contactType')}
+          aria-invalid={errors.contactType ? true : undefined}
+          aria-describedby={contactTypeErrorId}
+          className={cn(
+            'h-12 w-full min-w-0 border-0 border-b bg-transparent px-0 text-field text-fg outline-none transition-colors',
+            'focus-visible:ring-1 focus-visible:ring-ring disabled:cursor-not-allowed disabled:text-fg-muted',
+            errors.contactType ? 'border-b-[var(--destructive)]' : 'border-border focus:border-accent-primary'
+          )}
+        >
+          <option value="" className="bg-bg text-fg">
+            {labels.contactTypePlaceholder}
+          </option>
+          {CONTACT_TYPES.map((type) => (
+            <option key={type} value={type} className="bg-bg text-fg">
+              {labels.contactTypes[type]}
+            </option>
+          ))}
+        </select>
+        {errors.contactType && (
+          <p id={contactTypeErrorId} className="text-detail text-coral-500">
+            {fieldError('contactType', errors.contactType, labels)}
+          </p>
+        )}
       </div>
 
       <Textarea
