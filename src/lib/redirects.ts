@@ -97,6 +97,26 @@ export const REDIRECTS: readonly Redirect[] = [
 ]
 
 /**
+ * Duplicate article URLs verified against legacy source and the deployed
+ * Contentful pages on 2026-10-18 (#38). These are content-equivalent moves,
+ * rather than guesses from similar titles. The Meta Swap directory actually
+ * serves the Alpaca tutorial; single-sided-farming is the older Part 1 copy.
+ * Three other live but unlisted articles have no equivalent and need migration.
+ * Blog destinations are dynamic Contentful routes, so they have no page file
+ * for the static-route guard to discover.
+ */
+export const BLOG_REDIRECTS: readonly { from: string; to: string }[] = [
+  {
+    from: '/Meta-Swap-Decentralized-AMM-Optimizer',
+    to: '/how-to-use-the-orbs-pool-on-alpaca-finance',
+  },
+  {
+    from: '/single-sided-farming',
+    to: '/single-sided-farming-on-any-dex-via-orbs-liquidity-nexus-part-1',
+  },
+]
+
+/**
  * A section whose CHILD pages exist only in English, where the legacy site
  * served localised ones.
  *
@@ -226,6 +246,11 @@ export function expandedRedirects(): { source: string; destination: string; perm
       }))
     ),
     ...expandedPrefixRedirects(),
+    ...BLOG_REDIRECTS.map(({ from, to }) => ({
+      source: `${from}/`,
+      destination: `${to}/`,
+      permanent: true as const,
+    })),
   ]
 }
 

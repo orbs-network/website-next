@@ -2,7 +2,7 @@ import { readdir } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { PREFIX_REDIRECTS, REDIRECTS, expandedPrefixRedirects, expandedRedirects } from './redirects'
+import { BLOG_REDIRECTS, PREFIX_REDIRECTS, REDIRECTS, expandedPrefixRedirects, expandedRedirects } from './redirects'
 import { localesFor } from '@/i18n/availability'
 import { LOCALE_SEGMENTS } from '@/i18n/locales'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
@@ -68,7 +68,7 @@ describe('the redirect map', () => {
   })
 
   it('never redirects away from a page that still exists', () => {
-    const shadowed = REDIRECTS.filter(({ from }) => routes.has(from)).map(({ from }) => from)
+    const shadowed = [...REDIRECTS, ...BLOG_REDIRECTS].filter(({ from }) => routes.has(from)).map(({ from }) => from)
 
     expect(
       shadowed,
@@ -79,15 +79,16 @@ describe('the redirect map', () => {
   it('has no redirect that points at another redirect', () => {
     // A chain costs the reader two round trips and search engines discount
     // them. Collapse it to one hop instead of relying on nobody noticing.
-    const sources = new Set(REDIRECTS.map(({ from }) => from))
-    const chained = REDIRECTS.filter(({ to }) => sources.has(to)).map(({ from, to }) => `${from} -> ${to} -> ...`)
+    const all = [...REDIRECTS, ...BLOG_REDIRECTS]
+    const sources = new Set(all.map(({ from }) => from))
+    const chained = all.filter(({ to }) => sources.has(to)).map(({ from, to }) => `${from} -> ${to} -> ...`)
 
     expect(chained, `\nRedirect chains:\n  ${chained.join('\n  ')}\n`).toEqual([])
   })
 
   it('has no duplicate sources', () => {
     const seen = new Set<string>()
-    const duplicated = REDIRECTS.map(({ from }) => from).filter((from) => !seen.add(from))
+    const duplicated = [...REDIRECTS, ...BLOG_REDIRECTS].map(({ from }) => from).filter((from) => !seen.add(from))
 
     expect(duplicated).toEqual([])
   })
@@ -97,9 +98,9 @@ describe('the redirect map', () => {
     // produce `//`, which matches nothing and fails silently.
     // The home page is the one exception: it has no slashless spelling, and
     // `expandedRedirects` handles it rather than concatenating a second slash.
-    const wrong = REDIRECTS.flatMap(({ from, to }) => [from, to]).filter(
-      (path) => path !== '/' && (path.endsWith('/') || !path.startsWith('/'))
-    )
+    const wrong = [...REDIRECTS, ...BLOG_REDIRECTS]
+      .flatMap(({ from, to }) => [from, to])
+      .filter((path) => path !== '/' && (path.endsWith('/') || !path.startsWith('/')))
 
     expect(wrong).toEqual([])
   })
@@ -153,6 +154,7 @@ describe('expandedRedirects', () => {
   it('emits one rule per locale the destination exists in, and no more', () => {
     const expected =
       REDIRECTS.reduce((total, { locales }) => total + locales.length, 0) +
+      BLOG_REDIRECTS.length +
       // One pattern per locale, plus one explicit rule per renamed child.
       PREFIX_REDIRECTS.reduce(
         (total, { locales, rename }) =>
@@ -192,6 +194,21 @@ describe('expandedRedirects', () => {
     expect(sources).not.toContain('/jp/perpetual-hub/')
 
     expect(expandedRedirects().find(({ source }) => source === '/perpetual-hub/')?.destination).toBe('/dperps/')
+  })
+})
+
+describe('legacy duplicate article URLs', () => {
+  it('moves both known copies to the content-equivalent, published article', () => {
+    expect(BLOG_REDIRECTS).toEqual([
+      { from: '/Meta-Swap-Decentralized-AMM-Optimizer', to: '/how-to-use-the-orbs-pool-on-alpaca-finance' },
+      {
+        from: '/single-sided-farming',
+        to: '/single-sided-farming-on-any-dex-via-orbs-liquidity-nexus-part-1',
+      },
+    ])
+    for (const { from, to } of BLOG_REDIRECTS) {
+      expect(expandedRedirects()).toContainEqual({ source: `${from}/`, destination: `${to}/`, permanent: true })
+    }
   })
 })
 

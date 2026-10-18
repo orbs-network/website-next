@@ -1,5 +1,7 @@
 import { describe, expect, it } from 'vitest'
-import { localeHref } from './availability'
+import { localeHref, localesFor, isPlaceholder, translatedLocalesFor } from './availability'
+import en from './messages/en.json'
+import ja from './messages/ja.json'
 
 describe('localeHref with fragments and queries', () => {
   it('keeps the homepage product anchor intact in every locale', () => {
@@ -18,4 +20,20 @@ describe('localeHref with fragments and queries', () => {
     expect(localeHref('/', 'ja')).toBe('/jp/')
     expect(localeHref('/pos', 'ko')).toBe('/ko/pos/')
   })
+})
+
+describe('legacy Japanese AI URLs', () => {
+  it('has complete English placeholder copy for both Japanese page renderers', () => {
+    expect(ja.pages.aiSkills).toEqual(en.pages.aiSkills)
+    expect(ja.pages.spotOrders).toEqual(en.pages.spotOrders)
+  })
+  it.each(['/ai/skills', '/ai/skills/spot-advanced-swap-orders'])(
+    'preserves %s without a false translation claim',
+    (path) => {
+      expect(localesFor(path)).toContain('ja')
+      expect(isPlaceholder(path, 'ja')).toBe(true)
+      expect(translatedLocalesFor(path)).not.toContain('ja')
+      expect(localeHref(path, 'ja')).toBe(`/jp${path}/`)
+    }
+  )
 })

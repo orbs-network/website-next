@@ -68,8 +68,10 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   // `/ai` itself is NOT a page — the legacy site 404s on it. The section's
   // entry point is this index, and one skill sits under it. Korean is a real
   // translation of both.
-  '/ai/skills': { en: 'translated', ko: 'translated' },
-  '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ko: 'translated' },
+  // Both Japanese URLs are live on legacy, but all 20 source markdown files
+  // contain English copy. Preserve the URLs without claiming a translation.
+  '/ai/skills': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   // `content/jp/privacy-policy` is a real Japanese translation of the whole
   // document. `content/ko/privacy-policy` is the English text copied verbatim,
   // so Korean is reachable and `placeholder` — the same distinction dTWAP and
