@@ -1505,6 +1505,23 @@
         "title": "dTWAP and dLIMIT disclaimer",
         "description": "Risk disclaimer for the Orbs dTWAP and dLIMIT protocols."
       }
+    },
+    "localizedHome": {
+      "meta": {
+        "title": "기존 금융을 DeFi에 담다",
+        "description": "차세대 온체인 트레이딩을 위한 L3 솔루션"
+      },
+      "headline": "기존 금융을\nDeFi에 담다",
+      "intro": "차세대 온체인 트레이딩을 위한 L3 솔루션",
+      "overview": "더 알아보기",
+      "contact": "문의하기",
+      "partners": "DeFi 분야에서 가장 많은 선택을 받은 L3 솔루션"
+    },
+    "challengeArchive": {
+      "meta": {
+        "title": "오브스 에이전틱 챌린지 — 보관 문서",
+        "description": "2026년 5월 4일–24일 오브스 에이전틱 챌린지의 정보와 규칙. 참가 접수는 종료되었습니다."
+      }
     }
   },
   "devDocs": {

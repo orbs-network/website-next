@@ -1873,6 +1873,12 @@
           "network": "Orbs network repositories"
         }
       }
+    },
+    "challengeArchive": {
+      "meta": {
+        "title": "The Orbs Agentic Challenge — archive",
+        "description": "Archived campaign information and rules for the Orbs Agentic Challenge, 4–24 May 2026. Entries are closed."
+      }
     }
   },
   "devDocs": {

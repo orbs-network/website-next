@@ -40,9 +40,8 @@ import { textLang } from '@/i18n/script'
 /**
  * The home page, design 3.4.
  *
- * Japanese and Korean keep their earlier English placeholder copy while the
- * content refresh starts in English. Both routes remain `placeholder`.
- * `textLang` marks each English string inside those documents.
+ * Japanese and Korean use `LocalizedHomePage` with the approved legacy landing
+ * copy while the new design's content refresh starts in English.
  *
  * One destination is not built yet (`/ai-agents`). It is in
  * `link-integrity.test.ts`'s `PENDING`, so the guard knows and will fail the

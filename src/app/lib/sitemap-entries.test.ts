@@ -9,6 +9,12 @@ vi.mock('./api', () => ({
 }))
 
 describe('marketing sitemap entries', () => {
+  it('preserves all three indexable homepage entry points', async () => {
+    const entries = await sitemapEntries()
+    expect(entries.filter(({ priority }) => priority === 1 || priority === 0.9).map(({ url }) => url)).toEqual(
+      expect.arrayContaining(['https://www.orbs.com/', 'https://www.orbs.com/jp/', 'https://www.orbs.com/ko/'])
+    )
+  })
   it('includes the English audit page without advertising unavailable translations', async () => {
     const entries = await sitemapEntries()
     const urls = entries

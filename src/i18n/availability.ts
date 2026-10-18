@@ -30,14 +30,12 @@ type LocaleStatus = 'translated' | 'placeholder'
  * A path absent from this map is English-only, which is the safe default: the
  * selector will not offer a locale we cannot serve.
  *
- * `/jp/` and `/ko/` are `placeholder` because both currently render the shared
- * English `HomeHero`. Phase 3 (#31, #32) builds the real home pages and flips
- * them to `translated`. Note they are marked noindex until then — that costs
- * nothing today because DNS has not cut over (#39), so the legacy site is still
- * the one being crawled.
+ * `/jp/` and `/ko/` preserve the approved legacy landing copy, so these entry
+ * points remain indexable at cutover rather than serving the English refresh.
  */
 const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
-  '/': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
+  '/challenge': { en: 'translated', ja: 'translated', ko: 'translated' },
+  '/': { en: 'translated', ja: 'translated', ko: 'translated' },
   // Korean is a real translation of every string on the page. Japanese is not:
   // the legacy `jp/dtwap` content is byte-for-byte the English page, so its
   // catalog mirrors English and the route is preserved without claiming to be a
@@ -257,7 +255,7 @@ export function isPlaceholder(pathname: string, locale: Locale): boolean {
  * Distinct from a `placeholder` locale, which is about a translation that does
  * not exist. This is about a page whose SUBJECT has expired, in every language.
  */
-const ARCHIVED_PATHS = new Set(['/ORBS-NFT-CONTEST-OFFICIAL-RULES'])
+const ARCHIVED_PATHS = new Set(['/ORBS-NFT-CONTEST-OFFICIAL-RULES', '/challenge'])
 
 /** Whether a path is kept for the record rather than advertised. */
 export function isArchived(pathname: string): boolean {

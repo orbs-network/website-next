@@ -46,7 +46,7 @@ English placeholders, with complete English catalog namespaces, `noindex` and
 no Japanese hreflang claim. They preserve reachability rather than pretend to
 be translations.
 
-## Six content URLs still require preservation
+## Remaining content preservation
 
 These have no content-equivalent destination. A generic redirect would hide
 content loss:
@@ -56,31 +56,26 @@ content loss:
 - `/tetra-orbs-staking-wallet-tutorial/` — historical staking tutorial. Its
   source date is blank; the existing migrator skips it. Confirm its original
   publication date before importing, rather than date it as a new post.
-- `/challenge/`
-- `/jp/challenge/`
-- `/ko/challenge/`
 
-The first three are live but unlisted posts and need a targeted Contentful
+These are live but unlisted posts and need a targeted Contentful
 import, including their images. No Contentful management capability is
 available in this session. The existing tool is
 `scripts/orbs-website-migration/scripts/migrate-blogposts.mjs`; scope an import
 to these entries and preserve the existing author IDs and asset handling.
 
-The Challenge was a trading competition on 4–24 May 2026, with published prize
-and eligibility rules. Recommend preserving it as an archived page in each
-existing language, without implying that the competition is still open.
-Archiving or retiring this campaign needs an editorial decision.
+Sarbloc approved preserving the expired Challenge on 18 October. The three
+original URLs (`/challenge/`, `/jp/challenge/`, `/ko/challenge/`) now serve an
+archive with a prominent closure notice, original prize/eligibility rules,
+no live entry CTA, and `noindex, follow`. They are excluded from the sitemap.
 
-## Locale homepages remain a launch decision
+## Locale homepages preserved
 
-The new `/jp/` and `/ko/` homepages return 200 with English placeholder body
-copy, `noindex, follow`, and no sitemap entries. The live legacy homepages have
-Japanese/Korean hero copy. Do not simply mark the new placeholders as translated
-or advertise them as Japanese/Korean alternates.
-
-Preserving localized homepages requires approved localized copy/composition;
-consolidating them onto English instead requires an explicit SEO/content
-decision. This issue remains open before DNS cutover.
+Sarbloc approved preserving the existing Japanese/Korean landing copy on
+18 October. `/jp/` and `/ko/` now render their original translated hero copy
+in the shared site layout, with locale-correct links and the Korean partner
+strip. They are indexable with self canonicals, reciprocal language alternates
+and sitemap entries. The new English homepage has not been presented as a
+Japanese/Korean translation. Localizing that full refresh remains later work.
 
 ## Other launch checks
 

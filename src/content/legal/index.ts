@@ -47,6 +47,15 @@ export type LegalDocument = {
 }
 
 const DOCUMENTS = {
+  // Approved archive of the 4–24 May 2026 competition. Preserve its published
+  // prize/eligibility rules in every original language, without reopening it.
+  '/challenge': {
+    body: {
+      en: read('challenge.en.md'),
+      ja: read('challenge.ja.md'),
+      ko: read('challenge.ko.md'),
+    },
+  },
   '/privacy-policy': {
     body: {
       en: read('privacy-policy.en.md'),
