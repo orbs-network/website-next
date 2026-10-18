@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { HomePage } from '@/app/marketing/home'
+import { LocalizedHomePage } from '@/app/marketing/localized-home'
 import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import { HOME_PATH } from '@/app/lib/routes'
@@ -7,7 +7,7 @@ import { HOME_PATH } from '@/app/lib/routes'
 export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations({ locale: 'ko', namespace: 'pages.home.meta' })
+  const t = await getTranslations({ locale: 'ko', namespace: 'pages.localizedHome.meta' })
 
   return {
     title: t('title'),
@@ -19,13 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-/**
- * The design 3.4 home page, in a document tagged `ko`.
- *
- * Its copy is entirely new and English-only — none of it exists in the legacy
- * site in any language — so the catalog mirrors English, `textLang` marks each
- * string, and the route stays `placeholder`. That is what it already was.
- */
+/** Preserve the legacy Korean landing copy while the English refresh is localized. */
 export default function LocaleHome() {
-  return <HomePage locale="ko" />
+  return <LocalizedHomePage locale="ko" />
 }

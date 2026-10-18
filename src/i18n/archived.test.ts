@@ -44,7 +44,7 @@ describe('archived pages', () => {
     // passes while doing nothing, which is how this silently stops working.
     const archived = MARKETING_PAGE_PATHS.filter((path) => isArchived(path))
 
-    expect(archived).toEqual(['/ORBS-NFT-CONTEST-OFFICIAL-RULES'])
+    expect(archived).toEqual(['/ORBS-NFT-CONTEST-OFFICIAL-RULES', '/challenge'])
   })
 
   it('does not archive the pages that are still operative', () => {

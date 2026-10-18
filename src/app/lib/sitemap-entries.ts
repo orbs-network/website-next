@@ -50,10 +50,9 @@ export async function sitemapEntries(): Promise<MetadataRoute.Sitemap> {
     posts.length > 0 ? new Date(Math.max(...posts.map((p) => new Date(p.updatedAt).getTime()))) : new Date()
   const totalPages = Math.max(1, Math.ceil(posts.length / POSTS_PER_PAGE))
 
-  // Only locales whose copy is genuinely translated. `/jp/` and `/ko/` exist and
-  // are reachable, but they currently render the English placeholder and are
-  // marked noindex, so listing them would advertise URLs we are simultaneously
-  // asking crawlers to ignore. Phase 3 gives them real copy and they appear.
+  // Only locales whose landing copy is genuinely translated. English and the
+  // preserved Japanese/Korean landings are indexable; other placeholder pages
+  // remain excluded by the availability map below.
   const home: MetadataRoute.Sitemap = translatedLocalesFor(HOME_PATH).map((locale) => ({
     url: absoluteUrl(localePath(locale, HOME_PATH)),
     lastModified: lastArchiveChange,

@@ -72,6 +72,10 @@ export type MarketingPageEntry = {
  * route that exists but is not reserved.
  */
 const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
+  '/challenge': {
+    render: (locale) => <LegalPage path="/challenge" locale={locale} namespace="pages.challengeArchive" />,
+    namespace: 'pages.challengeArchive',
+  },
   '/dtwap': { render: (locale) => <DtwapPage locale={locale} />, namespace: 'pages.dtwap' },
   '/dlimit': { render: (locale) => <DlimitPage locale={locale} />, namespace: 'pages.dlimit' },
   '/dsltp': { render: (locale) => <DsltpPage locale={locale} />, namespace: 'pages.dsltp' },

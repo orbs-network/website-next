@@ -1316,6 +1316,21 @@
         "nameHeader": "Chain",
         "idHeader": "Chain ID"
       }
+    },
+    "localizedHome": {
+      "meta": {
+        "title": "Orbsハイブリッド・ブロックチェーン：ビジネスの分散化を後押し",
+        "description": "実用的なブロックチェーンソリューション。 スケーリング可能な予測可能な料金。アプリ間の分離。 あらゆる言語のスマートコントラクト。"
+      },
+      "headline": "スマート\nコントラクトを\nよりスマートに",
+      "intro": "実用的なブロックチェーンソリューション。 スケーリング可能な予測可能な料金。アプリ間の分離。 あらゆる言語のスマートコントラクト。",
+      "overview": "詳細はこちら"
+    },
+    "challengeArchive": {
+      "meta": {
+        "title": "Orbs Agentic Challenge — アーカイブ",
+        "description": "2026年5月4日〜24日の Orbs Agentic Challenge の情報とルール。参加受付は終了しました。"
+      }
     }
   },
   "devDocs": {

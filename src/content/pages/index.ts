@@ -43,6 +43,7 @@ export const MARKETING_PAGE_PATHS = [
   '/dtwap-dlimit-disclaimer',
   '/orbs-ecosystem-grant-program-terms-and-conditions',
   '/ORBS-NFT-CONTEST-OFFICIAL-RULES',
+  '/challenge',
   // FAQ. Same markdown-document treatment as the legal pages; `##` is a
   // section and `###` a question.
   '/faq',
