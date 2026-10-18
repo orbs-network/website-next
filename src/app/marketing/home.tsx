@@ -29,7 +29,7 @@ import {
   type HomeCard,
 } from '@/content/pages/home'
 import { postPath } from '@/app/lib/routes'
-import { COVER_FRAME, coverImage } from '@/app/components/blog/cover'
+import { COVER_FRAME, COVER_PLACEHOLDER } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
 import { SDK_DOCS_URL } from '@/content/shared/sdk'
 import { readingMinutes } from '@/lib/reading-time'
@@ -732,7 +732,7 @@ function NewsCard({
    */
   locale: Locale
 }) {
-  const cover = coverImage(getAssetUrl(post.heroImage))
+  const coverSrc = getAssetUrl(post.heroImage) ?? COVER_PLACEHOLDER
   const author = getAuthorInfo(post.author)
 
   return (
@@ -749,15 +749,12 @@ function NewsCard({
         */}
         <div className={cn('overflow-hidden rounded-sm', COVER_FRAME)}>
           <Image
-            src={cover.src}
+            src={coverSrc}
             alt=""
             width={352}
             height={176}
             sizes="(min-width: 640px) 22rem, 19rem"
-            className={cn(
-              'h-full w-full motion-safe:transition-transform motion-safe:duration-300 motion-safe:[@media(hover:hover)]:group-hover:scale-105',
-              cover.fit
-            )}
+            className="h-full w-full object-cover motion-safe:transition-transform motion-safe:duration-300 motion-safe:[@media(hover:hover)]:group-hover:scale-105"
           />
         </div>
 

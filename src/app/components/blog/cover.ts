@@ -12,7 +12,8 @@
  * image is CONTAINED on a tinted ground. An odd-shaped cover is letterboxed
  * rather than cropped. A cropped brand banner is a broken one; a letterboxed
  * one is only smaller. The frame stays fixed, rather than following each
- * image, so cards in a row keep one height.
+ * image, so cards in a row keep one height. The homepage news rail deliberately
+ * uses object-cover instead, per the approved filled-thumbnail treatment.
  */
 export const COVER_FRAME = 'aspect-[2/1] bg-surface'
 export const COVER_IMAGE = 'object-contain'
