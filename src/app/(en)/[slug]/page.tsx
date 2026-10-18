@@ -1,12 +1,10 @@
 import { Separator } from '@/components/ui/separator'
-import { documentToReactComponents, Options } from '@contentful/rich-text-react-renderer'
-import { BLOCKS, INLINES } from '@contentful/rich-text-types'
 import { Metadata } from 'next'
 import Image from 'next/image'
 import { notFound } from 'next/navigation'
 import { draftMode } from 'next/headers'
-import type { ReactNode } from 'react'
 import { Author } from '@/app/components/blog/author'
+import { BlogRichText } from '@/app/components/blog/rich-text'
 import { H4 } from '@/app/components/typography'
 import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
 import { getAllPostSlugs, getAssetImage, getAssetUrl, getAuthorInfo, getPostBySlug } from '@/app/lib/api'
@@ -14,92 +12,6 @@ import { cn } from '@/lib/utils'
 import { encodedPostPath } from '@/app/lib/routes'
 import { absoluteUrl } from '@/app/lib/site'
 import { BackButton } from './back-button'
-
-// Helper to unwrap paragraph from list item children
-function unwrapParagraphFromListItem(children: ReactNode): ReactNode {
-  // Children is typically an array with a single <p> element
-  // We want to extract the content from inside the <p>
-  if (Array.isArray(children) && children.length === 1) {
-    const child = children[0]
-    // Check if it's a paragraph element and extract its children
-    if (
-      child &&
-      typeof child === 'object' &&
-      'type' in child &&
-      child.type === 'p' &&
-      'props' in child &&
-      child.props?.children
-    ) {
-      return child.props.children
-    }
-  }
-  return children
-}
-
-// Rich text rendering options for embedded assets and entries
-const richTextOptions: Options = {
-  renderNode: {
-    // Fix list items containing unnecessary <p> tags
-    [BLOCKS.LIST_ITEM]: (node, children) => <li>{unwrapParagraphFromListItem(children)}</li>,
-    [BLOCKS.EMBEDDED_ASSET]: (node) => {
-      const { file, title, description } = node.data.target.fields
-      const url = file?.url
-      const mimeType = file?.contentType
-
-      if (!url) return null
-
-      // Handle images
-      if (mimeType?.startsWith('image/')) {
-        return (
-          <figure className="my-8">
-            <Image
-              src={`https:${url}`}
-              alt={description || title || 'Embedded image'}
-              width={file.details?.image?.width || 800}
-              height={file.details?.image?.height || 600}
-              className="rounded-[var(--radius)] w-full h-auto"
-              sizes="(min-width: 896px) 896px, 100vw"
-            />
-            {description && (
-              <figcaption className="text-center text-sm text-muted-foreground mt-2">{description}</figcaption>
-            )}
-          </figure>
-        )
-      }
-
-      // Handle videos
-      if (mimeType?.startsWith('video/')) {
-        return (
-          <video controls className="w-full my-8 rounded-[var(--radius)]">
-            <source src={`https:${url}`} type={mimeType} />
-          </video>
-        )
-      }
-
-      // Handle other files as download links
-      return (
-        <a
-          href={`https:${url}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="inline-flex items-center gap-2 text-primary no-underline hover:underline hover:text-secondary"
-        >
-          📎 {title || 'Download file'}
-        </a>
-      )
-    },
-    [INLINES.HYPERLINK]: (node, children) => (
-      <a
-        href={node.data.uri}
-        target="_blank"
-        rel="noopener noreferrer"
-        className="text-primary no-underline hover:underline hover:text-secondary"
-      >
-        {children}
-      </a>
-    ),
-  },
-}
 
 type Props = {
   params: Promise<{ slug: string }>
@@ -251,9 +163,7 @@ export default async function BlogPostPage({ params }: Props) {
           </div>
         )}
 
-        <div className="prose prose-lg dark:prose-invert max-w-none">
-          {documentToReactComponents(post.content, richTextOptions)}
-        </div>
+        <BlogRichText document={post.content} />
 
         <Separator className="my-10" />
 
