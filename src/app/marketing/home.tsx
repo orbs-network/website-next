@@ -118,14 +118,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
         <div className="container relative">
           <div className="relative mx-auto max-w-4xl text-center">
-            <p
-              className="text-detail font-medium uppercase tracking-widest text-accent-primary"
-              lang={lang('hero.eyebrow')}
-            >
-              {t('hero.eyebrow')}
-            </p>
-
-            <H1 className="mt-6 text-balance" lang={lang('hero.headline') ?? locale}>
+            <H1 className="text-balance" lang={lang('hero.headline') ?? locale}>
               {t('hero.headline')}
             </H1>
 
