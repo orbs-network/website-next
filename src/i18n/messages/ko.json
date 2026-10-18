@@ -1070,6 +1070,14 @@
         "emailPlaceholder": "이메일을 적어주세요",
         "phone": "전화번호 (선택)",
         "phonePlaceholder": "전화번호를 적어주세요",
+        "contactType": "문의자 유형 (선택)",
+        "contactTypePlaceholder": "항목을 선택해 주세요",
+        "contactTypes": {
+          "venue": "거래 플랫폼",
+          "institution": "기관",
+          "developer": "개발자"
+        },
+        "invalidContactType": "올바른 항목을 선택해 주세요",
         "message": "하시고 싶은 말",
         "messagePlaceholder": "저희에게 하시고 싶으신 말씀, 혹은 질문사항을 여기에 적어주세요",
         "submit": "제출하기",

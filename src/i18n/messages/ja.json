@@ -784,6 +784,14 @@
         "emailPlaceholder": "eメールアドレスを入力",
         "phone": "電話番号（任意）",
         "phonePlaceholder": "電話番号を入力",
+        "contactType": "お問い合わせ元の種別（任意）",
+        "contactTypePlaceholder": "選択してください",
+        "contactTypes": {
+          "venue": "取引プラットフォーム",
+          "institution": "機関投資家",
+          "developer": "開発者"
+        },
+        "invalidContactType": "有効な選択肢を選んでください",
         "message": "メッセージ",
         "messagePlaceholder": "お問い合わせの内容",
         "submit": "送信",

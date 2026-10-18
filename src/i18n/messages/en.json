@@ -1222,6 +1222,14 @@
         "emailPlaceholder": "Email",
         "phone": "Phone Number (optional)",
         "phonePlaceholder": "Phone number",
+        "contactType": "Who are you? (optional)",
+        "contactTypePlaceholder": "Select an option",
+        "contactTypes": {
+          "venue": "Venue",
+          "institution": "Institution",
+          "developer": "Developer"
+        },
+        "invalidContactType": "Please select a valid option",
         "message": "Message",
         "messagePlaceholder": "Something you want to tell us? Or maybe to ask?",
         "submit": "Submit",

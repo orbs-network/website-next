@@ -21,6 +21,9 @@ const LABELS: ContactFormLabels = {
   emailPlaceholder: 'Email',
   phone: 'Phone Number (optional)',
   phonePlaceholder: 'Phone number',
+  contactType: 'Who are you? (optional)',
+  contactTypePlaceholder: 'Select an option',
+  contactTypes: { venue: 'Venue', institution: 'Institution', developer: 'Developer' },
   message: 'Message',
   messagePlaceholder: 'Something you want to tell us? Or maybe to ask?',
   submit: 'Submit',
@@ -28,6 +31,7 @@ const LABELS: ContactFormLabels = {
   required: 'Please fill the field',
   invalidEmail: 'Please insert valid email',
   invalidPhone: 'Please insert valid phone number',
+  invalidContactType: 'Please select a valid option',
   failed: 'Something went wrong and your message was not sent.',
   successTitle: 'Thank you for reaching out!',
   successBody: 'We will contact you soon.',
@@ -37,9 +41,45 @@ const args = { labels: LABELS, locale: 'en' } as const
 
 export const Default: Story = { args }
 
+export const SelectedCategoryTravelsWithTheEnquiry: Story = {
+  args,
+  play: async ({ canvasElement }) => {
+    const canvas = within(canvasElement)
+    const select = canvas.getByRole('combobox', { name: LABELS.contactType })
+    await expect(
+      within(select)
+        .getAllByRole('option')
+        .map((option) => option.textContent)
+    ).toEqual([LABELS.contactTypePlaceholder, 'Venue', 'Institution', 'Developer'])
+    await userEvent.selectOptions(select, 'developer')
+    await userEvent.type(canvas.getByLabelText(LABELS.firstName), 'Ada')
+    await userEvent.type(canvas.getByLabelText(LABELS.lastName), 'Lovelace')
+    await userEvent.type(canvas.getByLabelText(LABELS.email), 'ada@example.com')
+    await userEvent.type(canvas.getByLabelText(LABELS.message), 'Please help with an integration.')
+
+    let payload: unknown
+    const originalFetch = window.fetch
+    window.fetch = async (input, init) => {
+      if (input !== '/api/contact/') return originalFetch(input, init)
+      payload = JSON.parse(String(init?.body))
+      // Intercept the request completely. A failed send also lets us check that
+      // the selection remains available for retry without sending real email.
+      return Response.json({ ok: false }, { status: 502 })
+    }
+    try {
+      await userEvent.click(canvas.getByRole('button', { name: LABELS.submit }))
+      await expect(await canvas.findByRole('alert')).toBeInTheDocument()
+      await expect(payload).toMatchObject({ contactType: 'developer', email: 'ada@example.com' })
+      await expect(select).toHaveValue('developer')
+      await expect(select).toBeEnabled()
+    } finally {
+      window.fetch = originalFetch
+    }
+  },
+}
+
 /**
- * Four errors, not five. The phone field is optional and must not be reported
- * as missing — the legacy form asked for it the same way.
+ * Four errors: phone and category are optional and must not be reported as missing.
  */
 export const EmptySubmitReportsEveryMissingField: Story = {
   args,

@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import {
   CONTACT_LIMITS,
+  CONTACT_TYPES,
   HONEYPOT_FIELD,
   formatEnquiry,
   looksAutomated,
@@ -23,6 +24,27 @@ const VALID = {
 } as const
 
 describe('validateContactMessage', () => {
+  it.each(CONTACT_TYPES)('accepts and preserves the %s category', (contactType) => {
+    expect(validateContactMessage({ ...VALID, contactType })).toMatchObject({ ok: true, message: { contactType } })
+    expect(validateContactMessage({ ...VALID, contactType: ` ${contactType} ` })).toMatchObject({
+      ok: true,
+      message: { contactType },
+    })
+  })
+
+  it('keeps the category optional for general enquiries and previously loaded forms', () => {
+    for (const contactType of [undefined, '', '   ']) {
+      expect(validateContactMessage({ ...VALID, contactType })).toMatchObject({ ok: true })
+    }
+  })
+
+  it.each(['other', 'venue\nInjected', 42, null, {}, []])('rejects an invalid category: %j', (contactType) => {
+    expect(validateContactMessage({ ...VALID, contactType })).toMatchObject({
+      ok: false,
+      errors: { contactType: 'invalid' },
+    })
+  })
+
   it('accepts a filled form', () => {
     const result = validateContactMessage(VALID)
 
@@ -128,6 +150,14 @@ describe('looksAutomated', () => {
 })
 
 describe('formatEnquiry', () => {
+  it.each(CONTACT_TYPES)('includes the selected %s category in the forwarded enquiry', (contactType) => {
+    expect(formatEnquiry({ ...VALID, locale: 'en', contactType })).toContain(`Type:    ${contactType}`)
+  })
+
+  it('omits the category line when no category was selected', () => {
+    expect(formatEnquiry({ ...VALID, locale: 'en' })).not.toContain('Type:')
+  })
+
   it('omits the phone line when there is no phone', () => {
     const withPhone = formatEnquiry({ ...VALID, phone: '+44 20 7123 4567', locale: 'en' })
     const without = formatEnquiry({ ...VALID, phone: '', locale: 'en' })
