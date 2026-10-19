@@ -7,8 +7,8 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
  * The Templates page carries two frames of that name with identical copy; this
  * follows `2200:17900`, the one whose hero has the finished mark stack.
  *
- * dSPOT is a hub: the cards link DOWN to the order-type pages, which keep
- * their URLs and their translations (#149). No redirects.
+ * The cards describe the order types without linking to the individual pages
+ * while those pages are being refreshed. Their URLs temporarily lead here.
  */
 
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
@@ -26,12 +26,7 @@ export const DSPOT_LINKS = {
 } as const
 
 /** The four products under dSPOT, in design order. Presentation lives with the page. */
-export const DSPOT_MODULES = [
-  { id: 'dlimit', href: '/dlimit' },
-  { id: 'dtwap', href: '/dtwap' },
-  { id: 'dsltp', href: '/dsltp' },
-  { id: 'liquidityHub', href: '/liquidity-hub' },
-] as const
+export const DSPOT_MODULES = [{ id: 'dlimit' }, { id: 'dtwap' }, { id: 'dsltp' }, { id: 'liquidityHub' }] as const
 
 export type DspotModuleId = (typeof DSPOT_MODULES)[number]['id']
 

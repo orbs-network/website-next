@@ -46,10 +46,8 @@ export type HomeCard = {
 /**
  * [THE STACK] — three products in English; localised refreshes follow.
  *
- * `dSPOT` groups dTWAP, dLIMIT, dSLTP and Liquidity Hub in the navigation, but
- * it is its own page rather than a replacement for theirs: those four keep
- * their URLs and `/dspot` links down to them. Grouping in a menu and moving an
- * indexed URL are separate decisions, and only the first was asked for.
+ * `dSPOT` groups dTWAP, dLIMIT, dSLTP and Liquidity Hub. Their individual
+ * pages temporarily redirect to dSPOT while the inner pages are refreshed.
  *
  * `dPERPS` is the rename of Perpetual Hub. `/perpetual-hub` now permanently
  * redirects here — see `src/lib/redirects.ts`.
@@ -93,7 +91,7 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'venues', href: '/venues', accent: 'cyan' },
   // The one that already exists.
   { id: 'institutions', href: '/institutional' },
-  { id: 'aiAgents', href: '/ai/skills', accent: 'pink' },
+  { id: 'aiAgents', href: '/agentic', accent: 'pink' },
 ]
 
 /** The shared feature order: English grid, Japanese/Korean legacy tabs. */

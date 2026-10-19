@@ -1,6 +1,6 @@
 import type { NextConfig } from 'next'
 import createNextIntlPlugin from 'next-intl/plugin'
-import { expandedRedirects } from './src/lib/redirects'
+import { expandedRedirects, expandedTemporaryRedirects } from './src/lib/redirects'
 
 // Points at the request config rather than the default `./i18n/request.ts`,
 // because this project keeps source under `src/`.
@@ -50,11 +50,11 @@ const nextConfig: NextConfig = {
     '/**': ['./src/content/legal/**', './src/content/archive/*.md'],
   },
   /**
-   * Permanent redirects for URLs we have moved ourselves.
+   * Permanent moves and temporary redirects during the inner-page refresh.
    *
    * The map and the rules that keep it honest live in `src/lib/redirects.ts` —
-   * every destination must resolve to a real route, and no source may also be
-   * one. Both are enforced by `src/lib/redirects.test.ts` rather than by
+   * every destination must resolve to a real route. Permanent moves cannot
+   * shadow live pages; temporary moves deliberately preserve them for restoration. Both are enforced by `src/lib/redirects.test.ts` rather than by
    * review, because a redirect pointing at a 404 looks exactly like a redirect
    * that works until somebody follows it.
    *
@@ -63,7 +63,7 @@ const nextConfig: NextConfig = {
    * cost a second hop before this rule ever fired.
    */
   async redirects() {
-    return expandedRedirects()
+    return [...expandedRedirects(), ...expandedTemporaryRedirects()]
   },
 }
 

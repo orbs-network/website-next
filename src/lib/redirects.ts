@@ -201,6 +201,37 @@ const SEGMENTS: Record<Locale, string> = {
 }
 
 /**
+ * Reversible consolidation while the inner pages are refreshed (October 2026).
+ * The underlying routes stay available to restore later, but are not advertised
+ * in the sitemap. Unlike permanent moves, these return 307 and may intentionally
+ * shadow a page. Unavailable destination translations fall back to English.
+ */
+export const TEMPORARY_REDIRECTS: readonly Redirect[] = [
+  ...['/liquidity-hub', '/dtwap', '/dlimit', '/dsltp'].map((from) => ({
+    from,
+    to: '/dspot',
+    locales: ['en'] as const,
+    reason: 'Individual product pages are being refreshed; use the main dSPOT page for now.',
+  })),
+  {
+    from: '/ai/skills',
+    to: '/agentic',
+    locales: ['en', 'ko'],
+    reason: 'Consolidate the AI Skills landing page into Orbs Agentic.',
+  },
+]
+
+export function expandedTemporaryRedirects(): { source: string; destination: string; permanent: false }[] {
+  return TEMPORARY_REDIRECTS.flatMap(({ from, to, locales }) =>
+    (Object.keys(SEGMENTS) as Locale[]).map((locale) => ({
+      source: `${SEGMENTS[locale]}${from}/`,
+      destination: `${locales.includes(locale) ? SEGMENTS[locale] : ''}${to}/`,
+      permanent: false as const,
+    }))
+  )
+}
+
+/**
  * Every source/destination pair, expanded across the locales the destination
  * actually exists in, in the trailing-slash form `trailingSlash: true` serves.
  *

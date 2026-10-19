@@ -83,9 +83,8 @@ export const LEGACY_NAV_GROUPS: readonly NavGroupSpec[] = [
     links: [
       { key: 'venues', href: '/venues' },
       { key: 'institutions', href: '/institutional' },
-      // No dedicated AI-agents page: the skills index is where an agent
-      // builder starts (#212, Sara). #158 proposed a page; this supersedes it.
-      { key: 'aiAgents', href: '/ai/skills' },
+      // All AI Agents entry points lead directly to Orbs Agentic.
+      { key: 'aiAgents', href: '/agentic' },
     ],
   },
   {
@@ -127,7 +126,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     key: 'tools',
     links: [
       { key: 'sdk', href: SDK_DOCS_URL },
-      { key: 'playground', href: 'https://swap.orbs.network/' },
+      { key: 'playground', href: 'https://swap.orbs.network/dev' },
       { key: 'agentic', href: '/agentic' },
       { key: 'securityAndAudits', href: '/security-and-audits' },
     ],
@@ -137,7 +136,7 @@ export const NAV_GROUPS: readonly NavGroupSpec[] = [
     links: [
       { key: 'venues', href: '/venues' },
       { key: 'institutions', href: '/institutional' },
-      { key: 'aiAgents', href: '/ai/skills' },
+      { key: 'aiAgents', href: '/agentic' },
     ],
   },
   {

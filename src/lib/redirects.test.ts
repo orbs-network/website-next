@@ -2,7 +2,15 @@ import { readdir } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
 import { beforeAll, describe, expect, it } from 'vitest'
-import { BLOG_REDIRECTS, PREFIX_REDIRECTS, REDIRECTS, expandedPrefixRedirects, expandedRedirects } from './redirects'
+import {
+  BLOG_REDIRECTS,
+  PREFIX_REDIRECTS,
+  REDIRECTS,
+  TEMPORARY_REDIRECTS,
+  expandedPrefixRedirects,
+  expandedRedirects,
+  expandedTemporaryRedirects,
+} from './redirects'
 import { localesFor } from '@/i18n/availability'
 import { LOCALE_SEGMENTS } from '@/i18n/locales'
 import { WHITE_PAPERS } from '@/content/pages/white-papers'
@@ -25,6 +33,43 @@ import { WHITE_PAPERS } from '@/content/pages/white-papers'
 
 const REPO = resolve(dirname(fileURLToPath(import.meta.url)), '../..')
 const APP = join(REPO, 'src/app')
+
+describe('temporary inner-page consolidation', () => {
+  it('sends all four product URLs and their locale variants straight to dSPOT with reversible redirects', () => {
+    for (const prefix of ['', '/jp', '/ko']) {
+      for (const product of ['liquidity-hub', 'dtwap', 'dlimit', 'dsltp']) {
+        expect(expandedTemporaryRedirects()).toContainEqual({
+          source: `${prefix}/${product}/`,
+          destination: '/dspot/',
+          permanent: false,
+        })
+      }
+    }
+  })
+
+  it('consolidates AI Skills into Agentic, retaining Korean and falling back to English for Japanese', () => {
+    const rules = expandedTemporaryRedirects()
+    for (const [prefix, destination] of [
+      ['', '/agentic/'],
+      ['/jp', '/agentic/'],
+      ['/ko', '/ko/agentic/'],
+    ]) {
+      expect(rules).toContainEqual({ source: `${prefix}/ai/skills/`, destination, permanent: false })
+    }
+    // Agentic still links to the actual skill guide. Only its redundant index moves.
+    expect(rules.some(({ source }) => source.includes('spot-advanced-swap-orders'))).toBe(false)
+  })
+
+  it('has real destination locales, unique sources and no chains through permanent or temporary moves', () => {
+    for (const { to, locales } of TEMPORARY_REDIRECTS) {
+      expect([...locales].sort()).toEqual([...localesFor(to)].sort())
+    }
+    const rules = [...expandedRedirects(), ...expandedTemporaryRedirects()]
+    const sources = rules.map(({ source }) => source)
+    expect(new Set(sources).size).toBe(sources.length)
+    for (const { destination } of rules) expect(sources).not.toContain(destination)
+  })
+})
 
 async function* walk(dir: string): AsyncGenerator<string> {
   for (const entry of await readdir(dir, { withFileTypes: true })) {

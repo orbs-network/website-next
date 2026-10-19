@@ -78,7 +78,6 @@ export async function DspotPage({ locale }: { locale: Locale }) {
           eyebrow: t(`modules.${module.id}.name`),
           title: t(`modules.${module.id}.name`),
           body: t(`modules.${module.id}.body`),
-          link: { label: t(`modules.${module.id}.cta`), href: module.href },
           ...MODULE_PRESENTATION[module.id],
         }))}
         locale={locale}
