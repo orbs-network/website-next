@@ -121,7 +121,6 @@ export async function InstitutionalPage({ locale }: { locale: Locale }) {
           eyebrow: t(`products.items.${product.id}.title`),
           title: t(`products.items.${product.id}.title`),
           body: t(`products.items.${product.id}.body`),
-          link: { label: t(`products.items.${product.id}.cta`), href: product.href },
           ...PRODUCT_PRESENTATION[product.id],
         }))}
         locale={locale}

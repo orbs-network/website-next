@@ -67,6 +67,7 @@ describe('October product handoff', () => {
     expect(html).toContain('Unified execution.')
     expect(html).not.toContain('Advanced order execution.')
     expect(html).toContain('href="#modules"')
-    for (const href of ['/dlimit/', '/dtwap/', '/dsltp/', '/liquidity-hub/']) expect(html).toContain(`href="${href}"`)
+    for (const href of ['/dlimit/', '/dtwap/', '/dsltp/', '/liquidity-hub/'])
+      expect(html).not.toContain(`href="${href}"`)
   })
 })

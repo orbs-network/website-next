@@ -9,6 +9,15 @@ vi.mock('./api', () => ({
 }))
 
 describe('marketing sitemap entries', () => {
+  it('advertises the consolidated destinations instead of temporarily redirected product and AI Skills pages', async () => {
+    const paths = (await sitemapEntries()).map(({ url }) => new URL(url).pathname)
+    expect(paths).toEqual(expect.arrayContaining(['/dspot/', '/agentic/', '/ko/agentic/']))
+    for (const prefix of ['', '/jp', '/ko']) {
+      for (const path of ['/liquidity-hub/', '/dtwap/', '/dlimit/', '/dsltp/', '/ai/skills/']) {
+        expect(paths).not.toContain(prefix + path)
+      }
+    }
+  })
   it('preserves all three indexable homepage entry points', async () => {
     const entries = await sitemapEntries()
     expect(entries.filter(({ priority }) => priority === 1 || priority === 0.9).map(({ url }) => url)).toEqual(

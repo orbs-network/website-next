@@ -83,7 +83,7 @@ export const LEGACY_FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
       { key: 'venues', href: '/venues' },
       { key: 'institutions', href: '/institutional' },
       // Same destination as the nav's "For AI Agents" (#212).
-      { key: 'aiAgents', href: '/ai/skills' },
+      { key: 'aiAgents', href: '/agentic' },
     ],
   },
   {

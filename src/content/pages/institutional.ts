@@ -14,7 +14,7 @@ import type { LogoRowItem } from '@/components/marketing/logo-row'
 export const INSTITUTIONAL_STATS = ['volume', 'chains', 'venues'] as const
 
 /**
- * The four products, each linking to its own page.
+ * The four products, shown without links while their pages are refreshed.
  *
  * Rendered as `ModuleCards`, dSPOT's card row, with each product's lockup from
  * `icons/products`. Not the legacy `product-*.svg` wordmarks: those letter in
@@ -22,10 +22,10 @@ export const INSTITUTIONAL_STATS = ['volume', 'chains', 'venues'] as const
  * page, because Tailwind only scans `src/app` and `src/components`.
  */
 export const INSTITUTIONAL_PRODUCTS = [
-  { id: 'liquidityHub', href: '/liquidity-hub' },
-  { id: 'dtwap', href: '/dtwap' },
-  { id: 'dlimit', href: '/dlimit' },
-  { id: 'dsltp', href: '/dsltp' },
+  { id: 'liquidityHub' },
+  { id: 'dtwap' },
+  { id: 'dlimit' },
+  { id: 'dsltp' },
 ] as const
 
 /**

@@ -9,7 +9,7 @@ import { Eyebrow, type SectionLink } from './section-parts'
 
 /**
  * dSPOT's modules: an eyebrow, a full-width heading and a short body, then one
- * card per product linking down to its own page.
+ * card per product, optionally linking down to its own page.
  *
  * The cards are the Figma `Feature Card` component: a coloured product name,
  * the product's name again as a tracked title, a sentence, and a "Discover"
@@ -36,7 +36,8 @@ export type ModuleCard = {
   /** Extra classes for the title, e.g. `uppercase` for a name with no lowercase letter to protect. */
   titleClassName?: string
   body: string
-  link: SectionLink
+  /** Omit while a product's individual page is being refreshed. */
+  link?: SectionLink
 }
 
 export function ModuleCards({
@@ -109,14 +110,16 @@ export function ModuleCards({
               {card.body}
             </p>
 
-            <Link
-              href={localeHref(card.link.href, locale)}
-              lang={textLang(card.link.label, locale)}
-              className="mt-auto inline-flex items-center gap-2.5 pt-10 text-detail font-medium uppercase tracking-widest transition-colors after:absolute after:inset-0 hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
-            >
-              {card.link.label}
-              <ButtonArrow />
-            </Link>
+            {card.link && (
+              <Link
+                href={localeHref(card.link.href, locale)}
+                lang={textLang(card.link.label, locale)}
+                className="mt-auto inline-flex items-center gap-2.5 pt-10 text-detail font-medium uppercase tracking-widest transition-colors after:absolute after:inset-0 hover:text-accent-primary focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring"
+              >
+                {card.link.label}
+                <ButtonArrow />
+              </Link>
+            )}
           </li>
         ))}
       </ul>

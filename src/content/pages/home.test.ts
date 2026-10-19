@@ -1,8 +1,25 @@
 import { describe, expect, it } from 'vitest'
-import { HOME_DISCOVER, homeStackForLocale } from './home'
+import { HOME_SOLUTIONS, HOME_DISCOVER, homeStackForLocale } from './home'
 import { overviewProductsForLocale } from './overview'
+import { footerColumnsForLocale } from '@/content/shared/footer'
+import { navigationForLocale } from '@/content/shared/navigation'
 
 describe('English-first product grouping', () => {
+  it.each(['en', 'ja', 'ko'] as const)(
+    'uses Orbs Agentic for the homepage, navigation and footer AI Agents links in %s',
+    (locale) => {
+      const links = [
+        HOME_SOLUTIONS.find(({ id }) => id === 'aiAgents'),
+        navigationForLocale(locale)
+          .groups.find(({ key }) => key === 'solutions')!
+          .links.find(({ key }) => key === 'aiAgents'),
+        footerColumnsForLocale(locale)
+          .find(({ key }) => key === 'solutions')!
+          .links.find(({ key }) => key === 'aiAgents'),
+      ]
+      for (const link of links) expect(link?.href).toBe('/agentic')
+    }
+  )
   it('links Discover to current developer docs instead of the white-paper archive', () => {
     expect(HOME_DISCOVER.map(({ id }) => id)).toEqual(['blog', 'developers', 'faq', 'securityAndAudits'])
     expect(HOME_DISCOVER.find(({ id }) => id === 'developers')!.href).toBe('https://docs.orbs.network/v3')
