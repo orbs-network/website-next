@@ -1,0 +1,3 @@
+# Require sarbloc's review when the main ruleset enables code-owner approval.
+# This includes CODEOWNERS itself and every GitHub Actions workflow.
+* @sarbloc
