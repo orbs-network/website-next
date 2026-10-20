@@ -1,3 +1,6 @@
+import type { Locale } from '@/i18n/locales'
+import { KOREAN_SOCIAL_LINKS } from '@/content/shared/socials'
+
 /**
  * The social channels listed beside the contact form, ported from the legacy
  * `content/contact/socials/` tree.
@@ -91,7 +94,7 @@ export const CONTACT_CHANNELS: readonly ContactChannelGroup[] = [
       // locales — but deriving it means one fewer absolute URL to update at the
       // DNS cutover (#39).
       { language: 'en', label: 'orbs.com/blog', url: '/blog' },
-      { language: 'ko', label: 'blog.naver.com/orbskorea', url: 'https://blog.naver.com/orbskorea' },
+      { language: 'ko', label: 'blog.naver.com/orbskorea', url: 'http://blog.naver.com/orbskorea' },
       { language: 'ja', label: 'medium.com/@orbs-japan-community', url: 'https://medium.com/@orbs-japan-community' },
     ],
   },
@@ -106,3 +109,18 @@ export const CONTACT_CHANNELS: readonly ContactChannelGroup[] = [
  * went away. Same address as the footer.
  */
 export const CONTACT_EMAIL = 'hello@orbs.com'
+
+/** Override only Korean-audience rows when rendered in the Korean edition. */
+export function contactChannelsForLocale(locale: Locale): readonly ContactChannelGroup[] {
+  if (locale !== 'ko') return CONTACT_CHANNELS
+  return CONTACT_CHANNELS.map((group) => ({
+    ...group,
+    links: group.links.map((link) => {
+      if (link.language !== 'ko') return link
+      const platform = group.key === 'community' ? 'telegram' : group.key
+      const url = KOREAN_SOCIAL_LINKS[platform as keyof typeof KOREAN_SOCIAL_LINKS]
+      if (!url) return link
+      return { ...link, url, label: group.key === 'telegram' ? 'Telegram KR' : link.label }
+    }),
+  }))
+}

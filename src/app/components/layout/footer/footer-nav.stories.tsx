@@ -120,7 +120,7 @@ export const LocaleOverrideSendsTheBlogOffSite: Story = {
       {
         spec: spec('blog', '/blog', {
           ja: 'https://orbs-japan-community.medium.com/',
-          ko: 'https://orbskorea.medium.com/',
+          ko: 'http://blog.naver.com/orbskorea',
         }),
         label: 'Blog',
       },

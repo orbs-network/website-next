@@ -321,7 +321,7 @@ function MobileNavFooterArea({
         </div>
 
         <div className={cn('border-t pt-5', RULE)}>
-          <FooterSocials labels={footer.socialLabels} className="justify-between" />
+          <FooterSocials locale={locale} labels={footer.socialLabels} className="justify-between" />
         </div>
       </div>
     </div>

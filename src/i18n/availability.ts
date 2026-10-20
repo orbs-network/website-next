@@ -1,4 +1,5 @@
 import { absoluteUrl } from '@/app/lib/site'
+import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { DEFAULT_LOCALE, LOCALES, localePath, type Locale } from './locales'
 
 /**
@@ -30,153 +31,53 @@ type LocaleStatus = 'translated' | 'placeholder'
  * A path absent from this map is English-only, which is the safe default: the
  * selector will not offer a locale we cannot serve.
  *
- * `/jp/` and `/ko/` preserve the approved legacy landing copy, so these entry
- * points remain indexable at cutover rather than serving the English refresh.
+ * `/jp/` preserves its translated legacy landing. Korean now uses the refreshed
+ * English layout with freshly translated Korean copy. Only the four excluded legal
+ * pages and the English CMS news archive remain Korean placeholders.
  */
 const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
+  '/venues': { en: 'translated', ko: 'translated' },
+  '/tetra-orbs-staking-wallet-tutorial': { en: 'translated', ko: 'translated' },
+  '/terms-of-use': { en: 'translated', ko: 'placeholder' },
+  '/security-and-audits': { en: 'translated', ko: 'translated' },
+  '/orbs-ecosystem-grant-program-terms-and-conditions': { en: 'translated', ko: 'translated' },
+  '/news': { en: 'translated', ko: 'placeholder' },
+  '/liquidity-hub-terms-of-use': { en: 'translated', ko: 'translated' },
+  '/institutional': { en: 'translated', ko: 'translated' },
+  '/dspot': { en: 'translated', ko: 'translated' },
+  '/cookies': { en: 'translated', ko: 'placeholder' },
+  '/accessibility-declaration': { en: 'translated', ko: 'placeholder' },
   '/challenge': { en: 'translated', ja: 'translated', ko: 'translated' },
   '/': { en: 'translated', ja: 'translated', ko: 'translated' },
-  // Korean is a real translation of every string on the page. Japanese is not:
-  // the legacy `jp/dtwap` content is byte-for-byte the English page, so its
-  // catalog mirrors English and the route is preserved without claiming to be a
-  // translation. Measured, not assumed — see #27 for the coverage table.
   '/dtwap': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // Same split as dTWAP, and measured the same way: the legacy `ko/dlimit`
-  // content is a real translation down to the card bodies and the schema prose,
-  // while `jp/dlimit` is byte-for-byte the English page. Its catalog therefore
-  // mirrors English and the route is preserved without claiming to be a
-  // translation.
   '/dlimit': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // No `ja` key at all, which is different from the two above. dTWAP and dLIMIT
-  // have Japanese DIRECTORIES holding English copy, so they are reachable and
-  // marked `placeholder`. `content/jp/dsltp` does not exist in the legacy repo:
-  // this page has never had a Japanese version, so Japanese is not offered and
-  // `/jp/dsltp/` is not generated. Korean is a full translation.
   '/dsltp': { en: 'translated', ko: 'translated' },
-  // Same shape as dSLTP: no `content/jp/perpetual-hub` in the legacy repo, so
-  // Japanese is not offered rather than being served English under a `ja` tag.
   '/dperps': { en: 'translated', ko: 'translated' },
-  // Back to the dTWAP shape: `jp/liquidity-hub` exists but holds the English
-  // copy, so Japanese is reachable and `placeholder`. Korean is a real
-  // translation down to the card bodies and the column lists.
   '/liquidity-hub': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // No `content/jp/agentic`, so Japanese is not offered. Korean is a real
-  // translation, including the four verification steps.
   '/agentic': { en: 'translated', ko: 'translated' },
-  // `/ai` itself is NOT a page — the legacy site 404s on it. The section's
-  // entry point is this index, and one skill sits under it. Korean is a real
-  // translation of both.
-  // Both Japanese URLs are live on legacy, but all 20 source markdown files
-  // contain English copy. Preserve the URLs without claiming a translation.
   '/ai/skills': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // `content/jp/privacy-policy` is a real Japanese translation of the whole
-  // document. `content/ko/privacy-policy` is the English text copied verbatim,
-  // so Korean is reachable and `placeholder` — the same distinction dTWAP and
-  // dLIMIT draw, measured the same way.
-  //
-  // The other three legal pages are absent from this map entirely, which means
-  // English-only: none of them has a `jp/` or `ko/` directory in the legacy
-  // repo, so there is nothing to serve and nothing to claim.
   '/privacy-policy': { en: 'translated', ja: 'translated', ko: 'placeholder' },
-  // `content/jp/faq` exists but holds the English text — zero Japanese
-  // characters across all 33 answers — so Japanese is reachable and
-  // `placeholder`. Korean is a real translation.
   '/faq': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // No `content/jp/dtwap-and-dlimit-faq` in the legacy repo, so Japanese is not
-  // offered rather than being served English under a `ja` tag.
   '/dtwap-and-dlimit-faq': { en: 'translated', ko: 'translated' },
-  // Japanese is a real translation — all 24 paper titles under
-  // `content/jp/white-papers` are Japanese. Korean is not: only 6 of 27 are,
-  // the rest being the English text, so it is `placeholder`.
-  '/white-papers': { en: 'translated', ja: 'translated', ko: 'placeholder' },
-  // Korean is a real translation: 31 of 38 strings are Korean.
-  //
-  // Japanese is NOT, despite `jp/overview` existing. That directory holds a
-  // structurally different, older page — four files against the English
-  // seventeen — and only 5 of 38 strings came back Japanese. Worse, the ones
-  // that did belong to a previous design: its hero reads "making smart
-  // contracts smarter" while every other section says "bringing CeFi-level
-  // execution to DeFi". Serving that mix is less coherent than serving English,
-  // so the Japanese catalog holds the English text and this is `placeholder` —
-  // reachable, noindex, not advertised as an hreflang alternate.
+  '/white-papers': { en: 'translated', ja: 'translated', ko: 'translated' },
   '/overview': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // Both locale directories exist but hold the English category titles
-  // verbatim, and the entries themselves are project names — proper nouns that
-  // do not translate. So the routes stay reachable and `placeholder`; there is
-  // no translation to claim.
-  '/ecosystem': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
-  // `content/jp/execution-services` exists with ZERO non-Latin characters — the
-  // English text copied — so Japanese is reachable and `placeholder`. Korean is
-  // a real translation.
+  '/ecosystem': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/execution-services': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // Both are real translations and substantial ones — 9,478 non-Latin
-  // characters under `jp/pos` and 7,718 under `ko/pos`.
   '/pos': { en: 'translated', ja: 'translated', ko: 'translated' },
-  // All three live on the legacy site and both translations are real — 2,688
-  // non-Latin characters under `jp/smart-contracts` and 1,791 under `ko/`,
-  // covering all 15 contract entries and all 5 roles.
-  //
-  // The contract NAMES are the interesting part, and an earlier version of this
-  // comment got them wrong: it said they stay English in every catalog because
-  // they are identifiers. They do not. Counted across the two catalogs, of 15
-  // names:
-  //
-  //   Japanese   1 left in English, 14 translated (コントラクト・レジストリ, 委任)
-  //   Korean    13 left in English,  2 translated
-  //
-  // The same string, in the same role, treated oppositely by two translators.
-  // No page-level rule survives that — which is exactly why the page runs every
-  // name through `textLang` rather than deciding once. See #103.
   '/smart-contracts': { en: 'translated', ja: 'translated', ko: 'translated' },
-  /*
-    Carried over by #38. Both have a legacy locale directory holding the
-    ENGLISH text — 2 non-Latin characters in `ko/dtwap-dlimit-disclaimer`
-    against 281 words, and 43 in `jp/ORBS-NFT-CONTEST-OFFICIAL-RULES` against
-    1,504. So the routes exist, because those URLs are live and must not start
-    404ing, and they are `placeholder`: noindex, not an hreflang alternate, and
-    `LegalPage` serves the English body with `lang="en"` on it.
-
-    The grant terms have no locale directory at all and are absent from this
-    map, which means English-only.
-  */
-  '/dtwap-dlimit-disclaimer': { en: 'translated', ko: 'placeholder' },
-  '/ORBS-NFT-CONTEST-OFFICIAL-RULES': { en: 'translated', ja: 'placeholder' },
-  // `jp/notifications` has ZERO non-Latin characters — the English text copied —
-  // so Japanese is `placeholder`. Korean is translated, though thinly: 510
-  // non-Latin characters against 7,718 for `/pos`, so several strings fall back
-  // and carry their own `lang`.
+  '/dtwap-dlimit-disclaimer': { en: 'translated', ko: 'translated' },
+  '/ORBS-NFT-CONTEST-OFFICIAL-RULES': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/notifications': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // Both locale directories exist and both URLs return 200 today, so omitting
-  // them here would 404 two live pages. Neither is a translation — zero
-  // non-Latin characters in either — so both are `placeholder`: reachable,
-  // noindex, serving the English captions with `lang="en"` on each.
-  '/brand-assets': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
-  // Both are real translations of the part that matters. `jp/contact/md/form.md`
-  // and `ko/contact/md/form.md` translate every label, placeholder, validation
-  // message and the success screen — the entire form, which is the page.
-  //
-  // The channel list beside it is English in all three locales, because both
-  // locale pages reference the SHARED `/contact/socials/index.md` rather than a
-  // translated copy. That is a handful of proper nouns and language names, each
-  // marked `lang="en"` by `textLang`, and it does not make the page a
-  // near-duplicate of the English one the way a `placeholder` page is.
+  '/brand-assets': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/contact': { en: 'translated', ja: 'translated', ko: 'translated' },
-  // Korean is a real translation — 893 non-Latin characters across
-  // `content/ko/ton-access`, covering the hero, all six cards, the schema
-  // paragraph and both developer quotes.
-  //
-  // Japanese is not, and this one is unusually clear-cut: `content/jp/ton-access`
-  // contains exactly ONE non-ASCII character in the whole directory, and it is
-  // the apostrophe in a quote. The English text, copied. So the catalog mirrors
-  // English and the route is reachable but noindex.
   '/ton-access': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  // The same split as `/ton-access`, measured the same way. Korean is a real
-  // translation — 911 non-Latin characters covering the hero, all six tool
-  // cards, the slider section and the whole verification passage. Japanese is
-  // the English text: `content/jp/ton-vote` has 13 non-ASCII characters, which
-  // is exactly what the ENGLISH directory has, and they are curly quotes.
   '/ton-vote': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+}
+
+// Korean detail titles and abstracts are translated; the linked PDF files retain their published language.
+for (const paper of WHITE_PAPERS) {
+  AVAILABILITY[`/white-papers/${paper.slug}`] = { en: 'translated', ko: 'translated' }
 }
 
 /**
@@ -184,7 +85,7 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
  *
  * The blog and the press archive are English-only and always will be: the
  * legacy site has no Japanese or Korean blog (its Japanese navbar links out to
- * `orbs-japan-community.medium.com`, and the Korean one to `orbskorea.medium.com`),
+ * `orbs-japan-community.medium.com`, and the Korean one to `blog.naver.com/orbskorea`),
  * and Contentful has a single `en-US` locale. Offering a language switch that can
  * only take you off the article you are reading is worse than offering none.
  */

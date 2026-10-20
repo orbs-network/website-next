@@ -31,7 +31,7 @@ describe('English-first product grouping', () => {
     expect(overviewProductsForLocale('en').map((card) => card.href)).toEqual(destinations)
   })
 
-  it.each(['ja', 'ko'] as const)('retains the current %s product groupings', (locale) => {
+  it.each(['ja'] as const)('retains the current %s product groupings', (locale) => {
     expect(homeStackForLocale(locale).map((card) => card.href)).toEqual(['/dspot', '/dperps'])
     expect(overviewProductsForLocale(locale).map((card) => card.href)).toEqual([
       '/dtwap',
@@ -40,4 +40,9 @@ describe('English-first product grouping', () => {
       '/dperps',
     ])
   })
+})
+
+it('uses the refreshed three-product grouping for Korean', () => {
+  expect(homeStackForLocale('ko')).toEqual(homeStackForLocale('en'))
+  expect(overviewProductsForLocale('ko')).toEqual(overviewProductsForLocale('en'))
 })

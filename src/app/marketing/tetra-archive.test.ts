@@ -52,7 +52,7 @@ describe('undated Tetra tutorial archive', () => {
 
   it('reserves the original English URL with a self canonical and archive robots policy', async () => {
     expect(MARKETING_PAGE_PATHS).toContain(PATH)
-    expect(localesFor(PATH)).toEqual(['en'])
+    expect(localesFor(PATH)).toEqual(['en', 'ko'])
     expect(isArchived(PATH)).toBe(true)
     const metadata = await marketingMetadata(PATH, 'en')
     expect(metadata.robots).toEqual({ index: false, follow: true })

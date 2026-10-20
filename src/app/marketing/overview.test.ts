@@ -57,7 +57,7 @@ describe('English network content refresh', () => {
     expect(html).not.toContain('graph-2.png')
   })
 
-  it.each(['ja', 'ko'] as const)('keeps the existing %s sections and uses only that catalog', async (locale) => {
+  it.each(['ja'] as const)('keeps the existing %s sections and uses only that catalog', async (locale) => {
     const overview = renderToStaticMarkup(await OverviewPage({ locale }))
     expect(overview).toContain('href="#protocols"')
     expect(overview).toContain(`href="/${locale === 'ja' ? 'jp' : locale}/dtwap/"`)

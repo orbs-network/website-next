@@ -89,7 +89,7 @@ const DOCUMENTS = {
     dir: 'rtl',
   },
   '/liquidity-hub-terms-of-use': {
-    body: { en: read('liquidity-hub-terms-of-use.en.md') },
+    body: { en: read('liquidity-hub-terms-of-use.en.md'), ko: read('liquidity-hub-terms-of-use.ko.md') },
   },
   /*
     Written here rather than handed over by a lawyer, which is the exception in
@@ -103,29 +103,19 @@ const DOCUMENTS = {
     body: { en: read('cookies.en.md') },
   },
   /*
-    Three documents carried over from the legacy site, which #38 found live with
-    no route here — they would have 404ed at cutover.
-
-    English only, and that is a finding rather than a shortcut. Legacy has a
-    `ko/dtwap-dlimit-disclaimer` and a `jp/ORBS-NFT-CONTEST-OFFICIAL-RULES`, but
-    both hold the ENGLISH text: 2 and 43 non-Latin characters respectively,
-    against 281 and 1,504 words. Shipping those as separate files would be two
-    copies of English pretending to be translations, so those locales are
-    `placeholder` in the availability map instead and `LegalPage` serves the
-    English body with `lang="en"` on it.
-
-    The URLs keep their legacy spelling, including the shouted one. They are
-    what is indexed, and a prettier path plus a redirect is more moving parts
-    than the ugliness is worth.
+    Legacy URLs retain their original spelling. Korean bodies are freshly
+    translated from English; Japanese continues to use the English fallback.
+    The four footer policy documents above are intentionally not translated
+    into Korean in this phase.
   */
   '/dtwap-dlimit-disclaimer': {
-    body: { en: read('dtwap-dlimit-disclaimer.en.md') },
+    body: { en: read('dtwap-dlimit-disclaimer.en.md'), ko: read('dtwap-dlimit-disclaimer.ko.md') },
   },
   '/orbs-ecosystem-grant-program-terms-and-conditions': {
-    body: { en: read('orbs-ecosystem-grant-program-terms-and-conditions.en.md') },
+    body: { en: read('orbs-ecosystem-grant-program-terms-and-conditions.en.md'), ko: read('orbs-ecosystem-grant-program-terms-and-conditions.ko.md') },
   },
   '/ORBS-NFT-CONTEST-OFFICIAL-RULES': {
-    body: { en: read('orbs-nft-contest-official-rules.en.md') },
+    body: { en: read('orbs-nft-contest-official-rules.en.md'), ko: read('orbs-nft-contest-official-rules.ko.md') },
   },
 } as const satisfies Record<string, LegalDocument>
 

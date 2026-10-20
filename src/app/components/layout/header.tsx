@@ -25,7 +25,7 @@ import { resolveNavigation } from './navigation/nav-menu'
  * keeps that fact where it is actually known instead of inferring it from the
  * request, which would also force these pages out of static prerendering.
  */
-export async function Header({ locale }: { locale: Locale }) {
+export async function Header({ locale, logoFontClassName }: { locale: Locale; logoFontClassName?: string }) {
   const t = await getTranslations({ locale, namespace: 'header' })
   const nav = await getTranslations({ locale, namespace: 'nav' })
   const footerT = await getTranslations({ locale, namespace: 'footer' })
@@ -94,7 +94,7 @@ export async function Header({ locale }: { locale: Locale }) {
               desktop size, so nothing jumps at `xl`. Only the burger shares the
               row below `sm`, so even at 320px there are ~140px to spare.
             */}
-            <OrbsLogo className="text-xl" aria-hidden />
+            <OrbsLogo className={['text-xl', logoFontClassName].filter(Boolean).join(' ')} aria-hidden />
           </Link>
 
           {/*

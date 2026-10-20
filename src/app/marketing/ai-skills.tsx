@@ -39,6 +39,12 @@ export async function AiSkillsPage({ locale }: { locale: Locale }) {
           orderTypesLabel={t('orderTypesLabel')}
           skills={AI_SKILLS.map((skill) => ({
             ...skill,
+            orderTypes:
+              locale === 'ko'
+                ? skill.orderTypes.map(
+                    (name) => ({ Limit: '지정가', 'Take-Profit': '익절', 'Stop-Loss': '손절' })[name] ?? name
+                  )
+                : skill.orderTypes,
             // Through `localeHref`, so the Korean index links to the Korean skill
             // page rather than sending the reader back to English.
             href: resolveLocaleLink({ href: skill.href }, locale).href,

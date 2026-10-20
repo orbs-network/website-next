@@ -48,7 +48,7 @@ describe('venues and ecosystem handoff', () => {
     expect(html).toContain('https://x.com/IntentX_')
     expect(html).toContain('https://x.com/BuildOnLumia')
   })
-  it.each(['ja', 'ko'] as const)('retains the existing %s directory', async (locale) => {
+  it.each(['ja'] as const)('retains the existing %s directory', async (locale) => {
     const html = renderToStaticMarkup(await EcosystemPage({ locale }))
     expect(html).toContain('TON Minter')
     expect(html).toContain('Bybit')

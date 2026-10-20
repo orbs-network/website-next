@@ -40,8 +40,8 @@ import { textLang } from '@/i18n/script'
 /**
  * The home page, design 3.4.
  *
- * Japanese and Korean use `LocalizedHomePage` with the approved legacy landing
- * copy while the new design's content refresh starts in English.
+ * Japanese retains `LocalizedHomePage`. English and Korean share this refreshed
+ * composition; Korean catalog gaps use English copy until translated.
  *
  * One destination is not built yet (`/ai-agents`). It is in
  * `link-integrity.test.ts`'s `PENDING`, so the guard knows and will fail the
@@ -55,6 +55,9 @@ import { textLang } from '@/i18n/script'
 export async function HomePage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.home' })
   const lang = (key: string) => textLang(t(key), locale)
+  const discover = HOME_DISCOVER.filter(
+    (item) => !item.locales || item.locales.includes(locale) || (locale === 'ko' && item.locales.includes('en'))
+  ).map((item) => (locale === 'ko' && item.id === 'blog' ? { ...item, href: 'http://blog.naver.com/orbskorea' } : item))
 
   /*
     `slug` is optional in the Contentful model, and a post without one has no
@@ -63,7 +66,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
     `BlogCard` interpolates the slug straight into a template literal and does
     produce that link; out of scope here, worth fixing separately.)
   */
-  const posts = (await getRecentPosts(HOME_NEWS_COUNT)).filter(
+  const posts = (locale === 'ko' ? [] : await getRecentPosts(HOME_NEWS_COUNT)).filter(
     (post): post is BlogPostFields & { slug: string } => typeof post.slug === 'string' && post.slug !== ''
   )
 
@@ -118,7 +121,10 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
         <div className="container relative">
           <div className="relative mx-auto max-w-4xl text-center">
-            <H1 className="text-balance" lang={lang('hero.headline') ?? locale}>
+            <H1
+              className={locale === 'ko' ? 'whitespace-pre-line text-balance' : 'text-balance'}
+              lang={lang('hero.headline') ?? locale}
+            >
               {t('hero.headline')}
             </H1>
 
@@ -210,10 +216,17 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {locale === 'en' && (
+      {locale !== 'ja' && (
         <section className="container border-t border-border py-section">
-          <p className="text-detail font-medium uppercase tracking-widest text-fg-muted">{t('access.eyebrow')}</p>
-          <H2 className="mt-6 text-balance">{t('access.title')}</H2>
+          <p
+            className="text-detail font-medium uppercase tracking-widest text-fg-muted"
+            lang={textLang(t('access.eyebrow'), locale)}
+          >
+            {t('access.eyebrow')}
+          </p>
+          <H2 className="mt-6 text-balance" lang={textLang(t('access.title'), locale)}>
+            {t('access.title')}
+          </H2>
           <ul className="mt-12 grid gap-5 md:grid-cols-3">
             {HOME_ACCESS_PATHS.map((path) => (
               <HighlightCard
@@ -284,12 +297,22 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {locale === 'en' ? (
+      {locale !== 'ja' ? (
         <div className="institutional-benefits">
           <section className="container py-section">
             <div className="mx-auto max-w-3xl text-center">
-              <p className="text-detail font-medium uppercase tracking-widest text-fg-muted">{t('features.eyebrow')}</p>
-              <H2 className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-balance">{t('features.title')}</H2>
+              <p
+                className="text-detail font-medium uppercase tracking-widest text-fg-muted"
+                lang={textLang(t('features.eyebrow'), locale)}
+              >
+                {t('features.eyebrow')}
+              </p>
+              <H2
+                className="mx-auto mt-6 max-w-2xl whitespace-pre-line text-balance"
+                lang={textLang(t('features.title'), locale)}
+              >
+                {t('features.title')}
+              </H2>
             </div>
             <div className="mt-16">
               <HomeBenefitsGrid
@@ -303,10 +326,17 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </div>
             <div className="mt-14 flex flex-wrap justify-center gap-4">
               <Button asChild>
-                <Link href={localeHref(HOME_LINKS.contact, locale)}>{t('features.cta')}</Link>
+                <Link href={localeHref(HOME_LINKS.contact, locale)} lang={textLang(t('features.cta'), locale)}>
+                  {t('features.cta')}
+                </Link>
               </Button>
               <Button asChild>
-                <a href={HOME_LINKS.github} target="_blank" rel="noopener noreferrer">
+                <a
+                  href={HOME_LINKS.github}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  lang={textLang(t('features.github'), locale)}
+                >
                   {t('features.github')}
                 </a>
               </Button>
@@ -453,7 +483,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
           <div className="mt-16 grid gap-10 lg:mt-48 lg:grid-cols-[minmax(0,1fr)_minmax(0,2fr)] lg:gap-x-5">
             <ul className="flex min-w-0 flex-col lg:col-start-2 lg:row-start-1">
-              {HOME_DISCOVER.filter((item) => !item.locales || item.locales.includes(locale)).map((item) => (
+              {discover.map((item) => (
                 <li key={item.id}>
                   <Link
                     href={item.href.startsWith('/') ? localeHref(item.href, locale) : item.href}

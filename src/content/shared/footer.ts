@@ -108,7 +108,7 @@ export const LEGACY_FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
         href: '/blog',
         localeHref: {
           ja: 'https://orbs-japan-community.medium.com/',
-          ko: 'https://orbskorea.medium.com/',
+          ko: 'http://blog.naver.com/orbskorea',
         },
       },
       { key: 'ecosystem', href: '/ecosystem' },
@@ -205,5 +205,14 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
 ]
 
 export function footerColumnsForLocale(locale: Locale) {
+  if (locale === 'ko') {
+    return FOOTER_COLUMNS.map((column) => ({
+      ...column,
+      links: column.links
+        .filter((link) => link.key !== 'governance')
+        .map((link) => (link.key === 'blog' ? { ...link, href: 'http://blog.naver.com/orbskorea' } : link)),
+    }))
+  }
+
   return locale === 'en' ? FOOTER_COLUMNS : LEGACY_FOOTER_COLUMNS
 }

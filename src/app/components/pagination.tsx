@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import type { Locale } from '@/i18n/locales'
 import { cn } from '@/lib/utils'
 
 type Props = {
@@ -12,6 +13,7 @@ type Props = {
   pathFor: (pageNumber: number) => string
   /** Distinguishes the two navs for screen readers. */
   label?: string
+  locale?: Locale
 }
 
 /**
@@ -38,7 +40,7 @@ function pageItems(currentPage: number, totalPages: number): (number | 'gap')[] 
   return items
 }
 
-export function Pagination({ currentPage, totalPages, pathFor, label = 'Pagination' }: Props) {
+export function Pagination({ currentPage, totalPages, pathFor, label = 'Pagination', locale = 'en' }: Props) {
   if (totalPages <= 1) return null
 
   const items = pageItems(currentPage, totalPages)
@@ -48,7 +50,7 @@ export function Pagination({ currentPage, totalPages, pathFor, label = 'Paginati
     <nav className="flex items-center justify-center gap-1 mt-12" aria-label={label}>
       {currentPage > 1 && (
         <Link href={pathFor(currentPage - 1)} className={linkClass} rel="prev">
-          Previous
+          {locale === 'ko' ? '이전' : 'Previous'}
         </Link>
       )}
 
@@ -62,7 +64,7 @@ export function Pagination({ currentPage, totalPages, pathFor, label = 'Paginati
             key={item}
             href={pathFor(item)}
             className={cn(linkClass, item === currentPage && 'bg-accent font-semibold')}
-            aria-label={`Page ${item}`}
+            aria-label={locale === 'ko' ? `${item}페이지` : `Page ${item}`}
             aria-current={item === currentPage ? 'page' : undefined}
           >
             {item}
@@ -72,7 +74,7 @@ export function Pagination({ currentPage, totalPages, pathFor, label = 'Paginati
 
       {currentPage < totalPages && (
         <Link href={pathFor(currentPage + 1)} className={linkClass} rel="next">
-          Next
+          {locale === 'ko' ? '다음' : 'Next'}
         </Link>
       )}
     </nav>

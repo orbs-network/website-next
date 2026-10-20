@@ -76,7 +76,7 @@ export const HOME_STACK: readonly HomeCard[] = [
 ]
 
 export function homeStackForLocale(locale: Locale) {
-  return HOME_STACK.filter((card) => !card.englishOnly || locale === 'en')
+  return HOME_STACK.filter((card) => !card.englishOnly || locale !== 'ja')
 }
 
 /** The three access paths in the English content handoff. */
@@ -94,7 +94,7 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'aiAgents', href: '/agentic', accent: 'pink' },
 ]
 
-/** The shared feature order: English grid, Japanese/Korean legacy tabs. */
+/** The shared feature order: English/Korean grid, Japanese legacy tabs. */
 export const HOME_FEATURES = [
   'nonCustodial',
   'gasless',

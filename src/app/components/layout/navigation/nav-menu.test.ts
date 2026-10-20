@@ -14,7 +14,7 @@ describe('English-first navigation', () => {
     expect(links.every((link) => !link.children)).toBe(true)
   })
 
-  it.each(['ja', 'ko'] as const)('retains the existing %s Products menu', async (locale) => {
+  it.each(['ja'] as const)('retains the existing %s Products menu', async (locale) => {
     const { groups } = await resolveNavigation(locale)
     expect(groups.find((group) => group.key === 'products')!.links.map((link) => link.key)).toEqual([
       'sdk',
@@ -41,7 +41,7 @@ describe('October menu destinations', () => {
     expect(topLevel.map((link) => link.key)).toEqual(['ecosystem', 'blog', 'github'])
   })
 
-  it.each(['ja', 'ko'] as const)('retains %s legacy navigation and nested capability routes', async (locale) => {
+  it.each(['ja'] as const)('retains %s legacy navigation and nested capability routes', async (locale) => {
     const { groups, topLevel } = await resolveNavigation(locale)
     expect(groups.map((group) => group.key)).toEqual(['products', 'solutions', 'network'])
     expect(topLevel.some((link) => link.key === 'docs')).toBe(true)
@@ -51,5 +51,25 @@ describe('October menu destinations', () => {
         ? ['/jp/dtwap/', '/jp/dlimit/', '/dsltp/', '/jp/liquidity-hub/']
         : ['/ko/dtwap/', '/ko/dlimit/', '/ko/dsltp/', '/ko/liquidity-hub/']
     )
+  })
+})
+
+describe('Korean menu synchronization', () => {
+  it('matches English group/order/link targets except Governance and the external Korean blog', async () => {
+    const english = await resolveNavigation('en')
+    const korean = await resolveNavigation('ko')
+    expect(korean.groups.map((g) => g.key)).toEqual(english.groups.map((g) => g.key))
+    for (const [i, group] of korean.groups.entries()) {
+      const expected = english.groups[i].links.filter((link) => link.key !== 'governance')
+      expect(group.links.map((link) => link.key)).toEqual(expected.map((link) => link.key))
+      for (const [j, link] of group.links.entries()) {
+        expect(link.href).toBe(expected[j].external ? expected[j].href : `/ko${expected[j].href}`)
+        expect(link.label).toBe(expected[j].label)
+      }
+    }
+    expect(korean.topLevel.find((link) => link.key === 'blog')).toMatchObject({
+      href: 'http://blog.naver.com/orbskorea',
+      external: true,
+    })
   })
 })

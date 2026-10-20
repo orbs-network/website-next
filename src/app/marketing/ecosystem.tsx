@@ -1,3 +1,4 @@
+import { textLang } from '@/i18n/script'
 import { getTranslations } from 'next-intl/server'
 import { H1 } from '@/app/components/typography'
 import { EcosystemGrid } from '@/components/marketing/ecosystem-grid'
@@ -21,12 +22,11 @@ import { InnerClosingCta } from './inner-closing'
 export async function EcosystemPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.ecosystem' })
 
-  // Full replacement in English; the existing directories stay on localised
-  // routes until their separate content refresh.
-  if (locale === 'en') {
+  // English and Korean share the new grid; Japanese retains its legacy directory.
+  if (locale !== 'ja') {
     return (
       <section className="container pt-16 pb-section lg:pt-24">
-        <H1>{t('hero.headline')}</H1>
+        <H1 lang={textLang(t('hero.headline'), locale)}>{t('hero.headline')}</H1>
         <div className="mt-12 lg:mt-16">
           <EcosystemGrid
             cards={ECOSYSTEM_CARDS}

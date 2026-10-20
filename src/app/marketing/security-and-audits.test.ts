@@ -57,24 +57,27 @@ describe('FAQ and scoped security resources', () => {
     expect(html).toContain('1.1B ORBS')
   })
 
-  it('reserves and advertises only the English security route', async () => {
+  it('advertises the English and translated Korean security routes', async () => {
     expect(isReservedRootSlug('security-and-audits')).toBe(true)
-    expect(translatedLocalesFor('/security-and-audits')).toEqual(['en'])
+    expect(translatedLocalesFor('/security-and-audits')).toEqual(['en', 'ko'])
     expect(findLocaleMarketingPage('/security-and-audits', 'en')).toBeDefined()
-    for (const locale of ['ja', 'ko'] as const) {
+    for (const locale of ['ja'] as const) {
       expect(findLocaleMarketingPage('/security-and-audits', locale)).toBeUndefined()
       expect(await marketingMetadata('/security-and-audits', locale)).toEqual({})
       expect(localeHref('/security-and-audits', locale)).toBe('/security-and-audits/')
     }
+    expect(findLocaleMarketingPage('/security-and-audits', 'ko')).toBeDefined()
+    expect(localeHref('/security-and-audits', 'ko')).toBe('/ko/security-and-audits/')
+    expect((await marketingMetadata('/security-and-audits', 'ko')).robots).toBeUndefined()
     const metadata = await marketingMetadata('/security-and-audits', 'en')
     expect(metadata.title).toBe('Security & Audits')
     expect(String(metadata.alternates?.canonical)).toContain('/security-and-audits/')
-    expect(metadata.alternates?.languages).toBeUndefined()
+    expect(metadata.alternates?.languages?.ko).toBe('https://www.orbs.com/ko/security-and-audits/')
   })
 
   it('retains the Korean FAQ and marks Japanese English fallback text correctly', async () => {
     const korean = renderToStaticMarkup(await FaqPage({ path: '/faq', locale: 'ko', namespace: 'pages.faq' }))
-    expect(korean.match(/<details\b/g)).toHaveLength(33)
+    expect(korean.match(/<details\b/g)).toHaveLength(14)
     expect(korean).not.toContain('Where do I start?')
     const japanese = renderToStaticMarkup(await FaqPage({ path: '/faq', locale: 'ja', namespace: 'pages.faq' }))
     expect(japanese.match(/<details\b/g)).toHaveLength(14)

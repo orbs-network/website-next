@@ -91,7 +91,7 @@ export const REDIRECTS: readonly Redirect[] = [
   {
     from: '/accesili',
     to: '/terms-of-use',
-    locales: ['en'],
+    locales: ['en', 'ko'],
     reason: 'A duplicate of the terms of use at a misspelled path. See #38.',
   },
 ]
@@ -176,7 +176,7 @@ export type PrefixRedirect = {
 export const PREFIX_REDIRECTS: readonly PrefixRedirect[] = [
   {
     prefix: '/white-papers',
-    locales: ['ja', 'ko'],
+    locales: ['ja'],
     rename: {
       ja: {
         // Live at 200 today; the `grogram` spelling 404s in Japanese. Verified
@@ -210,7 +210,7 @@ export const TEMPORARY_REDIRECTS: readonly Redirect[] = [
   ...['/liquidity-hub', '/dtwap', '/dlimit', '/dsltp'].map((from) => ({
     from,
     to: '/dspot',
-    locales: ['en'] as const,
+    locales: ['en', 'ko'] as const,
     reason: 'Individual product pages are being refreshed; use the main dSPOT page for now.',
   })),
   {
@@ -223,11 +223,14 @@ export const TEMPORARY_REDIRECTS: readonly Redirect[] = [
 
 export function expandedTemporaryRedirects(): { source: string; destination: string; permanent: false }[] {
   return TEMPORARY_REDIRECTS.flatMap(({ from, to, locales }) =>
-    (Object.keys(SEGMENTS) as Locale[]).map((locale) => ({
-      source: `${SEGMENTS[locale]}${from}/`,
-      destination: `${locales.includes(locale) ? SEGMENTS[locale] : ''}${to}/`,
-      permanent: false as const,
-    }))
+    // Korean translations remain directly accessible during this locale refresh.
+    (Object.keys(SEGMENTS) as Locale[])
+      .filter((locale) => locale !== 'ko')
+      .map((locale) => ({
+        source: `${SEGMENTS[locale]}${from}/`,
+        destination: `${locales.includes(locale) ? SEGMENTS[locale] : ''}${to}/`,
+        permanent: false as const,
+      }))
   )
 }
 

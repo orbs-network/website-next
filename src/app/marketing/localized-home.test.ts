@@ -29,9 +29,9 @@ describe('localized home entry points', () => {
     if (locale === 'ko') expect(html).toContain('href="mailto:hello@orbs.com"')
   })
 
-  it('makes both real landing pages indexable with reciprocal language alternates', () => {
+  it('advertises Japanese and the refreshed Korean translation', () => {
     expect(translatedLocalesFor('/')).toEqual(['en', 'ja', 'ko'])
-    for (const locale of ['ja', 'ko'] as const) {
+    for (const locale of ['ja'] as const) {
       expect(placeholderRobots('/', locale)).toBeUndefined()
       expect(localeAlternates('/', locale).languages).toEqual({
         en: 'https://www.orbs.com/',
