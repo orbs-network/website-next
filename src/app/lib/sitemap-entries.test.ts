@@ -1,4 +1,5 @@
 import { describe, expect, it, vi } from 'vitest'
+import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import { sitemapEntries } from './sitemap-entries'
 
 vi.mock('./api', () => ({
@@ -30,5 +31,14 @@ describe('marketing sitemap entries', () => {
       .filter(({ url }) => url.includes('/security-and-audits/'))
       .map(({ url }) => new URL(url).pathname)
     expect(urls).toEqual(['/security-and-audits/', '/ko/security-and-audits/'])
+  })
+  it('includes every English and Korean paper detail exactly once, without unavailable Japanese variants', async () => {
+    const paths = (await sitemapEntries()).map(({ url }) => new URL(url).pathname)
+    for (const { slug } of WHITE_PAPERS) {
+      for (const prefix of ['', '/ko']) {
+        expect(paths.filter((path) => path === `${prefix}/white-papers/${slug}/`)).toHaveLength(1)
+      }
+      expect(paths).not.toContain(`/jp/white-papers/${slug}/`)
+    }
   })
 })

@@ -88,3 +88,23 @@ export const PublisherBackings: Story = {
     }
   },
 }
+
+export const EnglishContentInKoreanPage: Story = {
+  render: () => (
+    <div lang="ko">
+      <MediaCard
+        mention={{
+          headline: 'Orbs expands its network',
+          date: '2026-10-06T00:00:00Z',
+          url: 'https://example.com/article',
+        }}
+      />
+    </div>
+  ),
+  play: async ({ canvasElement }) => {
+    const link = canvasElement.querySelector('a')!
+    await expect(link).toHaveAttribute('lang', 'en')
+    await expect(link).toHaveAccessibleName("Orbs expands its network (opens on the publisher's site)")
+    await expect(link.querySelector('time')!.closest('[lang]')).toBe(link)
+  },
+}

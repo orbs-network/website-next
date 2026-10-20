@@ -36,8 +36,16 @@ describe('Korean localization coverage', () => {
     expect(expandedPrefixRedirects().some(({ source }) => source.startsWith('/ko/'))).toBe(false)
   })
 
-  it('keeps the translated product and AI pages reachable rather than redirecting them away', () => {
-    expect(expandedTemporaryRedirects().some(({ source }) => source.startsWith('/ko/'))).toBe(false)
+  it('preserves Korean product and AI consolidation', () => {
+    const rules = expandedTemporaryRedirects().filter(({ source }) => source.startsWith('/ko/'))
+    expect(rules).toHaveLength(5)
+    expect(rules.map(({ destination }) => destination)).toEqual([
+      '/ko/dspot/',
+      '/ko/dspot/',
+      '/ko/dspot/',
+      '/ko/dspot/',
+      '/ko/agentic/',
+    ])
   })
 
   it('uses English menu labels while retaining Korean prose', () => {

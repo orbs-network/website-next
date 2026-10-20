@@ -33,6 +33,7 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
   return (
     <Card className="p-0 group overflow-hidden hover:shadow-lg transition-shadow duration-200">
       <a
+        lang="en"
         href={mention.url}
         target="_blank"
         rel="noopener noreferrer"

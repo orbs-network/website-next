@@ -36,11 +36,11 @@ const APP = join(REPO, 'src/app')
 
 describe('temporary inner-page consolidation', () => {
   it('sends all four product URLs and their locale variants straight to dSPOT with reversible redirects', () => {
-    for (const prefix of ['', '/jp']) {
+    for (const prefix of ['', '/jp', '/ko']) {
       for (const product of ['liquidity-hub', 'dtwap', 'dlimit', 'dsltp']) {
         expect(expandedTemporaryRedirects()).toContainEqual({
           source: `${prefix}/${product}/`,
-          destination: '/dspot/',
+          destination: prefix === '/ko' ? '/ko/dspot/' : '/dspot/',
           permanent: false,
         })
       }
@@ -52,10 +52,10 @@ describe('temporary inner-page consolidation', () => {
     for (const [prefix, destination] of [
       ['', '/agentic/'],
       ['/jp', '/agentic/'],
+      ['/ko', '/ko/agentic/'],
     ]) {
       expect(rules).toContainEqual({ source: `${prefix}/ai/skills/`, destination, permanent: false })
     }
-    expect(rules.some(({ source }) => source.startsWith('/ko/'))).toBe(false)
     // Agentic still links to the actual skill guide. Only its redundant index moves.
     expect(rules.some(({ source }) => source.includes('spot-advanced-swap-orders'))).toBe(false)
   })

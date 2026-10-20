@@ -41,4 +41,16 @@ describe('POST /api/revalidate', () => {
     const paths = revalidatePath.mock.calls.map(([path]) => path)
     expect(paths).toEqual(expect.arrayContaining(['/', '/jp/', '/ko/', '/blog/']))
   })
+  it('refreshes English and Korean news listings when a media mention is published', async () => {
+    const { POST } = await import('./route')
+    const response = await POST(publish({ sys: { id: 'news1', contentType: { sys: { id: 'mediaMention' } } } }))
+    expect(response.status).toBe(200)
+    expect(revalidatePath.mock.calls).toEqual([
+      ['/news/'],
+      ['/news/page/[n]', 'page'],
+      ['/ko/news/'],
+      ['/ko/news/page/[n]', 'page'],
+    ])
+    expect((await response.json()).revalidated).toEqual(['/news/', '/news/page/[n]', '/ko/news/', '/ko/news/page/[n]'])
+  })
 })

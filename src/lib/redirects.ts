@@ -223,14 +223,11 @@ export const TEMPORARY_REDIRECTS: readonly Redirect[] = [
 
 export function expandedTemporaryRedirects(): { source: string; destination: string; permanent: false }[] {
   return TEMPORARY_REDIRECTS.flatMap(({ from, to, locales }) =>
-    // Korean translations remain directly accessible during this locale refresh.
-    (Object.keys(SEGMENTS) as Locale[])
-      .filter((locale) => locale !== 'ko')
-      .map((locale) => ({
-        source: `${SEGMENTS[locale]}${from}/`,
-        destination: `${locales.includes(locale) ? SEGMENTS[locale] : ''}${to}/`,
-        permanent: false as const,
-      }))
+    (Object.keys(SEGMENTS) as Locale[]).map((locale) => ({
+      source: `${SEGMENTS[locale]}${from}/`,
+      destination: `${locales.includes(locale) ? SEGMENTS[locale] : ''}${to}/`,
+      permanent: false as const,
+    }))
   )
 }
 
