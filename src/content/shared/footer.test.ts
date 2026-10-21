@@ -19,10 +19,24 @@ describe('October English footer', () => {
     expect(columns.flatMap((column) => column.links).some((link) => link.key === 'team')).toBe(false)
   })
 
-  it.each(['ja', 'ko'] as const)('leaves the %s footer structure and blog destination intact', (locale) => {
+  it.each(['ja'] as const)('leaves the %s footer structure and blog destination intact', (locale) => {
     const columns = footerColumnsForLocale(locale)
     expect(columns).toBe(LEGACY_FOOTER_COLUMNS)
     const blog = columns.find((column) => column.key === 'community')!.links.find((link) => link.key === 'blog')!
     expect(blog.localeHref?.[locale]).toContain('medium.com')
   })
+})
+
+it('synchronizes Korean footer columns without Governance and retains the Korean blog', () => {
+  const english = footerColumnsForLocale('en')
+  const korean = footerColumnsForLocale('ko')
+  expect(korean.map((column) => column.key)).toEqual(english.map((column) => column.key))
+  korean.forEach((column, index) => {
+    expect(column.links.map((link) => link.key)).toEqual(
+      english[index].links.filter((link) => link.key !== 'governance').map((link) => link.key)
+    )
+  })
+  expect(korean.flatMap((column) => column.links).find((link) => link.key === 'blog')?.href).toBe(
+    'http://blog.naver.com/orbskorea'
+  )
 })

@@ -36,7 +36,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      {locale === 'en' ? (
+      {locale !== 'ja' ? (
         <SplitHero
           eyebrow={t('eyebrows.hero')}
           headline={t('hero.headline')}
@@ -46,7 +46,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
           locale={locale}
         />
       ) : (
-        // Legacy locales retain their bare title, without repeating the Lambda intro.
+        // Japanese retains its bare title, without repeating the Lambda intro.
         <section className="container pt-16 pb-section lg:pt-24">
           <Eyebrow text={t('eyebrows.hero')} locale={locale} />
           <H1 className="mt-3 max-w-5xl text-balance" lang={lang('hero.headline')}>
@@ -63,7 +63,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
               <H2 className="text-balance" lang={lang(`${product.id}.title`)}>
                 {t(`${product.id}.title`)}
               </H2>
-              {locale === 'en' && (
+              {locale !== 'ja' && (
                 <p className="mt-8 text-p font-medium text-fg" lang={lang(`${product.id}.tagline`)}>
                   {t(`${product.id}.tagline`)}
                 </p>
@@ -72,7 +72,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
             </div>
 
             {/* Decorative brand illustrations, so `alt=""`: the heading names the product. */}
-            {locale === 'en' ? (
+            {locale !== 'ja' ? (
               <Image
                 src={product.illustration.src}
                 alt=""
@@ -105,7 +105,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
         </DividedSection>
       ))}
 
-      {locale === 'en' ? (
+      {locale !== 'ja' ? (
         <InnerSection
           eyebrow={t('eyebrows.comparison')}
           heading={t('comparison.title')}

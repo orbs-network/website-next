@@ -26,7 +26,11 @@ export function StatementBand({ text, locale }: { text: string; locale: Locale }
   return (
     <section lang={lang} className="flex min-h-[26rem] items-center bg-statement-band py-section lg:min-h-[44.5rem]">
       <div className="container">
-        <p className="mx-auto max-w-5xl text-center text-balance text-h3 text-neutral-900 sm:text-h2">{text}</p>
+        <p
+          className={`mx-auto max-w-5xl text-center text-balance text-h3 text-neutral-900 sm:text-h2${locale === 'ko' ? ' whitespace-pre-line' : ''}`}
+        >
+          {text}
+        </p>
       </div>
     </section>
   )

@@ -74,7 +74,7 @@ export type MarketingPageEntry = {
  */
 const MARKETING_PAGES: Record<MarketingPagePath, MarketingPageEntry> = {
   '/tetra-orbs-staking-wallet-tutorial': {
-    render: () => <TetraArchivePage />,
+    render: (locale) => <TetraArchivePage locale={locale} />,
     namespace: 'pages.tetraArchive',
   },
   '/challenge': {

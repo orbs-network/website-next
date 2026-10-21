@@ -69,16 +69,16 @@ describe('the carried-over legal pages', () => {
     // `jp/ORBS-NFT-CONTEST-OFFICIAL-RULES`, both holding the English text — so
     // those URLs must resolve, and must not claim to be translations.
     expect([...localesFor('/dtwap-dlimit-disclaimer')].sort()).toEqual(['en', 'ko'])
-    expect([...localesFor('/ORBS-NFT-CONTEST-OFFICIAL-RULES')].sort()).toEqual(['en', 'ja'])
+    expect([...localesFor('/ORBS-NFT-CONTEST-OFFICIAL-RULES')].sort()).toEqual(['en', 'ja', 'ko'])
     // No locale directory at all on legacy, so English-only.
-    expect([...localesFor('/orbs-ecosystem-grant-program-terms-and-conditions')]).toEqual(['en'])
+    expect([...localesFor('/orbs-ecosystem-grant-program-terms-and-conditions')]).toEqual(['en', 'ko'])
   })
 
-  it('marks the copied-English locales as placeholder, not translated', () => {
+  it('marks the newly translated Korean disclaimer while retaining the Japanese fallback', () => {
     // `ko/dtwap-dlimit-disclaimer` holds 2 non-Latin characters against 281
     // words. Declaring it a translation would tell Google two near-identical
     // documents are language alternates of each other.
-    expect(placeholderRobots('/dtwap-dlimit-disclaimer', 'ko')).toEqual({ index: false, follow: true })
+    expect(placeholderRobots('/dtwap-dlimit-disclaimer', 'ko')).toBeUndefined()
     expect(placeholderRobots('/ORBS-NFT-CONTEST-OFFICIAL-RULES', 'ja')).toEqual({ index: false, follow: true })
   })
 })

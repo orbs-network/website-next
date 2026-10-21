@@ -2,8 +2,8 @@ import type { Locale } from '@/i18n/locales'
 import { NETWORK_DOCS_URL, SDK_DOCS_URL } from './sdk'
 
 /**
- * English navigation follows Sara's October 15 menu PDFs. Japanese/Korean
- * retain the previous menu until their content refresh. Structure is data;
+ * English and Korean navigation follow Sara's October 15 menu PDFs. Japanese
+ * retains the previous menu. Korean omits Governance and uses its external blog. Structure is data;
  * labels live under nav.* in each message catalog. Existing routes do not move.
  */
 export type NavLinkSpec = {
@@ -159,6 +159,15 @@ export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
 ]
 
 export function navigationForLocale(locale: Locale) {
+  if (locale === 'ko') {
+    return {
+      groups: NAV_GROUPS.map((group) => ({ ...group, links: group.links.filter((link) => link.key !== 'governance') })),
+      topLevel: NAV_TOP_LEVEL_LINKS.map((link) =>
+        link.key === 'blog' ? { ...link, href: 'http://blog.naver.com/orbskorea' } : link
+      ),
+    }
+  }
+
   return locale === 'en'
     ? { groups: NAV_GROUPS, topLevel: NAV_TOP_LEVEL_LINKS }
     : { groups: LEGACY_NAV_GROUPS, topLevel: LEGACY_NAV_TOP_LEVEL_LINKS }

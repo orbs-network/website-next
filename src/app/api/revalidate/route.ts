@@ -10,6 +10,7 @@ import {
   postPath,
   encodedPostPath,
 } from '@/app/lib/routes'
+import { localesFor } from '@/i18n/availability'
 import { secretMatches } from '@/app/lib/secrets'
 import { GOVERNANCE_POST_SLUGS } from '@/content/shared/governance'
 import { DEFAULT_LOCALE, LOCALES, localePath } from '@/i18n/locales'
@@ -109,10 +110,15 @@ export async function POST(request: NextRequest) {
   // route. Handled before the layout sweep so a routine comms publish does not
   // invalidate the entire site.
   if (!isRemoval && contentType === 'mediaMention') {
-    revalidatePath(NEWS_INDEX_PATH)
-    revalidatePath(NEWS_PAGE_ROUTE, 'page')
-    console.info(`[revalidate] ${topic} ${entryId} (mediaMention) -> ${NEWS_INDEX_PATH}, ${NEWS_PAGE_ROUTE}`)
-    return NextResponse.json({ revalidated: [NEWS_INDEX_PATH, NEWS_PAGE_ROUTE], topic })
+    const paths = localesFor('/news').flatMap((locale) => {
+      const index = localePath(locale, NEWS_INDEX_PATH)
+      const pages = localePath(locale, NEWS_PAGE_ROUTE)
+      revalidatePath(index)
+      revalidatePath(pages, 'page')
+      return [index, pages]
+    })
+    console.info(`[revalidate] ${topic} ${entryId} (mediaMention) -> ${paths.join(', ')}`)
+    return NextResponse.json({ revalidated: paths, topic })
   }
 
   // Narrowing on `!slug` directly (rather than via a derived boolean) is what

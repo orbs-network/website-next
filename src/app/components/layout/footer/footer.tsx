@@ -35,9 +35,9 @@ import { FooterSocials } from './footer-socials'
  *  - **The contact email.** 3.4 moves it to the mobile menu (`MobileNav`), and
  *    `/contact` is one column away.
  */
-export async function Footer({ locale }: { locale: Locale }) {
+export async function Footer({ locale, logoFontClassName }: { locale: Locale; logoFontClassName?: string }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
-  const nav = locale === 'en' ? await getTranslations({ locale, namespace: 'nav' }) : undefined
+  const nav = locale !== 'ja' ? await getTranslations({ locale, namespace: 'nav' }) : undefined
 
   const socialLabels = Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, t(`socials.${social.key}`)]))
   const columns = footerColumnsForLocale(locale).map((column) => {
@@ -72,7 +72,7 @@ export async function Footer({ locale }: { locale: Locale }) {
             className="inline-flex shrink-0"
           >
             {/* Hidden: the lockup's wordmark would be a second name inside a link that is already labelled. */}
-            <OrbsLogo className="text-[1.875rem]" aria-hidden />
+            <OrbsLogo className={['text-[1.875rem]', logoFontClassName].filter(Boolean).join(' ')} aria-hidden />
           </Link>
 
           <p
@@ -125,7 +125,7 @@ export async function Footer({ locale }: { locale: Locale }) {
           </ul>
 
           <div className="flex items-center pb-7 lg:row-start-2 lg:border-l lg:border-neutral-500 lg:pl-6 lg:pt-[3.625rem]">
-            <FooterSocials labels={socialLabels} />
+            <FooterSocials locale={locale} labels={socialLabels} />
           </div>
         </div>
       </div>

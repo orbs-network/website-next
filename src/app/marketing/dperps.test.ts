@@ -52,13 +52,12 @@ describe('October product handoff', () => {
     expect(html).not.toContain('TODO')
   })
 
-  it('preserves the Korean legacy content, diagrams and article CTA', async () => {
+  it('uses the refreshed dPERPS structure in Korean, without the old diagrams', async () => {
     const html = renderToStaticMarkup(await DperpsPage({ locale: 'ko' }))
-    expect(html).toContain(encodeURIComponent('/marketing/perpetual-hub/diagram.png'))
-    expect(html).toContain(encodeURIComponent('/marketing/perpetual-hub/partners.png'))
-    expect(html).toContain('https://blog.naver.com/orbskorea/223514811254')
-    expect(html).not.toContain('product-benefits')
-    expect(html).not.toContain('Wallet-authorised withdrawals')
+    expect(html).toContain('product-benefits')
+    expect(html).toContain(ko.pages.dperps.hero.headline)
+    expect(html).not.toContain(encodeURIComponent('/marketing/perpetual-hub/diagram.png'))
+    expect(html).not.toContain(encodeURIComponent('/marketing/perpetual-hub/partners.png'))
   })
 
   it('uses the selected dSPOT headline in one composition for both themes', async () => {

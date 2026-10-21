@@ -46,7 +46,19 @@ export const ROOT_METADATA: Metadata = {
  * layouts, and it is the right trade here — switching language is a deliberate,
  * rare action, and a reload is what the legacy site did anyway.
  */
-export async function RootShell({ locale, children }: { locale: Locale; children: React.ReactNode }) {
+export async function RootShell({
+  locale,
+  children,
+  fontClassName,
+  fallbackFontFamily,
+}: {
+  locale: Locale
+  children: React.ReactNode
+  /** Optional locale-specific font; English and Japanese retain Montserrat. */
+  fontClassName?: string
+  /** Prefer Montserrat, then this locale font for unsupported glyphs. */
+  fallbackFontFamily?: string
+}) {
   // Explicit locale: with no `[locale]` segment and no middleware, next-intl
   // cannot infer it. See src/i18n/request.ts.
   const messages = await getMessages({ locale })
@@ -73,7 +85,10 @@ export async function RootShell({ locale, children }: { locale: Locale; children
 
   return (
     <html lang={LOCALE_HTML_LANG[locale]} suppressHydrationWarning>
-      <body className={montserrat.className}>
+      <body
+        className={fontClassName ?? montserrat.className}
+        style={fallbackFontFamily ? { fontFamily: `${montserrat.style.fontFamily}, ${fallbackFontFamily}` } : undefined}
+      >
         {/*
           Only the namespaces client components actually read are handed to the
           provider. Whatever goes in here is serialized into the RSC payload of
@@ -88,9 +103,9 @@ export async function RootShell({ locale, children }: { locale: Locale; children
         */}
         <NextIntlClientProvider locale={locale} messages={{ languageSelector: messages.languageSelector }}>
           <ThemeProvider attribute="class" defaultTheme="system" enableSystem disableTransitionOnChange>
-            <Header locale={locale} />
+            <Header locale={locale} logoFontClassName={locale === 'ko' ? montserrat.className : undefined} />
             <main>{children}</main>
-            <Footer locale={locale} />
+            <Footer locale={locale} logoFontClassName={locale === 'ko' ? montserrat.className : undefined} />
             <ScrollToTop label={scrollToTopLabel} lang={textLang(scrollToTopLabel, locale)} />
           </ThemeProvider>
         </NextIntlClientProvider>

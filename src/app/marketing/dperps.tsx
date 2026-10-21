@@ -26,20 +26,20 @@ import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
 /**
- * dPERPS: the October English design and the existing Korean product page.
+ * dPERPS: shared October layout for English and Korean.
  *
  * No Japanese: `content/jp/perpetual-hub` does not exist in the legacy repo, so
  * `ja` is absent from the availability entry rather than marked `placeholder` —
  * the same treatment dSLTP got in #99, and for the same reason. Korean is a
  * full translation.
  *
- * The English architecture diagram is awaiting Sara’s replacement; the legacy
- * Korean diagrams and destinations remain in that locale’s composition.
+ * The architecture diagram is awaiting Sara’s replacement in both locales;
+ * preserved Korean catalog values are used wherever their keys match.
  */
 export async function DperpsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dperps' })
 
-  if (locale === 'en') {
+  if (locale !== 'ja') {
     return (
       <>
         <SplitHero
@@ -52,16 +52,27 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         />
         <section className="container border-t border-border py-section text-center">
           <Eyebrow text={t('overview.eyebrow')} locale={locale} />
-          <H2 className="mx-auto mt-6 max-w-5xl text-balance">{t('overview.title')}</H2>
-          <p className="mx-auto mt-8 max-w-5xl text-p text-fg">{t('overview.body')}</p>
-          <p className="mx-auto mt-4 max-w-5xl text-p text-fg">{t('overview.markets')}</p>
+          <H2 className="mx-auto mt-6 max-w-5xl text-balance" lang={textLang(t('overview.title'), locale)}>
+            {t('overview.title')}
+          </H2>
+          <p className="mx-auto mt-8 max-w-5xl text-p text-fg" lang={textLang(t('overview.body'), locale)}>
+            {t('overview.body')}
+          </p>
+          <p className="mx-auto mt-4 max-w-5xl text-p text-fg" lang={textLang(t('overview.markets'), locale)}>
+            {t('overview.markets')}
+          </p>
           {/* TODO #318: Add Sara's replacement dPERPS architecture diagram when supplied. */}
         </section>
         <section className="product-benefits py-section">
           <div className="container">
             <div className="mb-16 text-center lg:mb-24">
               <Eyebrow text={t('features.eyebrow')} locale={locale} />
-              <H2 className="mx-auto mt-6 max-w-5xl whitespace-pre-line text-balance">{t('features.title')}</H2>
+              <H2
+                className="mx-auto mt-6 max-w-5xl whitespace-pre-line text-balance"
+                lang={textLang(t('features.title'), locale)}
+              >
+                {t('features.title')}
+              </H2>
             </div>
             <DperpsFeaturesGrid
               features={DPERPS_FEATURES.map((id) => ({

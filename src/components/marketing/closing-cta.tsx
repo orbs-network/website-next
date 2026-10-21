@@ -1,3 +1,4 @@
+import { socialHrefForLocale } from '@/content/shared/socials'
 import { TelegramIcon, XIcon } from '@/components/icons'
 import { Button } from '@/components/ui/button'
 import type { Locale } from '@/i18n/locales'
@@ -86,12 +87,22 @@ export function ClosingSocialButtons({
   return (
     <>
       <Button asChild icon={<XIcon aria-hidden className="size-3.5 shrink-0" />}>
-        <a href={x} target="_blank" rel="noopener noreferrer" lang={textLang(follow, locale)}>
+        <a
+          href={socialHrefForLocale('x', x, locale)}
+          target="_blank"
+          rel="noopener noreferrer"
+          lang={textLang(follow, locale)}
+        >
           {follow}
         </a>
       </Button>
       <Button asChild icon={<TelegramIcon aria-hidden className="size-3.5 shrink-0" />}>
-        <a href={telegram} target="_blank" rel="noopener noreferrer" lang={textLang(community, locale)}>
+        <a
+          href={socialHrefForLocale('telegram', telegram, locale)}
+          target="_blank"
+          rel="noopener noreferrer"
+          lang={textLang(community, locale)}
+        >
           {community}
         </a>
       </Button>

@@ -570,3 +570,15 @@
     background: linear-gradient(135deg, #f6f3ff 0%, #dedbff 55%, #8581ff 100%);
   }
 }
+
+/* Keep Korean words intact; very long identifiers may still wrap on small screens. */
+html:lang(ko) main :is(h1, h2, h3, h4, p, li, summary):lang(ko),
+html:lang(ko) footer p:lang(ko) {
+  word-break: keep-all;
+  overflow-wrap: anywhere;
+}
+
+/* Preserve catalog casing for Orbs and product names in Korean content. */
+html:lang(ko) main .uppercase {
+  text-transform: none;
+}

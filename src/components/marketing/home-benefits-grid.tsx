@@ -31,7 +31,7 @@ export function HomeBenefitsGrid({ features, locale }: { features: readonly Home
               <Icon className="size-5" strokeWidth={1.25} />
             </span>
             <h3
-              className="mt-6 max-w-[16rem] text-[1.5rem] font-normal leading-tight text-fg"
+              className={`mt-6 max-w-[16rem] text-[1.5rem] font-normal leading-tight text-fg${locale === 'ko' ? ' whitespace-pre-line' : ''}`}
               lang={textLang(feature.title, locale)}
             >
               {feature.title}

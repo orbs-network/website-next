@@ -37,8 +37,8 @@ const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string;
  *
  * On the inner-page MASTER's sections (#227): split hero, a rule and bracketed
  * eyebrow on every section, left-aligned headings, borderless cards, and the
- * shared closing block. English groups the three products; other locales
- * retain their four protocol cards until their content refresh.
+ * shared closing block. English and Korean group the three products; Japanese retains its legacy
+ * protocol cards.
  *
  * Every string is tagged individually with `textLang`. Japanese is a PARTIAL
  * translation — `jp/overview/md/why-section.md` is an empty file — so those
@@ -50,9 +50,8 @@ const PRODUCT_PRESENTATION: Record<OverviewProductId, { accentClassName: string;
 export async function OverviewPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.overview' })
 
-  // The English handoff replaces the legacy sections; localised catalogs and
-  // compositions stay intact until their own refresh is approved.
-  if (locale === 'en') {
+  // English and Korean share the refreshed structure; Japanese retains its legacy composition.
+  if (locale !== 'ja') {
     return (
       <>
         <SplitHero

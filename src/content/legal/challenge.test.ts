@@ -25,7 +25,7 @@ describe('May 2026 Challenge archive', () => {
       {
         en: 'sole arbiter of eligibility and disqualification',
         ja: '参加資格および失格の唯一の判断者',
-        ko: '참여 자격 및 실격 여부에 대한 최종 판단 권한',
+        ko: '참가 자격·실격을 단독 판단',
       }[locale]
     )
   })

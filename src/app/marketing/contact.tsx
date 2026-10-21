@@ -2,7 +2,7 @@ import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
 import { H1, H3, H4 } from '@/app/components/typography'
 import { ContactForm, type ContactFormLabels } from '@/components/marketing/contact-form'
-import { CONTACT_CHANNELS, CONTACT_EMAIL } from '@/content/pages/contact'
+import { contactChannelsForLocale, CONTACT_EMAIL } from '@/content/pages/contact'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
@@ -129,7 +129,7 @@ export async function ContactPage({ locale }: { locale: Locale }) {
           </H3>
 
           <div className="mt-8 flex flex-col gap-8">
-            {CONTACT_CHANNELS.map((group) => (
+            {contactChannelsForLocale(locale).map((group) => (
               <section key={group.key}>
                 <H4 lang={textLang(channels(`groups.${group.key}`), locale)}>{channels(`groups.${group.key}`)}</H4>
 

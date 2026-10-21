@@ -1,5 +1,5 @@
 import type { Metadata } from 'next'
-import { LocalizedHomePage } from '@/app/marketing/localized-home'
+import { HomePage } from '@/app/marketing/home'
 import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import { HOME_PATH } from '@/app/lib/routes'
@@ -7,7 +7,7 @@ import { HOME_PATH } from '@/app/lib/routes'
 export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations({ locale: 'ko', namespace: 'pages.localizedHome.meta' })
+  const t = await getTranslations({ locale: 'ko', namespace: 'pages.home.meta' })
 
   return {
     title: t('title'),
@@ -19,7 +19,7 @@ export async function generateMetadata(): Promise<Metadata> {
   }
 }
 
-/** Preserve the legacy Korean landing copy while the English refresh is localized. */
+/** Use the current English page composition with freshly translated Korean copy. */
 export default function LocaleHome() {
-  return <LocalizedHomePage locale="ko" />
+  return <HomePage locale="ko" />
 }

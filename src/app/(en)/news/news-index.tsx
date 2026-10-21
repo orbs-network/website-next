@@ -1,3 +1,4 @@
+import { localePath, type Locale } from '@/i18n/locales'
 import { notFound } from 'next/navigation'
 import { H1 } from '@/app/components/typography'
 import { Pagination } from '@/app/components/pagination'
@@ -6,11 +7,15 @@ import { newsPagePath } from '@/app/lib/routes'
 import { MediaCard } from './news-card'
 
 /** Copy lifted from the legacy content/news/hero. */
-function Heading() {
+function Heading({ locale }: { locale: Locale }) {
   return (
-    <div className="flex flex-col items-center justify-center pt-10 pb-20">
-      <H1 className="inline-block text-center mx-auto">Orbs in the News</H1>
-      <p className="text-fg-muted text-center">Check out the latest articles and publications featuring Orbs.</p>
+    <div lang={locale === 'ko' ? 'ko' : 'en'} className="flex flex-col items-center justify-center pt-10 pb-20">
+      <H1 className="inline-block text-center mx-auto">{locale === 'ko' ? '언론 속 Orbs' : 'Orbs in the News'}</H1>
+      <p className="text-fg-muted text-center">
+        {locale === 'ko'
+          ? 'Orbs를 소개하는 최신 기사와 발행물을 확인하세요.'
+          : 'Check out the latest articles and publications featuring Orbs.'}
+      </p>
     </div>
   )
 }
@@ -19,7 +24,7 @@ function Heading() {
  * Shared body for `/news` and `/news/page/[n]` so the two routes cannot drift.
  * Same shape as BlogIndex deliberately — one pattern, two collections.
  */
-export async function NewsIndex({ currentPage }: { currentPage: number }) {
+export async function NewsIndex({ currentPage, locale = 'en' }: { currentPage: number; locale?: Locale }) {
   const { items, total } = await getMediaMentions({
     skip: (currentPage - 1) * MEDIA_PER_PAGE,
     limit: MEDIA_PER_PAGE,
@@ -36,25 +41,30 @@ export async function NewsIndex({ currentPage }: { currentPage: number }) {
   if (items.length === 0) {
     return (
       <div className="container py-10">
-        <Heading />
-        <p className="text-fg-muted">No coverage yet. Check back soon.</p>
+        <Heading locale={locale} />
+        <p className="text-fg-muted">
+          {locale === 'ko'
+            ? '아직 등록된 기사가 없습니다. 나중에 다시 확인해 주세요.'
+            : 'No coverage yet. Check back soon.'}
+        </p>
       </div>
     )
   }
 
   return (
     <div className="container py-10">
-      <Heading />
+      <Heading locale={locale} />
       <div className="grid gap-10 md:grid-cols-2 lg:grid-cols-3">
         {items.map((mention) => (
           <MediaCard key={mention.url} mention={mention} />
         ))}
       </div>
       <Pagination
+        locale={locale}
         currentPage={currentPage}
         totalPages={totalPages}
-        pathFor={newsPagePath}
-        label="Media coverage pagination"
+        pathFor={(page) => localePath(locale, newsPagePath(page))}
+        label={locale === 'ko' ? '언론 보도 페이지 이동' : 'Media coverage pagination'}
       />
     </div>
   )

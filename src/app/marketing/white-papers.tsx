@@ -2,6 +2,7 @@ import { getTranslations } from 'next-intl/server'
 import { WhitePaperList } from '@/components/marketing/white-paper-list'
 import { WHITE_PAPER_CATEGORIES } from '@/content/pages/white-papers'
 import type { Locale } from '@/i18n/locales'
+import { localeHref } from '@/i18n/availability'
 import { textLang } from '@/i18n/script'
 
 /**
@@ -26,13 +27,7 @@ export async function WhitePapersPage({ locale }: { locale: Locale }) {
 
       return {
         slug: paper.slug,
-        /*
-         * NOT locale-prefixed. A paper page is a wrapper around one PDF, and
-         * the PDF exists in a single language — there is nothing to translate
-         * and no /ko/white-papers/<slug> route to send anyone to. Every locale
-         * links at the one canonical page.
-         */
-        href: `/white-papers/${paper.slug}/`,
+        href: localeHref(`/white-papers/${paper.slug}`, locale),
         title,
         abstract,
         date: paper.date,

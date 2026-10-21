@@ -8,6 +8,8 @@ import {
   YoutubeIcon,
 } from '@/components/icons'
 import { FOOTER_SOCIALS, type FooterSocialSpec } from '@/content/shared/footer'
+import type { Locale } from '@/i18n/locales'
+import { socialHrefForLocale } from '@/content/shared/socials'
 import { cn } from '@/lib/utils'
 
 /**
@@ -33,7 +35,15 @@ const ICONS: Record<FooterSocialSpec['icon'], React.ComponentType<IconBaseProps>
  * which they are anything but English, and marking them per-string would be the
  * same answer every time.
  */
-export function FooterSocials({ labels, className }: { labels: Record<string, string>; className?: string }) {
+export function FooterSocials({
+  labels,
+  className,
+  locale = 'en',
+}: {
+  labels: Record<string, string>
+  className?: string
+  locale?: Locale
+}) {
   return (
     <ul className={cn('flex items-center gap-3', className)}>
       {FOOTER_SOCIALS.map((social) => {
@@ -42,7 +52,7 @@ export function FooterSocials({ labels, className }: { labels: Record<string, st
         return (
           <li key={social.key}>
             <a
-              href={social.href}
+              href={socialHrefForLocale(social.key, social.href, locale)}
               target="_blank"
               rel="noopener noreferrer"
               aria-label={labels[social.key]}

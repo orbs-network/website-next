@@ -40,7 +40,7 @@ describe('temporary inner-page consolidation', () => {
       for (const product of ['liquidity-hub', 'dtwap', 'dlimit', 'dsltp']) {
         expect(expandedTemporaryRedirects()).toContainEqual({
           source: `${prefix}/${product}/`,
-          destination: '/dspot/',
+          destination: prefix === '/ko' ? '/ko/dspot/' : '/dspot/',
           permanent: false,
         })
       }
@@ -272,7 +272,7 @@ describe('expandedPrefixRedirects', () => {
       destination: '/white-papers/:child/',
       permanent: true,
     })
-    expect(rules).toContainEqual({
+    expect(rules).not.toContainEqual({
       source: '/ko/white-papers/:child/',
       destination: '/white-papers/:child/',
       permanent: true,

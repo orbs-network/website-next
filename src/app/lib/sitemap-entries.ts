@@ -79,25 +79,17 @@ export async function sitemapEntries(): Promise<MetadataRoute.Sitemap> {
     }))
   )
 
-  /*
-   * The individual white papers.
-   *
-   * Not covered by the loop above: that reads MARKETING_PAGE_PATHS, which holds
-   * only the `/white-papers` index — the 23 papers are a dynamic route and
-   * would otherwise be absent from the sitemap entirely.
-   *
-   * English only, and no locale variants, because the pages are: each wraps one
-   * PDF that exists in a single language, so there is one canonical URL per
-   * paper and every locale's index links at it.
-   */
-  const whitePapers: MetadataRoute.Sitemap = WHITE_PAPERS.map((paper) => ({
-    url: absoluteUrl(`/white-papers/${paper.slug}/`),
-    lastModified: lastArchiveChange,
-    changeFrequency: 'yearly' as const,
-    // Below the product pages: these are reference documents, several of them
-    // years old, not the commercial surface.
-    priority: 0.5,
-  }))
+  // Detail routes are not in MARKETING_PAGE_PATHS. Include every translated
+  // wrapper, even when its downloadable PDF remains the original document.
+  const whitePapers: MetadataRoute.Sitemap = WHITE_PAPERS.flatMap((paper) => {
+    const path = `/white-papers/${paper.slug}/`
+    return translatedLocalesFor(path).map((locale) => ({
+      url: absoluteUrl(localePath(locale, path)),
+      lastModified: lastArchiveChange,
+      changeFrequency: 'yearly' as const,
+      priority: 0.5,
+    }))
+  })
 
   // Page 1 is /blog/, not /blog/page/1/ — blogPagePath enforces that, so there
   // is exactly one URL per page of results and no self-duplicate.

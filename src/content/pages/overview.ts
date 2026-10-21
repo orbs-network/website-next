@@ -23,7 +23,7 @@ export const OVERVIEW_REFRESH_PRODUCTS = [
 ] as const
 
 export function overviewProductsForLocale(locale: Locale) {
-  return locale === 'en' ? OVERVIEW_REFRESH_PRODUCTS : OVERVIEW_PRODUCTS
+  return locale !== 'ja' ? OVERVIEW_REFRESH_PRODUCTS : OVERVIEW_PRODUCTS
 }
 
 export type OverviewProductId =
