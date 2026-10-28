@@ -18,9 +18,9 @@ describe('developer CTA refresh', () => {
     })
   })
 
-  it('retains the paused dSPOT CTA', async () => {
+  it('uses Start building for the refreshed English dSPOT CTA', async () => {
     expect(await getDevDocsLink('dspot', 'en')).toEqual({
-      label: en.devDocs.sdk,
+      label: 'Start building',
       href: 'https://docs.orbs.com/#spot-guides',
     })
   })

@@ -30,7 +30,6 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         headline={t('hero.headline')}
         intro={t('hero.intro')}
         cta={{ label: t('hero.cta'), href: DSPOT_LINKS.modules }}
-        /* Preserve the approved SDK label and destination. */
         secondaryCta={devDocs}
         graphic={DSPOT_GRAPHICS.hero}
         locale={locale}
