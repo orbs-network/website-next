@@ -52,7 +52,9 @@ export function ProductModuleCards({
         {cards.map((card) => (
           <li
             key={card.id}
-            className="w-[88%] shrink-0 snap-start bg-[#e7e7e7] p-6 sm:w-[calc((100%-1.5rem)/2)] lg:w-[calc((100%-3rem)/3)] dark:bg-[#1e1e20]"
+            // Reserve space after the gaps for a preview of the next card:
+            // 32px on phones, 48px after two cards, 64px after three cards.
+            className="w-[calc(100%-3.5rem)] shrink-0 snap-start bg-[#e7e7e7] p-6 sm:w-[calc((100%-6rem)/2)] lg:w-[calc((100%-8.5rem)/3)] dark:bg-[#1e1e20]"
           >
             <div className="aspect-[5/3]">
               <ThemedGraphic

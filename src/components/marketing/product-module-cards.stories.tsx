@@ -33,6 +33,7 @@ const meta = {
     viewport: {
       options: {
         desktop: { name: 'Desktop', styles: { width: '1440px', height: '900px' } },
+        tablet: { name: 'Tablet', styles: { width: '768px', height: '900px' } },
         phone: { name: 'Phone', styles: { width: '320px', height: '900px' } },
       },
     },
@@ -50,6 +51,13 @@ const checkRail: NonNullable<Story['play']> = async ({ canvasElement, args }) =>
   await waitFor(() => expect(canvas.getByRole('button', { name: args.previousLabel })).toBeDisabled())
   expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
   expect(rail.scrollWidth).toBeGreaterThan(rail.clientWidth)
+  // A partially visible next card makes the scrolling affordance visible.
+  const railBox = rail.getBoundingClientRect()
+  const preview = cards
+    .map((card) => card.getBoundingClientRect())
+    .find((box) => box.left < railBox.right && box.right > railBox.right)
+  expect(preview).toBeDefined()
+  expect(railBox.right - preview!.left).toBeGreaterThanOrEqual(24)
 
   // The fourth card was outside the Figma frame. A mouse user must reach it.
   for (let n = 0; n < 4 && rail.scrollLeft < rail.scrollWidth - rail.clientWidth - 1; n++) {
@@ -68,5 +76,6 @@ const checkRail: NonNullable<Story['play']> = async ({ canvasElement, args }) =>
 }
 
 export const Desktop: Story = { globals: { viewport: { value: 'desktop' } }, play: checkRail }
+export const Tablet: Story = { globals: { viewport: { value: 'tablet' } }, play: checkRail }
 export const Phone: Story = { globals: { viewport: { value: 'phone' } }, play: checkRail }
 export const KoreanPhone: Story = { args: argsFor('ko'), globals: { viewport: { value: 'phone' } }, play: checkRail }
