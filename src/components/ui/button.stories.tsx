@@ -195,7 +195,7 @@ function OverlayOnFacets() {
   return (
     <div className="p-10" style={{ backgroundImage: FACET_BACKDROP }}>
       <Button variant="overlay" asChild>
-        <a href="https://example.com">Explore SDK</a>
+        <a href="https://example.com">Start building</a>
       </Button>
     </div>
   )
@@ -234,7 +234,7 @@ async function expectOverlayReadable(canvasElement: HTMLElement) {
 }
 
 /**
- * Overlay: the home hero's "Explore SDK", over the facet field (#268). Looks
+ * Overlay: the home hero's "Start building", over the facet field (#268). Looks
  * like `primary` at rest, but opaque; white fill with an indigo label on hover
  * and focus, the same pair in both themes.
  */

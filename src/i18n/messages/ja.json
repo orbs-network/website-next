@@ -1104,7 +1104,7 @@
         "failed": "送信できませんでした。もう一度お試しください。",
         "invalidEmail": "有効なメールアドレスを入力してください。"
       },
-      "sdk": "Explore SDK"
+      "sdk": "Start building"
     },
     "smartContracts": {
       "meta": {
@@ -1342,7 +1342,7 @@
     }
   },
   "devDocs": {
-    "sdk": "Explore SDK",
+    "sdk": "Start building",
     "api": "API",
     "skill": "Skill"
   }
