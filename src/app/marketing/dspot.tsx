@@ -30,11 +30,7 @@ export async function DspotPage({ locale }: { locale: Locale }) {
         headline={t('hero.headline')}
         intro={t('hero.intro')}
         cta={{ label: t('hero.cta'), href: DSPOT_LINKS.modules }}
-        /*
-          Not in the design, which draws one hero CTA; kept on purpose. #214
-          made every product hero's SDK link an "Explore SDK" CTA, and dSPOT's
-          is the only one that lands on the docs' Spot guide chooser.
-        */
+        /* Preserve the approved SDK label and destination. */
         secondaryCta={devDocs}
         graphic={DSPOT_GRAPHICS.hero}
         locale={locale}
