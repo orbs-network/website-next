@@ -52,6 +52,14 @@ describe('October product handoff', () => {
     expect(html).not.toContain('TODO')
   })
 
+  it.each(['en', 'ko'] as const)('omits the whole excluded Overview section in %s', async (locale) => {
+    const messages = locale === 'ko' ? ko : en
+    const html = renderToStaticMarkup(await DperpsPage({ locale }))
+    for (const text of Object.values(messages.pages.dperps.overview)) expect(html).not.toContain(text)
+    expect(html).toContain(messages.pages.dperps.marquee.perpetuals)
+    expect(html).toContain(`href="${locale === 'ko' ? '/ko/contact/' : '/contact/'}"`)
+  })
+
   it('uses the refreshed dPERPS structure in Korean, without the old diagrams', async () => {
     const html = renderToStaticMarkup(await DperpsPage({ locale: 'ko' }))
     expect(html).toContain('product-benefits')

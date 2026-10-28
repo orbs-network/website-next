@@ -18,7 +18,10 @@ describe('product cards during the inner-page refresh', () => {
     ['Institutions', InstitutionalPage],
   ] as const)('keeps all four %s product cards as text without links or link arrows', async (_name, Page) => {
     const html = renderToStaticMarkup(await Page({ locale: 'en' }))
-    const cards = html.match(/<li\b[^>]*class="[^"]*min-h-\[21rem\][^"]*"[^>]*>[\s\S]*?<\/li>/g) ?? []
+    // Scope by the card's own heading, not a size class that changes with the design.
+    const cards = (html.match(/<li\b[^>]*>[\s\S]*?<\/li>/g) ?? []).filter((item) =>
+      /<h3\b[^>]*>(?:Liquidity Hub|dTWAP|dLIMIT|dSLTP)<\/h3>/.test(item)
+    )
     expect(cards).toHaveLength(4)
     for (const name of ['Liquidity Hub', 'dTWAP', 'dLIMIT', 'dSLTP']) expect(cards.join('')).toContain(name)
     for (const card of cards) {
