@@ -1,17 +1,10 @@
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 
 /**
- * Structural data for the dSPOT page (#155). Copy lives under `pages.dspot`.
- *
- * From the `Desktop / Products / dSPOT (dark mode)` template frame, 2026-09-28.
- * The Templates page carries two frames of that name with identical copy; this
- * follows `2200:17900`, the one whose hero has the finished mark stack.
- *
- * The cards describe the order types without linking to the individual pages
- * while those pages are being refreshed. Their URLs temporarily lead here.
+ * October 28 Templates / dSPOT (`2494:19487`), with approved copy and solvers.
+ * Cards stay unlinked while their individual URLs temporarily lead here.
  */
 
-import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
 import { HOME_LINKS } from './home'
 
@@ -28,7 +21,22 @@ export const DSPOT_LINKS = {
 /** The four products under dSPOT, in design order. Presentation lives with the page. */
 export const DSPOT_MODULES = [{ id: 'dlimit' }, { id: 'dtwap' }, { id: 'dsltp' }, { id: 'liquidityHub' }] as const
 
-export type DspotModuleId = (typeof DSPOT_MODULES)[number]['id']
+/** Current page art plus the light panels supplied outside the page frame. */
+export const DSPOT_MODULE_GRAPHICS = {
+  dlimit: moduleGraphic('dlimit', 385, 231),
+  dtwap: moduleGraphic('dtwap', 431, 252),
+  dsltp: moduleGraphic('dsltp', 431, 259),
+  liquidityHub: moduleGraphic('liquidity-hub', 431, 259),
+} as const
+
+function moduleGraphic(name: string, width: number, height: number) {
+  return {
+    src: `/marketing/dspot/modules/${name}.svg`,
+    lightSrc: `/marketing/dspot/modules/${name}-light.svg`,
+    width,
+    height,
+  }
+}
 
 /** The "Built for best execution" list, in design order. */
 export const DSPOT_POINTS = ['pricing', 'custody', 'settlement'] as const
@@ -47,7 +55,12 @@ export const DSPOT_POINTS = ['pricing', 'custody', 'settlement'] as const
  */
 export const DSPOT_GRAPHICS = {
   /** The stacked hexagon planes with the order-type marks. */
-  hero: HERO_GRAPHICS.dspot,
+  hero: {
+    src: '/marketing/dspot/execution-hero.svg',
+    lightSrc: '/marketing/dspot/execution-hero-light.svg',
+    width: 465,
+    height: 650,
+  },
   /** The sphere network, shared with Venues. */
   network: {
     src: '/marketing/shared/network-sphere.svg',

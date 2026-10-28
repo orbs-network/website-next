@@ -1,6 +1,7 @@
 import { H2 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
 import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
@@ -19,6 +20,7 @@ export function GraphicSplit({
   cta,
   graphic,
   locale,
+  className,
 }: {
   eyebrow: string
   heading: string
@@ -27,9 +29,10 @@ export function GraphicSplit({
   /** Decorative, like the hero's: the copy beside it carries the meaning. */
   graphic: SectionGraphic
   locale: Locale
+  className?: string
 }) {
   return (
-    <section className="container py-section">
+    <section className={cn('container py-section', className)}>
       <div className="grid grid-cols-1 gap-12 lg:grid-cols-[minmax(0,2fr)_minmax(0,3fr)] lg:gap-16">
         <div className="flex flex-col">
           <Eyebrow text={eyebrow} locale={locale} />

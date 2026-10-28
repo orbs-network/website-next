@@ -1,0 +1,9 @@
+<svg width="34" height="34" viewBox="0 0 34 34" fill="none" xmlns="http://www.w3.org/2000/svg">
+<g id="Icon">
+<rect x="0.369565" y="0.369565" width="33.2609" height="33.2609" rx="7.02174" fill="#3346F2" fill-opacity="0.1"/>
+<rect x="0.369565" y="0.369565" width="33.2609" height="33.2609" rx="7.02174" stroke="#3346F2" stroke-width="0.73913"/>
+<g id="Chart pie">
+<path id="Icon_2" d="M9.875 17C9.875 13.3325 12.6459 10.3123 16.2083 9.91846V17.7916H24.0815C23.6877 21.3541 20.6674 24.125 17 24.125C13.065 24.125 9.875 20.935 9.875 17ZM23.7195 14.625H19.375V10.2805C21.3994 10.9961 23.0039 12.6006 23.7195 14.625Z" stroke-width="1.58333" stroke-linecap="round" stroke-linejoin="round" stroke="#3346F2"/>
+</g>
+</g>
+</svg>
