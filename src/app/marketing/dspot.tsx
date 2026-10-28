@@ -76,6 +76,7 @@ export async function DspotPage({ locale }: { locale: Locale }) {
       />
 
       <GraphicSplit
+        className="border-t border-border"
         eyebrow={t('network.eyebrow')}
         heading={t('network.heading')}
         body={t('network.body')}
