@@ -39,9 +39,9 @@ describe('published ecosystem cards', () => {
     ])
   })
 
-  it('links directly to project profiles, with the Carbon/IntentX identity kept distinct', () => {
+  it('links directly to project profiles, with the Carbon venue identity kept distinct', () => {
     for (const card of ECOSYSTEM_CARDS) expect(card.xUrl).toMatch(/^https:\/\/x\.com\/[A-Za-z0-9_]+$/)
-    expect(ECOSYSTEM_CARDS.find((card) => card.name === 'Carbon')?.xUrl).toBe('https://x.com/IntentX_')
+    expect(ECOSYSTEM_CARDS.find((card) => card.name === 'Carbon')?.xUrl).toBe('https://x.com/CarbonTerminal')
   })
 
   it('ships real assets with visible ink on white cards', async () => {
