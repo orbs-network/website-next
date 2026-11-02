@@ -45,7 +45,7 @@ describe('venues and ecosystem handoff', () => {
       expect(html).not.toContain(name)
     expect(html).not.toContain('<table')
     expect(html).not.toContain('id="dspot"')
-    expect(html).toContain('https://x.com/IntentX_')
+    expect(html).toContain('https://x.com/CarbonTerminal')
     expect(html).toContain('https://x.com/BuildOnLumia')
   })
   it.each(['ja'] as const)('retains the existing %s directory', async (locale) => {

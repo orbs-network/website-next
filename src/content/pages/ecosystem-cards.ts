@@ -52,7 +52,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
       width: 149,
       height: 32,
     },
-    xUrl: 'https://x.com/IntentX_',
+    xUrl: 'https://x.com/CarbonTerminal',
   },
   trebleswap: {
     logo: { src: '/marketing/ecosystem/cards/trebleswap.webp', width: 250, height: 250 },
@@ -194,7 +194,7 @@ const SOLVER_CARDS: EcosystemCard[] = [
   {
     id: 'solver:magpie',
     name: 'Magpie',
-    xUrl: 'https://x.com/magpieprotocol',
+    xUrl: 'https://x.com/flytrade_',
     logo: {
       src: '/marketing/ecosystem/cards/magpie.png',
       width: 256,
