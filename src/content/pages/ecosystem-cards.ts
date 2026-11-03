@@ -95,7 +95,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
     xUrl: 'https://x.com/BlackHoleDEX',
   },
   ring: {
-    logo: { src: '/marketing/ecosystem/cards/ring.png', width: 192, height: 192 },
+    logo: { src: '/marketing/ecosystem/cards/ring.svg', width: 87, height: 87 },
     xUrl: 'https://x.com/ProtocolRing',
   },
 }

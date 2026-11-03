@@ -9,7 +9,7 @@ Retrieved 14 October 2026. Native SVG geometry is preserved. Raster files are re
 - **dragonswap:** https://www.saphyre.xyz/favicon.ico
 - **sparkdex:** https://res.cloudinary.com/sparkdex/image/upload/f_svg/v1727753386/SparkDexLogo-sm_vv15k7.svg
 - **shadow:** https://www.shadow.so/logo.svg
-- **ring:** https://app.ring.exchange/images/192x192_App_Icon.png
+- **ring:** https://app.ring.exchange/ — the header’s native inline SVG (`svg[data-testid="ring-logo"]`), retrieved 3 November 2026. Preserve both paths and the original pink/purple/cyan gradients; crop the viewBox to the artwork instead of retaining the app header’s surrounding space. The app’s apple-touch icon is a Uniswap asset and was removed from this card.
 - **odos:** https://odos.xyz/favicon.png
 - **velora:** https://framerusercontent.com/images/FuxM2HJWypLor972lYSjEsyh7IA.svg
 - **openocean:** https://app.openocean.finance/img/OpenOcean-Logo.81b4484b.svg
