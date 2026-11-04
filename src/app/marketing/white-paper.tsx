@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
@@ -17,15 +18,19 @@ export async function whitePaperMetadata(slug: string, locale: Locale): Promise<
   if (!paper) return { title: 'Paper not found' }
 
   const t = await getTranslations({ locale, namespace: 'pages.whitePapers' })
+  const title = t(`items.${slug}.title`)
 
-  return {
-    title: t(`items.${slug}.title`),
-    // Stripped: a meta description is text, and several abstracts contain
-    // markdown links that would otherwise be published as raw syntax.
-    description: plainText(t(`items.${slug}.abstract`)),
-    alternates: localeAlternates(`/white-papers/${slug}`, locale),
-    robots: placeholderRobots(`/white-papers/${slug}`, locale),
-  }
+  return withSocialMetadata(
+    {
+      title,
+      // Stripped: a meta description is text, and several abstracts contain
+      // markdown links that would otherwise be published as raw syntax.
+      description: plainText(t(`items.${slug}.abstract`)).trim() || `${title} — ${t('meta.description')}`,
+      alternates: localeAlternates(`/white-papers/${slug}`, locale),
+      robots: placeholderRobots(`/white-papers/${slug}`, locale),
+    },
+    { locale }
+  )
 }
 
 export async function WhitePaperPage({ slug, locale }: { slug: string; locale: Locale }) {

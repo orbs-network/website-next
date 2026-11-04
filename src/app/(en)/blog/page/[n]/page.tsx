@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { BlogIndex, getTotalPages } from '../../blog-index'
@@ -54,7 +55,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Page Not Found' }
   }
 
-  return {
+  return withSocialMetadata({
     title: `Blog — page ${pageNumber}`,
     description: 'Read our latest blog posts',
     alternates: {
@@ -63,7 +64,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // from the index.
       canonical: absoluteUrl(blogPagePath(pageNumber)),
     },
-  }
+  })
 }
 
 /*

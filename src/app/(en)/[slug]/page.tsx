@@ -1,3 +1,4 @@
+import { postMetadata } from '@/app/lib/post-metadata'
 import { Separator } from '@/components/ui/separator'
 import { Metadata } from 'next'
 import Image from 'next/image'
@@ -9,8 +10,6 @@ import { H4 } from '@/app/components/typography'
 import { COVER_FRAME, COVER_IMAGE } from '@/app/components/blog/cover'
 import { getAllPostSlugs, getAssetImage, getAssetUrl, getAuthorInfo, getPostBySlug } from '@/app/lib/api'
 import { cn } from '@/lib/utils'
-import { encodedPostPath } from '@/app/lib/routes'
-import { absoluteUrl } from '@/app/lib/site'
 import { BackButton } from './back-button'
 
 type Props = {
@@ -87,16 +86,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     }
   }
 
-  return {
-    title: post.title,
-    description: post.shortDescription || '',
-    alternates: {
-      // Absolute, matching the sitemap. A relative canonical resolves against
-      // the request host, so a post served from a Vercel alias would
-      // self-canonicalize that hostname and compete with the real domain.
-      canonical: absoluteUrl(encodedPostPath(slug)),
-    },
-  }
+  return postMetadata(post, slug)
 }
 
 export default async function BlogPostPage({ params }: Props) {

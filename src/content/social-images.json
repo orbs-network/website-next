@@ -1,0 +1,18 @@
+{
+  "/dtwap": { "source": "/marketing/dtwap/hero.svg" },
+  "/dlimit": { "source": "/marketing/dlimit/hero.svg" },
+  "/dsltp": { "source": "/marketing/dsltp/hero.svg" },
+  "/dspot": { "source": "/marketing/dspot/execution-hero.svg" },
+  "/dperps": { "source": "/marketing/dperps/futures-hero.svg" },
+  "/liquidity-hub": { "source": "/marketing/liquidity-hub/hero.svg" },
+  "/agentic": { "source": "/marketing/agentic/hero.svg" },
+  "/ai/skills": { "source": "/marketing/ai-skills/hero.svg" },
+  "/institutional": { "source": "/marketing/institutional/hero.svg" },
+  "/overview": { "source": "/marketing/overview/hero.svg" },
+  "/execution-services": { "source": "/marketing/execution-services/hero.svg", "locales": ["en", "ko"] },
+  "/venues": { "source": "/marketing/venues/hero.svg" },
+  "/notifications": { "source": "/marketing/notifications/hero.png" },
+  "/ton-access": { "source": "/marketing/ton-access/hero.svg" },
+  "/ton-vote": { "source": "/marketing/ton-vote/hero.svg" },
+  "/tetra-orbs-staking-wallet-tutorial": { "source": "/archives/tetra/bg.jpeg" }
+}

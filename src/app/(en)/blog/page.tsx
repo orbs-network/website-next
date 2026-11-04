@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { BlogIndex, getTotalPages } from './blog-index'
 import { blogPagePath } from '@/app/lib/routes'
@@ -7,7 +8,7 @@ import { absoluteUrl } from '@/app/lib/site'
 // (#19) is the primary path; this bounds staleness if a webhook is missed.
 export const revalidate = 86400
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: 'Blog',
   description: 'Read our latest blog posts',
   alternates: {
@@ -16,7 +17,7 @@ export const metadata: Metadata = {
     // from the index entirely.
     canonical: absoluteUrl(blogPagePath(1)),
   },
-}
+})
 
 export default async function BlogPage() {
   return <BlogIndex currentPage={1} />

@@ -12,6 +12,8 @@ import { localeHref } from '@/i18n/availability'
 import { Footer } from './footer/footer'
 import { Header } from './header'
 import { ScrollToTop } from './scroll-to-top'
+import { siteUrl } from '@/app/lib/site'
+import { socialMetadata } from '@/app/lib/social-metadata'
 
 const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '600', '700', '900'] })
 
@@ -24,11 +26,13 @@ const montserrat = Montserrat({ subsets: ['latin'], weight: ['400', '500', '600'
  * that have locale variants declare their own alternates.
  */
 export const ROOT_METADATA: Metadata = {
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'Orbs',
     template: '%s | Orbs',
   },
   description: 'Bringing CeFi execution to DeFi.',
+  ...socialMetadata({ title: 'Orbs', description: 'Bringing CeFi execution to DeFi.' }),
 }
 
 /**

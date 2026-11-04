@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import type { Metadata } from 'next'
 import { HomePage } from '@/app/marketing/home'
 import { getTranslations } from 'next-intl/server'
@@ -14,11 +15,14 @@ export const revalidate = 86400
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: 'en', namespace: 'pages.home.meta' })
 
-  return {
-    title: t('title'),
-    description: t('description'),
-    alternates: localeAlternates(HOME_PATH, 'en'),
-  }
+  return withSocialMetadata(
+    {
+      title: t('title'),
+      description: t('description'),
+      alternates: localeAlternates(HOME_PATH, 'en'),
+    },
+    { locale: 'en' }
+  )
 }
 
 export default function Home() {
