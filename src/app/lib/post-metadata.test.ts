@@ -67,4 +67,22 @@ describe('article sharing metadata', () => {
     const editorial = 'A detailed editorial summary. '.repeat(12)
     expect(postMetadata(post({ shortDescription: editorial }), 'post').description).toBe(editorial.trim())
   })
+
+  it.each([undefined, 'https://www.linkedin.com/in/ran-hammer-32323278/'])(
+    'supplies the author name separately from the optional profile URL (%s)',
+    (profileUrl) => {
+      const author = { fields: { name: 'Ran Hammer', profileUrl } } as BlogPostFields['author']
+      const metadata = postMetadata(post({ author }), 'post')
+      expect(metadata.authors).toEqual([{ name: 'Ran Hammer', url: profileUrl }])
+      expect(metadata.openGraph).toMatchObject({ authors: [profileUrl ?? 'Ran Hammer'] })
+    }
+  )
+
+  it('omits author metadata when the Contentful author is missing or unresolved', () => {
+    for (const author of [undefined, { sys: { type: 'Link', linkType: 'Entry', id: 'unpublished' } }] as const) {
+      const metadata = postMetadata(post({ author }), 'post')
+      expect(metadata.authors).toBeUndefined()
+      expect(metadata.openGraph).not.toHaveProperty('authors')
+    }
+  })
 })

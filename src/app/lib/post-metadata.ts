@@ -20,6 +20,7 @@ export function postMetadata(post: BlogPostFields, slug: string) {
     {
       title: post.title,
       description,
+      authors: author ? [{ name: author.name, url: author.profileUrl ?? undefined }] : undefined,
       alternates: { canonical: absoluteUrl(encodedPostPath(slug)) },
     },
     {
