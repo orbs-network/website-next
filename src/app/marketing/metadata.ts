@@ -3,6 +3,7 @@ import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { findLocaleMarketingPage } from './registry'
+import { marketingSocialImage, socialMetadata } from '@/app/lib/social-metadata'
 
 /**
  * Metadata for a marketing page, in one locale.
@@ -31,11 +32,21 @@ export async function marketingMetadata(path: string, locale: Locale): Promise<M
   }
 
   const t = await getTranslations({ locale, namespace: `${entry.namespace}.meta` })
+  const title = t('title')
+  const description = t('description')
+  const alternates = localeAlternates(path, locale)
 
   return {
-    title: t('title'),
-    description: t('description'),
-    alternates: localeAlternates(path, locale),
+    title,
+    description,
+    alternates,
     robots: placeholderRobots(path, locale),
+    ...socialMetadata({
+      title,
+      description,
+      path: alternates.canonical,
+      locale,
+      image: marketingSocialImage(path, locale),
+    }),
   }
 }

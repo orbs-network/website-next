@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { NewsIndex, getTotalNewsPages } from '@/app/(en)/news/news-index'
@@ -44,16 +45,19 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: '페이지를 찾을 수 없습니다' }
   }
 
-  return {
-    title: `언론 보도 — ${pageNumber}페이지`,
-    description: 'Orbs를 소개하는 언론 보도와 발행물입니다.',
-    robots: { index: false, follow: true },
-    alternates: {
-      // Self-canonical. Pointing pages 2+ at /news would mark them duplicates
-      // and drop all but the newest 12 mentions from the index.
-      canonical: absoluteUrl(localePath('ko', newsPagePath(pageNumber))),
+  return withSocialMetadata(
+    {
+      title: `언론 보도 — ${pageNumber}페이지`,
+      description: 'Orbs를 소개하는 언론 보도와 발행물입니다.',
+      robots: { index: false, follow: true },
+      alternates: {
+        // Self-canonical. Pointing pages 2+ at /news would mark them duplicates
+        // and drop all but the newest 12 mentions from the index.
+        canonical: absoluteUrl(localePath('ko', newsPagePath(pageNumber))),
+      },
     },
-  }
+    { locale: 'ko' }
+  )
 }
 
 export default async function NewsPaginatedPage({ params }: Props) {

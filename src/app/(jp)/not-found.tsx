@@ -1,3 +1,4 @@
+import { socialMetadata } from '@/app/lib/social-metadata'
 import type { Metadata } from 'next'
 import { NotFoundPage } from '@/app/components/not-found-page'
 
@@ -8,6 +9,11 @@ import { NotFoundPage } from '@/app/components/not-found-page'
  */
 export const metadata: Metadata = {
   title: 'Page not found',
+  ...socialMetadata({
+    title: 'Page not found',
+    description: "That page doesn't exist, or it may have moved.",
+    locale: 'ja',
+  }),
 }
 
 /** 404 boundary for this locale group — see NotFoundPage for why each needs one. */

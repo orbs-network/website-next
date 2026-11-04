@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { H1 } from '@/app/components/typography'
 import { getPostsBySlugs } from '@/app/lib/api'
@@ -12,11 +13,11 @@ export const revalidate = 86400
 
 const INTRO = 'All posts related to community governance of the Orbs Network.'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: 'Governance',
   description: INTRO,
   alternates: { canonical: absoluteUrl(GOVERNANCE_PATH) },
-}
+})
 
 /**
  * The governance index, rebuilt (#224).

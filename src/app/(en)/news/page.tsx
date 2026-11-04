@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { NewsIndex } from './news-index'
 import { newsPagePath } from '@/app/lib/routes'
@@ -7,13 +8,13 @@ import { absoluteUrl } from '@/app/lib/site'
 // the primary path; this bounds staleness if a webhook is missed.
 export const revalidate = 86400
 
-export const metadata: Metadata = {
+export const metadata: Metadata = withSocialMetadata({
   title: 'Media',
   description: 'Press coverage and publications featuring Orbs.',
   alternates: {
     canonical: absoluteUrl(newsPagePath(1)),
   },
-}
+})
 
 export default async function NewsPage() {
   return <NewsIndex currentPage={1} />

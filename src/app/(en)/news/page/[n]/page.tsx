@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import { Metadata } from 'next'
 import { notFound } from 'next/navigation'
 import { NewsIndex, getTotalNewsPages } from '../../news-index'
@@ -43,7 +44,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Page Not Found' }
   }
 
-  return {
+  return withSocialMetadata({
     title: `Media — page ${pageNumber}`,
     description: 'Press coverage and publications featuring Orbs.',
     alternates: {
@@ -51,7 +52,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
       // and drop all but the newest 12 mentions from the index.
       canonical: absoluteUrl(newsPagePath(pageNumber)),
     },
-  }
+  })
 }
 
 export default async function NewsPaginatedPage({ params }: Props) {

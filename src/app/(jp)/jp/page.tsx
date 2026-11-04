@@ -1,3 +1,4 @@
+import { withSocialMetadata } from '@/app/lib/social-metadata'
 import type { Metadata } from 'next'
 import { LocalizedHomePage } from '@/app/marketing/localized-home'
 import { getTranslations } from 'next-intl/server'
@@ -9,14 +10,17 @@ export const revalidate = 86400
 export async function generateMetadata(): Promise<Metadata> {
   const t = await getTranslations({ locale: 'ja', namespace: 'pages.localizedHome.meta' })
 
-  return {
-    title: t('title'),
-    description: t('description'),
-    alternates: localeAlternates(HOME_PATH, 'ja'),
-    // Derived from the availability map, so flipping this page to
-    // `translated` removes the noindex automatically. See placeholderRobots.
-    robots: placeholderRobots(HOME_PATH, 'ja'),
-  }
+  return withSocialMetadata(
+    {
+      title: t('title'),
+      description: t('description'),
+      alternates: localeAlternates(HOME_PATH, 'ja'),
+      // Derived from the availability map, so flipping this page to
+      // `translated` removes the noindex automatically. See placeholderRobots.
+      robots: placeholderRobots(HOME_PATH, 'ja'),
+    },
+    { locale: 'ja' }
+  )
 }
 
 /** Preserve the legacy Japanese landing copy while the English refresh is localized. */
