@@ -68,6 +68,15 @@ describe('October product handoff', () => {
     expect(html).not.toContain(encodeURIComponent('/marketing/perpetual-hub/partners.png'))
   })
 
+  it.each(['en', 'ko'] as const)('retains every risk clause in the visible disclosure panel in %s', async (locale) => {
+    const messages = { en, ko }[locale].pages.dperps
+    const html = renderToStaticMarkup(await DperpsPage({ locale }))
+    expect(html).toContain(messages.risk.title.replaceAll('&', '&amp;'))
+    for (const clause of messages.disclaimer.split('\n\n')) expect(html).toContain(clause)
+    expect(html).not.toContain('<details')
+    expect(html).toContain('venue-light.svg')
+  })
+
   it('uses the selected dSPOT headline in one composition for both themes', async () => {
     const html = renderToStaticMarkup(await DspotPage({ locale: 'en' }))
     expect(html).toContain('Advanced spot trading.')

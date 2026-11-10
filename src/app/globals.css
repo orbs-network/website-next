@@ -557,6 +557,18 @@
 }
 
 @layer components {
+  /* The 954px Figma glow extends above the 518px CTA, without affecting flow. */
+  .closing-cta-glow {
+    height: max(100%, calc(100cqw * 954 / 1612));
+    background-image: url('/marketing/shared/closing-glow-light.svg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  .dark .closing-cta-glow {
+    background-image: url('/marketing/shared/closing-glow-dark.svg');
+  }
+
   /* Sara's October 15 light lavender band has dark type in either page theme. */
   .institutional-benefits,
   .product-benefits {
@@ -568,6 +580,19 @@
     --ring: var(--color-indigo-400);
     color: var(--color-fg);
     background: linear-gradient(135deg, #f6f3ff 0%, #dedbff 55%, #8581ff 100%);
+  }
+
+  /* Figma 2461:16412 is 1196.8px tall, clipped by the 974px feature band. */
+  .dperps-benefits {
+    background-color: #fafafc;
+    background-image: linear-gradient(
+      143.4deg,
+      rgb(246 245 255 / 86%) 0%,
+      rgb(217 215 255 / 86%) 55%,
+      rgb(102 114 255 / 86%) 100%
+    );
+    background-size: 100% 122.875%;
+    background-repeat: no-repeat;
   }
 }
 

@@ -1,6 +1,7 @@
 import { H1 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
 import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
@@ -31,6 +32,10 @@ export function SplitHero({
   actions,
   graphic,
   locale,
+  className,
+  graphicClassName,
+  gridClassName,
+  introClassName,
 }: {
   eyebrow: string
   headline: string
@@ -50,16 +55,24 @@ export function SplitHero({
    */
   graphic: SectionGraphic
   locale: Locale
+  /** Page-specific spacing without changing other product heroes. */
+  className?: string
+  /** Bound shorter page heroes without stretching their illustration. */
+  graphicClassName?: string
+  /** Match page-specific illustration/text proportions. */
+  gridClassName?: string
+  /** A longer introduction can use the full text column. */
+  introClassName?: string
 }) {
   return (
-    <section className="container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14">
-      <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+    <section className={cn('container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14', className)}>
+      <div className={cn('grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8', gridClassName)}>
         <div>
           <Eyebrow text={eyebrow} locale={locale} />
           <H1 className="mt-3 text-balance" lang={textLang(headline, locale)}>
             {headline}
           </H1>
-          <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(intro, locale)}>
+          <p className={cn('mt-10 max-w-xl text-p text-fg', introClassName)} lang={textLang(intro, locale)}>
             {intro}
           </p>
           {(cta || secondaryCta || actions) && (
@@ -71,7 +84,12 @@ export function SplitHero({
           )}
         </div>
 
-        <div className="relative mx-auto aspect-square w-full max-w-md lg:order-first lg:max-w-none">
+        <div
+          className={cn(
+            'relative mx-auto aspect-square w-full max-w-md lg:order-first lg:max-w-none',
+            graphicClassName
+          )}
+        >
           {/*
             `priority`: on a wide screen this is the largest thing above the
             fold, so it is the LCP candidate and lazy-loading it would delay the

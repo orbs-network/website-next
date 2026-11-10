@@ -358,3 +358,75 @@ export const ClosingChildrenSitAboveTheMarquee: Story = {
     await expect(signup.compareDocumentPosition(phrase) & Node.DOCUMENT_POSITION_FOLLOWING).toBeTruthy()
   },
 }
+
+/** Supplied glow, both themes; decoration extends upward without blocking actions. */
+export const ClosingGlowArtwork: Story = {
+  parameters: {
+    viewport: {
+      options: {
+        desktop: { name: 'Figma width', styles: { width: '1612px', height: '900px' } },
+        phone: { name: 'Phone', styles: { width: '320px', height: '900px' } },
+      },
+    },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  render: () => (
+    <ClosingCta
+      phrases={['One API.', 'Every on-chain order type.']}
+      locale="en"
+      actions={<Button>Talk to the team</Button>}
+    />
+  ),
+  play: async ({ canvasElement }) => {
+    const backdrop = canvasElement.querySelector<HTMLElement>('.closing-cta-glow')!
+    const root = backdrop.parentElement!
+    const html = document.documentElement
+    const wasDark = html.classList.contains('dark')
+    try {
+      for (const dark of [false, true]) {
+        html.classList.toggle('dark', dark)
+        const background = getComputedStyle(backdrop).backgroundImage
+        await expect(background).toContain(`closing-glow-${dark ? 'dark' : 'light'}.svg`)
+        const image = new Image()
+        image.src = background.slice(5, -2)
+        await image.decode()
+        await expect(image.naturalHeight).toBe(954)
+        // Inspect the painted SVG, not just its filename: cyan at the left,
+        // pink at the lower centre, and a transparent fade above the field.
+        const canvas = document.createElement('canvas')
+        canvas.width = 1612
+        canvas.height = 954
+        const context = canvas.getContext('2d')!
+        context.drawImage(image, 0, 0, 1612, 954)
+        const left = context.getImageData(400, 900, 1, 1).data
+        const centre = context.getImageData(806, 900, 1, 1).data
+        const top = context.getImageData(806, 20, 1, 1).data
+        await expect(left[1]).toBeGreaterThan(left[0])
+        await expect(centre[0]).toBeGreaterThan(centre[1])
+        await expect(centre[2]).toBeGreaterThan(centre[1])
+        await expect(centre[3]).toBeGreaterThan(top[3])
+      }
+      const field = backdrop.getBoundingClientRect()
+      const section = root.getBoundingClientRect()
+      await expect(Math.abs(field.bottom - section.bottom)).toBeLessThan(1)
+      await expect(Math.abs(field.height - Math.max(section.height, (section.width * 954) / 1612))).toBeLessThan(1)
+      await expect(backdrop).toHaveAttribute('aria-hidden', 'true')
+      await expect(getComputedStyle(backdrop).pointerEvents).toBe('none')
+      const button = within(canvasElement).getByRole('button', { name: 'Talk to the team' })
+      button.focus()
+      await expect(button).toHaveFocus()
+      const box = button.getBoundingClientRect()
+      await expect(
+        document.elementFromPoint(box.left + box.width / 2, box.top + box.height / 2)?.closest('button')
+      ).toBe(button)
+      await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
+    } finally {
+      html.classList.toggle('dark', wasDark)
+    }
+  },
+}
+
+export const ClosingGlowPhone: Story = {
+  ...ClosingGlowArtwork,
+  globals: { viewport: { value: 'phone' } },
+}

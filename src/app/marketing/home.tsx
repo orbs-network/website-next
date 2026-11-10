@@ -1,7 +1,7 @@
 import Image from 'next/image'
 import Link from 'next/link'
 import { getTranslations } from 'next-intl/server'
-import { H1, H2, H4 } from '@/app/components/typography'
+import { H2, H4 } from '@/app/components/typography'
 import { Button, type ButtonProps } from '@/components/ui/button'
 import { CardRail } from '@/components/marketing/card-rail'
 import { HomeBenefitsGrid } from '@/components/marketing/home-benefits-grid'
@@ -9,10 +9,9 @@ import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
-import { HeroFacetField } from '@/components/marketing/hero-facet-field'
 import { SectionBackdrop } from '@/components/marketing/section-backdrop'
 import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
-import { StatsRow } from '@/components/marketing/stats-row'
+import { HomeHero } from '@/components/marketing/home-hero'
 import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
 import {
   HOME_ACCESS_PATHS,
@@ -72,102 +71,27 @@ export async function HomePage({ locale }: { locale: Locale }) {
 
   return (
     <>
-      {/*
-        `overflow-hidden` is not decoration. The backdrop is absolutely
-        positioned against this section, and an absolutely positioned child that
-        extends past its container is exactly how #96 put a 390px viewport into
-        401px of horizontal scroll. Clipping here means it can never do that,
-        whatever width it is given.
-
-        810px, matching `Grid Pattern Top` exactly — the grid layer and the
-        section it backs are the same height, so the grid neither stops short
-        nor runs past.
-
-        A FLOOR RATHER THAN A FIXED HEIGHT, and the content is top-aligned
-        rather than centred, because that is how the design distributes it.
-        Measured down the centre column of the 3.4 frame, the copy runs from
-        y=230 (eyebrow) to y=570 (buttons) inside a section starting at y=90:
-        roughly 140px above it and 330px below. Centring would split that
-        evenly and lift the headline ~95px.
-
-        `lg:` only. 810px of hero on a 667px phone is a screenful of nothing
-        before the first word, and the 3.4 frame is a 1440 desktop board — the
-        mobile frames are drawn separately and do not say this.
-
-        NO STATIC FACET GRAPHIC. A `hero-facets.svg` used to float at the right
-        of this section, taken from the cluster drawn in the design frame — but
-        that cluster is the designer's ILLUSTRATION OF THE HOVER STATE, drawn
-        around a `Cursor` graphic, not a fixed element of the page. It is built
-        for real now, so shipping a frozen copy of it as well left the hero
-        wearing the same motif twice.
-      */}
-      <section className="relative isolate mx-auto overflow-hidden pt-36 pb-24 lg:min-h-[810px]">
-        {/*
-          `Grid Pattern Top`: 2px square dots on a 40.5px lattice.
-
-          This was `variant="grid"` — the 66px LINE grid, which is a different
-          layer of the design (`orbs-grid-clean-editable`, used further down the
-          page). The two look alike at a glance in a screenshot and are not the
-          same thing, so the hero has been wearing the wrong background since
-          #178.
-
-          Wrapped in `HeroFacetField`, which adds the cursor interaction on top
-          and leaves this exactly as-is when there is no pointer, no JavaScript,
-          or a reduced-motion preference.
-        */}
-        <HeroFacetField>
-          <SectionBackdrop variant="dots" />
-        </HeroFacetField>
-
-        <div className="container relative">
-          <div className="relative mx-auto max-w-4xl text-center">
-            <H1
-              className={locale === 'ko' ? 'whitespace-pre-line text-balance' : 'text-balance'}
-              lang={lang('hero.headline') ?? locale}
-            >
-              {t('hero.headline')}
-            </H1>
-
-            <p className="mx-auto mt-8 max-w-2xl text-body text-fg-muted" lang={lang('hero.intro')}>
-              {t('hero.intro')}
-            </p>
-
-            <div className="mt-10 flex flex-wrap justify-center gap-4">
-              <Button
-                asChild
-                variant="solid"
-                className="hover:border-indigo-400 hover:bg-neutral-100 hover:text-indigo-400 focus-visible:border-indigo-400 focus-visible:bg-neutral-100 focus-visible:text-indigo-400"
-              >
-                <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('hero.cta')}>
-                  {t('hero.cta')}
-                </Link>
-              </Button>
-              {/*
-                Same destination as the SDK buttons below; the design keeps its
-                own wording here. `overlay` because the facet field moves behind
-                this one and not the others (#268).
-              */}
-              <SdkButton label={t('sdk')} locale={locale} variant="overlay" />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/*
-        `StatsRow` and `LogoRow` render their own `<section class="container">`,
-        so neither is wrapped in one here — nesting them produced a container
-        inside a container and doubled the vertical padding.
-      */}
-      <StatsRow
-        columns={5}
-        glow
-        stats={HOME_STATS.map((id) => ({
-          id,
-          value: t(`stats.${id}.value`),
-          label: t(`stats.${id}.label`),
-        }))}
+      <HomeHero
+        headline={t('hero.headline')}
+        intro={t('hero.intro')}
         locale={locale}
-      />
+        stats={HOME_STATS.map((id) => ({ id, value: t(`stats.${id}.value`), label: t(`stats.${id}.label`) }))}
+      >
+        <Button
+          asChild
+          variant="solid"
+          className="hover:border-indigo-400 hover:bg-neutral-100 hover:text-indigo-400 focus-visible:border-indigo-400 focus-visible:bg-neutral-100 focus-visible:text-indigo-400"
+        >
+          <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('hero.cta')}>
+            {t('hero.cta')}
+          </Link>
+        </Button>
+        {/*
+          Same destination as the SDK buttons below; overlay keeps the focus
+          treatment visible against the facet field.
+        */}
+        <SdkButton label={t('sdk')} locale={locale} variant="overlay" />
+      </HomeHero>
 
       <section id="products" className="container scroll-mt-32 border-t border-border py-section">
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('stack.eyebrow')}>

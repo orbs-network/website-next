@@ -1,6 +1,6 @@
 import type { LogoRowItem } from '@/components/marketing/logo-row'
 
-/** October 28 page structure. Copy lives in the English and Korean catalogs. */
+/** November 10 Templates refinement. Copy lives in the English and Korean catalogs. */
 export const DPERPS_LINKS = {
   contact: { href: '/contact' },
 } as const
@@ -26,10 +26,10 @@ export const DPERPS_GRAPHICS = {
   security: {
     src: '/marketing/dperps/security.svg',
     lightSrc: '/marketing/dperps/security-light.svg',
-    width: 800,
-    height: 800,
+    width: 680,
+    height: 460,
   },
-  venue: { src: '/marketing/dperps/venue.svg', lightSrc: '/marketing/dperps/venue-light.svg', width: 646, height: 616 },
+  venue: { src: '/marketing/dperps/venue.svg', lightSrc: '/marketing/dperps/venue-light.svg', width: 680, height: 460 },
 } as const
 
 export const DPERPS_MARQUEE = ['precision', 'perpetuals', 'exposure'] as const

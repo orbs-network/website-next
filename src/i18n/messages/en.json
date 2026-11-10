@@ -272,7 +272,7 @@
       },
       "hero": {
         "eyebrow": "[dPERPS]",
-        "headline": "Perpetual futures.\nUnder your brand.",
+        "headline": "Perpetual futures. Under your brand.",
         "intro": "dPERPS brings the components required for professional perpetual futures trading into one stack, built in-house by Orbs: execution, hedging, liquidation, oracles, settlement and a white-label trading interface. Venues can serve institutional clients and active traders without assembling the infrastructure from separate providers.",
         "cta": "Talk to the team"
       },
@@ -284,7 +284,7 @@
       },
       "features": {
         "eyebrow": "[KEY FEATURES & BENEFITS]",
-        "title": "A complete stack,\nnot a collection of integrations",
+        "title": "A complete stack, not a collection of integrations",
         "items": {
           "pricing": {
             "title": "Pricing",
@@ -314,12 +314,12 @@
       },
       "network": {
         "eyebrow": "[NETWORK]",
-        "title": "Execution powered\nby Orbs L3.",
+        "title": "Execution powered by Orbs L3.",
         "body": "Matching, position management and settlement run on Orbs L3, while deposits and withdrawals take place on the underlying blockchain. This architecture keeps routine trading actions off the base-chain transaction path."
       },
       "security": {
         "eyebrow": "[SECURITY]",
-        "title": "TEE-secured execution.\nWallet-authorised\nwithdrawals.",
+        "title": "TEE-secured execution. Wallet-authorised withdrawals.",
         "body": "The dPERPS engine runs inside a Trusted Execution Environment (TEE). Trading session keys can authorise trading but cannot withdraw funds. Withdrawals require the user’s wallet signature."
       },
       "partners": {
@@ -327,7 +327,7 @@
       },
       "venue": {
         "eyebrow": "[FOR VENUES]",
-        "title": "Your venue.\nYour trading experience.",
+        "title": "Your venue. Your trading experience.",
         "body": "Offer crypto perpetuals and tokenised equity markets through an interface branded for your venue. dPERPS provides the execution infrastructure behind the experience."
       },
       "disclaimer": "The dPERPS software will leverage the power of the decentralized Orbs Network, with its Guardians and proof-of-stake ecosystem, to allow platforms, market participants and other third parties to provide and operate this suite of decentralized services. The dPERPS is a beta version that is still under active development and all underlying digital assets, blockchain networks and DEX platforms are also subject to ongoing development and to various risks, and as such, dPERPS or the underlying platforms:\n\n(a) may contain bugs, errors, and defects,\n\n(b) may function improperly or be subject to periods of downtime and unavailability,\n\n(c) may result in total or partial loss of funds.\n\nAny use of any platform, application and/or services described here is at your own risk and you are solely responsible for all transaction decisions.",
@@ -335,6 +335,10 @@
         "precision": "Trade with precision.",
         "perpetuals": "Power perpetual trading.",
         "exposure": "Manage your exposure."
+      },
+      "risk": {
+        "eyebrow": "Beta software",
+        "title": "Product status & risks"
       }
     },
     "liquidityHub": {
@@ -1041,8 +1045,8 @@
       },
       "eyebrows": {
         "hero": "[Network / Compute]",
-        "lambdaProduct": "[Orbs Lambda]",
-        "vm": "[Orbs VM]",
+        "lambdaProduct": "[Event-driven functions]",
+        "vm": "[Persistent services]",
         "comparison": "[Execution models]"
       },
       "hero": {
@@ -1053,12 +1057,12 @@
       "lambdaProduct": {
         "title": "Orbs Lambda",
         "tagline": "Functions that respond to onchain events.",
-        "body": "Write a JavaScript function, choose a trigger and deploy it to the Orbs network. Respond to new blocks or onchain events and connect application logic to external data using familiar Node.js libraries.\n\nUse Lambda to monitor onchain events and trigger application workflows without managing a dedicated application server. Trading teams can connect these functions to their own data and execution logic."
+        "body": "Write a JavaScript function to tell your application what to do when an onchain event occurs. Deploy it to Orbs to run automatically, using familiar Node.js libraries and external data."
       },
       "vm": {
         "title": "Orbs VM",
-        "tagline": "Your service. Your language. Distributed execution.",
-        "body": "Package your application as a Docker container and deploy it as a persistent service on Orbs. Use the language and libraries that fit your application, including Go, Rust, JavaScript, Python, Java or C++.\n\nUse VM for ongoing monitoring and custom trading services that need a continuous runtime, specific dependencies or more control over their environment."
+        "tagline": "Choose your tools. Keep your service running.",
+        "body": "Use your preferred programming language and libraries. Package your service in a Docker container and deploy it to Orbs, where it keeps running to monitor data and support your application."
       },
       "comparison": {
         "title": "Choose the execution model that fits",

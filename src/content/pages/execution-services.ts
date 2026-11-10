@@ -12,13 +12,23 @@ export const EXECUTION_SERVICES_PRODUCTS = [
     id: 'lambdaProduct',
     image: '/marketing/execution-services/lambda.svg',
     darkImage: '/marketing/execution-services/lambda-dark.svg',
-    illustration: { src: '/marketing/execution-services/lambda-illustration.svg', width: 452, height: 405 },
+    illustration: {
+      src: '/marketing/execution-services/lambda-interface.svg',
+      lightSrc: '/marketing/execution-services/lambda-interface-light.svg',
+      width: 560,
+      height: 360,
+    },
   },
   {
     id: 'vm',
     image: '/marketing/execution-services/vm.svg',
     darkImage: '/marketing/execution-services/vm-dark.svg',
-    illustration: { src: '/marketing/execution-services/vm-illustration.svg', width: 467, height: 372 },
+    illustration: {
+      src: '/marketing/execution-services/vm-interface.svg',
+      lightSrc: '/marketing/execution-services/vm-interface-light.svg',
+      width: 560,
+      height: 360,
+    },
   },
 ] as const
 
