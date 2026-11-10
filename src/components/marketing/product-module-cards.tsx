@@ -72,10 +72,7 @@ export function ProductModuleCards({
             >
               <h3>{card.title}</h3>
             </H3>
-            <p
-              className="mt-4 text-p text-fg-muted lg:text-[15px] lg:tracking-[-0.45px]"
-              lang={textLang(card.body, locale)}
-            >
+            <p className="mt-4 text-p text-fg lg:text-[15px] lg:tracking-[-0.45px]" lang={textLang(card.body, locale)}>
               {card.body}
             </p>
           </li>

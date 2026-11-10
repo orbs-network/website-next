@@ -60,6 +60,14 @@ try {
           near(geometry.gap, 16, label + ' card gap')
           assert(geometry.preview >= 24 && geometry.preview < geometry.width, label + ' next-card cue')
           assert.equal(await track.locator('a').count(), 0, label + ' unlinked cards')
+          const contrast = await track
+            .locator('li')
+            .first()
+            .evaluate((card) => ({
+              title: getComputedStyle(card.querySelector('h3')).color,
+              description: getComputedStyle(card.querySelector('p')).color,
+            }))
+          assert.equal(contrast.description, contrast.title, label + ' card description contrast')
         } else if (product === 'dperps') {
           const sections = await page
             .locator('main > div > div')
@@ -92,6 +100,12 @@ try {
             .last()
             .evaluate((node) => ({ size: getComputedStyle(node).fontSize, line: getComputedStyle(node).lineHeight }))
           assert.deepEqual(type, { size: '14px', line: '23px' }, label + ' disclosure type')
+          const venue = page.locator('main img[src*="/dperps/venue"]').filter({ visible: true }).first()
+          assert.notEqual(
+            await venue.evaluate((node) => getComputedStyle(node).filter),
+            'none',
+            label + ' venue outer glow'
+          )
         } else {
           const columns = await page
             .locator('main img[src*="lambda-interface"]')
@@ -105,6 +119,14 @@ try {
           near(columns.copy, 650, label + ' copy width')
           near(columns.graphic, 560, label + ' illustration width')
           near(columns.gap, 164, label + ' column gap')
+          for (const asset of ['lambda-interface', 'vm-interface']) {
+            const graphic = page.locator(`main img[src*="${asset}"]`).filter({ visible: true }).first()
+            assert.notEqual(
+              await graphic.evaluate((node) => getComputedStyle(node).filter),
+              'none',
+              label + ' ' + asset + ' outer glow'
+            )
+          }
           const closingTop = await page
             .locator('main > div')
             .last()

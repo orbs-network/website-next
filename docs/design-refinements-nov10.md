@@ -37,6 +37,9 @@ and corrected the following misses before merge:
 - Execution Services: match the 650px copy column, 164px gap and 560px interface
   illustration at the 1612px reference width, including the 150px gap before
   the closing CTA supplied outside the page frame.
+- Restore foreground contrast in the dSPOT card descriptions and the supplied
+  outer shadows around venue/Lambda/VM illustrations. The SVG exports retain
+  their original bytes; CSS restores the glow clipped by SVG image boundaries.
 
 ### Comparison scope
 

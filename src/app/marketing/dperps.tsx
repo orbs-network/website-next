@@ -139,7 +139,7 @@ function DperpsDetail({
           <ThemedGraphic
             graphic={graphic}
             sizes="(min-width: 1024px) 50vw, 28rem"
-            className="h-auto w-full object-contain"
+            className={`h-auto w-full object-contain ${kind === 'venue' ? 'drop-shadow-[0_6px_14px_rgba(220,138,224,0.1)] dark:drop-shadow-[0_4px_16px_rgba(220,138,224,0.16)]' : ''}`}
           />
         </div>
       </div>

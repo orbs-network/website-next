@@ -50,7 +50,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
               <ThemedGraphic
                 graphic={product.illustration}
                 sizes="(min-width: 1024px) 40vw, 90vw"
-                className="h-auto w-full"
+                className="h-auto w-full drop-shadow-[0_6px_14px_rgba(151,71,255,0.1)] dark:drop-shadow-[0_4px_16px_rgba(151,71,255,0.16)]"
               />
             </div>
           </div>
