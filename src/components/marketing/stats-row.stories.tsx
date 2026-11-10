@@ -76,6 +76,63 @@ export const CentredGlowDoesNotOverflow: Story = {
   play: async ({ canvasElement }) => {
     const dl = canvasElement.querySelector('dl')!
     await expect(getComputedStyle(dl).textAlign).toBe('center')
+    const cells = [...dl.children].map((node) => node.getBoundingClientRect())
+    await expect(cells[0].top).toBe(cells[1].top)
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
+  },
+}
+
+const FIVE_STATS = [
+  { id: 'volume', value: '$14B+', label: 'Processed' },
+  { id: 'launch', value: '2017', label: 'Project live' },
+  { id: 'venues', value: '30+', label: 'Venues' },
+  { id: 'chains', value: '10+', label: 'Chains' },
+  { id: 'staked', value: '1.1B', label: 'ORBS staked' },
+]
+
+export const LastMobileStatIsCentred: Story = {
+  ...PHONE,
+  args: { stats: FIVE_STATS, columns: 5, glow: true, locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const grid = canvasElement.querySelector('dl')!
+    const cells = [...grid.children].map((node) => node.getBoundingClientRect())
+    const bounds = grid.getBoundingClientRect()
+    // The first four stay two per row; the odd final stat uses the whole row.
+    await expect(cells[0].top).toBe(cells[1].top)
+    await expect(cells[2].top).toBe(cells[3].top)
+    await expect(cells[4].top).toBeGreaterThan(cells[3].bottom)
+    await expect(Math.abs(cells[4].width - bounds.width)).toBeLessThan(1)
+    const number = within(canvasElement).getByText('1.1B')
+    await expect(getComputedStyle(number).textAlign).toBe('center')
+    const value = number.getBoundingClientRect()
+    await expect(Math.abs(value.left + value.width / 2 - (bounds.left + bounds.width / 2))).toBeLessThan(1)
+    await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth)
+  },
+}
+
+export const FiveDesktopStatsStayOnOneRow: Story = {
+  parameters: {
+    viewport: { options: { desktop: { name: 'Desktop', styles: { width: '1440px', height: '900px' } } } },
+  },
+  globals: { viewport: { value: 'desktop' } },
+  args: { stats: FIVE_STATS, columns: 5, locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const cells = [...canvasElement.querySelector('dl')!.children].map((node) => node.getBoundingClientRect())
+    await expect(new Set(cells.map((cell) => cell.top)).size).toBe(1)
+    for (const cell of cells) await expect(Math.abs(cell.width - cells[0].width)).toBeLessThan(1)
+  },
+}
+
+export const TabletKeepsThreeColumns: Story = {
+  parameters: {
+    viewport: { options: { tablet: { name: 'Tablet', styles: { width: '768px', height: '900px' } } } },
+  },
+  globals: { viewport: { value: 'tablet' } },
+  args: { stats: FIVE_STATS, columns: 5, locale: 'en' },
+  play: async ({ canvasElement }) => {
+    const cells = [...canvasElement.querySelector('dl')!.children].map((node) => node.getBoundingClientRect())
+    await expect(new Set(cells.slice(0, 3).map((cell) => cell.top)).size).toBe(1)
+    await expect(cells[3].top).toBe(cells[4].top)
+    await expect(Math.abs(cells[4].width - cells[0].width)).toBeLessThan(1)
   },
 }

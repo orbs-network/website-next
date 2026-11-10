@@ -112,3 +112,22 @@ stays hidden from assistive technology and cannot intercept pointer input.
 Browser checks cover both actual SVG paints, theme selection, the upper fade,
 background bounds, action focus/hit testing and mobile overflow. The old radial
 approximation has been removed. No copy or CTA destinations change.
+
+## November 10 responsive follow-up
+
+Feedback after the design release centres the final homepage stat in its own
+row on phones. The five-stat layout keeps its existing desktop row and tablet
+columns; even-count rows are unaffected.
+
+The extra 64px desktop inset above the dPERPS hero has been removed to bring its
+top spacing closer to Agentic. Both pages already use the same 64px phone
+padding; that mobile padding is retained. Execution Services keeps its shorter
+hero composition.
+
+The dPERPS and Execution Services hero and interface files were checked for
+embedded bitmaps: they contain native vector artwork only. Live phone checks at
+393px and 3× device scale showed sharp artwork in Chromium. Reported pixelation
+has not been reproduced in that engine. WebKit could not launch on this host
+because its operating-system dependencies are unavailable; this is not a claim
+of testing the operator's physical phone or mobile Safari. No speculative raster
+replacement or artificial text line breaks were added.

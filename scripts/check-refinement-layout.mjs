@@ -101,7 +101,7 @@ try {
               })
             })
           assert.equal(sections.length, 7, label + ' section count')
-          near(sections[0].top, 64, label + ' top inset')
+          near(sections[0].top, 0, label + ' hero starts at the same main boundary as Agentic')
           for (let i = 1; i < sections.length; i++) {
             near(sections[i].top - sections[i - 1].top - sections[i - 1].height, 96, label + ' section gap ' + i)
           }
