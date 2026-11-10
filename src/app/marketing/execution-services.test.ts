@@ -33,13 +33,8 @@ describe('Execution Services Templates refinement', () => {
     expect(html).toContain(messages.hero.headline)
     expect(html).toContain(messages.lambdaProduct.body.split('\n\n')[0])
     expect(html).toContain(messages.vm.tagline)
-    for (const asset of [
-      'lambda-interface.svg',
-      'lambda-interface-light.svg',
-      'vm-interface.svg',
-      'vm-interface-light.svg',
-    ])
-      expect(html).toContain(asset)
+    for (const artwork of ['lambda', 'vm']) expect(html).toContain(`data-product-graphic="${artwork}"`)
+    expect(html).not.toMatch(/<img[^>]+(?:lambda|vm)-interface/)
     expect(html).toContain(`href="${NETWORK_DOCS_URL}"`)
     expect(html).not.toContain(messages.comparison.title)
     expect(html).not.toContain('graph-1.png')

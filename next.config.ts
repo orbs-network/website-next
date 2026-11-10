@@ -45,9 +45,16 @@ const nextConfig: NextConfig = {
    * than by luck: if one of those pages ever gains `revalidate` or a dynamic
    * API, the read moves to request time, and without the files traced into the
    * bundle it would fail in production while working locally.
+   * The three inline product illustrations also read their reviewed SVG source
+   * on the server; retain both theme variants if those routes become dynamic.
    */
   outputFileTracingIncludes: {
-    '/**': ['./src/content/legal/**', './src/content/archive/*.md'],
+    '/**': [
+      './src/content/legal/**',
+      './src/content/archive/*.md',
+      './public/marketing/dperps/venue*.svg',
+      './public/marketing/execution-services/*-interface*.svg',
+    ],
   },
   /**
    * Permanent moves and temporary redirects during the inner-page refresh.
