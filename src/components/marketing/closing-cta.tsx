@@ -42,23 +42,25 @@ export function ClosingCta({
   locale: Locale
 }) {
   return (
-    <div className="relative isolate overflow-hidden">
+    <div className="relative isolate [container-type:inline-size]">
       <SectionBackdrop variant="glow" />
 
-      {children}
+      <div className="overflow-hidden">
+        {children}
 
-      <Marquee phrases={phrases} locale={locale} className="pb-0 pt-24 md:pt-[10.5rem]" />
+        <Marquee phrases={phrases} locale={locale} className="pb-0 pt-24 md:pt-[10.5rem]" />
 
-      <section className="px-5 pb-24 pt-16 md:pb-[10.8125rem] md:pt-[4.8125rem]">
-        {/*
+        <section className="px-5 pb-24 pt-16 md:pb-[10.8125rem] md:pt-[4.8125rem]">
+          {/*
           The design fills each button with 10% white over the glow. Set here
           rather than on each caller's buttons so every page's closing block
           gets it — the actions are direct children.
         */}
-        <div className="relative flex flex-wrap items-center justify-center gap-[2.0625rem] [&>*]:bg-white/10">
-          {actions}
-        </div>
-      </section>
+          <div className="relative flex flex-wrap items-center justify-center gap-[2.0625rem] [&>*]:bg-white/10">
+            {actions}
+          </div>
+        </section>
+      </div>
     </div>
   )
 }

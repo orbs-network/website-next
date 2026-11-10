@@ -11,8 +11,9 @@ import { cn } from '@/lib/utils'
  *
  * **Native vectors/CSS, not exported screenshots.** The square-dot hero grid
  * uses inline SVG patterns; the line grid uses CSS. Both scale cleanly on
- * high-DPI displays without repeating CSS image masks on the mobile hero. The glow is a radial gradient for
- * the same reasons. The only thing lost is the handful of coloured squares the
+ * high-DPI displays without repeating CSS image masks on the mobile hero. The
+ * closing glow uses the supplied Figma vector paths and blur layers. The only
+ * thing lost from the line grid is the handful of coloured squares the
  * design scatters at certain grid intersections — those sit at specific points
  * rather than a repeating one, which a gradient cannot express. See the note in
  * `tailwind.config.ts`.
@@ -46,7 +47,7 @@ export function SectionBackdrop({
    * `dots` — the 40.5px square-dot grid from `Grid Pattern Top`, behind the
    *   hero. NOT interchangeable with `grid`: they are two different layers in
    *   the design and the hero shipped wearing the wrong one.
-   * `glow` — the soft radial wash behind the closing call to action.
+   * `glow` — the November Figma artwork behind the closing call to action.
    */
   variant: BackdropVariant
   className?: string
@@ -71,16 +72,7 @@ export function SectionBackdrop({
         ],
         // SVG patterns paint the static dots without CSS image masks.
         variant === 'dots' && 'hero-dot-field',
-        /*
-          The glow was a single indigo blob at 25% opacity centred in the
-          section — a guess, made before the design's own construction was
-          read. What the design has is three brand-coloured circles sitting
-          below the section with their middle masked out, so the visible result
-          is a wide cyan-blue-pink band along the bottom edge. `bg-orbs-glow`
-          is that, in `tailwind.config.ts`, with the hues and centres taken
-          from the Figma geometry.
-        */
-        variant === 'glow' && 'bg-orbs-glow',
+        variant === 'glow' && 'closing-cta-glow top-auto',
         className
       )}
     >

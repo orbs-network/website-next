@@ -15,7 +15,7 @@ The dPERPS network diagrams are `2593:1340` / `2593:1447`; security is `2606:916
 
 The Execution Services Lambda illustrations are `2555:611` / `2572:880`; VM is `2555:662` / `2572:988`.
 
-Fourteen standalone SVGs are used without external image dependencies. The dPERPS dark hero export contained a raster copy of the existing artwork, so the existing native vector is retained. Hero image paths do not change, preserving the existing social-image mapping.
+Fourteen standalone infographic SVGs are used without external image dependencies. Two additional closing-background SVGs carry the new themed glow artwork. The dPERPS dark hero export contained a raster copy of the existing artwork, so the existing native vector is retained. Hero image paths do not change, preserving the existing social-image mapping.
 
 ## Validation
 
@@ -78,8 +78,8 @@ specification.
 - Keep the shared header, navigation, footer, CTA destinations and working
   carousel/keyboard controls. Global chrome was not part of this refinement.
 - Use the existing accessible pink token for the disclosure label in light mode;
-  the pale source pink is too faint for small text. Shared closing glows and
-  marquees remain live CSS components rather than rasterized page fragments.
+  the pale source pink is too faint for small text. The shared marquee remains
+  live content; the closing background now uses the new Figma artwork.
 
 The comparison establishes checked scope and recorded exceptions. It is not a
 promise that a designer will have no further feedback or that every responsive
@@ -94,3 +94,21 @@ node scripts/check-refinement-layout.mjs --base http://localhost:3000
 This checks the frame measurements in both themes and locales, including a
 1200px-tall homepage fold. Run `npm run check:overflow -- --base <url>` for the
 full narrow-screen route sweep; the component stories run in ordinary CI.
+
+## Updated closing background
+
+The shared closing CTA now uses the new glow from nodes `2553:3432` (dark) and
+`2553:3543` (light). Their original vector paths, nested transforms, opacities
+and blur layers are retained in `public/marketing/shared/closing-glow-*.svg`.
+Each asset is approximately 4 KB with no raster payloads or external references.
+
+The 954px-tall source background is anchored at the bottom of the closing block.
+It scales with that block's width and extends upward, as in the detached Figma
+artwork. On narrow screens it covers at least the block's natural height.
+Foreground content clips horizontal marquee overflow separately, so the upper
+glow is visible and the page does not acquire sideways scrolling. The decoration
+stays hidden from assistive technology and cannot intercept pointer input.
+
+Browser checks cover both actual SVG paints, theme selection, the upper fade,
+background bounds, action focus/hit testing and mobile overflow. The old radial
+approximation has been removed. No copy or CTA destinations change.

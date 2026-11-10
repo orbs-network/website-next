@@ -557,6 +557,18 @@
 }
 
 @layer components {
+  /* The 954px Figma glow extends above the 518px CTA, without affecting flow. */
+  .closing-cta-glow {
+    height: max(100%, calc(100cqw * 954 / 1612));
+    background-image: url('/marketing/shared/closing-glow-light.svg');
+    background-size: 100% 100%;
+    background-repeat: no-repeat;
+  }
+
+  .dark .closing-cta-glow {
+    background-image: url('/marketing/shared/closing-glow-dark.svg');
+  }
+
   /* Sara's October 15 light lavender band has dark type in either page theme. */
   .institutional-benefits,
   .product-benefits {

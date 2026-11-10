@@ -34,6 +34,27 @@ try {
           (dark) => document.documentElement.classList.contains('dark') === dark,
           theme === 'dark'
         )
+        const glow = await page.locator('.closing-cta-glow').evaluate(async (node) => {
+          const style = getComputedStyle(node)
+          const image = new Image()
+          image.src = style.backgroundImage.slice(5, -2)
+          await image.decode()
+          const field = node.getBoundingClientRect()
+          const root = node.parentElement.getBoundingClientRect()
+          return {
+            src: image.src,
+            intrinsicHeight: image.naturalHeight,
+            bottomOffset: field.bottom - root.bottom,
+            height: field.height,
+            expectedHeight: Math.max(root.height, (root.width * 954) / 1612),
+            pointerEvents: style.pointerEvents,
+          }
+        })
+        assert(glow.src.endsWith(`closing-glow-${theme}.svg`), label + ' themed CTA artwork')
+        assert.equal(glow.intrinsicHeight, 954, label + ' original CTA canvas')
+        near(glow.bottomOffset, 0, label + ' CTA bottom alignment')
+        near(glow.height, glow.expectedHeight, label + ' responsive CTA artwork')
+        assert.equal(glow.pointerEvents, 'none', label + ' decorative CTA background')
         for (const heading of await page.locator('main h1, main h2').all()) {
           assert.equal(await heading.locator('br').count(), 0, label + ' forced heading break')
           assert.equal(
