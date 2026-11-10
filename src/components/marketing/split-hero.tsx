@@ -1,6 +1,7 @@
 import { H1 } from '@/app/components/typography'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { cn } from '@/lib/utils'
 import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic, type SectionLink } from './section-parts'
 
 /**
@@ -31,6 +32,8 @@ export function SplitHero({
   actions,
   graphic,
   locale,
+  className,
+  graphicClassName,
 }: {
   eyebrow: string
   headline: string
@@ -50,9 +53,13 @@ export function SplitHero({
    */
   graphic: SectionGraphic
   locale: Locale
+  /** Page-specific spacing without changing other product heroes. */
+  className?: string
+  /** Bound shorter page heroes without stretching their illustration. */
+  graphicClassName?: string
 }) {
   return (
-    <section className="container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14">
+    <section className={cn('container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14', className)}>
       <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
         <div>
           <Eyebrow text={eyebrow} locale={locale} />
@@ -71,7 +78,12 @@ export function SplitHero({
           )}
         </div>
 
-        <div className="relative mx-auto aspect-square w-full max-w-md lg:order-first lg:max-w-none">
+        <div
+          className={cn(
+            'relative mx-auto aspect-square w-full max-w-md lg:order-first lg:max-w-none',
+            graphicClassName
+          )}
+        >
           {/*
             `priority`: on a wide screen this is the largest thing above the
             fold, so it is the LCP candidate and lazy-loading it would delay the

@@ -335,6 +335,10 @@
         "precision": "Trade with precision.",
         "perpetuals": "Power perpetual trading.",
         "exposure": "Manage your exposure."
+      },
+      "risk": {
+        "eyebrow": "Beta software",
+        "title": "Product status\n& risks"
       }
     },
     "liquidityHub": {
@@ -1041,8 +1045,8 @@
       },
       "eyebrows": {
         "hero": "[Network / Compute]",
-        "lambdaProduct": "[Orbs Lambda]",
-        "vm": "[Orbs VM]",
+        "lambdaProduct": "[Event-driven functions]",
+        "vm": "[Persistent services]",
         "comparison": "[Execution models]"
       },
       "hero": {
@@ -1053,12 +1057,12 @@
       "lambdaProduct": {
         "title": "Orbs Lambda",
         "tagline": "Functions that respond to onchain events.",
-        "body": "Write a JavaScript function, choose a trigger and deploy it to the Orbs network. Respond to new blocks or onchain events and connect application logic to external data using familiar Node.js libraries.\n\nUse Lambda to monitor onchain events and trigger application workflows without managing a dedicated application server. Trading teams can connect these functions to their own data and execution logic."
+        "body": "Write a JavaScript function to tell your application what to do when an onchain event occurs. Deploy it to Orbs to run automatically, using familiar Node.js libraries and external data."
       },
       "vm": {
         "title": "Orbs VM",
-        "tagline": "Your service. Your language. Distributed execution.",
-        "body": "Package your application as a Docker container and deploy it as a persistent service on Orbs. Use the language and libraries that fit your application, including Go, Rust, JavaScript, Python, Java or C++.\n\nUse VM for ongoing monitoring and custom trading services that need a continuous runtime, specific dependencies or more control over their environment."
+        "tagline": "Choose your tools. Keep your service running.",
+        "body": "Use your preferred programming language and libraries. Package your service in a Docker container and deploy it to Orbs, where it keeps running to monitor data and support your application."
       },
       "comparison": {
         "title": "Choose the execution model that fits",
@@ -1402,7 +1406,7 @@
       },
       "hero": {
         "eyebrow": "[$14B+ in trading volume]",
-        "headline": "Trading infrastructure for on-chain finance",
+        "headline": "Trading infrastructure for\non-chain finance",
         "intro": "One execution stack for onchain finance: aggregated liquidity, advanced spot orders, perpetual futures and decentralised compute. Powering dSPOT, dPERPS and Execution Services, with $14B+ in executed trading volume.",
         "cta": "Talk to the team"
       },

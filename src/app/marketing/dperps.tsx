@@ -1,6 +1,6 @@
 import { getTranslations } from 'next-intl/server'
 import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
-import { Disclaimer } from '@/components/marketing/disclaimer'
+import { RiskDisclosure } from '@/components/marketing/risk-disclosure'
 import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { LogoRow } from '@/components/marketing/logo-row'
@@ -63,7 +63,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         items={DPERPS_PARTNERS}
         spread
         locale={locale}
-        className="border-b border-border"
+        className="lg:py-28"
       />
       <DperpsDetail
         eyebrow={t('venue.eyebrow')}
@@ -72,7 +72,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
         graphic={DPERPS_GRAPHICS.venue}
         locale={locale}
       />
-      <Disclaimer text={t('disclaimer')} locale={locale} className="max-w-5xl pt-16 text-center" />
+      <RiskDisclosure eyebrow={t('risk.eyebrow')} title={t('risk.title')} text={t('disclaimer')} locale={locale} />
       <ClosingCta
         phrases={DPERPS_MARQUEE.map((id) => t(`marquee.${id}`))}
         locale={locale}
@@ -108,19 +108,25 @@ function DperpsDetail({
   locale: Locale
 }) {
   return (
-    <section className="container border-b border-border py-section">
-      <Eyebrow text={eyebrow} locale={locale} />
-      <div className="mt-12 grid items-center gap-12 lg:mt-16 lg:grid-cols-2 lg:gap-16">
-        <div>
-          <H2 className="whitespace-pre-line text-balance" lang={textLang(heading, locale)}>
-            {heading}
-          </H2>
-          <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(body, locale)}>
-            {body}
-          </p>
+    <section className="container py-section">
+      <div className="grid items-center gap-12 lg:min-h-[34.1875rem] lg:grid-cols-2 lg:gap-16">
+        <div className="flex h-full flex-col">
+          <Eyebrow text={eyebrow} locale={locale} />
+          <div className="mt-12 lg:my-auto lg:pt-12">
+            <H2 className="whitespace-pre-line text-balance" lang={textLang(heading, locale)}>
+              {heading}
+            </H2>
+            <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(body, locale)}>
+              {body}
+            </p>
+          </div>
         </div>
         <div className="relative mx-auto w-full max-w-md lg:max-w-none">
-          <ThemedGraphic graphic={graphic} sizes="(min-width: 1024px) 50vw, 28rem" className="h-auto w-full" />
+          <ThemedGraphic
+            graphic={graphic}
+            sizes="(min-width: 1024px) 50vw, 28rem"
+            className="h-auto max-h-[34.1875rem] w-full object-contain"
+          />
         </div>
       </div>
     </section>

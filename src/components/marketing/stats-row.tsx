@@ -30,6 +30,7 @@ export function StatsRow({
   columns = 3,
   glow = false,
   locale,
+  className,
 }: {
   /** Optional: the institutional page runs these bare, under the hero. */
   title?: string
@@ -44,13 +45,14 @@ export function StatsRow({
   glow?: boolean
   /** The document's locale. Each string's own `lang` is derived from it. */
   locale: Locale
+  className?: string
 }) {
   return (
     // `overflow-x-clip` for the glow: it reaches past the first and last
     // figures, and even at opacity 0 a pseudo-element that crosses the
     // viewport edge scrolls the page sideways (measured: 20px at 390).
     // `clip`, not `hidden`, so the section does not become a scroll container.
-    <section className={cn('container py-20', glow && 'overflow-x-clip')}>
+    <section className={cn('container py-20', glow && 'overflow-x-clip', className)}>
       {title && (
         <H2 className="mb-12 text-balance text-center" lang={textLang(title, locale)}>
           {title}
@@ -66,7 +68,7 @@ export function StatsRow({
       <dl
         className={cn(
           'grid gap-10 text-center',
-          columns === 2 ? 'grid-cols-2' : columns === 5 ? 'sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
+          columns === 2 ? 'grid-cols-2' : columns === 5 ? 'grid-cols-2 sm:grid-cols-3 lg:grid-cols-5' : 'sm:grid-cols-3'
         )}
       >
         {stats.map((stat) => (

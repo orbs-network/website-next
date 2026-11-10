@@ -54,7 +54,7 @@ export function ProductModuleCards({
             key={card.id}
             // Reserve space after the gaps for a preview of the next card:
             // 32px on phones, 48px after two cards, 64px after three cards.
-            className="w-[calc(100%-3.5rem)] shrink-0 snap-start bg-[#e7e7e7] p-6 sm:w-[calc((100%-6rem)/2)] lg:w-[calc((100%-8.5rem)/3)] dark:bg-[#1e1e20]"
+            className="w-[calc(100%-3.5rem)] shrink-0 snap-start rounded-2xl border border-[#e6e7fd] bg-white p-6 shadow-[0_8px_24px_rgba(116,85,220,0.035)] sm:w-[calc((100%-6rem)/2)] lg:w-[calc((100%-8.5rem)/3)] dark:rounded-none dark:border-0 dark:bg-[#1e1e20] dark:shadow-none"
           >
             <div className="aspect-[5/3]">
               <ThemedGraphic

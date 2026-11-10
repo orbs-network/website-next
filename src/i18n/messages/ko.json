@@ -365,6 +365,10 @@
         "precision": "정교하게 거래하세요.",
         "perpetuals": "무기한 선물 거래를 지원하세요.",
         "exposure": "시장 노출을 관리하세요."
+      },
+      "risk": {
+        "eyebrow": "베타 소프트웨어",
+        "title": "제품 상태 및 위험"
       }
     },
     "liquidityHub": {
