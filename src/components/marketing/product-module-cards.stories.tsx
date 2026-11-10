@@ -33,6 +33,7 @@ const meta = {
     viewport: {
       options: {
         desktop: { name: 'Desktop', styles: { width: '1440px', height: '900px' } },
+        figma: { name: 'Figma frame', styles: { width: '1612px', height: '900px' } },
         tablet: { name: 'Tablet', styles: { width: '768px', height: '900px' } },
         phone: { name: 'Phone', styles: { width: '320px', height: '900px' } },
       },
@@ -58,6 +59,14 @@ const checkRail: NonNullable<Story['play']> = async ({ canvasElement, args }) =>
     .find((box) => box.left < railBox.right && box.right > railBox.right)
   expect(preview).toBeDefined()
   expect(railBox.right - preview!.left).toBeGreaterThanOrEqual(24)
+  if (window.innerWidth === 1612) {
+    const first = cards[0].getBoundingClientRect()
+    const second = cards[1].getBoundingClientRect()
+    expect(first.left).toBeCloseTo(40, 0)
+    expect(Math.abs(first.width - 499.2)).toBeLessThan(2)
+    expect(Math.abs(first.height - 440)).toBeLessThan(2)
+    expect(second.left - first.right).toBeCloseTo(16, 0)
+  }
 
   // The fourth card was outside the Figma frame. A mouse user must reach it.
   for (let n = 0; n < 4 && rail.scrollLeft < rail.scrollWidth - rail.clientWidth - 1; n++) {
@@ -76,6 +85,7 @@ const checkRail: NonNullable<Story['play']> = async ({ canvasElement, args }) =>
 }
 
 export const Desktop: Story = { globals: { viewport: { value: 'desktop' } }, play: checkRail }
+export const FigmaFrame: Story = { globals: { viewport: { value: 'figma' } }, play: checkRail }
 export const Tablet: Story = { globals: { viewport: { value: 'tablet' } }, play: checkRail }
 export const Phone: Story = { globals: { viewport: { value: 'phone' } }, play: checkRail }
 export const KoreanPhone: Story = { args: argsFor('ko'), globals: { viewport: { value: 'phone' } }, play: checkRail }

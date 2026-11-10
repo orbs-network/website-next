@@ -34,6 +34,8 @@ export function SplitHero({
   locale,
   className,
   graphicClassName,
+  gridClassName,
+  introClassName,
 }: {
   eyebrow: string
   headline: string
@@ -57,16 +59,20 @@ export function SplitHero({
   className?: string
   /** Bound shorter page heroes without stretching their illustration. */
   graphicClassName?: string
+  /** Match page-specific illustration/text proportions. */
+  gridClassName?: string
+  /** A longer introduction can use the full text column. */
+  introClassName?: string
 }) {
   return (
     <section className={cn('container pt-16 pb-section lg:flex lg:min-h-[810px] lg:items-center lg:py-14', className)}>
-      <div className="grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8">
+      <div className={cn('grid w-full grid-cols-1 items-center gap-12 lg:grid-cols-2 lg:gap-8', gridClassName)}>
         <div>
           <Eyebrow text={eyebrow} locale={locale} />
           <H1 className="mt-3 text-balance" lang={textLang(headline, locale)}>
             {headline}
           </H1>
-          <p className="mt-10 max-w-xl text-p text-fg" lang={textLang(intro, locale)}>
+          <p className={cn('mt-10 max-w-xl text-p text-fg', introClassName)} lang={textLang(intro, locale)}>
             {intro}
           </p>
           {(cta || secondaryCta || actions) && (

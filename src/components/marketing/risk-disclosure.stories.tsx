@@ -17,6 +17,9 @@ export const FullDisclosure: Story = {
     await expect(canvas.getByText(/solely responsible for all transaction decisions/)).toBeVisible()
     await expect(canvasElement.querySelector('details')).toBeNull()
     for (const paragraph of canvasElement.querySelectorAll('p')) await expect(paragraph).toBeVisible()
+    const clause = canvas.getByText(/may result in total or partial loss of funds/)
+    await expect(getComputedStyle(clause).fontSize).toBe('14px')
+    await expect(getComputedStyle(clause).lineHeight).toBe('23px')
   },
 }
 

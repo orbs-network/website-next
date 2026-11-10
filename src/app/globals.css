@@ -569,6 +569,19 @@
     color: var(--color-fg);
     background: linear-gradient(135deg, #f6f3ff 0%, #dedbff 55%, #8581ff 100%);
   }
+
+  /* Figma 2461:16412 is 1196.8px tall, clipped by the 974px feature band. */
+  .dperps-benefits {
+    background-color: #fafafc;
+    background-image: linear-gradient(
+      143.4deg,
+      rgb(246 245 255 / 86%) 0%,
+      rgb(217 215 255 / 86%) 55%,
+      rgb(102 114 255 / 86%) 100%
+    );
+    background-size: 100% 122.875%;
+    background-repeat: no-repeat;
+  }
 }
 
 /* Keep Korean words intact; very long identifiers may still wrap on small screens. */

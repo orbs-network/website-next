@@ -36,7 +36,10 @@ export const Desktop: Story = {
     expect(cards).toHaveLength(6)
     const boxes = cards.map((card) => card.getBoundingClientRect())
     expect(new Set(boxes.slice(0, 3).map((box) => box.top)).size).toBe(1)
-    expect(boxes[3].top).toBeGreaterThan(boxes[0].bottom)
+    // Figma has two adjoining 256px rows; spacing is inside each card.
+    expect(boxes[3].top).toBeCloseTo(boxes[0].bottom, 0)
+    expect(boxes[0].height).toBe(256)
+    expect(boxes[1].left - boxes[0].right).toBe(72)
     expect(within(canvasElement).queryAllByRole('button')).toHaveLength(0)
     expect(within(canvasElement).queryAllByRole('link')).toHaveLength(0)
   },

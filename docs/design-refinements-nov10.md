@@ -20,3 +20,74 @@ Fourteen standalone SVGs are used without external image dependencies. The dPERP
 ## Validation
 
 Check first-fold geometry with the real header and both homepage languages, all five stats, both calls to action, pointer/reduced-motion behavior, card previews and navigation, loaded artwork, full legal disclosure, localized layouts, and page overflow at desktop, tablet and narrow phone widths. `HomeHero` also has a browser fixture so its English first fold can be checked without Contentful credentials. Existing facet-field stories cover its pointer behavior.
+
+## Visual audit after the first review
+
+The first review covered the main compositions and assets, but its layout checks
+were incomplete. A second comparison against the captured Figma renders found
+and corrected the following misses before merge:
+
+- Home: prevent the next section entering a tall desktop first fold; match the
+  introduction type and the wider, lower stats row.
+- dSPOT: restore the full-width rail, approximately 500 × 440px desktop cards,
+  40px inset, 16px gaps, larger card titles and a visible next-card preview.
+- dPERPS: restore the 64px top inset and 96px section gaps, full-width feature
+  band, feature typography, illustration columns and copy positions. Match the
+  supplied gradient, 14px/23px disclosure type and paragraph spacing.
+- Execution Services: match the 650px copy column, 164px gap and 560px interface
+  illustration at the 1612px reference width, including the 150px gap before
+  the closing CTA supplied outside the page frame.
+
+### Comparison scope
+
+The desktop reference width is 1612px. The audit covers the home hero and stats;
+all four dSPOT illustrations and cards; all seven dPERPS sections and the closing
+CTA; and the Execution Services hero, Lambda, VM and detached closing CTA.
+Both supplied page themes are checked. Home has one supplied dark frame; its
+light adaptation is checked for readability and layout, not claimed as a match
+to a missing light reference. Detached siblings listed above are included when
+checking closing content.
+
+Artwork is checked against the original SVG exports, not recreated from a
+screenshot. Rendered browser checks measure card geometry, section positions,
+image loading, heading/disclosure typography, first-fold boundaries and
+reachability. English home uses the actual `HomeHero` browser fixture because a
+local full English homepage build requires Contentful credentials. Korean uses
+the complete built application. Application and fixture comparisons also cover
+1440, 1024, 768, 640, 390, 360 and 320px where applicable, plus tall desktop folds.
+These are responsive adaptations; the supplied desktop frame is not a mobile
+specification.
+
+### Intentional differences from the frames
+
+- Keep the approved home introduction and “Powering” wording. The pointer facet
+  field remains interactive rather than showing the designer's static cursor.
+- Keep the approved dSPOT headline “Advanced spot trading. Unified execution.”
+  and its eight-solvers strip. The source frame still has the superseded
+  headline and a six-venue strip. Other existing dSPOT sections remain the
+  approved October composition; the November update concerns its light cards.
+- Keep all dPERPS legal clauses and omit the entire previously excluded Symmio
+  overview. Preserve approved casing. Headings wrap naturally; no forced line
+  breaks are added to reproduce the desktop artwork. Different line endings at
+  different viewport widths are expected and are not visual defects.
+- Retain Korean translations and the Japanese archive composition. Figma's
+  supplied English copy does not replace translated body text.
+- Keep the shared header, navigation, footer, CTA destinations and working
+  carousel/keyboard controls. Global chrome was not part of this refinement.
+- Use the existing accessible pink token for the disclosure label in light mode;
+  the pale source pink is too faint for small text. Shared closing glows and
+  marquees remain live CSS components rather than rasterized page fragments.
+
+The comparison establishes checked scope and recorded exceptions. It is not a
+promise that a designer will have no further feedback or that every responsive
+viewport is pixel-identical to a fixed desktop frame.
+
+To repeat the desktop composition checks against a built site or preview:
+
+```sh
+node scripts/check-refinement-layout.mjs --base http://localhost:3000
+```
+
+This checks the frame measurements in both themes and locales, including a
+1200px-tall homepage fold. Run `npm run check:overflow -- --base <url>` for the
+full narrow-screen route sweep; the component stories run in ordinary CI.

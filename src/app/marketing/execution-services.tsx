@@ -35,7 +35,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
       {EXECUTION_SERVICES_PRODUCTS.map((product) => (
         <section key={product.id} className="container border-t border-border pt-6 pb-20">
           <Eyebrow text={t(`eyebrows.${product.id}`)} locale={locale} />
-          <div className="mt-10 grid items-center gap-12 lg:min-h-[360px] lg:grid-cols-[minmax(0,650fr)_minmax(0,560fr)] lg:gap-24">
+          <div className="mt-10 grid items-center gap-12 lg:min-h-[360px] lg:grid-cols-[minmax(0,650fr)_minmax(0,560fr)] lg:gap-[164px]">
             <div>
               <H2 className="text-balance" lang={lang(`${product.id}.title`)}>
                 {t(`${product.id}.title`)}
@@ -56,7 +56,9 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
           </div>
         </section>
       ))}
-      <InnerClosingCta locale={locale} />
+      <div className="lg:mt-[150px]">
+        <InnerClosingCta locale={locale} />
+      </div>
     </>
   )
 }

@@ -28,6 +28,7 @@ export function CardRail({
   nextLabel,
   locale,
   className,
+  trackClassName,
 }: {
   children: React.ReactNode
   /** Accessible name for the strip, e.g. the section heading. */
@@ -51,6 +52,8 @@ export function CardRail({
    */
   locale: Locale
   className?: string
+  /** Page-specific card spacing without changing other rails. */
+  trackClassName?: string
 }) {
   const scroller = React.useRef<HTMLUListElement>(null)
   const [atStart, setAtStart] = React.useState(true)
@@ -133,7 +136,8 @@ export function CardRail({
         // without one it is a dead gap under the cards.
         className={cn(
           'scrollbar-none mt-6 flex snap-x snap-mandatory gap-6 overflow-x-auto',
-          'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring'
+          'focus-visible:outline-none focus-visible:ring-1 focus-visible:ring-ring',
+          trackClassName
         )}
       >
         {children}

@@ -47,11 +47,21 @@ export const English: Story = {
     // Reserve the real header's 100px within a 900px desktop first fold.
     if (window.innerWidth >= 1024) {
       await expect(parseFloat(getComputedStyle(heading).fontSize)).toBeGreaterThanOrEqual(56)
-      await expect(getComputedStyle(heading).whiteSpace).toBe('pre-line')
+      await expect(getComputedStyle(heading).whiteSpace).toBe('normal')
       await expect(stats.getBoundingClientRect().bottom - hero.getBoundingClientRect().top).toBeLessThanOrEqual(800)
+      // Keeping the figures in view alone is insufficient: the following
+      // section must also stay below the fold, including on tall displays.
+      await expect(hero.getBoundingClientRect().height + 100).toBeGreaterThanOrEqual(window.innerHeight)
     }
     await expect(document.documentElement.scrollWidth).toBeLessThanOrEqual(window.innerWidth + 1)
   },
 }
 
-export const Korean: Story = { args: args('ko') }
+export const Korean: Story = {
+  args: args('ko'),
+  play: async ({ canvasElement }) => {
+    const heading = within(canvasElement).getByRole('heading', { level: 1 })
+    await expect(getComputedStyle(heading).whiteSpace).toBe('normal')
+    await expect(heading.querySelector('br')).toBeNull()
+  },
+}

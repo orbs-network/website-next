@@ -32,8 +32,8 @@ export function ProductModuleCards({
   locale: Locale
 }) {
   return (
-    <section id={id} className="container min-w-0 scroll-mt-32 border-t border-border pt-section pb-16">
-      <div className="text-center">
+    <section id={id} className="min-w-0 scroll-mt-32 pb-16">
+      <div className="container border-t border-border pt-section text-center">
         <Eyebrow text={eyebrow} locale={locale} />
         <H2 className="mx-auto mt-6 max-w-5xl text-balance" lang={textLang(heading, locale)}>
           {heading}
@@ -47,14 +47,16 @@ export function ProductModuleCards({
         previousLabel={previousLabel}
         nextLabel={nextLabel}
         locale={locale}
-        className="mt-16 min-w-0 lg:mt-40"
+        className="container mt-16 min-w-0 lg:mt-40 lg:max-w-[1612px] lg:px-0 lg:[&>div]:px-10"
+        trackClassName="lg:scroll-pl-10 lg:gap-4"
       >
         {cards.map((card) => (
           <li
             key={card.id}
             // Reserve space after the gaps for a preview of the next card:
-            // 32px on phones, 48px after two cards, 64px after three cards.
-            className="w-[calc(100%-3.5rem)] shrink-0 snap-start rounded-2xl border border-[#e6e7fd] bg-white p-6 shadow-[0_8px_24px_rgba(116,85,220,0.035)] sm:w-[calc((100%-6rem)/2)] lg:w-[calc((100%-8.5rem)/3)] dark:rounded-none dark:border-0 dark:bg-[#1e1e20] dark:shadow-none"
+            // Desktop: 40px inset, 16px gaps, three ~500px cards and a 24px preview
+            // at Figma's 1612px width. Margins keep the preview visible at smaller desktops.
+            className="w-[calc(100%-3.5rem)] shrink-0 snap-start rounded-2xl border border-[#e6e7fd] bg-white p-6 shadow-[0_8px_24px_rgba(116,85,220,0.035)] sm:w-[calc((100%-6rem)/2)] lg:min-h-[440px] lg:w-[calc((100%-7rem)/3)] lg:p-[2.1rem] first:lg:ml-10 last:lg:mr-10 dark:rounded-none dark:border-0 dark:bg-[#1e1e20] dark:shadow-none"
           >
             <div className="aspect-[5/3]">
               <ThemedGraphic
@@ -63,10 +65,17 @@ export function ProductModuleCards({
                 className="size-full object-contain"
               />
             </div>
-            <H3 asChild className="mt-6 text-h4 font-normal" lang={textLang(card.title, locale)}>
+            <H3
+              asChild
+              className="mt-6 text-h4 font-normal lg:mt-4 lg:text-[27px] lg:leading-9 lg:tracking-[-0.75px]"
+              lang={textLang(card.title, locale)}
+            >
               <h3>{card.title}</h3>
             </H3>
-            <p className="mt-4 text-p text-fg-muted" lang={textLang(card.body, locale)}>
+            <p
+              className="mt-4 text-p text-fg-muted lg:text-[15px] lg:tracking-[-0.45px]"
+              lang={textLang(card.body, locale)}
+            >
               {card.body}
             </p>
           </li>

@@ -15,7 +15,7 @@ export function RiskDisclosure({
   locale: Locale
 }) {
   return (
-    <section className="container py-12 lg:py-24">
+    <section className="container py-12 lg:max-w-none lg:px-[37px] lg:py-0">
       <div className="grid gap-8 rounded-2xl border border-[#e6d9eb] bg-[#f8f5fa] p-6 lg:grid-cols-[minmax(0,20rem)_minmax(0,1fr)] lg:gap-16 lg:p-10 dark:border-[#39253d] dark:bg-[#18151c]">
         <div>
           <p
@@ -24,14 +24,14 @@ export function RiskDisclosure({
           >
             {eyebrow}
           </p>
-          <h2 className="mt-5 whitespace-pre-line text-3xl leading-tight text-fg" lang={textLang(title, locale)}>
+          <h2 className="mt-5 text-3xl leading-tight text-fg" lang={textLang(title, locale)}>
             {title}
           </h2>
         </div>
         <Prose
           text={text}
           locale={locale}
-          className="space-y-3 [&_p]:text-xs [&_p]:leading-relaxed [&_p]:text-fg-muted"
+          className="space-y-0 [&_p]:text-sm [&_p]:leading-[23px] [&_p]:tracking-[-0.5px] [&_p]:text-fg-muted [&_p:first-child]:mb-[23px]"
         />
       </div>
     </section>
