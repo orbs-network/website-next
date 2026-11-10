@@ -18,7 +18,7 @@ export async function DperpsPage({ locale }: { locale: Locale }) {
   const closing = await getTranslations({ locale, namespace: 'pages.dspot.closing' })
 
   return (
-    <div className="mx-auto max-w-[1612px] lg:pt-16 lg:[--font-size-p:15px] lg:[--tracking-tight:-0.04em]">
+    <div className="mx-auto max-w-[1612px] lg:[--font-size-p:15px] lg:[--tracking-tight:-0.04em]">
       <div className="lg:space-y-24">
         <SplitHero
           eyebrow={t('hero.eyebrow')}

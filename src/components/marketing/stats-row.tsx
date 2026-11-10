@@ -72,7 +72,14 @@ export function StatsRow({
         )}
       >
         {stats.map((stat) => (
-          <div key={stat.id} className={cn('flex flex-col-reverse gap-2', glow && STAT_GLOW)}>
+          <div
+            key={stat.id}
+            className={cn(
+              'flex flex-col-reverse gap-2',
+              columns === 5 && stats.length % 2 === 1 && 'last:col-span-2 sm:last:col-span-1',
+              glow && STAT_GLOW
+            )}
+          >
             {/*
               The label and the value are marked SEPARATELY, and this pair is
               the clearest case on the site for why. "$14B+" is Latin in every
