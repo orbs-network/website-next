@@ -121,15 +121,16 @@ try {
             .last()
             .evaluate((node) => ({ size: getComputedStyle(node).fontSize, line: getComputedStyle(node).lineHeight }))
           assert.deepEqual(type, { size: '14px', line: '23px' }, label + ' disclosure type')
-          const venue = page.locator('main img[src*="/dperps/venue"]').filter({ visible: true }).first()
-          assert.notEqual(
+          const venue = page.locator('main [data-product-graphic="venue"] svg').filter({ visible: true }).first()
+          assert.equal(
             await venue.evaluate((node) => getComputedStyle(node).filter),
             'none',
-            label + ' venue outer glow'
+            label + ' venue foreground is not flattened by a CSS filter'
           )
+          assert.equal(await venue.locator('feGaussianBlur').count(), 1, label + ' native venue glow')
         } else {
           const columns = await page
-            .locator('main img[src*="lambda-interface"]')
+            .locator('main [data-product-graphic="lambda"] svg')
             .filter({ visible: true })
             .first()
             .evaluate((image) => {
@@ -140,13 +141,14 @@ try {
           near(columns.copy, 650, label + ' copy width')
           near(columns.graphic, 560, label + ' illustration width')
           near(columns.gap, 164, label + ' column gap')
-          for (const asset of ['lambda-interface', 'vm-interface']) {
-            const graphic = page.locator(`main img[src*="${asset}"]`).filter({ visible: true }).first()
-            assert.notEqual(
+          for (const asset of ['lambda', 'vm']) {
+            const graphic = page.locator(`main [data-product-graphic="${asset}"] svg`).filter({ visible: true }).first()
+            assert.equal(
               await graphic.evaluate((node) => getComputedStyle(node).filter),
               'none',
-              label + ' ' + asset + ' outer glow'
+              label + ' ' + asset + ' foreground is not flattened by a CSS filter'
             )
+            assert.equal(await graphic.locator('feGaussianBlur').count(), 1, label + ' ' + asset + ' native glow')
           }
           const closingTop = await page
             .locator('main > div')

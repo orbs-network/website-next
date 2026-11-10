@@ -4,7 +4,8 @@ import { H1, H2 } from '@/app/components/typography'
 import { DividedSection } from '@/components/marketing/divided-section'
 import { Prose } from '@/components/marketing/prose'
 import { NETWORK_DOCS_URL } from '@/content/shared/sdk'
-import { Eyebrow, ThemedGraphic } from '@/components/marketing/section-parts'
+import { Eyebrow } from '@/components/marketing/section-parts'
+import { InlineProductGraphic } from '@/components/marketing/inline-product-graphic'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import { EXECUTION_SERVICES_DIAGRAMS, EXECUTION_SERVICES_PRODUCTS } from '@/content/pages/execution-services'
@@ -47,11 +48,7 @@ export async function ExecutionServicesPage({ locale }: { locale: Locale }) {
             </div>
             {/* Concept illustrations, not interactive consoles. */}
             <div className="mx-auto w-full max-w-[560px]">
-              <ThemedGraphic
-                graphic={product.illustration}
-                sizes="(min-width: 1024px) 40vw, 90vw"
-                className="h-auto w-full drop-shadow-[0_6px_14px_rgba(151,71,255,0.1)] dark:drop-shadow-[0_4px_16px_rgba(151,71,255,0.16)]"
-              />
+              <InlineProductGraphic artwork={product.id === 'lambdaProduct' ? 'lambda' : 'vm'} />
             </div>
           </div>
         </section>

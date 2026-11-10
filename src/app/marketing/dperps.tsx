@@ -3,6 +3,7 @@ import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing
 import { RiskDisclosure } from '@/components/marketing/risk-disclosure'
 import { CtaButton, Eyebrow, ThemedGraphic, type SectionGraphic } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
+import { InlineProductGraphic } from '@/components/marketing/inline-product-graphic'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { DperpsFeaturesGrid } from '@/components/marketing/dperps-features-grid'
 import { H2 } from '@/app/components/typography'
@@ -136,11 +137,15 @@ function DperpsDetail({
           </div>
         </div>
         <div className="relative mx-auto w-full max-w-md lg:flex lg:h-[547px] lg:max-w-none lg:items-center">
-          <ThemedGraphic
-            graphic={graphic}
-            sizes="(min-width: 1024px) 50vw, 28rem"
-            className={`h-auto w-full object-contain ${kind === 'venue' ? 'drop-shadow-[0_6px_14px_rgba(220,138,224,0.1)] dark:drop-shadow-[0_4px_16px_rgba(220,138,224,0.16)]' : ''}`}
-          />
+          {kind === 'venue' ? (
+            <InlineProductGraphic artwork="venue" />
+          ) : (
+            <ThemedGraphic
+              graphic={graphic}
+              sizes="(min-width: 1024px) 50vw, 28rem"
+              className="h-auto w-full object-contain"
+            />
+          )}
         </div>
       </div>
     </section>

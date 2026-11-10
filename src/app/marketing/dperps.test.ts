@@ -74,7 +74,8 @@ describe('October product handoff', () => {
     expect(html).toContain(messages.risk.title.replaceAll('&', '&amp;'))
     for (const clause of messages.disclaimer.split('\n\n')) expect(html).toContain(clause)
     expect(html).not.toContain('<details')
-    expect(html).toContain('venue-light.svg')
+    expect(html).toContain('data-product-graphic="venue"')
+    expect(html).not.toContain('src="/marketing/dperps/venue')
   })
 
   it('uses the selected dSPOT headline in one composition for both themes', async () => {
