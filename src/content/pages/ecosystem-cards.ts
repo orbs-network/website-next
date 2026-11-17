@@ -75,7 +75,7 @@ const PARTNER_BRANDING: Record<IntegrationPartnerId, { logo: EcosystemCard['logo
     xUrl: 'https://x.com/RamsesExchange',
   },
   kodiak: {
-    logo: { src: '/marketing/ecosystem/cards/kodiak.svg', width: 47, height: 30 },
+    logo: { src: '/marketing/ecosystem/cards/kodiak.svg', width: 1080, height: 1080 },
     xUrl: 'https://x.com/KodiakFi',
   },
   dragonswap: {

@@ -17,7 +17,7 @@ Retrieved 14 October 2026. Native SVG geometry is preserved. Raster files are re
 - **dodo:** https://app.dodoex.io/images/dodo-192x192.png
 - **lumia:** https://lumia.org/favicon.svg
 - **magpie:** https://cdn.prod.website-files.com/629b39872d72ff02443a529f/6491371dd08ddae77bddcf36_magpie-webclip.png
-- **kodiak:** https://www.kodiak.finance/kodiak-logo.svg
+- **kodiak:** official Kodiak brand kit, `Kodiak Variant.svg` — https://drive.google.com/file/d/1gdwEy8yps0YsL2001hxnNlGKtm1ThO7U/view
 - **blackhole:** https://blackhole.xyz/assets/blackhole-icon-XQCLaWSd.png
 - **rango:** https://rango.exchange/icon1.png?2cd9a01a466b0afb
 - **gryps:** https://gryps.finance/ (inline header SVG)
