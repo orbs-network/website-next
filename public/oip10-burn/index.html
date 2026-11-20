@@ -1,0 +1,90 @@
+<!doctype html><html lang="en"><head><meta charset="UTF-8"><meta http-equiv="Content-Security-Policy" content="default-src 'none'; script-src 'self'; style-src 'self' https://fonts.googleapis.com; font-src https://fonts.gstatic.com; img-src 'self' data:; connect-src 'self' https://rpcman.orbs.network; object-src 'none'; base-uri 'none'; form-action 'none'; frame-src 'none'"><meta name="referrer" content="no-referrer"><meta name="viewport" content="width=device-width, initial-scale=1"><title>ORBS Burn Tracker</title><meta name="description" content="A public record of the OIP-10 weekly ORBS burn."><meta name="color-scheme" content="light"><meta name="theme-color" content="#f6f6f6"><meta property="og:type" content="website"><meta property="og:url" content="https://www.orbs.com/oip10-burn/"><meta property="og:title" content="ORBS Burn Tracker"><meta property="og:description" content="A public record of the OIP-10 weekly ORBS burn."><meta name="twitter:card" content="summary"><meta name="twitter:title" content="ORBS Burn Tracker"><meta name="twitter:description" content="A public record of the OIP-10 weekly ORBS burn."><!-- Pending: og:image and twitter:image will be added once a share image exists. --><link rel="icon" href="./orbs-mark.svg" type="image/svg+xml"><script src="./theme.js"></script><link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Montserrat:wght@300;400;500;600&display=swap"><link rel="stylesheet" href="./app.css"><script src="./app.js" defer></script></head><body>
+<a class="skip" href="#history">Skip to burn history</a>
+<header class="top"><div class="wrap top-in"><a class="logo" href="https://www.orbs.com/" target="_blank" rel="noopener noreferrer"><img src="./orbs-mark.svg" alt="" width="30" height="29"><span>ORBS</span></a><span class="top-tag">Burn Tracker</span><span class="net"><i class="dot" id="netdot"></i><span id="netlbl"><span class="nl-x">Ethereum </span>mainnet</span></span><button class="thm" id="thm" type="button" aria-label="Switch to dark mode" aria-pressed="false"><svg class="i-moon" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><path d="M13.5 9.6A5.8 5.8 0 0 1 6.4 2.5a5.8 5.8 0 1 0 7.1 7.1Z" fill="none" stroke="currentColor" stroke-width="1.4" stroke-linejoin="round"/></svg><svg class="i-sun" viewBox="0 0 16 16" aria-hidden="true" focusable="false"><circle cx="8" cy="8" r="3" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M8 1v1.8M8 13.2V15M1 8h1.8M13.2 8H15M3.05 3.05l1.27 1.27M11.68 11.68l1.27 1.27M3.05 12.95l1.27-1.27M11.68 4.32l1.27-1.27" stroke="currentColor" stroke-width="1.4" stroke-linecap="round"/></svg></button></div><div class="gline"></div></header>
+<main>
+<section class="hero" id="hero"><canvas id="embers" aria-hidden="true"></canvas><div class="glow" aria-hidden="true"></div><div class="hline" aria-hidden="true"></div><div class="wrap">
+<p class="eyebrow accent"><i class="ember" aria-hidden="true"></i>[BURN] OIP-10</p>
+<h1>ORBS Burn Tracker</h1>
+<p class="sub">A public record of the OIP-10 weekly ORBS burn.</p>
+<div class="stats">
+<article class="stat stat-main"><p class="lbl">Burned under OIP-10</p><p class="val"><span id="burned">…</span> <small>ORBS</small></p><p class="hint" id="burnedhint">ORBS sent to the burn address by the Orbs burn controller</p><div class="bar"><span id="progbar"></span></div><p class="hint" id="progtxt">of 507,540,603 ORBS in the program</p></article>
+<article class="stat"><p class="lbl">In the burn pool</p><p class="val"><span id="pool">…</span> <small>ORBS</small></p><p class="hint" id="poolhint">Held by the Orbs burn controller, waiting to be burned</p></article>
+<article class="stat"><p class="lbl">Latest burn</p><p class="val" id="latest">…</p><p class="hint" id="latesthint">Most recent weekly burn</p></article>
+<article class="stat"><p class="lbl">Burns recorded</p><p class="val" id="count">…</p><p class="hint" id="counthint">Weekly batches since the program started</p></article>
+</div>
+</div></section>
+
+<section class="sec" id="history"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[HISTORY]</p><h2>Burn history</h2></div><p class="meta" id="blockinfo">Reading Ethereum…</p></div>
+<div class="tablewrap"><table class="tbl"><thead><tr><th>Date (UTC)</th><th>Pricing week</th><th>Time weighted price used</th><th>ORBS burned</th><th>Transaction</th></tr></thead><tbody id="rows"><tr><td colspan="5" class="empty">Loading burn history…</td></tr></tbody></table></div>
+<p class="fine">Date, amount and transaction come from Ethereum. Pricing week and price per burn: <span class="tag ph">[PLACEHOLDER: per burn record, to be added by the dev team]</span></p>
+</div></section>
+
+<section class="sec alt" id="pricing"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[PRICING]</p><h2>Latest completed pricing week</h2></div><p class="meta" id="weeklbl">…</p></div>
+<div class="price-grid">
+<div class="pcard">
+<div class="kv"><span>Time weighted average ORBS/USD</span><b id="twap">…</b></div>
+<div class="kv"><span>Price observations in the week</span><b id="obs">…</b></div>
+<div class="kv"><span>Longest gap between observations</span><b id="gap">…</b></div>
+<div class="kv"><span>Coverage check</span><b id="cov">…</b></div>
+<p class="fine" id="pricestatus">Source: CoinGecko ORBS/USD hourly observations.</p>
+</div>
+<figure class="chart"><div id="chart" role="img" aria-label="Hourly ORBS/USD price over the pricing week with the time weighted average"></div><figcaption><span class="lg line"></span>Hourly price <span class="lg avg"></span>Time weighted average</figcaption></figure>
+</div>
+</div></section>
+
+<section class="sec" id="how"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[PROCESS]</p><h2>How it works</h2></div></div>
+<ol class="steps">
+<li><span class="n">01</span><h3>The vote</h3><p>OIP-10 passed a Snapshot vote that closed Nov 18, 2026.</p></li>
+<li><span class="n">02</span><h3>The total</h3><p>507,540,603 ORBS will be burned in weekly batches.</p></li>
+<li><span class="n">03</span><h3>The source</h3><p>The ORBS come from the Orbs Long Term Reserves Pool and are held by the Orbs burn controller.</p></li>
+<li><span class="n">04</span><h3>The burn</h3><p>Each week the ORBS go to the dead address and the burn is recorded on Ethereum.</p></li>
+</ol>
+</div></section>
+
+<section class="sec alt" id="methodology"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[METHODOLOGY]</p><h2>How the weekly amount is calculated</h2></div></div>
+<div class="meth">
+<ol class="mlist">
+<li><span><b>Price the week.</b> Each Monday to Monday week (UTC) uses hourly ORBS/USD prices from <a class="xl" href="https://www.coingecko.com/en/coins/orbs" target="_blank" rel="noopener noreferrer">CoinGecko<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a>, with no gap over 2 hours.</span></li>
+<li><span><b>Average it.</b> The hourly prices give one time weighted average price for the week.</span></li>
+<li><span><b>Set the amount.</b> ORBS burned = weekly USD reference ÷ average price. Lower price, more ORBS. Higher price, fewer ORBS.</span></li>
+<li><span><b>Burn it.</b> The <a class="xl" href="https://etherscan.io/address/0x189a5caf060b94961f0d4f3e56ad0d678ebb6c12" target="_blank" rel="noopener noreferrer">Orbs burn controller<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a> sends the ORBS to the dead address. Each burn shows in the history above.</span></li>
+</ol>
+<aside class="flow" id="flow"><div class="fhead"><p class="lbl">Worked flow</p><p class="fstep" id="fstep" aria-live="off">Step 1 of 4</p></div>
+<ol class="fl">
+<li class="fbox"><i>1</i><span>Hourly ORBS/USD prices, Monday to Monday UTC, no gap over 2 hours</span></li>
+<li class="fbox"><i>2</i><span>Time weighted average price (P)</span></li>
+<li class="fbox"><i>3</i><span>ORBS amount = weekly USD reference ÷ P</span></li>
+<li class="fbox"><i>4</i><span>ORBS sent to the dead address, recorded on Ethereum</span></li>
+</ol>
+</aside>
+</div>
+<p class="src">Methodology follows OIP-10.</p>
+</div></section>
+
+<section class="sec" id="control"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[CONTROL]</p><h2>Key addresses</h2></div></div>
+<dl class="ctl">
+<div class="crow"><dt>Orbs burn controller</dt><dd><a class="addr" href="https://etherscan.io/address/0x189a5caf060b94961f0d4f3e56ad0d678ebb6c12" target="_blank" rel="noopener noreferrer" title="0x189a5caf060b94961f0d4f3e56ad0d678ebb6c12"><span class="a-h">0x189a5caf060b94961f0d4f3e56ad0d678e</span><span class="a-t">bb6c12</span></a><button class="copy" type="button" data-copy="0x189a5caf060b94961f0d4f3e56ad0d678ebb6c12">Copy</button></dd></div>
+<div class="crow"><dt>ORBS token</dt><dd><a class="addr" href="https://etherscan.io/token/0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa" target="_blank" rel="noopener noreferrer" title="0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa"><span class="a-h">0xff56cc6b1e6ded347aa0b7676c85ab0b3d</span><span class="a-t">08b0fa</span></a><button class="copy" type="button" data-copy="0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa">Copy</button></dd></div>
+<div class="crow"><dt>Burn address</dt><dd><a class="addr" href="https://etherscan.io/token/0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa?a=0x000000000000000000000000000000000000dEaD" target="_blank" rel="noopener noreferrer" title="0x000000000000000000000000000000000000dEaD"><span class="a-h">0x0000000000000000000000000000000000</span><span class="a-t">00dEaD</span></a><button class="copy" type="button" data-copy="0x000000000000000000000000000000000000dEaD">Copy</button></dd></div>
+</dl>
+</div></section>
+
+<section class="sec alt" id="resources"><div class="wrap">
+<div class="head"><div><p class="eyebrow">[RESOURCES]</p><h2>Resources</h2></div></div>
+<ul class="res">
+<li><a class="xl" href="https://github.com/orbs-network/OIPs/issues/11" target="_blank" rel="noopener noreferrer">OIP-10 proposal<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+<li><a class="xl" href="https://snapshot.box/#/s:orbs-network.eth/proposal/0xd2af1ee80124e22afb73b4f8871f27abdb8c4008335900b2af1387db3abfed0d" target="_blank" rel="noopener noreferrer">Snapshot vote result<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+<li><a class="xl" href="https://etherscan.io/address/0x189a5caf060b94961f0d4f3e56ad0d678ebb6c12" target="_blank" rel="noopener noreferrer">Orbs burn controller on Etherscan<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+<li><a class="xl" href="https://etherscan.io/token/0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa" target="_blank" rel="noopener noreferrer">ORBS token on Etherscan<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+<li><a class="xl" href="https://etherscan.io/token/0xff56cc6b1e6ded347aa0b7676c85ab0b3d08b0fa?a=0x000000000000000000000000000000000000dEaD" target="_blank" rel="noopener noreferrer">Burn address on Etherscan<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+<li><a class="xl" id="srclink" href="https://www.coingecko.com/en/coins/orbs" target="_blank" rel="noopener noreferrer">Weekly price source response<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2.5h6v6M9.5 2.5 2.5 9.5" fill="none" stroke="currentColor" stroke-width="1.3"/></svg></a></li>
+</ul>
+</div></section>
+</main>
+<footer class="foot"><div class="wrap foot-in"><span class="logo sm"><img src="./orbs-mark.svg" alt="" width="20" height="19"><span>ORBS</span></span><span>Read only. Data from Ethereum mainnet and CoinGecko.</span></div></footer>
+</body></html>

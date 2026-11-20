@@ -24,6 +24,10 @@ src/content/faq/
 # input by the migration scripts. Source data we did not write and do not edit.
 scripts/orbs-website-migration/authors/
 
+# OIP-10 burn tracker: a reviewed, self-contained static page served
+# byte-for-byte from public/. Reformatting it would change an approved artefact.
+public/oip10-burn/
+
 # Build output, dependencies and review artefacts.
 .next/
 node_modules/
