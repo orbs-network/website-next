@@ -1,5 +1,3 @@
-import { readFileSync } from 'node:fs'
-import { join } from 'node:path'
 import resolveResponse from 'contentful-resolve-response'
 import type { Entry } from 'contentful'
 import type { TypeBlogPostSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
@@ -22,6 +20,11 @@ import type { TypeBlogPostSkeleton, TypeMediaMentionSkeleton } from '../generate
  * `getPostBySlug` for posts that were not prerendered, so `next.config.ts`
  * traces the directory into the deployment.
  *
+ * `fs` and `path` come from `process.getBuiltinModule`, not static imports:
+ * `api.ts` is also imported by components that Storybook bundles for the
+ * browser (`news-card.tsx`), and Vite cannot bundle a static `node:fs` import.
+ * The loader only ever runs on the server.
+ *
  * Refresh with `npm run snapshot-content` while Contentful is available. A
  * stale snapshot only matters when a build falls back to it: posts published
  * after the capture are then missing from that deployment until it is rebuilt.
@@ -38,12 +41,13 @@ export type ContentfulSnapshot = {
   mentions: SnapshotMention[]
 }
 
-const DIR = join(process.cwd(), 'src/app/lib/contentful-snapshot')
-
 type RawResponse = { capturedAt: string; total: number; items: unknown[] }
 
 function readResolved<T>(file: string): { capturedAt: string; items: T[] } {
-  const raw = JSON.parse(readFileSync(join(DIR, file), 'utf8')) as RawResponse
+  const { readFileSync } = process.getBuiltinModule('node:fs')
+  const { join } = process.getBuiltinModule('node:path')
+  const path = join(process.cwd(), 'src/app/lib/contentful-snapshot', file)
+  const raw = JSON.parse(readFileSync(path, 'utf8')) as RawResponse
   const items = resolveResponse(raw, { removeUnresolved: false, itemEntryPoints: ['fields'] }) as T[]
   if (items.length !== raw.total) {
     throw new Error(`[contentful-snapshot] ${file} holds ${items.length} items but records a total of ${raw.total}.`)
