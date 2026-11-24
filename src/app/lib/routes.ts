@@ -83,6 +83,8 @@ export function encodedPostPath(slug: string): string {
 }
 
 export const BLOG_INDEX_PATH = '/blog/'
+/** Not under trailingSlash — a file, not a page route. ISR; the webhook revalidates it. */
+export const RSS_PATH = '/blog/rss.xml'
 export const HOME_PATH = '/'
 export const GOVERNANCE_PATH = '/governance-blog/'
 
@@ -107,8 +109,7 @@ export const BLOG_PAGE_ROUTE = '/blog/page/[n]'
 /**
  * Not under trailingSlash — it is a file, not a page route.
  *
- * The sitemap route is force-dynamic, so it needs no revalidation. Kept because
- * robots.txt advertises it and one definition beats two string literals.
+ * ISR; the webhook revalidates it on publish. robots.txt advertises it too.
  */
 export const SITEMAP_PATH = '/sitemap.xml'
 

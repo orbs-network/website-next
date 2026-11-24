@@ -9,16 +9,11 @@ import { DEFAULT_LOCALE, localePath } from '@/i18n/locales'
 import { TEMPORARY_REDIRECTS } from '@/lib/redirects'
 
 /*
- * Built per request by `app/sitemap.xml/route.ts`, which renders these entries
- * and sets the CDN cache header. That is why this is not a `sitemap.ts`
- * metadata route: a metadata route cannot set its own headers, and the
- * `headers()` entry in next.config that was meant to cache it never applied
- * (#141 measured `x-vercel-cache: MISS` on every request). Every crawl went to
- * Contentful.
- *
- * Dynamic rather than prerendered because a sitemap's job is to list what
- * exists NOW, and a prerendered one omits every post published since the last
- * build. The CDN, not the build, decides how fresh it is.
+ * Rendered by `app/sitemap.xml/route.ts`, an ISR route handler rather than a
+ * `sitemap.ts` metadata route so it controls its own headers. It is refreshed
+ * by the Contentful webhook when a post or media mention is published, with a
+ * daily regeneration as the fallback, so the sitemap lists new posts without
+ * any request being able to reach Contentful.
  */
 
 /**

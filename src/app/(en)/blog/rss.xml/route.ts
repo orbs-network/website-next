@@ -1,5 +1,5 @@
 import { getAssetUrl, getAuthorInfo, getPosts, type BlogPostFields } from '@/app/lib/api'
-import { BLOG_INDEX_PATH, encodedPostPath } from '@/app/lib/routes'
+import { BLOG_INDEX_PATH, RSS_PATH, encodedPostPath } from '@/app/lib/routes'
 import { absoluteUrl, siteUrl } from '@/app/lib/site'
 import { escapeXml } from '@/app/lib/xml'
 
@@ -12,20 +12,24 @@ import { escapeXml } from '@/app/lib/xml'
  * Generated from Contentful rather than by parsing built HTML, which is what
  * the old `build-rss-feed.js` did.
  *
- * Rendered per request, then cached at the edge by the `Cache-Control` header
- * the handler sets — see `GET`.
+ * ISR: prerendered at build, served from the ISR cache, and regenerated at
+ * most once a day, or as soon as the Contentful webhook (`api/revalidate`)
+ * reports a publish. A failed regeneration keeps serving the last good feed.
  *
- * NOT ISR, though the original reason for that has since gone away. It was
- * dynamic because `absoluteUrl()` read `SITE_URL`, so prerendering would freeze
- * the build-time origin into a document that advertises its own canonical
- * address. #71 fixed that at the source: the origin is now a constant, and
- * prerendering it would be harmless.
+ * It used to be rendered per request behind a CDN `Cache-Control` header, on
+ * the theory that the CDN would absorb polling. It did for browsers, but not
+ * for a news aggregator that polled every five seconds from November 2026 and
+ * missed the CDN on every request: each poll was a Contentful call, about
+ * 17,000 a day, and it pushed the organisation over its monthly API quota.
+ * With ISR a request
+ * that misses the CDN is answered from the stored render, so no client can
+ * drive Contentful traffic however it asks.
  *
- * It stays dynamic for the reason that survives — the feed's CONTENT is the
- * latest posts, and a prerendered feed is stale until something rebuilds it.
- * Freshness here is a CDN concern, not a build-time one.
+ * Freshness, the old reason for staying dynamic, now comes from the webhook
+ * rather than from a short CDN lifetime, so a new post appears in the feed as
+ * soon as it is published instead of up to a day later.
  */
-export const dynamic = 'force-dynamic'
+export const revalidate = 86400
 
 /** Matches the legacy channel metadata so readers see no change. */
 const FEED_TITLE = 'THE ORBS PROJECT BLOG'
@@ -100,7 +104,7 @@ function renderItem(post: BlogPostFields): string {
 export async function GET() {
   const { items } = await getPosts({ skip: 0, limit: FEED_ITEM_LIMIT })
 
-  const feedUrl = absoluteUrl('/blog/rss.xml')
+  const feedUrl = absoluteUrl(RSS_PATH)
   const blogUrl = absoluteUrl(BLOG_INDEX_PATH)
   const lastBuild = items.length > 0 ? rfc822(items[0].date) : new Date().toUTCString().replace('GMT', '+0000')
 
@@ -123,27 +127,6 @@ ${items
   return new Response(xml, {
     headers: {
       'Content-Type': 'application/rss+xml; charset=utf-8',
-      /*
-       * One origin render per day, and the CDN absorbs every poll in between.
-       *
-       * This is the only thing standing between the Contentful allowance and
-       * however many readers decide to poll: the handler reads Contentful on
-       * every origin render, and feed readers poll on their own schedule
-       * regardless of how rarely the blog publishes. At `s-maxage=3600` a
-       * cold cache cost up to 730 reads a month; at a day it is ~30.
-       *
-       * `max-age=0` keeps browsers revalidating so a human visiting the URL
-       * still sees current content. `stale-while-revalidate` then serves the
-       * cached copy for a further week while it refreshes in the background,
-       * so a poll never waits on Contentful and a Contentful outage degrades
-       * to a stale feed rather than a 500.
-       *
-       * A day of staleness costs subscribers nothing in practice: the webhook
-       * cannot purge this (it is a CDN cache, not an ISR entry), but readers
-       * keep items they have already seen, and a blog that publishes weekly
-       * has nothing to show for most of any given day.
-       */
-      'Cache-Control': 'public, max-age=0, s-maxage=86400, stale-while-revalidate=604800',
     },
   })
 }

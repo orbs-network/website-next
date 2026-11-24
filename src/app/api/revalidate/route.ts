@@ -7,6 +7,8 @@ import {
   HOME_PATH,
   NEWS_INDEX_PATH,
   NEWS_PAGE_ROUTE,
+  RSS_PATH,
+  SITEMAP_PATH,
   postPath,
   encodedPostPath,
 } from '@/app/lib/routes'
@@ -117,6 +119,9 @@ export async function POST(request: NextRequest) {
       revalidatePath(pages, 'page')
       return [index, pages]
     })
+    // The sitemap lists the news pages and their modification date.
+    revalidatePath(SITEMAP_PATH)
+    paths.push(SITEMAP_PATH)
     console.info(`[revalidate] ${topic} ${entryId} (mediaMention) -> ${paths.join(', ')}`)
     return NextResponse.json({ revalidated: paths, topic })
   }
@@ -125,6 +130,10 @@ export async function POST(request: NextRequest) {
   // lets TypeScript treat `slug` as a string below.
   if (isRemoval || !isBlogPost || !slug) {
     revalidatePath(HOME_PATH, 'layout')
+    // Route handlers sit outside the layout tree, so the sweep may not reach
+    // them. Named explicitly so a removed post leaves the feed and sitemap.
+    revalidatePath(RSS_PATH)
+    revalidatePath(SITEMAP_PATH)
 
     const reason = isRemoval
       ? action
@@ -133,7 +142,7 @@ export async function POST(request: NextRequest) {
         : 'blogPost publish with no slug'
 
     console.info(`[revalidate] ${topic} ${entryId} (${reason}) -> swept all paths`)
-    return NextResponse.json({ revalidated: ['layout'], topic, reason })
+    return NextResponse.json({ revalidated: ['layout', RSS_PATH, SITEMAP_PATH], topic, reason })
   }
 
   // The slug is deliberately NOT shape-checked here. It only ever reaches
@@ -158,7 +167,18 @@ export async function POST(request: NextRequest) {
     localePath(locale, HOME_PATH)
   )
   const paths = [
-    ...new Set([HOME_PATH, ...localisedHomes, BLOG_INDEX_PATH, ...governance, postPath(slug), encodedPostPath(slug)]),
+    ...new Set([
+      HOME_PATH,
+      ...localisedHomes,
+      BLOG_INDEX_PATH,
+      ...governance,
+      postPath(slug),
+      encodedPostPath(slug),
+      // ISR route handlers that list posts: refreshed on publish, so a new post
+      // reaches feed readers and crawlers now rather than at the daily fallback.
+      RSS_PATH,
+      SITEMAP_PATH,
+    ]),
   ]
 
   for (const path of paths) {

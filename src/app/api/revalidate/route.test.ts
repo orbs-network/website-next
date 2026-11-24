@@ -5,6 +5,10 @@ const revalidatePath = vi.fn()
 vi.mock('next/cache', () => ({ revalidatePath, revalidateTag: vi.fn() }))
 
 const SECRET = 'test-secret'
+const postBody = {
+  sys: { id: 'e1', contentType: { sys: { id: 'blogPost' } } },
+  fields: { slug: { 'en-US': 'a-post' } },
+}
 
 function publish(body: unknown): NextRequest {
   return new NextRequest('https://example.com/api/revalidate/', {
@@ -50,7 +54,34 @@ describe('POST /api/revalidate', () => {
       ['/news/page/[n]', 'page'],
       ['/ko/news/'],
       ['/ko/news/page/[n]', 'page'],
+      ['/sitemap.xml'],
     ])
-    expect((await response.json()).revalidated).toEqual(['/news/', '/news/page/[n]', '/ko/news/', '/ko/news/page/[n]'])
+    expect((await response.json()).revalidated).toEqual([
+      '/news/',
+      '/news/page/[n]',
+      '/ko/news/',
+      '/ko/news/page/[n]',
+      '/sitemap.xml',
+    ])
+  })
+
+  // Both are ISR: without this a new post reaches feed readers and crawlers
+  // only at the daily regeneration.
+  it('refreshes the RSS feed and sitemap when a post is published', async () => {
+    const { POST } = await import('./route')
+    await POST(publish(postBody))
+    const paths = revalidatePath.mock.calls.map(([path]) => path)
+
+    expect(paths).toEqual(expect.arrayContaining(['/blog/rss.xml', '/sitemap.xml']))
+  })
+
+  it('drops an unpublished post from the RSS feed and sitemap', async () => {
+    const { POST } = await import('./route')
+    const request = publish(postBody)
+    request.headers.set('x-contentful-topic', 'ContentManagement.Entry.unpublish')
+    await POST(request)
+    const paths = revalidatePath.mock.calls.map(([path]) => path)
+
+    expect(paths).toEqual(expect.arrayContaining(['/blog/rss.xml', '/sitemap.xml']))
   })
 })
