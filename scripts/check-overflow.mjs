@@ -40,8 +40,8 @@ const WIDTHS = arg('widths', '390,360,320').split(',').map(Number)
  * Every prerendered page, from the build's own manifest rather than a list kept
  * by hand — a hand-kept list is the thing that goes stale.
  *
- * Blog and news routes are skipped: they are Contentful-backed, and a build
- * made with `CONTENTFUL_ALLOW_DEGRADED` has no posts in them to measure. So are
+ * Blog and news routes are skipped: they are Contentful-backed, so their
+ * content changes with every publish and is not this check's concern. So are
  * assets and feeds, which have no layout.
  */
 function routes() {

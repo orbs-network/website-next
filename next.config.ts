@@ -52,6 +52,8 @@ const nextConfig: NextConfig = {
     '/**': [
       './src/content/legal/**',
       './src/content/archive/*.md',
+      // Contentful snapshot: getPostBySlug falls back to it at request time.
+      './src/app/lib/contentful-snapshot/*.json',
       './public/marketing/dperps/venue*.svg',
       './public/marketing/execution-services/*-interface*.svg',
     ],

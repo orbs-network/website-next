@@ -3,6 +3,7 @@ import * as contentful from 'contentful'
 import type { Asset, Entry, UnresolvedLink } from 'contentful'
 import { TypeBlogPostSkeleton, TypeAuthorSkeleton, TypeMediaMentionSkeleton } from '../generated-types'
 import { isReservedRootSlug } from './routes'
+import { loadSnapshot, type ContentfulSnapshot } from './contentful-snapshot'
 
 // Resolved blog post type - what we get back from the API
 type BlogPost = Entry<TypeBlogPostSkeleton, undefined, string>
@@ -100,46 +101,21 @@ function getClient(preview = false) {
 }
 
 /**
- * Let the BUILD finish without Contentful, when explicitly allowed to.
+ * True while `next build` runs. The snapshot fallback is confined to the build.
  *
- * Two conditions, both required. `CONTENTFUL_ALLOW_DEGRADED=1` is the
- * operator's opt-in; `NEXT_PHASE` restricts it to `next build`. With both, a
- * Contentful AVAILABILITY failure stops being fatal for that query, which lets
- * work with nothing to do with the blog — the marketing pages, all of Phase 3 —
- * ship while the space is down (#115).
+ * At request time an ISR page that fails to regenerate keeps serving its last
+ * good render, which is at least as fresh as anything the snapshot holds — so
+ * there, throwing is the safer answer. (One exception, `getPostBySlug`, is
+ * explained where it happens.) Serving the snapshot instead would let a
+ * stale snapshot overwrite newer content: a listing would lose posts published
+ * since the capture, and a post newer than the capture would render as a 404
+ * and be cached as one. The sitemap and RSS feed, which render per request,
+ * ride out an outage on their own `stale-while-revalidate` window.
  *
- * THE PHASE CHECK IS THE LOAD-BEARING HALF. Without it the same fallback
- * applies to request-time rendering, and empty is not a safe answer there:
- *
- *  - `sitemap.ts` and the RSS route are `force-dynamic`, so they render per
- *    request. Degrading them serves a sitemap listing no posts and a feed
- *    containing no items — with a 200, so the CDN caches it for the 24 hours
- *    #117 and #118 configured. Telling crawlers the entire archive has gone,
- *    then holding that answer for a day, is far worse than the 500 they would
- *    otherwise get and retry.
- *  - An ISR page rendered empty at request time caches an empty 200 for its
- *    revalidate window, so a transient blip outlives itself.
- *
- * A build-time empty is contained by comparison, but it is NOT self-healing.
- * `/`, `/blog` and `/news` are prerendered, so a degraded build writes an empty
- * 200 into that deployment's ISR cache. Contentful coming back does not fire
- * the revalidation webhook — nothing published — so those pages stay empty
- * until their `revalidate` window expires and someone requests them.
- *
- * So a degraded deploy is a stopgap and has to be replaced, not waited out:
- *
- *   **When the space recovers, unset the flag and redeploy.** Do not rely on
- *   revalidation to heal it.
- *
- * That is one action, and it is one that has to happen anyway to remove the
- * flag, which is why this is documented rather than engineered around.
- *
- * The whole trade is only worth making because orbs.com still serves from the
- * legacy host, so this deployment has no public readers. **Unset the flag
- * before the DNS cutover (#39).**
+ * A build has no previous render to fall back on. Without the snapshot it
+ * fails outright, and nothing can deploy until Contentful recovers.
  */
-const DEGRADE_DURING_BUILD =
-  process.env.CONTENTFUL_ALLOW_DEGRADED === '1' && process.env.NEXT_PHASE === 'phase-production-build'
+const DURING_BUILD = process.env.NEXT_PHASE === 'phase-production-build'
 
 /**
  * The HTTP status of a Contentful failure, if that failure is an availability
@@ -151,14 +127,14 @@ const DEGRADE_DURING_BUILD =
  *
  * 401, 403 and 404 are deliberately NOT in that set. A bad token, a revoked
  * key or a wrong space id must stay fatal — degrading those would turn a
- * misconfigured deployment into a site that builds happily with no content,
+ * misconfigured deployment into a site that builds happily from a frozen copy,
  * which is far worse than a failed build.
  *
  * The SDK reports the status inconsistently — sometimes on the error, sometimes
  * on a `response`, and for the blocked-space case only inside a JSON string in
  * `message` — so all three are checked rather than assuming one shape.
  */
-function availabilityFailureStatus(error: unknown): number | null {
+export function availabilityFailureStatus(error: unknown): number | null {
   if (typeof error !== 'object' || error === null) return null
 
   const candidate = error as { status?: unknown; response?: { status?: unknown }; message?: unknown }
@@ -181,27 +157,46 @@ function availabilityFailureStatus(error: unknown): number | null {
 }
 
 /**
- * Run a Contentful query, falling back to `empty` only when the space is
- * unavailable AND `DEGRADE_DURING_BUILD` allows it.
+ * Set once a build worker has fallen back, so the rest of its pages come from
+ * the snapshot too.
  *
- * Everything else propagates untouched: any error at request time, any error
- * with the flag unset, and any non-availability error in either case. So the
- * default behaviour of both the build and the running site is exactly what it
- * was.
+ * Mixing sources within one build is how a listing (live) ends up linking to a
+ * post its page (snapshot) does not have. It also stops every remaining query
+ * spending a round trip on an answer already known to be no.
  */
-async function degradable<T>(what: string, empty: T, run: () => Promise<T>): Promise<T> {
+let buildUsesSnapshot = false
+
+/**
+ * Run a Contentful query; during a build, answer from the committed snapshot
+ * if Contentful is unavailable.
+ *
+ * Everything else propagates untouched: any error at request time, and any
+ * non-availability error at build. So the running site behaves exactly as it
+ * did before the snapshot existed.
+ */
+async function withSnapshotFallback<T>(
+  what: string,
+  fromSnapshot: (snapshot: ContentfulSnapshot) => T,
+  run: () => Promise<T>
+): Promise<T> {
+  if (DURING_BUILD && buildUsesSnapshot) return fromSnapshot(loadSnapshot())
+
   try {
     return await run()
   } catch (error) {
     const status = availabilityFailureStatus(error)
-    if (status === null || !DEGRADE_DURING_BUILD) throw error
+    if (status === null || !DURING_BUILD) throw error
 
-    console.warn(
-      `[api] ${what}: Contentful returned ${status} and CONTENTFUL_ALLOW_DEGRADED is set — ` +
-        'building with no data. This will be empty in the deployed output until the space ' +
-        'recovers and the page revalidates.'
-    )
-    return empty
+    const snapshot = loadSnapshot()
+    if (!buildUsesSnapshot) {
+      console.warn(
+        `[api] ${what}: Contentful returned ${status}. Building this worker's pages from the snapshot captured ` +
+          `${snapshot.capturedAt}. Posts published after that are missing from this deployment until it is ` +
+          'rebuilt with Contentful available, or their pages revalidate.'
+      )
+    }
+    buildUsesSnapshot = true
+    return fromSnapshot(snapshot)
   }
 }
 
@@ -264,7 +259,14 @@ function withoutReservedSlugs(posts: BlogPostFields[]): BlogPostFields[] {
 }
 
 export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promise<PostPage> {
-  return degradable('getPosts', { items: [], total: 0 }, async () => {
+  const toPage = (entries: BlogPost[], total: number): PostPage => ({
+    items: withoutReservedSlugs(entries.map((post) => post.fields)),
+    total,
+  })
+
+  const fromSnapshot = ({ posts }: ContentfulSnapshot) => toPage(posts.slice(skip, skip + limit), posts.length)
+
+  return withSnapshotFallback('getPosts', fromSnapshot, async () => {
     const client = getClient()
 
     const page = await client.getEntries<TypeBlogPostSkeleton>({
@@ -274,10 +276,7 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
       skip,
     })
 
-    return {
-      items: withoutReservedSlugs(page.items.map((post) => post.fields)),
-      total: page.total,
-    }
+    return toPage(page.items, page.total)
   })
 }
 
@@ -286,17 +285,23 @@ export async function getPosts({ skip = 0, limit = POSTS_PER_PAGE } = {}): Promi
  * set and discarding most of it.
  */
 export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
-  return degradable('getRecentPosts', [], async () => {
-    const client = getClient()
+  const toRecent = (entries: BlogPost[]) => withoutReservedSlugs(entries.map((post) => post.fields))
 
-    const posts = await client.getEntries<TypeBlogPostSkeleton>({
-      content_type: 'blogPost',
-      order: [...POST_ORDER],
-      limit: count,
-    })
+  return withSnapshotFallback(
+    'getRecentPosts',
+    ({ posts }) => toRecent(posts.slice(0, count)),
+    async () => {
+      const client = getClient()
 
-    return withoutReservedSlugs(posts.items.map((post) => post.fields))
-  })
+      const posts = await client.getEntries<TypeBlogPostSkeleton>({
+        content_type: 'blogPost',
+        order: [...POST_ORDER],
+        limit: count,
+      })
+
+      return toRecent(posts.items)
+    }
+  )
 }
 
 /**
@@ -309,7 +314,21 @@ export async function getRecentPosts(count: number): Promise<BlogPostFields[]> {
 export async function getPostsBySlugs(slugs: readonly string[]): Promise<BlogPostFields[]> {
   if (slugs.length === 0) return []
 
-  return degradable('getPostsBySlugs', [], async () => {
+  const toListed = (entries: BlogPost[]) => {
+    const posts = entries.map((post) => post.fields)
+    const found = new Set(posts.map((post) => post.slug))
+    const missing = slugs.filter((slug) => !found.has(slug))
+    if (missing.length > 0) {
+      console.warn(`[api] getPostsBySlugs: no published post for ${missing.map((slug) => `"${slug}"`).join(', ')}`)
+    }
+
+    return withoutReservedSlugs(posts)
+  }
+
+  const fromSnapshot = ({ posts }: ContentfulSnapshot) =>
+    toListed(posts.filter((post) => post.fields.slug !== undefined && slugs.includes(post.fields.slug)))
+
+  return withSnapshotFallback('getPostsBySlugs', fromSnapshot, async () => {
     const client = getClient()
 
     const page = await client.getEntries<TypeBlogPostSkeleton>({
@@ -319,14 +338,7 @@ export async function getPostsBySlugs(slugs: readonly string[]): Promise<BlogPos
       limit: Math.min(slugs.length, CDA_MAX_LIMIT),
     })
 
-    const posts = page.items.map((post) => post.fields)
-    const found = new Set(posts.map((post) => post.slug))
-    const missing = slugs.filter((slug) => !found.has(slug))
-    if (missing.length > 0) {
-      console.warn(`[api] getPostsBySlugs: no published post for ${missing.map((slug) => `"${slug}"`).join(', ')}`)
-    }
-
-    return withoutReservedSlugs(posts)
+    return toListed(page.items)
   })
 }
 
@@ -349,7 +361,12 @@ export type MediaPage = {
  * pages or on neither.
  */
 export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}): Promise<MediaPage> {
-  return degradable('getMediaMentions', { items: [], total: 0 }, async () => {
+  const fromSnapshot = ({ mentions }: ContentfulSnapshot): MediaPage => ({
+    items: mentions.slice(skip, skip + limit).map((item) => item.fields),
+    total: mentions.length,
+  })
+
+  return withSnapshotFallback('getMediaMentions', fromSnapshot, async () => {
     const client = getClient()
 
     const page = await client.getEntries<TypeMediaMentionSkeleton>({
@@ -375,7 +392,15 @@ export async function getMediaMentions({ skip = 0, limit = MEDIA_PER_PAGE } = {}
  * time for the same reason.
  */
 export async function getMediaSummary(): Promise<{ total: number; lastModified: Date | null }> {
-  return degradable('getMediaSummary', { total: 0, lastModified: null }, async () => {
+  const fromSnapshot = ({ mentions }: ContentfulSnapshot) => {
+    const newest = mentions.reduce<string | null>(
+      (latest, item) => (latest === null || item.sys.updatedAt > latest ? item.sys.updatedAt : latest),
+      null
+    )
+    return { total: mentions.length, lastModified: newest ? new Date(newest) : null }
+  }
+
+  return withSnapshotFallback('getMediaSummary', fromSnapshot, async () => {
     const client = getClient()
 
     const page = await client.getEntries<TypeMediaMentionSkeleton>({
@@ -414,8 +439,41 @@ export type PostRef = {
  * and the sitemap — and fetching ~460 complete documents for a list of URLs is
  * a build-time cost that grows with the archive for no benefit.
  */
+type RefSource = { sys: { id: string; updatedAt?: string }; fields: { slug?: string; date: string } }
+
+/**
+ * One archive entry as a `PostRef`, or null when it must not be published.
+ *
+ * A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
+ * static segments beat `[slug]`. Emitting it anyway would prerender a URL that
+ * renders something else and list it in the sitemap as the post. Dropped
+ * rather than published broken, and logged so it is fixable — silence here
+ * would look exactly like the post never existing.
+ */
+function toPostRef(post: RefSource): PostRef | null {
+  if (!post.fields.slug) return null
+
+  if (isReservedRootSlug(post.fields.slug)) {
+    console.warn(
+      `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
+        'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
+    )
+    return null
+  }
+
+  return {
+    slug: post.fields.slug,
+    date: post.fields.date,
+    updatedAt: post.sys.updatedAt || post.fields.date,
+  }
+}
+
+const isPostRef = (ref: PostRef | null): ref is PostRef => ref !== null
+
 export async function getAllPostRefs(): Promise<PostRef[]> {
-  return degradable('getAllPostRefs', [], async () => {
+  const fromSnapshot = ({ posts }: ContentfulSnapshot) => posts.map(toPostRef).filter(isPostRef)
+
+  return withSnapshotFallback('getAllPostRefs', fromSnapshot, async () => {
     const client = getClient()
     const refs: PostRef[] = []
     let skip = 0
@@ -429,28 +487,7 @@ export async function getAllPostRefs(): Promise<PostRef[]> {
         skip,
       })
 
-      for (const post of page.items) {
-        if (!post.fields.slug) continue
-
-        // A post slugged `blog`, `jp`, `ko`... is shadowed by a real route, since
-        // static segments beat `[slug]`. Emitting it anyway would prerender a URL
-        // that renders something else and list it in the sitemap as the post.
-        // Dropped rather than published broken, and logged so it is fixable —
-        // silence here would look exactly like the post never existing.
-        if (isReservedRootSlug(post.fields.slug)) {
-          console.warn(
-            `[api] Post ${post.sys.id} has the reserved slug "${post.fields.slug}", which collides with a site route. ` +
-              'It is excluded from generateStaticParams and the sitemap. Rename the slug in Contentful.'
-          )
-          continue
-        }
-
-        refs.push({
-          slug: post.fields.slug,
-          date: post.fields.date,
-          updatedAt: post.sys.updatedAt || post.fields.date,
-        })
-      }
+      refs.push(...page.items.map(toPostRef).filter(isPostRef))
 
       skip += page.items.length
       if (skip >= page.total || page.items.length === 0) break
@@ -508,7 +545,7 @@ export async function getPostById(entryId: string, preview = false): Promise<Blo
  *   Pass `(await draftMode()).isEnabled` — never a value derived from user input.
  */
 export const getPostBySlug = cache(async (slug: string, preview = false): Promise<BlogPostFields | null> => {
-  return degradable('getPostBySlug', null, async () => {
+  const run = async () => {
     const client = getClient(preview)
 
     const posts = await client.getEntries<TypeBlogPostSkeleton>({
@@ -522,5 +559,31 @@ export const getPostBySlug = cache(async (slug: string, preview = false): Promis
     }
 
     return posts.items[0].fields
-  })
+  }
+
+  // Drafts are never in the snapshot, which holds published content only.
+  if (preview) return run()
+
+  const findInSnapshot = (snapshot: ContentfulSnapshot) =>
+    snapshot.posts.find((post) => post.fields.slug === slug)?.fields ?? null
+
+  try {
+    return await withSnapshotFallback('getPostBySlug', findInSnapshot, run)
+  } catch (error) {
+    // The one query that also falls back at REQUEST time. Only the newest posts
+    // are prerendered; the rest render on first visit, and a new deployment
+    // starts with none of them cached. Without this, deploying while Contentful
+    // is unavailable takes every older post down until it recovers.
+    //
+    // A snapshot HIT is the same post, at worst missing an edit made after the
+    // capture. A MISS rethrows rather than returning null: null means 404, and
+    // a post published after the capture must not be cached as not found.
+    if (DURING_BUILD || availabilityFailureStatus(error) === null) throw error
+
+    const post = findInSnapshot(loadSnapshot())
+    if (!post) throw error
+
+    console.warn(`[api] getPostBySlug("${slug}"): Contentful unavailable, serving the snapshot copy.`)
+    return post
+  }
 })

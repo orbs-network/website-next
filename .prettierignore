@@ -8,6 +8,10 @@ src/app/generated-types/
 # machine-written file nobody reads.
 src/contentful-types/
 
+# Contentful snapshot written by `npm run snapshot-content`: 7 MB of
+# machine-written JSON, regenerated wholesale and never edited by hand.
+src/app/lib/contentful-snapshot/
+
 # LEGAL DOCUMENTS. Deliberately not style-managed.
 #
 # These are the privacy policy, terms of use, accessibility declaration and
