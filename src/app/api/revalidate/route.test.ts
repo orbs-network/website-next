@@ -54,7 +54,7 @@ describe('POST /api/revalidate', () => {
       ['/news/page/[n]', 'page'],
       ['/ko/news/'],
       ['/ko/news/page/[n]', 'page'],
-      ['/sitemap.xml'],
+      ['/sitemap.xml', 'layout'],
     ])
     expect((await response.json()).revalidated).toEqual([
       '/news/',
@@ -65,23 +65,34 @@ describe('POST /api/revalidate', () => {
     ])
   })
 
-  // Both are ISR: without this a new post reaches feed readers and crawlers
-  // only at the daily regeneration.
-  it('refreshes the RSS feed and sitemap when a post is published', async () => {
+  /*
+   * Both are ISR: without this a new post reaches feed readers and crawlers
+   * only at the daily regeneration. The calls must be `(route file, 'layout')`:
+   * a route handler is tagged `_N_T_/blog/rss.xml/` and revalidatePath strips
+   * that trailing slash, so revalidating the URL matches nothing (see
+   * XML_FEED_ROUTES). These are the tags the production build writes for them.
+   */
+  it('refreshes the RSS feed and sitemap by a tag their renders carry', async () => {
     const { POST } = await import('./route')
     await POST(publish(postBody))
-    const paths = revalidatePath.mock.calls.map(([path]) => path)
 
-    expect(paths).toEqual(expect.arrayContaining(['/blog/rss.xml', '/sitemap.xml']))
+    expect(revalidatePath.mock.calls).toEqual(
+      expect.arrayContaining([
+        ['/(en)/blog/rss.xml', 'layout'],
+        ['/sitemap.xml', 'layout'],
+      ])
+    )
+    const urls = revalidatePath.mock.calls.map(([path]) => path)
+    expect(urls).not.toContain('/blog/rss.xml')
   })
 
-  it('drops an unpublished post from the RSS feed and sitemap', async () => {
+  it('sweeps the feed and sitemap with everything else when a post is unpublished', async () => {
     const { POST } = await import('./route')
     const request = publish(postBody)
     request.headers.set('x-contentful-topic', 'ContentManagement.Entry.unpublish')
     await POST(request)
-    const paths = revalidatePath.mock.calls.map(([path]) => path)
 
-    expect(paths).toEqual(expect.arrayContaining(['/blog/rss.xml', '/sitemap.xml']))
+    // The root layout tag, which every render carries, route handlers included.
+    expect(revalidatePath.mock.calls).toEqual([['/', 'layout']])
   })
 })

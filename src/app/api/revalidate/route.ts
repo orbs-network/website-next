@@ -7,8 +7,8 @@ import {
   HOME_PATH,
   NEWS_INDEX_PATH,
   NEWS_PAGE_ROUTE,
-  RSS_PATH,
   SITEMAP_PATH,
+  XML_FEED_ROUTES,
   postPath,
   encodedPostPath,
 } from '@/app/lib/routes'
@@ -119,8 +119,9 @@ export async function POST(request: NextRequest) {
       revalidatePath(pages, 'page')
       return [index, pages]
     })
-    // The sitemap lists the news pages and their modification date.
-    revalidatePath(SITEMAP_PATH)
+    // The sitemap lists the news pages and their modification date. 'layout':
+    // see XML_FEED_ROUTES for why a route handler is not revalidated by URL.
+    revalidatePath(SITEMAP_PATH, 'layout')
     paths.push(SITEMAP_PATH)
     console.info(`[revalidate] ${topic} ${entryId} (mediaMention) -> ${paths.join(', ')}`)
     return NextResponse.json({ revalidated: paths, topic })
@@ -129,11 +130,9 @@ export async function POST(request: NextRequest) {
   // Narrowing on `!slug` directly (rather than via a derived boolean) is what
   // lets TypeScript treat `slug` as a string below.
   if (isRemoval || !isBlogPost || !slug) {
+    // Also reaches the RSS feed and sitemap: every render, route handlers
+    // included, carries the root `_N_T_/layout` tag.
     revalidatePath(HOME_PATH, 'layout')
-    // Route handlers sit outside the layout tree, so the sweep may not reach
-    // them. Named explicitly so a removed post leaves the feed and sitemap.
-    revalidatePath(RSS_PATH)
-    revalidatePath(SITEMAP_PATH)
 
     const reason = isRemoval
       ? action
@@ -142,7 +141,7 @@ export async function POST(request: NextRequest) {
         : 'blogPost publish with no slug'
 
     console.info(`[revalidate] ${topic} ${entryId} (${reason}) -> swept all paths`)
-    return NextResponse.json({ revalidated: ['layout', RSS_PATH, SITEMAP_PATH], topic, reason })
+    return NextResponse.json({ revalidated: ['layout'], topic, reason })
   }
 
   // The slug is deliberately NOT shape-checked here. It only ever reaches
@@ -167,18 +166,7 @@ export async function POST(request: NextRequest) {
     localePath(locale, HOME_PATH)
   )
   const paths = [
-    ...new Set([
-      HOME_PATH,
-      ...localisedHomes,
-      BLOG_INDEX_PATH,
-      ...governance,
-      postPath(slug),
-      encodedPostPath(slug),
-      // ISR route handlers that list posts: refreshed on publish, so a new post
-      // reaches feed readers and crawlers now rather than at the daily fallback.
-      RSS_PATH,
-      SITEMAP_PATH,
-    ]),
+    ...new Set([HOME_PATH, ...localisedHomes, BLOG_INDEX_PATH, ...governance, postPath(slug), encodedPostPath(slug)]),
   ]
 
   for (const path of paths) {
@@ -191,7 +179,13 @@ export async function POST(request: NextRequest) {
   // fetching the page count on every webhook.
   revalidatePath(BLOG_PAGE_ROUTE, 'page')
 
-  const revalidated = [...paths, BLOG_PAGE_ROUTE]
+  // The feed and sitemap list posts, so a publish reaches feed readers and
+  // crawlers now rather than at the daily fallback.
+  for (const route of XML_FEED_ROUTES) {
+    revalidatePath(route, 'layout')
+  }
+
+  const revalidated = [...paths, BLOG_PAGE_ROUTE, ...XML_FEED_ROUTES]
   console.info(`[revalidate] ${topic} ${entryId} -> ${revalidated.join(', ')}`)
   return NextResponse.json({ revalidated, topic })
 }
