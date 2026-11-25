@@ -36,8 +36,12 @@ h1{font-size:clamp(2.4rem,1rem + 4vw,4.2rem)}
 .stat-main{position:relative}.stat-main::before{content:"";position:absolute;left:-1px;right:-1px;top:-1px;height:3px;background:var(--grad)}
 .lbl{font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:.15em;color:var(--mu)}
 .val{font-size:clamp(1.5rem,1rem + 1.2vw,2.1rem);letter-spacing:-.03em;line-height:1.15;font-variant-numeric:tabular-nums;overflow-wrap:anywhere}
+.val .num{white-space:nowrap}
 .val small{font-size:.45em;letter-spacing:.14em;color:var(--mu);font-weight:500}
 .stat-main .val{font-size:clamp(1.8rem,1rem + 2vw,2.8rem)}
+.exact{font-size:12px;font-weight:500;color:var(--mu);font-variant-numeric:tabular-nums;letter-spacing:0;margin-top:-2px}
+.exact[hidden]{display:none}
+.sr{position:absolute;width:1px;height:1px;overflow:hidden;clip-path:inset(50%);white-space:nowrap}
 .hint{font-size:12px;font-weight:400;color:var(--mu2);line-height:1.5;text-transform:none;letter-spacing:0}
 .bar{height:4px;background:var(--ln);margin-top:10px}.bar span{display:block;height:100%;width:0;background:var(--ac)}
 .note{margin-top:16px;background:var(--sf);border:1px solid var(--ln);border-left:3px solid var(--ac);padding:14px 18px;font-size:14px;color:var(--fg2)}
