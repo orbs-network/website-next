@@ -22,7 +22,7 @@ var ARR='<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2
 function link(h,t){var a=document.createElement("a");a.className="xl";a.href=h;a.target="_blank";a.rel="noopener noreferrer";a.textContent=t;a.insertAdjacentHTML("beforeend",ARR);return a}
 function emptyRow(msg){var r=$("rows"),tr=document.createElement("tr"),c=document.createElement("td");c.colSpan=4;c.className="empty";c.textContent=msg;tr.appendChild(c);r.textContent="";r.appendChild(tr)}
 function td(lbl,cls){var c=document.createElement("td");c.setAttribute("data-l",lbl);if(cls)c.className=cls;return c}
-// Big stat values: compact and localised (507.5M, 5.075억, 5.075億), exact figure in the title and the .exact line.
+// Big stat values: compact and localised (507.5M, 5.075억, 5.075億), exact figure in a tooltip (see exact()).
 // 4 significant digits, not 1 decimal: at 1 decimal ko/ja show 5.1억 either side of a weekly burn and the number looks stuck.
 function orbs(wei){return Number(BigInt(wei)/10n**16n)/100}
 // Fixed at 4 digits from 1,000 up (499.0M, not 499M) so the width holds still while a change counts through.
@@ -31,11 +31,19 @@ function fmtc(wei){return cfmt(orbs(wei))}
 var SHOWN={},ANIM={};
 function reduced(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}
 // Counts from the value on screen to the new one when a refresh changes it. Language switches and first paint jump.
-function big(id,wei){var el=$(id),to=orbs(wei),from=SHOWN[id],run=ANIM[id]=(ANIM[id]||0)+1;SHOWN[id]=to;el.title=fmt(wei)+" ORBS";
+function big(id,wei){var el=$(id),to=orbs(wei),from=SHOWN[id],run=ANIM[id]=(ANIM[id]||0)+1;SHOWN[id]=to;
  if(from===undefined||from===to||reduced()||document.hidden){el.textContent=cfmt(to);return}
  var t0=performance.now();(function step(now){if(ANIM[id]!==run)return;var k=Math.min(1,(now-t0)/900),e=1-Math.pow(1-k,3);el.textContent=cfmt(from+(to-from)*e);if(k<1)requestAnimationFrame(step)})(t0)}
-// The exact amount under a compact value; hidden only when the compact form already says the same thing.
-function exact(id,wei){var el=$(id),x=fmt(wei);el.textContent=x+" ORBS";el.hidden=fmtc(wei)===x}
+// The exact amount behind a compact value, as a tooltip on the number (#<id>x). Hover, keyboard focus or a tap opens it;
+// Escape or a tap elsewhere closes it. Not offered when the compact form already says the same thing.
+function untip(id){var n=$(id),b=$(id+"x");if(b)b.hidden=true;n.removeAttribute("tabindex");n.removeAttribute("aria-describedby");n.parentNode.classList.remove("open")}
+function exact(id,wei){var n=$(id),b=$(id+"x"),x=fmt(wei);b.textContent=x+" ORBS";if(fmtc(wei)===x){untip(id);return}
+ b.hidden=false;n.tabIndex=0;n.setAttribute("aria-describedby",id+"x")}
+document.addEventListener("click",function(e){var n=e.target.closest&&e.target.closest(".num[tabindex]"),v=n&&n.parentNode;
+ document.querySelectorAll(".val.open").forEach(function(o){if(o!==v)o.classList.remove("open")});if(v){v.classList.remove("esc");v.classList.toggle("open")}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".val").forEach(function(v){v.classList.remove("open");v.classList.add("esc")})});
+document.addEventListener("focusin",function(e){var v=e.target.closest&&e.target.closest(".val");if(v)v.classList.remove("esc")});
+document.addEventListener("mouseover",function(e){var v=e.target.closest&&e.target.closest(".val");if(v&&!v.contains(e.relatedTarget))v.classList.remove("esc")});
 // Live refresh: the page re-reads the chain every POLL while visible. Only blocks after the last read are scanned,
 // starting REORG blocks back so a reorged burn is dropped and its replacement picked up.
 var ST={head:0,bal:"0x0",logs:[],ts:{}},REORG=12,POLL=60e3;
@@ -63,19 +71,19 @@ async function read(){
  ST={head:head,bal:bal,logs:logs,ts:ts};return true}
 function render(){var bal=ST.bal,logs=ST.logs,ts=ST.ts,head=ST.head,sum=sumOf(logs);
  delete SLOTS.chainerr;
- slot("pool",function(){big("pool",bal);exact("poolx",bal)});
- slot("burned",function(){big("burned",sum);exact("burnedx",sum)});
+ slot("pool",function(){big("pool",bal);exact("pool",bal)});
+ slot("burned",function(){big("burned",sum);exact("burned",sum)});
  $("count").textContent=String(logs.length);
  if(BigInt(bal)===0n&&!logs.length)slot("fund",function(){$("poolhint").textContent=t("nfPool");$("counthint").textContent=t("nfCount");$("burnedhint").textContent=t("nfBurned")});
  else if(SLOTS.fund){delete SLOTS.fund;["poolhint","counthint","burnedhint"].forEach(function(i){$(i).textContent=t($(i).getAttribute("data-i18n"))})}
  var pct=Number(sum*10000n/(TOTAL*10n**18n))/100;$("progbar").style.width=Math.min(100,pct)+"%";slot("progtxt",function(){$("progtxt").textContent=t("progDyn",{pct:pct.toFixed(2)})});
- if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var n=document.createElement("span"),sm=document.createElement("small");n.className="num";n.textContent=fmtc(L.v);sm.textContent="ORBS";$("latest").textContent="";$("latest").title=fmt(L.v)+" ORBS";$("latest").append(n," ",sm);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
- else{var nf=BigInt(bal)===0n;slot("latest",function(){$("latest").textContent=t("noneYet");$("latest").removeAttribute("title");$("latesthint").textContent=nf?t("firstNf"):t("first")})}
+ if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var n=document.createElement("span"),sm=document.createElement("small"),b=document.createElement("span");n.className="num";n.id="latestv";n.textContent=fmtc(L.v);sm.textContent="ORBS";b.className="tipbox";b.id="latestvx";b.setAttribute("role","tooltip");$("latest").textContent="";$("latest").append(n," ",sm,b);exact("latestv",L.v);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
+ else{var nf=BigInt(bal)===0n;slot("latest",function(){$("latest").textContent=t("noneYet");$("latesthint").textContent=nf?t("firstNf"):t("first")})}
  slot("rows",function(){var rows=$("rows");if(logs.length){var fr=document.createDocumentFragment();logs.slice().reverse().forEach(function(l){var tr=document.createElement("tr"),c=td(t("thExec"));c.textContent=I18N.date(ts[l.blockNumber]);tr.appendChild(c);c=td(t("thBurned"));c.textContent=fmt(l.v);tr.appendChild(c);var bnum=parseInt(l.blockNumber,16);c=td(t("thBlock"));c.textContent=String(bnum);tr.appendChild(c);c=td(t("thEvidence"));c.appendChild(link("https://etherscan.io/tx/"+l.transactionHash,t("viewExec")));tr.appendChild(c);fr.appendChild(tr)});rows.textContent="";rows.appendChild(fr)}else emptyRow(t("noBurns"))});
  slot("blockinfo",function(){var bi=$("blockinfo");bi.textContent=t("blockPre");bi.appendChild(link("https://etherscan.io/block/"+head,head.toLocaleString("en-US")));var post=t("blockPost");if(post)bi.appendChild(document.createTextNode(post))});
  $("netdot").className="dot ok";
 }
-function chainFail(){$("netdot").className="dot bad";slot("rows",function(){emptyRow(t("histErr"))});delete SLOTS.latest;slot("chainerr",function(){["burned","pool","latest","count"].forEach(function(i){$(i).textContent=t("unavail");$(i).removeAttribute("title")});["poolx","burnedx"].forEach(function(i){$(i).hidden=true})})}
+function chainFail(){$("netdot").className="dot bad";slot("rows",function(){emptyRow(t("histErr"))});delete SLOTS.latest;slot("chainerr",function(){["burned","pool","latest","count"].forEach(function(i){$(i).textContent=t("unavail")});untip("pool");untip("burned")})}
 var busy=false,lastRead=0;
 async function refresh(){if(busy)return;busy=true;lastRead=Date.now();var first=!ST.head,pb=BigInt(ST.bal),ps=sumOf(ST.logs);
  try{if(await read()){render();var bal=BigInt(ST.bal),sum=sumOf(ST.logs);
