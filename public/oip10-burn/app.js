@@ -34,8 +34,8 @@ function reduced(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-mot
 function big(id,wei){var el=$(id),to=orbs(wei),from=SHOWN[id],run=ANIM[id]=(ANIM[id]||0)+1;SHOWN[id]=to;el.title=fmt(wei)+" ORBS";
  if(from===undefined||from===to||reduced()||document.hidden){el.textContent=cfmt(to);return}
  var t0=performance.now();(function step(now){if(ANIM[id]!==run)return;var k=Math.min(1,(now-t0)/900),e=1-Math.pow(1-k,3);el.textContent=cfmt(from+(to-from)*e);if(k<1)requestAnimationFrame(step)})(t0)}
-// The exact amount under a compact value; hidden below 1,000 where the compact form is already exact.
-function exact(id,wei){var el=$(id);el.textContent=fmt(wei)+" ORBS";el.hidden=orbs(wei)<1000}
+// The exact amount under a compact value; hidden only when the compact form already says the same thing.
+function exact(id,wei){var el=$(id),x=fmt(wei);el.textContent=x+" ORBS";el.hidden=fmtc(wei)===x}
 // Live refresh: the page re-reads the chain every POLL while visible. Only blocks after the last read are scanned,
 // starting REORG blocks back so a reorged burn is dropped and its replacement picked up.
 var ST={head:0,bal:"0x0",logs:[],ts:{}},REORG=12,POLL=60e3;
