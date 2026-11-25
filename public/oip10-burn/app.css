@@ -41,8 +41,9 @@ h1{font-size:clamp(2.4rem,1rem + 4vw,4.2rem)}
 .stat-main .val{font-size:clamp(1.8rem,1rem + 2vw,2.8rem)}
 .val{position:relative}
 .num[tabindex]{cursor:help;border-radius:2px;outline-offset:3px;text-decoration:underline dotted;text-decoration-thickness:1px;text-underline-offset:.18em;text-decoration-color:var(--mu2)}
-.tipbox{position:absolute;left:0;bottom:calc(100% + 6px);z-index:5;padding:6px 9px;border-radius:4px;background:var(--fg);color:var(--sf);font-size:12px;font-weight:500;letter-spacing:0;line-height:1.3;white-space:nowrap;font-variant-numeric:tabular-nums;box-shadow:0 6px 18px rgba(0,0,0,.18);pointer-events:none;opacity:0;visibility:hidden;transform:translateY(3px);transition:opacity .12s,transform .12s,visibility .12s}
+.tipbox{position:absolute;left:0;bottom:calc(100% + 6px);z-index:5;padding:6px 9px;border-radius:4px;background:var(--fg);color:var(--sf);font-size:12px;font-weight:500;letter-spacing:0;line-height:1.3;white-space:nowrap;font-variant-numeric:tabular-nums;box-shadow:0 6px 18px rgba(0,0,0,.18);opacity:0;visibility:hidden;transform:translateY(3px);transition:opacity .12s,transform .12s,visibility .12s}
 .tipbox[hidden]{display:none}
+.tipbox::after{content:"";position:absolute;left:0;right:0;top:100%;height:6px}
 .num:focus-visible~.tipbox,.val.open .tipbox{opacity:1;visibility:visible;transform:none}
 @media(hover:hover){.val:hover .tipbox{opacity:1;visibility:visible;transform:none}}
 .val.esc .tipbox{opacity:0;visibility:hidden}
