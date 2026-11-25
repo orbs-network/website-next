@@ -56,9 +56,11 @@ async function read(){
  var logs=ST.logs.filter(function(l){return parseInt(l.blockNumber,16)<from}).concat(await scan(from,head));
  logs.sort(function(a,b){return parseInt(a.blockNumber,16)-parseInt(b.blockNumber,16)||parseInt(a.logIndex,16)-parseInt(b.logIndex,16)});
  logs.forEach(function(l){l.v=BigInt(l.data)});
- var bn=Array.from(new Set(logs.map(function(l){return l.blockNumber}))).filter(function(b){return !(b in ST.ts)});
- await limit(bn.map(function(b){return function(){return rpc("eth_getBlockByNumber",[b,false]).then(function(x){if(!x)throw new Error("no block");ST.ts[b]=parseInt(hex(x.timestamp),16)*1000})}}),CONC);
- ST={head:head,bal:bal,logs:logs,ts:ST.ts};return true}
+ // Timestamps inside the rescanned window are fetched again: a reorged block keeps its number but not its time.
+ var ts={};Object.keys(ST.ts).forEach(function(b){if(parseInt(b,16)<from)ts[b]=ST.ts[b]});
+ var bn=Array.from(new Set(logs.map(function(l){return l.blockNumber}))).filter(function(b){return !(b in ts)});
+ await limit(bn.map(function(b){return function(){return rpc("eth_getBlockByNumber",[b,false]).then(function(x){if(!x)throw new Error("no block");ts[b]=parseInt(hex(x.timestamp),16)*1000})}}),CONC);
+ ST={head:head,bal:bal,logs:logs,ts:ts};return true}
 function render(){var bal=ST.bal,logs=ST.logs,ts=ST.ts,head=ST.head,sum=sumOf(logs);
  delete SLOTS.chainerr;
  slot("pool",function(){big("pool",bal);exact("poolx",bal)});
@@ -67,7 +69,7 @@ function render(){var bal=ST.bal,logs=ST.logs,ts=ST.ts,head=ST.head,sum=sumOf(lo
  if(BigInt(bal)===0n&&!logs.length)slot("fund",function(){$("poolhint").textContent=t("nfPool");$("counthint").textContent=t("nfCount");$("burnedhint").textContent=t("nfBurned")});
  else if(SLOTS.fund){delete SLOTS.fund;["poolhint","counthint","burnedhint"].forEach(function(i){$(i).textContent=t($(i).getAttribute("data-i18n"))})}
  var pct=Number(sum*10000n/(TOTAL*10n**18n))/100;$("progbar").style.width=Math.min(100,pct)+"%";slot("progtxt",function(){$("progtxt").textContent=t("progDyn",{pct:pct.toFixed(2)})});
- if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var sm=document.createElement("small");sm.textContent="ORBS";$("latest").textContent=fmtc(L.v)+" ";$("latest").title=fmt(L.v)+" ORBS";$("latest").appendChild(sm);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
+ if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var n=document.createElement("span"),sm=document.createElement("small");n.className="num";n.textContent=fmtc(L.v);sm.textContent="ORBS";$("latest").textContent="";$("latest").title=fmt(L.v)+" ORBS";$("latest").append(n," ",sm);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
  else{var nf=BigInt(bal)===0n;slot("latest",function(){$("latest").textContent=t("noneYet");$("latest").removeAttribute("title");$("latesthint").textContent=nf?t("firstNf"):t("first")})}
  slot("rows",function(){var rows=$("rows");if(logs.length){var fr=document.createDocumentFragment();logs.slice().reverse().forEach(function(l){var tr=document.createElement("tr"),c=td(t("thExec"));c.textContent=I18N.date(ts[l.blockNumber]);tr.appendChild(c);c=td(t("thBurned"));c.textContent=fmt(l.v);tr.appendChild(c);var bnum=parseInt(l.blockNumber,16);c=td(t("thBlock"));c.textContent=String(bnum);tr.appendChild(c);c=td(t("thEvidence"));c.appendChild(link("https://etherscan.io/tx/"+l.transactionHash,t("viewExec")));tr.appendChild(c);fr.appendChild(tr)});rows.textContent="";rows.appendChild(fr)}else emptyRow(t("noBurns"))});
  slot("blockinfo",function(){var bi=$("blockinfo");bi.textContent=t("blockPre");bi.appendChild(link("https://etherscan.io/block/"+head,head.toLocaleString("en-US")));var post=t("blockPost");if(post)bi.appendChild(document.createTextNode(post))});
