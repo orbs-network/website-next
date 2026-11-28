@@ -22,27 +22,75 @@ var ARR='<svg class="ext" viewBox="0 0 12 12" aria-hidden="true"><path d="M3.5 2
 function link(h,t){var a=document.createElement("a");a.className="xl";a.href=h;a.target="_blank";a.rel="noopener noreferrer";a.textContent=t;a.insertAdjacentHTML("beforeend",ARR);return a}
 function emptyRow(msg){var r=$("rows"),tr=document.createElement("tr"),c=document.createElement("td");c.colSpan=4;c.className="empty";c.textContent=msg;tr.appendChild(c);r.textContent="";r.appendChild(tr)}
 function td(lbl,cls){var c=document.createElement("td");c.setAttribute("data-l",lbl);if(cls)c.className=cls;return c}
-async function chain(){
- var head=parseInt(await retry(function(){return rpc("eth_blockNumber",[]).then(function(v){return hex(v)})}),16);var tag="0x"+head.toString(16);
- var bal=await retry(function(){return call(TK,"0x70a08231"+pad(MS).slice(2),tag).then(function(v){return hex(v,WORD)})});
- $("pool").textContent=fmt(bal);
- var logs=[],jobs=[];for(var f=DEPLOY;f<=head;f+=CHUNK){(function(a,b){jobs.push(function(){return rpc("eth_getLogs",[{address:TK,fromBlock:"0x"+a.toString(16),toBlock:"0x"+b.toString(16),topics:[TOPIC,pad(MS),pad(DEAD)]}]).then(function(r){if(!Array.isArray(r))throw new Error("bad logs");return r})})})(f,Math.min(head,f+CHUNK-1))}
+// Big stat values: compact and localised (507.5M, 5.075억, 5.075億), exact figure in a tooltip (see exact()).
+// 4 significant digits, not 1 decimal: at 1 decimal ko/ja show 5.1억 either side of a weekly burn and the number looks stuck.
+function orbs(wei){return Number(BigInt(wei)/10n**16n)/100}
+// Fixed at 4 digits from 1,000 up (499.0M, not 499M) so the width holds still while a change counts through.
+function cfmt(n){return new Intl.NumberFormat(I18N.lang(),{notation:"compact",minimumSignificantDigits:n>=1000?4:1,maximumSignificantDigits:4}).format(n)}
+function fmtc(wei){return cfmt(orbs(wei))}
+var SHOWN={},ANIM={};
+function reduced(){return !!(window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches)}
+// Counts from the value on screen to the new one when a refresh changes it. Language switches and first paint jump.
+function big(id,wei){var el=$(id),to=orbs(wei),from=SHOWN[id],run=ANIM[id]=(ANIM[id]||0)+1;SHOWN[id]=to;
+ if(from===undefined||from===to||reduced()||document.hidden){el.textContent=cfmt(to);return}
+ var t0=performance.now();(function step(now){if(ANIM[id]!==run)return;var k=Math.min(1,(now-t0)/900),e=1-Math.pow(1-k,3);el.textContent=cfmt(from+(to-from)*e);if(k<1)requestAnimationFrame(step)})(t0)}
+// The exact amount behind a compact value, as a tooltip on the number (#<id>x). Hover, keyboard focus or a tap opens it;
+// Escape or a tap elsewhere closes it. Not offered when the compact form already says the same thing.
+function untip(id){var n=$(id),b=$(id+"x");if(b)b.hidden=true;n.removeAttribute("tabindex");n.removeAttribute("aria-describedby");n.parentNode.classList.remove("open")}
+function exact(id,wei){var n=$(id),b=$(id+"x"),x=fmt(wei);b.textContent=x+" ORBS";if(fmtc(wei)===x){untip(id);return}
+ b.hidden=false;n.tabIndex=0;n.setAttribute("aria-describedby",id+"x")}
+document.addEventListener("click",function(e){var n=e.target.closest&&e.target.closest(".num[tabindex]"),v=n&&n.parentNode;
+ document.querySelectorAll(".val.open").forEach(function(o){if(o!==v)o.classList.remove("open")});if(v){v.classList.remove("esc");v.classList.toggle("open")}});
+document.addEventListener("keydown",function(e){if(e.key==="Escape")document.querySelectorAll(".val").forEach(function(v){v.classList.remove("open");v.classList.add("esc")})});
+document.addEventListener("focusin",function(e){var v=e.target.closest&&e.target.closest(".val");if(v)v.classList.remove("esc")});
+document.addEventListener("mouseover",function(e){var v=e.target.closest&&e.target.closest(".val");if(v&&!v.contains(e.relatedTarget))v.classList.remove("esc")});
+// Live refresh: the page re-reads the chain every POLL while visible. Only blocks after the last read are scanned,
+// starting REORG blocks back so a reorged burn is dropped and its replacement picked up.
+var ST={head:0,bal:"0x0",logs:[],ts:{}},REORG=12,POLL=60e3;
+function sumOf(logs){var s=0n;logs.forEach(function(l){s+=l.v});return s}
+async function scan(from,to){
+ var logs=[],jobs=[];for(var f=from;f<=to;f+=CHUNK){(function(a,b){jobs.push(function(){return rpc("eth_getLogs",[{address:TK,fromBlock:"0x"+a.toString(16),toBlock:"0x"+b.toString(16),topics:[TOPIC,pad(MS),pad(DEAD)]}]).then(function(r){if(!Array.isArray(r))throw new Error("bad logs");return r})})})(f,Math.min(to,f+CHUNK-1))}
  (await limit(jobs,CONC)).forEach(function(l){logs=logs.concat(l)});
  logs.forEach(function(l){if(!l||typeof l!=="object")throw new Error("bad log");hex(l.transactionHash,HASH);hex(l.blockNumber);hex(l.logIndex);hex(l.data,WORD)});
- var T0=TOPIC.toLowerCase(),T1=pad(MS),T2=pad(DEAD),TA=TK.toLowerCase();logs=logs.filter(function(l){var t=l.topics;return typeof l.address==="string"&&l.address.toLowerCase()===TA&&Array.isArray(t)&&t.length===3&&typeof t[0]==="string"&&t[0].toLowerCase()===T0&&typeof t[1]==="string"&&t[1].toLowerCase()===T1&&typeof t[2]==="string"&&t[2].toLowerCase()===T2&&l.removed!==true});
+ var T0=TOPIC.toLowerCase(),T1=pad(MS),T2=pad(DEAD),TA=TK.toLowerCase();
+ return logs.filter(function(l){var t=l.topics;return typeof l.address==="string"&&l.address.toLowerCase()===TA&&Array.isArray(t)&&t.length===3&&typeof t[0]==="string"&&t[0].toLowerCase()===T0&&typeof t[1]==="string"&&t[1].toLowerCase()===T1&&typeof t[2]==="string"&&t[2].toLowerCase()===T2&&l.removed!==true})}
+// Reads the chain into ST. Returns false when there is no new block. ST is only replaced once every read succeeded.
+async function read(){
+ var head=parseInt(await retry(function(){return rpc("eth_blockNumber",[]).then(function(v){return hex(v)})}),16);
+ if(ST.head&&head<=ST.head)return false;
+ var tag="0x"+head.toString(16);
+ var bal=await retry(function(){return call(TK,"0x70a08231"+pad(MS).slice(2),tag).then(function(v){return hex(v,WORD)})});
+ var from=ST.head?Math.max(DEPLOY,ST.head-REORG):DEPLOY;
+ var logs=ST.logs.filter(function(l){return parseInt(l.blockNumber,16)<from}).concat(await scan(from,head));
  logs.sort(function(a,b){return parseInt(a.blockNumber,16)-parseInt(b.blockNumber,16)||parseInt(a.logIndex,16)-parseInt(b.logIndex,16)});
- var sum=0n;logs.forEach(function(l){l.v=BigInt(l.data);sum+=l.v});
- var bn=Array.from(new Set(logs.map(function(l){return l.blockNumber})));var ts={};
+ logs.forEach(function(l){l.v=BigInt(l.data)});
+ // Timestamps inside the rescanned window are fetched again: a reorged block keeps its number but not its time.
+ var ts={};Object.keys(ST.ts).forEach(function(b){if(parseInt(b,16)<from)ts[b]=ST.ts[b]});
+ var bn=Array.from(new Set(logs.map(function(l){return l.blockNumber}))).filter(function(b){return !(b in ts)});
  await limit(bn.map(function(b){return function(){return rpc("eth_getBlockByNumber",[b,false]).then(function(x){if(!x)throw new Error("no block");ts[b]=parseInt(hex(x.timestamp),16)*1000})}}),CONC);
- $("burned").textContent=fmt(sum);$("count").textContent=String(logs.length);
+ ST={head:head,bal:bal,logs:logs,ts:ts};return true}
+function render(){var bal=ST.bal,logs=ST.logs,ts=ST.ts,head=ST.head,sum=sumOf(logs);
+ delete SLOTS.chainerr;
+ slot("pool",function(){big("pool",bal);exact("pool",bal)});
+ slot("burned",function(){big("burned",sum);exact("burned",sum)});
+ $("count").textContent=String(logs.length);
  if(BigInt(bal)===0n&&!logs.length)slot("fund",function(){$("poolhint").textContent=t("nfPool");$("counthint").textContent=t("nfCount");$("burnedhint").textContent=t("nfBurned")});
+ else if(SLOTS.fund){delete SLOTS.fund;["poolhint","counthint","burnedhint"].forEach(function(i){$(i).textContent=t($(i).getAttribute("data-i18n"))})}
  var pct=Number(sum*10000n/(TOTAL*10n**18n))/100;$("progbar").style.width=Math.min(100,pct)+"%";slot("progtxt",function(){$("progtxt").textContent=t("progDyn",{pct:pct.toFixed(2)})});
- if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var sm=document.createElement("small");sm.textContent="ORBS";$("latest").textContent=fmt(L.v)+" ";$("latest").appendChild(sm);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
+ if(logs.length){var L=logs[logs.length-1];slot("latest",function(){var n=$("latestv");if(!n){var sm=document.createElement("small"),b=document.createElement("span");n=document.createElement("span");n.className="num";n.id="latestv";sm.textContent="ORBS";b.className="tipbox";b.id="latestvx";b.setAttribute("role","tooltip");$("latest").textContent="";$("latest").append(n," ",sm,b)}
+  n.textContent=fmtc(L.v);exact("latestv",L.v);$("latesthint").textContent=I18N.date(ts[L.blockNumber])+" · ";$("latesthint").appendChild(link("https://etherscan.io/tx/"+L.transactionHash,t("viewTx")))})}
  else{var nf=BigInt(bal)===0n;slot("latest",function(){$("latest").textContent=t("noneYet");$("latesthint").textContent=nf?t("firstNf"):t("first")})}
  slot("rows",function(){var rows=$("rows");if(logs.length){var fr=document.createDocumentFragment();logs.slice().reverse().forEach(function(l){var tr=document.createElement("tr"),c=td(t("thExec"));c.textContent=I18N.date(ts[l.blockNumber]);tr.appendChild(c);c=td(t("thBurned"));c.textContent=fmt(l.v);tr.appendChild(c);var bnum=parseInt(l.blockNumber,16);c=td(t("thBlock"));c.textContent=String(bnum);tr.appendChild(c);c=td(t("thEvidence"));c.appendChild(link("https://etherscan.io/tx/"+l.transactionHash,t("viewExec")));tr.appendChild(c);fr.appendChild(tr)});rows.textContent="";rows.appendChild(fr)}else emptyRow(t("noBurns"))});
  slot("blockinfo",function(){var bi=$("blockinfo");bi.textContent=t("blockPre");bi.appendChild(link("https://etherscan.io/block/"+head,head.toLocaleString("en-US")));var post=t("blockPost");if(post)bi.appendChild(document.createTextNode(post))});
  $("netdot").className="dot ok";
 }
+function chainFail(){$("netdot").className="dot bad";slot("rows",function(){emptyRow(t("histErr"))});delete SLOTS.latest;slot("chainerr",function(){["burned","pool","latest","count"].forEach(function(i){$(i).textContent=t("unavail")});untip("pool");untip("burned")})}
+var busy=false,lastRead=0;
+async function refresh(){if(busy)return;busy=true;lastRead=Date.now();var first=!ST.head,pb=BigInt(ST.bal),ps=sumOf(ST.logs);
+ try{if(await read()){render();var bal=BigInt(ST.bal),sum=sumOf(ST.logs);
+  if(!first&&(bal!==pb||sum!==ps))$("live").textContent=t("poolLbl")+": "+fmtc(bal)+" ORBS. "+t("burnedLbl")+": "+fmtc(sum)+" ORBS."}}
+ catch(e){console.warn("chain",e);if(first)chainFail();else $("netdot").className="dot bad"}
+ finally{busy=false}}
 function weekStart(now){var d=new Date(now);var m=Date.UTC(d.getUTCFullYear(),d.getUTCMonth(),d.getUTCDate())-((d.getUTCDay()+5)%7)*DAY;return m-WEEK}
 function okObs(p){return Array.isArray(p)&&p.length===2&&typeof p[0]==="number"&&isFinite(p[0])&&typeof p[1]==="number"&&isFinite(p[1])&&p[1]>0}
 function okSeries(p){if(!Array.isArray(p)||!p.every(okObs))return false;for(var i=1;i<p.length;i++)if(!(p[i][0]>p[i-1][0]))return false;return true}
@@ -68,7 +116,8 @@ async function pricing(){
  slot("pstate",function(){$("twap").textContent="$"+res.avg.toFixed(6);$("cov").textContent=t("complete");
  $("pricestatus").textContent=t("srcDyn",{x:stale?t("stale"):""})});
  slot("chart",function(){chart(res,s,e)})}
-chain().catch(function(e){console.warn("chain",e);$("netdot").className="dot bad";slot("rows",function(){emptyRow(t("histErr"))});delete SLOTS.latest;slot("chainerr",function(){["burned","pool","latest","count"].forEach(function(i){$(i).textContent=t("unavail")})})});
+refresh();setInterval(function(){if(!document.hidden)refresh()},POLL);
+document.addEventListener("visibilitychange",function(){if(!document.hidden&&Date.now()-lastRead>=POLL)refresh()});
 pricing().catch(function(e){console.warn("pricing",e);delete SLOTS.gap;delete SLOTS.chart;slot("pstate",function(){$("twap").textContent=t("unavail");$("pricestatus").textContent=t("priceErr")});["obs","gap","cov"].forEach(function(i){$(i).textContent="…"})});
 document.addEventListener("click",function(e){var b=e.target.closest&&e.target.closest(".copy");if(!b)return;var v=b.getAttribute("data-copy");var done=function(){b.textContent=t("copied");setTimeout(function(){b.textContent=t("copy")},1400)};if(navigator.clipboard)navigator.clipboard.writeText(v).then(done,function(){});});
 var RM=window.matchMedia&&matchMedia("(prefers-reduced-motion: reduce)").matches;
