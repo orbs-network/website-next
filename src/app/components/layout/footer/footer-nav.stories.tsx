@@ -1,6 +1,6 @@
+import type { FooterLinkSpec } from '@/content/shared/footer'
 import type { Meta, StoryObj } from '@storybook/nextjs-vite'
 import { expect, within } from 'storybook/test'
-import type { FooterLinkSpec } from '@/content/shared/footer'
 import { FooterNavColumn } from './footer-nav'
 
 const meta = {
@@ -82,17 +82,17 @@ export const TranslatedPagePrefixesTheLocale: Story = {
   },
 }
 
-/** Japanese Institutions is unavailable; its footer must fall back to English. */
+/** The internal blog has no Japanese translation; a direct link falls back to English. */
 export const UntranslatedPageFallsBackToEnglishUrl: Story = {
   args: {
     id: 'footer-overview',
     title: 'Overview',
     locale: 'ja',
-    items: [{ spec: spec('institutional', '/institutional'), label: 'Institutions' }],
+    items: [{ spec: spec('blog', '/blog'), label: 'Blog' }],
   },
   play: async ({ canvasElement }) => {
     const canvas = within(canvasElement)
-    await expect(canvas.getByRole('link', { name: 'Institutions' })).toHaveAttribute('href', '/institutional/')
+    await expect(canvas.getByRole('link', { name: 'Blog' })).toHaveAttribute('href', '/blog/')
   },
 }
 

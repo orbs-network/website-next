@@ -31,20 +31,20 @@ type LocaleStatus = 'translated' | 'placeholder'
  * A path absent from this map is English-only, which is the safe default: the
  * selector will not offer a locale we cannot serve.
  *
- * `/jp/` preserves its translated legacy landing. Korean now uses the refreshed
- * English layout with freshly translated Korean copy. Only the four excluded legal
- * pages and the English CMS news archive remain Korean placeholders.
+ * Japanese and Korean public marketing surfaces use the shared current layout.
+ * English CMS news remains a placeholder; archived and source-language legal
+ * documents retain their existing availability and indexing policy.
  */
 const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
-  '/venues': { en: 'translated', ko: 'translated' },
+  '/venues': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/tetra-orbs-staking-wallet-tutorial': { en: 'translated', ko: 'translated' },
   '/terms-of-use': { en: 'translated', ko: 'placeholder' },
-  '/security-and-audits': { en: 'translated', ko: 'translated' },
+  '/security-and-audits': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/orbs-ecosystem-grant-program-terms-and-conditions': { en: 'translated', ko: 'translated' },
-  '/news': { en: 'translated', ko: 'placeholder' },
+  '/news': { en: 'translated', ja: 'placeholder', ko: 'placeholder' },
   '/liquidity-hub-terms-of-use': { en: 'translated', ko: 'translated' },
-  '/institutional': { en: 'translated', ko: 'translated' },
-  '/dspot': { en: 'translated', ko: 'translated' },
+  '/institutional': { en: 'translated', ko: 'translated', ja: 'translated' },
+  '/dspot': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/cookies': { en: 'translated', ko: 'placeholder' },
   '/accessibility-declaration': { en: 'translated', ko: 'placeholder' },
   '/challenge': { en: 'translated', ja: 'translated', ko: 'translated' },
@@ -52,32 +52,32 @@ const AVAILABILITY: Record<string, Partial<Record<Locale, LocaleStatus>>> = {
   '/dtwap': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/dlimit': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/dsltp': { en: 'translated', ko: 'translated' },
-  '/dperps': { en: 'translated', ko: 'translated' },
+  '/dperps': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/liquidity-hub': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/agentic': { en: 'translated', ko: 'translated' },
+  '/agentic': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/ai/skills': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  '/ai/skills/spot-advanced-swap-orders': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/privacy-policy': { en: 'translated', ja: 'translated', ko: 'placeholder' },
-  '/faq': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/dtwap-and-dlimit-faq': { en: 'translated', ko: 'translated' },
+  '/faq': { en: 'translated', ko: 'translated', ja: 'translated' },
+  '/dtwap-and-dlimit-faq': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/white-papers': { en: 'translated', ja: 'translated', ko: 'translated' },
-  '/overview': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/ecosystem': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/execution-services': { en: 'translated', ja: 'placeholder', ko: 'translated' },
+  '/overview': { en: 'translated', ko: 'translated', ja: 'translated' },
+  '/ecosystem': { en: 'translated', ko: 'translated', ja: 'translated' },
+  '/execution-services': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/pos': { en: 'translated', ja: 'translated', ko: 'translated' },
   '/smart-contracts': { en: 'translated', ja: 'translated', ko: 'translated' },
   '/dtwap-dlimit-disclaimer': { en: 'translated', ko: 'translated' },
   '/ORBS-NFT-CONTEST-OFFICIAL-RULES': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/notifications': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/brand-assets': { en: 'translated', ja: 'placeholder', ko: 'translated' },
-  '/contact': { en: 'translated', ja: 'translated', ko: 'translated' },
+  '/brand-assets': { en: 'translated', ko: 'translated', ja: 'translated' },
+  '/contact': { en: 'translated', ko: 'translated', ja: 'translated' },
   '/ton-access': { en: 'translated', ja: 'placeholder', ko: 'translated' },
   '/ton-vote': { en: 'translated', ja: 'placeholder', ko: 'translated' },
 }
 
 // Korean detail titles and abstracts are translated; the linked PDF files retain their published language.
 for (const paper of WHITE_PAPERS) {
-  AVAILABILITY[`/white-papers/${paper.slug}`] = { en: 'translated', ko: 'translated' }
+  AVAILABILITY[`/white-papers/${paper.slug}`] = { en: 'translated', ja: 'translated', ko: 'translated' }
 }
 
 /**

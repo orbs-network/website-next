@@ -955,6 +955,15 @@
           "title": "Orbs PoS V2: The Age of Guardians – Rewards, Fees and Bootstrap Fund",
           "abstract": ""
         }
+      },
+      "ui": {
+        "breadcrumb": "Breadcrumb",
+        "readPdf": "Read the paper (PDF)",
+        "pdfUnavailable": "Your browser cannot display this PDF.",
+        "download": "Download it instead",
+        "notFound": "Paper not found",
+        "japaneseEdition": "日本語版 (PDF)",
+        "koreanEdition": "한국어판 (PDF)"
       }
     },
     "overview": {
@@ -1236,7 +1245,8 @@
         "contactTypes": {
           "venue": "Venue",
           "institution": "Institution",
-          "developer": "Developer"
+          "developer": "Developer",
+          "other": "Other"
         },
         "invalidContactType": "Please select a valid option",
         "message": "Message",
@@ -1266,7 +1276,8 @@
           "en": "English",
           "ja": "Japanese",
           "ko": "Korean",
-          "announcements": "Announcements Channel"
+          "announcements": "Announcements Channel",
+          "telegramChat": "English"
         }
       }
     },
@@ -1903,6 +1914,18 @@
         "title": "The Orbs Agentic Challenge — archive",
         "description": "Archived campaign information and rules for the Orbs Agentic Challenge, 4–24 May 2026. Entries are closed."
       }
+    },
+    "news": {
+      "title": "Orbs in the News",
+      "description": "Check out the latest articles and publications featuring Orbs.",
+      "empty": "No coverage yet. Check back soon.",
+      "paginationLabel": "Media coverage pagination",
+      "meta": {
+        "title": "Media",
+        "description": "Press coverage and publications featuring Orbs.",
+        "pageTitle": "Media — Page {page}",
+        "notFound": "Page not found"
+      }
     }
   },
   "devDocs": {
@@ -1910,5 +1933,11 @@
     "api": "API",
     "skill": "Skill",
     "startBuilding": "Start building"
+  },
+  "pagination": {
+    "label": "Pagination",
+    "previous": "Previous",
+    "next": "Next",
+    "page": "Page {page}"
   }
 }

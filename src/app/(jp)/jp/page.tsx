@@ -1,6 +1,6 @@
 import { withSocialMetadata } from '@/app/lib/social-metadata'
 import type { Metadata } from 'next'
-import { LocalizedHomePage } from '@/app/marketing/localized-home'
+import { HomePage } from '@/app/marketing/home'
 import { getTranslations } from 'next-intl/server'
 import { localeAlternates, placeholderRobots } from '@/i18n/availability'
 import { HOME_PATH } from '@/app/lib/routes'
@@ -8,7 +8,7 @@ import { HOME_PATH } from '@/app/lib/routes'
 export const revalidate = 86400
 
 export async function generateMetadata(): Promise<Metadata> {
-  const t = await getTranslations({ locale: 'ja', namespace: 'pages.localizedHome.meta' })
+  const t = await getTranslations({ locale: 'ja', namespace: 'pages.home.meta' })
 
   return withSocialMetadata(
     {
@@ -23,7 +23,7 @@ export async function generateMetadata(): Promise<Metadata> {
   )
 }
 
-/** Preserve the legacy Japanese landing copy while the English refresh is localized. */
+/** Use the current shared home composition with the Japanese catalog. */
 export default function LocaleHome() {
-  return <LocalizedHomePage locale="ja" />
+  return <HomePage locale="ja" />
 }

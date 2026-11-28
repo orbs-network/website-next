@@ -55,7 +55,7 @@ describe('October product handoff', () => {
   it.each(['en', 'ko'] as const)('omits the whole excluded Overview section in %s', async (locale) => {
     const messages = locale === 'ko' ? ko : en
     const html = renderToStaticMarkup(await DperpsPage({ locale }))
-    for (const text of Object.values(messages.pages.dperps.overview)) expect(html).not.toContain(text)
+    for (const text of Object.values(messages.pages.dperps.overview).filter(Boolean)) expect(html).not.toContain(text)
     expect(html).toContain(messages.pages.dperps.marquee.perpetuals)
     expect(html).toContain(`href="${locale === 'ko' ? '/ko/contact/' : '/contact/'}"`)
   })

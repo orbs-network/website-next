@@ -1,18 +1,15 @@
-import Image from 'next/image'
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
+import { HomeHero } from '@/components/marketing/home-hero'
+import { COVER_FRAME, COVER_PLACEHOLDER } from '@/app/components/blog/cover'
 import { H2, H4 } from '@/app/components/typography'
-import { Button, type ButtonProps } from '@/components/ui/button'
+import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
+import { postPath } from '@/app/lib/routes'
 import { CardRail } from '@/components/marketing/card-rail'
+import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
 import { HomeBenefitsGrid } from '@/components/marketing/home-benefits-grid'
-import { FeatureTabs } from '@/components/marketing/feature-tabs'
 import { LogoRow } from '@/components/marketing/logo-row'
 import { MarkdownProse } from '@/components/marketing/markdown-prose'
 import { NewsletterForm } from '@/components/marketing/newsletter-form'
-import { SectionBackdrop } from '@/components/marketing/section-backdrop'
-import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
-import { HomeHero } from '@/components/marketing/home-hero'
-import { getAssetUrl, getAuthorInfo, getRecentPosts, type BlogPostFields } from '@/app/lib/api'
+import { Button, type ButtonProps } from '@/components/ui/button'
 import {
   HOME_ACCESS_PATHS,
   HOME_DISCOVER,
@@ -22,25 +19,25 @@ import {
   HOME_MARQUEE,
   HOME_NEWS_COUNT,
   HOME_SOLUTIONS,
-  homeStackForLocale,
   HOME_STATS,
   HOME_VENUES,
+  homeStackForLocale,
   type HomeCard,
 } from '@/content/pages/home'
-import { postPath } from '@/app/lib/routes'
-import { COVER_FRAME, COVER_PLACEHOLDER } from '@/app/components/blog/cover'
-import { cn } from '@/lib/utils'
 import { SDK_DOCS_URL } from '@/content/shared/sdk'
-import { readingMinutes } from '@/lib/reading-time'
 import { localeHref } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
+import { readingMinutes } from '@/lib/reading-time'
+import { cn } from '@/lib/utils'
+import { getTranslations } from 'next-intl/server'
+import Image from 'next/image'
+import Link from 'next/link'
 
 /**
  * The home page, design 3.4.
  *
- * Japanese retains `LocalizedHomePage`. English and Korean share this refreshed
- * composition; Korean catalog gaps use English copy until translated.
+ * All locales share this refreshed composition and use their own catalogs.
  *
  * One destination is not built yet (`/ai-agents`). It is in
  * `link-integrity.test.ts`'s `PENDING`, so the guard knows and will fail the
@@ -55,8 +52,15 @@ export async function HomePage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.home' })
   const lang = (key: string) => textLang(t(key), locale)
   const discover = HOME_DISCOVER.filter(
-    (item) => !item.locales || item.locales.includes(locale) || (locale === 'ko' && item.locales.includes('en'))
-  ).map((item) => (locale === 'ko' && item.id === 'blog' ? { ...item, href: 'http://blog.naver.com/orbskorea' } : item))
+    (item) => !item.locales || item.locales.includes(locale) || (locale !== 'en' && item.locales.includes('en'))
+  ).map((item) =>
+    locale !== 'en' && item.id === 'blog'
+      ? {
+          ...item,
+          href: locale === 'ja' ? 'https://orbs-japan-community.medium.com/' : 'http://blog.naver.com/orbskorea',
+        }
+      : item
+  )
 
   /*
     `slug` is optional in the Contentful model, and a post without one has no
@@ -65,7 +69,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
     `BlogCard` interpolates the slug straight into a template literal and does
     produce that link; out of scope here, worth fixing separately.)
   */
-  const posts = (locale === 'ko' ? [] : await getRecentPosts(HOME_NEWS_COUNT)).filter(
+  const posts = (locale !== 'en' ? [] : await getRecentPosts(HOME_NEWS_COUNT)).filter(
     (post): post is BlogPostFields & { slug: string } => typeof post.slug === 'string' && post.slug !== ''
   )
 
@@ -140,7 +144,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {locale !== 'ja' && (
+      {
         <section className="container border-t border-border py-section">
           <p
             className="text-detail font-medium uppercase tracking-widest text-fg-muted"
@@ -165,7 +169,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             ))}
           </ul>
         </section>
-      )}
+      }
 
       {/*
         The design draws this as a bare strip of marks between two rules, with
@@ -221,7 +225,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
         </div>
       </section>
 
-      {locale !== 'ja' ? (
+      {
         <div className="institutional-benefits">
           <section className="container py-section">
             <div className="mx-auto max-w-3xl text-center">
@@ -267,54 +271,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
             </div>
           </section>
         </div>
-      ) : (
-        <div className="band-contrast bg-surface">
-          {/*
-          No bottom padding at `lg`: the list's vertical rule runs to the foot
-          of the band, so `FeatureTabs` carries that space inside its columns.
-        */}
-          <section className="container pt-section pb-section lg:pb-0">
-            <p
-              className="text-detail font-medium uppercase tracking-widest text-fg-muted"
-              lang={lang('features.eyebrow')}
-            >
-              {t('features.eyebrow')}
-            </p>
-            <H2 className="mt-6 text-balance" lang={lang('features.title')}>
-              {t('features.title')}
-            </H2>
-
-            <FeatureTabs
-              className="mt-16"
-              tabs={HOME_FEATURES.map((id) => ({
-                id,
-                title: t(`features.${id}.title`),
-                panel: t(`features.${id}.panel`),
-              }))}
-              locale={locale}
-              footer={
-                <>
-                  <Button asChild>
-                    <Link href={localeHref(HOME_LINKS.contact, locale)} lang={lang('features.cta')}>
-                      {t('features.cta')}
-                    </Link>
-                  </Button>
-                  <Button asChild>
-                    <a
-                      href={HOME_LINKS.github}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      lang={lang('features.github')}
-                    >
-                      {t('features.github')}
-                    </a>
-                  </Button>
-                </>
-              }
-            />
-          </section>
-        </div>
-      )}
+      }
 
       <section className="container border-t border-border py-section" lang={lang('network.body')}>
         <p className="text-detail font-medium uppercase tracking-widest text-fg-muted" lang={lang('network.eyebrow')}>
@@ -369,17 +326,7 @@ export async function HomePage({ locale }: { locale: Locale }) {
               </H2>
             </div>
 
-            {/*
-            `lang="en"` on the whole rail. Contentful has a single `en-US`
-            locale — there is no Japanese or Korean blog, which is why the
-            language selector hides on `/blog` — so every title, excerpt and
-            date in here is English even inside a `lang="ja"` document. The
-            arrow labels come from the catalog, which mirrors English for those
-            locales, so they belong inside the same boundary.
-
-            Without it a screen reader reads English article titles with
-            Japanese pronunciation, which is the exact defect #103 is about.
-          */}
+            {/* CMS articles are English. Localized homes link to their community blogs instead. */}
             <CardRail
               className="mt-6"
               label={t('news.title')}

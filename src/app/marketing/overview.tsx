@@ -1,23 +1,17 @@
-import { getTranslations } from 'next-intl/server'
-import { ClosingCta, ClosingSocialButtons } from '@/components/marketing/closing-cta'
-import { InnerSection, PointColumns } from '@/components/marketing/inner-section'
 import { ModuleCards } from '@/components/marketing/module-cards'
-import { CtaButton, Eyebrow } from '@/components/marketing/section-parts'
 import { SplitHero } from '@/components/marketing/split-hero'
 import { SplitStatement } from '@/components/marketing/split-statement'
 import { StatsRow } from '@/components/marketing/stats-row'
-import { InnerClosingCta } from './inner-closing'
-import { HOME_LINKS } from '@/content/pages/home'
 import {
-  OVERVIEW_BENEFITS,
   OVERVIEW_HISTORY,
   OVERVIEW_LINKS,
-  OVERVIEW_MARQUEE,
   overviewProductsForLocale,
   type OverviewProductId,
 } from '@/content/pages/overview'
 import { HERO_GRAPHICS } from '@/content/shared/hero-graphics'
 import type { Locale } from '@/i18n/locales'
+import { getTranslations } from 'next-intl/server'
+import { InnerClosingCta } from './inner-closing'
 
 /**
  * Each protocol's colour, as on dSPOT (see `MODULE_PRESENTATION` there).
@@ -51,64 +45,6 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.overview' })
 
   // English and Korean share the refreshed structure; Japanese retains its legacy composition.
-  if (locale !== 'ja') {
-    return (
-      <>
-        <SplitHero
-          eyebrow={t('hero.eyebrow')}
-          headline={t('hero.headline')}
-          intro={t('hero.intro')}
-          cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.products }}
-          secondaryCta={{ label: t('hero.secondaryCta'), href: OVERVIEW_LINKS.staking }}
-          graphic={HERO_GRAPHICS.overview}
-          locale={locale}
-        />
-        <SplitStatement
-          eyebrow={t('execution.eyebrow')}
-          heading={t('execution.title')}
-          body={t('execution.body')}
-          locale={locale}
-        />
-        <SplitStatement
-          eyebrow={t('decentralisation.eyebrow')}
-          heading={t('decentralisation.title')}
-          body={t('decentralisation.body')}
-          locale={locale}
-        />
-        <ModuleCards
-          id={OVERVIEW_LINKS.protocols.slice(1)}
-          eyebrow={t('tech.eyebrow')}
-          heading={t('products.title')}
-          body={t('tech.body')}
-          columns={3}
-          cards={overviewProductsForLocale(locale).map((product) => {
-            const name = t(`products.items.${product.id}.title`)
-            return {
-              id: product.id,
-              eyebrow: name,
-              title: name,
-              ...PRODUCT_PRESENTATION[product.id],
-              body: t(`products.items.${product.id}.body`),
-              link: { label: t('products.cta', { name }), href: product.href },
-            }
-          })}
-          locale={locale}
-        />
-        <div className="border-t border-border">
-          <StatsRow
-            title={t('history.title')}
-            stats={OVERVIEW_HISTORY.map((id) => ({
-              id,
-              value: t(`history.stats.${id}.value`),
-              label: t(`history.stats.${id}.label`),
-            }))}
-            locale={locale}
-          />
-        </div>
-        <InnerClosingCta locale={locale} />
-      </>
-    )
-  }
 
   return (
     <>
@@ -116,44 +52,29 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         eyebrow={t('hero.eyebrow')}
         headline={t('hero.headline')}
         intro={t('hero.intro')}
-        cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.protocols }}
+        cta={{ label: t('hero.cta'), href: OVERVIEW_LINKS.products }}
+        secondaryCta={{ label: t('hero.secondaryCta'), href: OVERVIEW_LINKS.staking }}
         graphic={HERO_GRAPHICS.overview}
         locale={locale}
       />
-
-      <SplitStatement eyebrow={t('what.eyebrow')} heading={t('what.title')} body={t('what.body')} locale={locale} />
-
-      {/*
-        Pain and solution side by side: a matched pair, and splitting them into
-        two sections would lose the comparison that is the point of them. No
-        section heading, so each column's title is the `h2`.
-      */}
-      <section className="container border-t border-border pt-3 pb-section">
-        <PointColumns
-          columns={2}
-          headingLevel="h2"
-          ruled={false}
-          points={(['challenge', 'solution'] as const).map((id) => ({
-            id,
-            label: t(`${id}.eyebrow`),
-            title: t(`${id}.title`),
-            body: t(`${id}.body`),
-          }))}
-          locale={locale}
-        />
-      </section>
-
-      {/*
-        The tech explainer introduces the protocols, so it is their card row's
-        lead rather than a section of its own. Its heading, "Layer 3 Technology
-        Stack", is the solution column's title word for word, so the row keeps
-        the products heading instead.
-      */}
+      <SplitStatement
+        eyebrow={t('execution.eyebrow')}
+        heading={t('execution.title')}
+        body={t('execution.body')}
+        locale={locale}
+      />
+      <SplitStatement
+        eyebrow={t('decentralisation.eyebrow')}
+        heading={t('decentralisation.title')}
+        body={t('decentralisation.body')}
+        locale={locale}
+      />
       <ModuleCards
         id={OVERVIEW_LINKS.protocols.slice(1)}
         eyebrow={t('tech.eyebrow')}
         heading={t('products.title')}
         body={t('tech.body')}
+        columns={3}
         cards={overviewProductsForLocale(locale).map((product) => {
           const name = t(`products.items.${product.id}.title`)
           return {
@@ -167,57 +88,18 @@ export async function OverviewPage({ locale }: { locale: Locale }) {
         })}
         locale={locale}
       />
-
-      {/* Why, how and mission are three short answers to one question, so one section. */}
-      <section className="container border-t border-border pt-3 pb-section">
-        <Eyebrow text={t('mission.eyebrow')} locale={locale} />
-        <PointColumns
-          columns={3}
-          headingLevel="h2"
-          className="mt-12 lg:mt-24"
-          points={[
-            { id: 'why', title: t('why.title'), body: t('why.body') },
-            { id: 'how', title: t('why.howTitle'), body: t('why.howBody') },
-            { id: 'mission', title: t('mission.title'), body: t('mission.body') },
-          ]}
-          locale={locale}
-        />
-      </section>
-
-      <InnerSection
-        eyebrow={t('benefits.eyebrow')}
-        heading={t('benefits.title')}
-        intro={t('benefits.intro')}
-        layout="stacked"
-        locale={locale}
-      >
-        <PointColumns
-          columns={3}
-          points={OVERVIEW_BENEFITS.map((id) => ({
+      <div className="border-t border-border">
+        <StatsRow
+          title={t('history.title')}
+          stats={OVERVIEW_HISTORY.map((id) => ({
             id,
-            title: t(`benefits.items.${id}.title`),
-            body: t(`benefits.items.${id}.body`),
+            value: t(`history.stats.${id}.value`),
+            label: t(`history.stats.${id}.label`),
           }))}
           locale={locale}
         />
-      </InnerSection>
-
-      <ClosingCta
-        phrases={OVERVIEW_MARQUEE.map((id) => t(`marquee.${id}`))}
-        locale={locale}
-        actions={
-          <>
-            <ClosingSocialButtons
-              follow={t('closing.follow')}
-              community={t('closing.community')}
-              x={HOME_LINKS.x}
-              telegram={HOME_LINKS.telegram}
-              locale={locale}
-            />
-            <CtaButton link={{ label: t('closing.contact'), href: OVERVIEW_LINKS.contact }} locale={locale} />
-          </>
-        }
-      />
+      </div>
+      <InnerClosingCta locale={locale} />
     </>
   )
 }

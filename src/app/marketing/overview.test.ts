@@ -1,12 +1,12 @@
-import { renderToStaticMarkup } from 'react-dom/server'
-import { createTranslator, type AbstractIntlMessages } from 'next-intl'
-import { describe, expect, it, vi } from 'vitest'
+import type { Locale } from '@/i18n/locales'
 import en from '@/i18n/messages/en.json'
 import ja from '@/i18n/messages/ja.json'
 import ko from '@/i18n/messages/ko.json'
-import type { Locale } from '@/i18n/locales'
-import { OverviewPage } from './overview'
+import { createTranslator, type AbstractIntlMessages } from 'next-intl'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { describe, expect, it, vi } from 'vitest'
 import { ExecutionServicesPage } from './execution-services'
+import { OverviewPage } from './overview'
 
 const catalogs = { en, ja, ko }
 
@@ -58,21 +58,16 @@ describe('English network content refresh', () => {
     expect(html).not.toContain('graph-2.png')
   })
 
-  it.each(['ja'] as const)('keeps the existing %s sections and uses only that catalog', async (locale) => {
-    const overview = renderToStaticMarkup(await OverviewPage({ locale }))
-    expect(overview).toContain('href="#protocols"')
-    expect(overview).toContain(`href="/${locale === 'ja' ? 'jp' : locale}/dtwap/"`)
-    expect(overview).not.toContain('href="/#products"')
-    expect(overview).not.toContain('Built for the long run')
-
-    const execution = renderToStaticMarkup(await ExecutionServicesPage({ locale }))
-    expect(execution).not.toContain('/marketing/execution-services/hero')
-    expect(execution).toContain('/marketing/execution-services/lambda-dark.svg')
-    expect(execution).toContain('/marketing/execution-services/vm-dark.svg')
-    expect(execution).not.toContain('-illustration.svg')
-    expect(execution).toContain('graph-1.png')
-    expect(execution).toContain('graph-2.png')
-    expect(execution).not.toContain('Choose the execution model that fits')
-    expect(execution).not.toContain('href="https://docs.orbs.network/v3"')
+  it('uses the shared current layout with Japanese copy and local destinations', async () => {
+    const overview = renderToStaticMarkup(await OverviewPage({ locale: 'ja' }))
+    for (const path of ['dspot', 'dperps', 'execution-services']) expect(overview).toContain(`href="/jp/${path}/"`)
+    expect(overview).toContain('オンチェーン金融を支えるL3')
+    expect(overview).not.toContain('href="#protocols"')
+    const execution = renderToStaticMarkup(await ExecutionServicesPage({ locale: 'ja' }))
+    expect(execution).toContain('/marketing/execution-services/hero.svg')
+    expect(execution).toContain('data-product-graphic="lambda"')
+    expect(execution).toContain('data-product-graphic="vm"')
+    expect(execution).not.toContain('graph-1.png')
+    expect(execution).toContain('href="https://docs.orbs.network/v3"')
   })
 })

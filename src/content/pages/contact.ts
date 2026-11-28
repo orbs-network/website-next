@@ -27,6 +27,8 @@ type ChannelLanguage = 'en' | 'ja' | 'ko' | 'announcements'
 
 export type ContactChannelLink = {
   language: ChannelLanguage
+  /** Optional catalog key for channel-specific wording; audience remains unchanged. */
+  languageLabelKey?: 'telegramChat'
   /** The handle or channel name, shown as the link text. Not translated. */
   label: string
   url: string
@@ -42,10 +44,10 @@ export const CONTACT_CHANNELS: readonly ContactChannelGroup[] = [
   {
     key: 'telegram',
     links: [
-      { language: 'en', label: '@OrbsNetwork', url: 'https://t.me/OrbsNetwork' },
+      { language: 'en', languageLabelKey: 'telegramChat', label: '@OrbsNetwork', url: 'https://t.me/OrbsNetwork' },
       { language: 'announcements', label: '@OrbsAnnouncements', url: 'https://t.me/OrbsAnnouncements' },
-      { language: 'ja', label: '@orbsjpannouncements', url: 'https://t.me/orbsjpannouncements' },
       { language: 'ko', label: '@orbskrannouncement', url: 'https://t.me/orbskrannouncement' },
+      { language: 'ja', label: '@orbsjpannouncements', url: 'https://t.me/orbsjpannouncements' },
     ],
   },
   {
@@ -81,8 +83,8 @@ export const CONTACT_CHANNELS: readonly ContactChannelGroup[] = [
       // `discord.gg` rather than the legacy `discord.com/invite` — the same
       // invite code, spelled the way the footer spells it.
       { language: 'en', label: 'Discord', url: 'https://discord.gg/sswGDYGBt5' },
-      { language: 'ja', label: 'LINE', url: 'https://lin.ee/yjbkD8U' },
       { language: 'ko', label: 'Telegram', url: 'https://t.me/orbskr' },
+      { language: 'ja', label: 'LINE', url: 'https://lin.ee/yjbkD8U' },
     ],
   },
   {

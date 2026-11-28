@@ -1,6 +1,7 @@
-import Link from 'next/link'
 import type { Locale } from '@/i18n/locales'
 import { cn } from '@/lib/utils'
+import Link from 'next/link'
+import { getTranslations } from 'next-intl/server'
 
 type Props = {
   currentPage: number
@@ -40,17 +41,18 @@ function pageItems(currentPage: number, totalPages: number): (number | 'gap')[] 
   return items
 }
 
-export function Pagination({ currentPage, totalPages, pathFor, label = 'Pagination', locale = 'en' }: Props) {
+export async function Pagination({ currentPage, totalPages, pathFor, label, locale = 'en' }: Props) {
   if (totalPages <= 1) return null
 
+  const t = await getTranslations({ locale, namespace: 'pagination' })
   const items = pageItems(currentPage, totalPages)
   const linkClass = 'px-3 py-2 rounded-[var(--radius)] text-sm transition-colors hover:bg-accent'
 
   return (
-    <nav className="flex items-center justify-center gap-1 mt-12" aria-label={label}>
+    <nav className="flex items-center justify-center gap-1 mt-12" aria-label={label ?? t('label')}>
       {currentPage > 1 && (
         <Link href={pathFor(currentPage - 1)} className={linkClass} rel="prev">
-          {locale === 'ko' ? '이전' : 'Previous'}
+          {t('previous')}
         </Link>
       )}
 
@@ -64,7 +66,7 @@ export function Pagination({ currentPage, totalPages, pathFor, label = 'Paginati
             key={item}
             href={pathFor(item)}
             className={cn(linkClass, item === currentPage && 'bg-accent font-semibold')}
-            aria-label={locale === 'ko' ? `${item}페이지` : `Page ${item}`}
+            aria-label={t('page', { page: item })}
             aria-current={item === currentPage ? 'page' : undefined}
           >
             {item}
@@ -74,7 +76,7 @@ export function Pagination({ currentPage, totalPages, pathFor, label = 'Paginati
 
       {currentPage < totalPages && (
         <Link href={pathFor(currentPage + 1)} className={linkClass} rel="next">
-          {locale === 'ko' ? '다음' : 'Next'}
+          {t('next')}
         </Link>
       )}
     </nav>

@@ -1,10 +1,10 @@
 {
-  "_note": "Japanese chrome is deliberately mostly English. The legacy site's jp/_shared/navbar menu links are English there too — every label in jp/_shared/navbar/menu-links/**/*.md is ASCII. The only genuinely translated Japanese chrome on the legacy site is the GDPR banner, the subscribe form, and the footer logo blurb; of those only \"footer.blurb\" exists here so far, and it carries the real legacy copy from jp/_shared/footer/logo-section.md rather than a new translation. Every other footer label is English because the legacy Japanese footer shows it in English. \"footer.links.accessibility\" is empty on purpose: that footer links Terms of Use and Privacy Policy only, and an empty label is how this codebase expresses an omitted link (see ArchitectureSection). Translating the nav here would invent copy the Japanese site has never shown, so these keys mirror English until real copy is supplied.",
   "nav": {
     "groups": {
-      "products": "Products",
-      "solutions": "Solutions",
-      "network": "Network"
+      "products": "製品",
+      "solutions": "ソリューション",
+      "network": "ネットワーク",
+      "tools": "ツール"
     },
     "links": {
       "sdk": "Execution SDK/API",
@@ -15,64 +15,68 @@
       "liquidityHub": "Liquidity Hub",
       "dperps": "dPERPS",
       "agentic": "Orbs Agentic",
-      "venues": "For Exchanges & Wallets",
-      "institutions": "For Institutions",
-      "aiAgents": "For AI Agents",
-      "pos": "Proof of Stake",
+      "venues": "取引プラットフォーム向け",
+      "institutions": "機関投資家向け",
+      "aiAgents": "AIエージェント向け",
+      "pos": "PoS・ステーキング",
       "executionServices": "Execution Services",
-      "governance": "Governance",
-      "status": "Status",
+      "governance": "ガバナンス",
+      "status": "稼働状況",
       "github": "GitHub",
-      "developers": "Developers",
-      "docs": "Docs",
-      "ecosystem": "Ecosystem",
-      "blog": "Blog"
+      "developers": "開発者向け",
+      "docs": "ドキュメント",
+      "ecosystem": "Orbsエコシステム",
+      "blog": "ブログ",
+      "securityAndAudits": "監査",
+      "overview": "概要",
+      "playground": "Playground"
     },
-    "menuLabel": "Open menu",
-    "menuTitle": "Menu",
-    "menuClose": "Close"
+    "menuLabel": "メニューを開く",
+    "menuTitle": "メニュー",
+    "menuClose": "閉じる"
   },
   "header": {
-    "talkToTheTeam": "Talk to the team",
-    "homeLink": "Orbs home",
-    "scrollToTop": "Back to top"
+    "talkToTheTeam": "チームに相談する",
+    "homeLink": "Orbsホーム",
+    "scrollToTop": "ページの先頭へ"
   },
   "footer": {
-    "homeLink": "Orbs home",
-    "blurb": "Orbs provides trading infrastructure for on-chain finance with one execution stack for liquidity, advanced orders, and perpetuals, used by 30+ venues via a single API. Execution is verified by the decentralized Orbs Layer-3 network with $100M+ staked.",
+    "homeLink": "Orbsホーム",
+    "blurb": "Orbsはオンチェーン金融のための取引インフラを提供します。分散型レイヤー3ネットワークが、30以上のプラットフォームと10以上のチェーンでdSPOT、dPERPS、Execution Servicesを支え、11億ORBSがステーキングされています。プロジェクトは2017年に開始し、メインネットは2019年から稼働しています。",
     "columns": {
-      "products": "Products",
-      "solutions": "Solutions",
-      "network": "Network",
-      "community": "Community",
-      "company": "Resources"
+      "products": "製品",
+      "solutions": "ソリューション",
+      "network": "ネットワーク",
+      "community": "コミュニティ",
+      "company": "リソース"
     },
     "links": {
       "sdk": "SDK/API",
       "dspot": "dSPOT",
       "dperps": "dPERPS",
       "agentic": "Orbs Agentic",
-      "venues": "Venues",
-      "institutions": "Institutions",
-      "aiAgents": "AI Agents",
-      "overview": "Overview",
-      "pos": "Proof of Stake",
+      "venues": "取引プラットフォーム向け",
+      "institutions": "機関投資家向け",
+      "aiAgents": "AIエージェント",
+      "overview": "概要",
+      "pos": "PoS・ステーキング",
       "executionServices": "Execution Services",
-      "governance": "Governance",
-      "status": "Status",
-      "developers": "Developers",
-      "blog": "Blog",
-      "ecosystem": "Orbs Ecosystem",
-      "media": "Media",
-      "brandAssets": "Brand Assets",
-      "contact": "Contact",
-      "faq": "FAQ",
-      "docs": "Docs",
+      "governance": "ガバナンス",
+      "status": "稼働状況",
+      "developers": "開発者向け",
+      "blog": "ブログ",
+      "ecosystem": "Orbsエコシステム",
+      "media": "メディア掲載",
+      "brandAssets": "ブランドアセット",
+      "contact": "お問い合わせ",
+      "faq": "よくある質問",
+      "docs": "ドキュメント",
       "github": "GitHub",
       "termsOfUse": "利用規約",
       "cookies": "Cookie",
       "privacyPolicy": "プライバシーポリシー",
-      "accessibility": ""
+      "accessibility": "",
+      "securityAndAudits": "監査"
     },
     "socials": {
       "github": "GitHub",
@@ -216,6 +220,127 @@
         "faq": ""
       }
     },
+    "dsltp": {
+      "meta": {
+        "title": "dSLTP",
+        "description": "A decentralized stop-loss and take-profit protocol for DEXs, enabling automated risk management directly on chain — without bots, scripts, or centralized off-chain infrastructure."
+      },
+      "hero": {
+        "headline": "Stop-Loss & Take-Profit\nProtocol for AMM",
+        "intro": "dSLTP is a decentralized stop-loss and take-profit protocol for DEXs, enabling automated risk management directly on chain. Built on Orbs Layer 3, dSLTP is designed to execute orders reliably and transparently, without relying on bots, scripts, or centralized off chain infrastructure.",
+        "cta": "Learn more"
+      },
+      "benefits": {
+        "title": "dSLTP is optimized for fast and seamless integration.",
+        "intro": "Its lightweight protocol can be easily integrated into any EVM-compatible DEX, delivering fully automated risk management and profit-taking functionality without the need for external infrastructure or manual upkeep.\n\nExecution is handled on-chain via Orbs Layer 3, ensuring reliability, transparency, and 24/7 availability.",
+        "items": {
+          "stopLoss": {
+            "title": "Risk Management with Stop-Loss Orders",
+            "body": "Protect positions by automatically exiting when the price drops below a trigger level"
+          },
+          "takeProfit": {
+            "title": "Profit Capture with Take-Profit Orders",
+            "body": "Lock in gains by selling at a predefined target price without needing to monitor the market"
+          },
+          "onchain": {
+            "title": "Fully Onchain, Bot-Free Execution",
+            "body": "Decentralized order monitoring and execution powered by Orbs Layer 3"
+          }
+        }
+      },
+      "graph": {
+        "alt": "A candlestick price chart with a take-profit level marked above the entry price and a stop-loss level below it."
+      },
+      "integrations": {
+        "title": "Recent and Ongoing Integrations",
+        "alt": "dSLTP at the centre of an orbital diagram, with QuickSwap and Thena orbiting it."
+      },
+      "poweredBy": {
+        "title": "Orbsネットワークが支えます",
+        "body": "Through its novel Layer 3 technology, the Orbs Network enhances the capabilities of smart contract platforms, providing essential services to DEXs across DeFi.\n\nTools utilizing Orbs L3 technology include Liquidity Hub for aggregated liquidity and lower price impact, as well as Advanced Trading Orders, such as decentralized limit and TWAP orders, for efficient execution. The release of dPERPS establishes Orbs' technology as a key DeFi infrastructure for DEXs in spot and futures markets.\n\nThe Orbs Network has dozens of independent validators running Proof-of-Stake consensus, with 1.1B ORBS staked. It has been running on the mainnet since 2019.\n\nReady to integrate? Bring dSLTP to your protocol, frontend, or chain. Contact us to get started or explore the docs below.",
+        "contact": "Contact the Team",
+        "faq": "FAQ",
+        "support": "Support Group",
+        "github": "GitHub",
+        "audits": "Audits"
+      }
+    },
+    "dperps": {
+      "meta": {
+        "title": "dPERPS",
+        "description": "Orbsが自社開発したプロ向け無期限先物インフラ。執行、ヘッジ、清算、オラクル、決済、ホワイトラベルの取引画面を提供します。"
+      },
+      "hero": {
+        "eyebrow": "[dPERPS]",
+        "headline": "無期限先物を、\n自社ブランドで。",
+        "intro": "Orbsが自社開発したdPERPSは、プロ向けの無期限先物取引に必要な執行、ヘッジ、清算、オラクル、決済、ホワイトラベルの取引画面をひとつの基盤にまとめています。複数の事業者からインフラを組み合わせることなく、機関投資家や活発なトレーダーにサービスを提供できます。",
+        "cta": "チームに相談する"
+      },
+      "overview": {
+        "eyebrow": "",
+        "title": "ユーザーが求める取引ツール",
+        "body": "プロの取引には、エントリー、決済、エクスポージャーの精密な制御が求められます。dPERPSは成行・指値注文、損切り・利確のブラケット注文、ポジションの一部決済、銘柄ごとのレバレッジ設定をひとつの画面で提供します。",
+        "markets": "複数のプラットフォームから流動性を調達し、暗号資産の無期限先物とトークン化株式市場を自社サービスで提供できます。"
+      },
+      "features": {
+        "eyebrow": "",
+        "title": "個別の連携の寄せ集めではなく、\n完成された基盤",
+        "items": {
+          "pricing": {
+            "title": "価格算定",
+            "body": "取引とポジションに正確な市場価格を提供します。"
+          },
+          "execution": {
+            "title": "執行",
+            "body": "取引の開始・調整・決済を円滑に行います。"
+          },
+          "positions": {
+            "title": "ポジション管理",
+            "body": "ポジション、レバレッジ、証拠金、エクスポージャーを把握します。"
+          },
+          "hedging": {
+            "title": "ヘッジ",
+            "body": "市場エクスポージャーと取引リスクを管理します。"
+          },
+          "liquidation": {
+            "title": "清算",
+            "body": "リスクの閾値を超えたポジションを管理します。"
+          },
+          "settlement": {
+            "title": "決済",
+            "body": "取引を処理し、残高を正確に更新します。"
+          }
+        }
+      },
+      "network": {
+        "eyebrow": "",
+        "title": "Orbs L3が支える\n取引執行。",
+        "body": "マッチング、ポジション管理、決済はOrbs L3上で行い、入出金は基盤となるブロックチェーン上で行います。この構成により、日常的な取引操作をベースチェーンのトランザクション処理から分離します。"
+      },
+      "security": {
+        "eyebrow": "",
+        "title": "TEEで保護された執行。\nウォレットで承認する出金。",
+        "body": "dPERPSのエンジンは信頼できる実行環境（TEE）内で動作します。取引セッションキーは取引を承認できますが、出金はできません。出金にはユーザーのウォレット署名が必要です。"
+      },
+      "partners": {
+        "title": "無期限先物プラットフォームで導入済み"
+      },
+      "venue": {
+        "eyebrow": "",
+        "title": "自社のプラットフォーム。\n自社ならではの取引体験。",
+        "body": "自社ブランドの画面を通じて、暗号資産の無期限先物とトークン化株式市場を提供できます。dPERPSがその取引体験を実行インフラで支えます。"
+      },
+      "disclaimer": "dPERPSソフトウェアは、ガーディアンとプルーフ・オブ・ステークのエコシステムを備える分散型Orbsネットワークを活用し、プラットフォーム、市場参加者、その他の第三者が一連の分散型サービスを提供・運営できるようにします。dPERPSは開発中のベータ版です。基盤となるデジタル資産、ブロックチェーンネットワーク、DEXプラットフォームも継続的に開発されており、さまざまなリスクにさらされています。そのため、dPERPSまたは基盤となるプラットフォームには、\n\n(a) バグ、エラー、不具合が含まれる可能性があります。\n\n(b) 正常に機能しない場合や、停止・利用不能となる期間が生じる可能性があります。\n\n(c) 資金の全部または一部の損失につながる可能性があります。\n\nここに記載されたプラットフォーム、アプリケーション、サービスの利用は自己責任であり、すべての取引判断について利用者自身が責任を負います。",
+      "marquee": {
+        "precision": "精度の高い取引を。",
+        "perpetuals": "無期限先物取引を支える。",
+        "exposure": "市場エクスポージャーを管理。"
+      },
+      "risk": {
+        "eyebrow": "ベータ版ソフトウェア",
+        "title": "製品の状態とリスク"
+      }
+    },
     "liquidityHub": {
       "meta": {
         "title": "Liquidity Hub",
@@ -253,7 +378,7 @@
             "body": "Existing DEX LPs generate the same revenue with Liquidity Hub enabled as they would have without it."
           },
           "mevProtection": {
-            "title": "MEV protection",
+            "title": "MEV対策",
             "body": "Arbitrage loss to MEV can be significant. Since Liquidity Hub matches orders without block producers, it removes MEV losses completely."
           },
           "composable": {
@@ -288,7 +413,7 @@
             "list": "Additional fee revenue\nIncreased volume\nCompetitive prices\nNo LP cannibalization"
           },
           "solvers": {
-            "title": "Solvers",
+            "title": "ソルバー",
             "list": "Simple integration\nNo MEV bidding\nCherry picking orders\nHigh frequency book"
           }
         }
@@ -316,6 +441,358 @@
         "terms": "Terms of use"
       }
     },
+    "agentic": {
+      "meta": {
+        "title": "Orbs Agentic",
+        "description": "AIエージェントとDeFiプロトコルをつなぐ取引執行レイヤー。Orbsが執行、ルーティング、オラクルの共同署名による検証を担い、各取引をオンチェーンで独立に検証します。"
+      },
+      "eyebrows": {
+        "hero": "[AIエージェント]",
+        "breaks": "[ボトルネック]",
+        "tools": "[実行ツール]",
+        "chains": "[対応チェーン]",
+        "oracle": "[検証]",
+        "architecture": "[アーキテクチャ]",
+        "poweredBy": "[実績]",
+        "getStarted": "[導入方法]"
+      },
+      "hero": {
+        "headline": "Orbs Agentic",
+        "intro": "AIエージェントとDeFiプロトコルをつなぐ取引執行レイヤーです。\n\nエージェントがスワップ、指値注文、TWAP戦略を実行する際は、Orbs Agenticのツールを呼び出します。Orbsネットワークが執行、ルーティング、オラクルの共同署名による検証を担い、各取引をオンチェーンで独立に検証します。\n\nウォレットでも、資産を預かるレイヤーでも、AIによる取引でもありません。エージェントが安全にDeFiを実行するための検証レイヤーです。",
+        "cta": "利用を始める"
+      },
+      "breaks": {
+        "intro": "自律型DeFiを妨げているのは推論能力ではありません。信頼、安全性、そして執行です。",
+        "items": {
+          "safety": {
+            "title": "安全性",
+            "body": "執行前に独立したオラクルがすべての取引に共同署名するため、エージェントの独断で取引を実行することはできません。"
+          },
+          "quality": {
+            "title": "執行品質",
+            "body": "スリッページ保護を備えたDEX間のスマートルーティング。2022年以降、22億ドル超の取引を執行してきたものと同じエンジンを使用します。"
+          },
+          "reliability": {
+            "title": "信頼性",
+            "body": "再試行、部分約定、ネイティブ残高の承認、RPC障害に対応し、エージェントの負担を減らします。"
+          }
+        }
+      },
+      "tools": {
+        "title": "ツール",
+        "intro": "柔軟に組み合わせられるパラメーターを備えた、ひとつの実行ツール。エージェントが注文条件を定義し、Orbsが実行フローを処理します。",
+        "items": {
+          "autoswap": {
+            "title": "Auto Swap",
+            "body": "スマートルーティングとスリッページ保護を備えた、エージェントによるトークンスワップ。多くの取引の基本となる機能です。"
+          },
+          "autolimit": {
+            "title": "Auto Limit",
+            "body": "オンチェーンでの執行を保証する指値注文。価格を設定したら、監視し続ける必要はありません。"
+          },
+          "secureswap": {
+            "title": "Secure Swap",
+            "body": "重要度の高い取引のために、オラクルの共同署名による追加検証を行います。資産が動く前に確認を重ねます。"
+          },
+          "twap": {
+            "title": "TWAP",
+            "body": "大口取引を時間分散し、価格への影響を最小限に抑えます。実行期間と分割数を設定できます。"
+          }
+        }
+      },
+      "chains": {
+        "title": "対応チェーン"
+      },
+      "oracle": {
+        "title": "オラクルの共同署名による検証",
+        "statement": "すべての執行を独立に検証します。エージェント、ウォレット、運営者のいずれも、オラクルの共同署名なしに単独で取引を実行できません。",
+        "steps": {
+          "decide": "エージェントは自身のポリシーと市場情報に基づいて操作を決定します。",
+          "submit": "エージェントはOrbs Agenticのツールを通じて実行パラメーターを送信します。",
+          "price": "Orbsの共同署名オラクルが、入力・出力トークンの署名付き価格を提供します。スマートコントラクトが実行パラメーターを検証し、スリッページと価格の条件を適用してユーザー（エージェント）を保護します。",
+          "cosign": "検証に合格するとオラクルが執行に共同署名します。その後、スマートコントラクトがオンチェーンでトランザクションを検証・実行します。"
+        }
+      },
+      "architecture": {
+        "title": "Orbs Agenticのアーキテクチャ",
+        "alt": "エージェントがOrbs Agenticのツールを呼び出し、Orbsネットワークがルーティングとオラクルの共同署名による検証を行った後、取引がオンチェーンで決済される構成。"
+      },
+      "poweredBy": {
+        "title": "Orbsネットワークが支えます",
+        "body": "新しいプロトコルではありません。2022年以降、指値注文、TWAP、DCA戦略で22億ドル超のDeFi取引を執行してきた、実績あるL3インフラです。\n\nPancakeSwap、SushiSwap、THENA、QuickSwap、SpookySwapなどで稼働しています。数十の独立したバリデーター、10億ORBSを超えるステーキング、2019年から稼働するメインネットが支えます。"
+      },
+      "getStarted": {
+        "title": "5分で開発を始めましょう。",
+        "items": {
+          "docs": {
+            "title": "ドキュメントを読む",
+            "body": "ツールと統合パターンを理解します。"
+          },
+          "api": {
+            "title": "APIキーを取得する",
+            "body": "数分で取引執行レイヤーにアクセスできます。"
+          },
+          "call": {
+            "title": "最初の呼び出しを実行する",
+            "body": "autoswap、autolimit、TWAPを1行のコードで実行できます。"
+          }
+        }
+      },
+      "disclaimer": "Orbs Agenticは開発中のベータ製品です。基盤となるデジタル資産、ブロックチェーンネットワーク、DeFiプラットフォームも継続的に開発されており、さまざまなリスクがあります。自己責任でご利用ください。"
+    },
+    "aiSkills": {
+      "meta": {
+        "title": "AI Skills",
+        "description": "DeFi trading tools for AI coding agents like Claude Code, Cursor and Windsurf. Install a skill and let your agent place on-chain orders for you."
+      },
+      "eyebrow": "[FOR AI AGENTS]",
+      "title": "AI Skills",
+      "intro": "DeFi trading tools for AI coding agents like Claude Code, Cursor, and Windsurf. Install a skill and let your agent place on-chain orders for you.",
+      "listEyebrow": "[SKILLS]",
+      "chainsLabel": "対応チェーン",
+      "orderTypesLabel": "Order types",
+      "items": {
+        "spotOrders": {
+          "description": "Gasless limit, stop-loss, take-profit, and TWAP orders across EVM chains. Non-custodial, oracle-protected execution using immutable, audited contracts."
+        }
+      }
+    },
+    "spotOrders": {
+      "meta": {
+        "title": "Spot Advanced Swap Orders",
+        "description": "AIコーディングエージェントにこのスキルを導入できます。Orbs L3を活用し、指値・損切り・利確・TWAP注文を、ノンカストディアルかつオラクルで保護された仕組みでオンチェーン執行します。"
+      },
+      "hero": {
+        "headline": "AIエージェントとユーザーのための\nガスレスで使える高度なスワップ注文",
+        "intro": "Claude Code、Cursor、CodexなどのAIコーディングエージェントにこのスキルを導入できます。Orbs L3を活用し、指値・損切り・利確・TWAP注文を、ノンカストディアルかつオラクルで保護された仕組みでオンチェーン執行します。",
+        "cta": "利用を始める"
+      },
+      "quickstart": {
+        "title": "クイックスタート",
+        "intro": "Claude Code、Cursor、CodexなどのAIコーディングエージェントに、数秒でこのスキルを導入できます。",
+        "items": {
+          "human": {
+            "title": "ユーザー向け",
+            "body": "このプロンプトをAIコーディングエージェントに貼り付けてください。"
+          },
+          "agent": {
+            "title": "AIエージェント・LLM向け",
+            "body": "エージェントにスキル仕様を参照させてください。"
+          }
+        }
+      },
+      "features": {
+        "title": "AIエージェントの注文タイプ",
+        "items": {
+          "market": {
+            "title": "成行注文",
+            "body": "オラクルによる保護のもと、利用可能な最適価格で即時にガスレススワップを行います。"
+          },
+          "limit": {
+            "title": "指値注文",
+            "body": "目標価格を設定すると、市場価格が到達した際に注文が自動で執行されます。"
+          },
+          "stopLoss": {
+            "title": "損切り",
+            "body": "価格が設定値を下回ると自動売却し、ポジションを保護します。"
+          },
+          "takeProfit": {
+            "title": "利確",
+            "body": "価格が目標を上回ると自動売却し、利益を確定します。"
+          },
+          "twap": {
+            "title": "TWAP / 分割注文",
+            "body": "大口注文を時間加重で分割し、すべての約定をオラクルで保護します。"
+          }
+        }
+      },
+      "howItWorks": {
+        "title": "仕組み",
+        "steps": {
+          "intent": {
+            "title": "取引意図を定義",
+            "body": "ユーザーまたはエージェントが、チェーン、トークン、数量、注文タイプ、必要に応じた価格条件を指定します。"
+          },
+          "approve": {
+            "title": "ラップと承認",
+            "body": "必要に応じてネイティブトークンをラップし、コントラクトによるトークン使用を承認します。スキルがcalldataを提供します。"
+          },
+          "prepare": {
+            "title": "注文を準備",
+            "body": "スキルが承認用calldata、EIP-712の型付きデータ、リレー送信用ペイロードを生成します。"
+          },
+          "sign": {
+            "title": "署名して送信",
+            "body": "ユーザーがウォレットでEIP-712署名を行い、署名済み注文を分散型リレーへ送信します。"
+          },
+          "execute": {
+            "title": "オラクルで保護された執行",
+            "body": "Orbs L3ネットワークが最適価格のルーティングとオラクルによる保護を各分割注文に適用して執行します。"
+          }
+        }
+      },
+      "chains": {
+        "title": "対応チェーン",
+        "nameHeader": "チェーン",
+        "idHeader": "チェーンID"
+      }
+    },
+    "institutional": {
+      "meta": {
+        "title": "Orbs Institutional",
+        "description": "累計取引高140億ドル超。現物取引製品は2023年から稼働し、30以上のプラットフォームが導入しています。主要な分散型取引プラットフォームを支える取引執行レイヤーを、トレーディングデスク、ウォレット、カストディ事業者、機関向けプラットフォームに提供します。"
+      },
+      "hero": {
+        "eyebrow": "[Orbs Institutional]",
+        "headline": "オンチェーン執行のための\n機関投資家水準のスワップインフラ",
+        "intro": "累計取引高140億ドル超。現物取引製品は2023年から稼働し、30以上のプラットフォームが導入しています。主要な分散型取引プラットフォームを支える取引執行レイヤーを、トレーディングデスク、ウォレット、カストディ事業者、機関向けプラットフォームに提供します。",
+        "cta": "チームに相談する"
+      },
+      "stats": {
+        "items": {
+          "volume": {
+            "value": "$14B+",
+            "label": "累計取引高"
+          },
+          "chains": {
+            "value": "10+",
+            "label": "稼働チェーン"
+          },
+          "venues": {
+            "value": "30+",
+            "label": "導入プラットフォーム"
+          }
+        }
+      },
+      "proofOfWork": {
+        "eyebrow": "[取り組みの実績]",
+        "title": "DeFiで磨き、機関投資家へ。",
+        "body": "Orbsは2017年からオンチェーンインフラを構築し、分散型取引プラットフォームの現物スワップ執行を支える標準的な基盤となってきました。"
+      },
+      "trackRecord": {
+        "eyebrow": "[実績]",
+        "title": "オンチェーンで実証済み",
+        "body": "機関投資家のワークフローに対応する実行インフラ。"
+      },
+      "venues": {
+        "title": "主要なプラットフォームで導入されています："
+      },
+      "products": {
+        "eyebrow": "[製品]",
+        "title": "最適な価格。より良い執行。ひとつの基盤。",
+        "intro": "取引チームが求めるリスク管理の注文タイプを、オンチェーンの執行へ。流動性を集約して最適な価格を追求し、高度な注文タイプで執行を制御します。機関投資家になじみのある市場構造をオンチェーンに届けます。",
+        "items": {
+          "liquidityHub": {
+            "title": "Liquidity Hub",
+            "body": "RFQレイヤーを通じてDEXの流動性とプロのマーケットメーカーを集約し、オンチェーンでの最適な価格を目指します。",
+            "cta": "Liquidity Hubについて"
+          },
+          "dtwap": {
+            "title": "dTWAP",
+            "body": "大口注文を時間分散し、価格への影響を抑えます。分散型の執行を提供し、資金は執行までウォレットに残ります。",
+            "cta": "dTWAPについて"
+          },
+          "dlimit": {
+            "title": "dLIMIT",
+            "body": "指定価格が利用できる場合にのみ執行します。手作業での監視、オフチェーンの資産預託、デスク側の介入は不要です。",
+            "cta": "dLIMITについて"
+          },
+          "dsltp": {
+            "title": "dSLTP",
+            "body": "オンチェーンのトリガーでポジション保護を自動化します。",
+            "cta": "dSLTPについて"
+          }
+        }
+      },
+      "selfCustody": {
+        "eyebrow": "[常に自己管理]",
+        "title": "機関投資家のシステムに対応",
+        "body": "dSPOTの注文はウォレットで署名され、資金は執行までウォレットに残ります。dPERPSは自己管理型のスマートコントラクト取引モデルを採用し、担保は該当するコントラクトが扱います。資金の流れは製品によって異なります。"
+      },
+      "signers": {
+        "title": "既存のセキュリティ基盤と連携",
+        "sub": "主要なカストディ事業者、自社MPC、EIP-712対応の署名者に対応します。"
+      },
+      "policyEngine": {
+        "title": "ポリシーエンジンも、承認フローも、署名基盤も、そのまま。",
+        "body": "Orbsが統合と執行を担います。"
+      },
+      "integrationPaths": {
+        "eyebrow": "[統合]",
+        "title": "2つの統合方法",
+        "items": {
+          "institutional": {
+            "title": "機関ユーザー",
+            "body": "トレーディングデスク、OTCデスク、財務部門、資産運用会社、機関の執行チーム向けのAPIアクセス。"
+          },
+          "partners": {
+            "title": "インフラ・アクセスパートナー",
+            "body": "顧客がすでに利用しているプラットフォームにOrbsの執行機能を組み込めます。共同ブランド、完全ホワイトラベルのどちらにも対応します。"
+          }
+        }
+      },
+      "features": {
+        "eyebrow": "[主な機能とメリット]",
+        "title": "金融機関レベルの品質を、標準で。",
+        "items": {
+          "nonCustodial": {
+            "title": "ノンカストディアル設計",
+            "body": "dSPOTの注文はウォレットで署名され、資金は執行までウォレットに残ります。dPERPSは自己管理型のスマートコントラクト取引モデルを採用し、担保は該当するコントラクトが扱います。資金の流れは製品によって異なります。"
+          },
+          "gasless": {
+            "title": "すべての製品でガス代不要",
+            "body": "エンドユーザーはガス代を支払いません。Orbsがチェーン上の費用を負担し、各トランザクションの複雑さを抽象化します。"
+          },
+          "mev": {
+            "title": "MEV対策",
+            "body": "オフチェーンで価格を決め、オンチェーンで決済する非公開RFQレイヤーを通して取引します。メンプールへの露出やサンドイッチ攻撃を防ぎます。"
+          },
+          "permissionless": {
+            "title": "パーミッションレスな統合",
+            "body": "公開SDK、公開スマートコントラクト、監査済みドキュメント。提携契約、許可を与える管理者、収益分配を必要とせずに統合できます。"
+          },
+          "robust": {
+            "title": "堅牢なインフラ",
+            "body": "現物取引製品は2023年から稼働しています。10以上のチェーン、30以上のプラットフォームで140億ドル超の取引を処理し、重要な実行経路で実績を重ねています。"
+          },
+          "whiteLabel": {
+            "title": "ホワイトラベル対応",
+            "body": "自社ブランドのもとにOrbsの実行機能を組み込めます。独自UI、テーマ対応ウィジェット、UX全体の制御。自社のプラットフォームをOrbsの基盤が支えます。"
+          },
+          "reporting": {
+            "title": "レポート作成と監査証跡",
+            "body": "すべての注文に確定的なオンチェーンの記録が残ります。取引、スリッページ、約定、ルーティング判断のデータを、コンプライアンス対応のために出力できます。"
+          },
+          "audited": {
+            "title": "監査済み・変更不可・所有者のいないコントラクト",
+            "body": "管理者キー、アップグレード経路、停止スイッチはありません。主要監査機関の監査を受けたコードそのものが契約です。"
+          }
+        }
+      },
+      "whoFor": {
+        "eyebrow": "[対象ユーザー]",
+        "title": "どのような組織に適していますか？",
+        "items": {
+          "institutional": {
+            "title": "機関ユーザー",
+            "list": "トレーディングデスク\nOTCデスク\n財務部門 — DAO、プロトコル、企業\n資産運用会社\n決済・フィンテック基盤"
+          },
+          "partners": {
+            "title": "インフラ・アクセスパートナー",
+            "list": "ウォレット・MPC事業者\nカストディ事業者\n取引所\nプライムブローカー"
+          }
+        }
+      },
+      "marquee": {
+        "bestPrice": "最適な価格。",
+        "betterExecution": "より良い執行。",
+        "oneStack": "ひとつの基盤。"
+      },
+      "closing": {
+        "contact": "チームに相談する",
+        "github": "GitHubで見る"
+      }
+    },
     "privacyPolicy": {
       "meta": {
         "title": "プライバシーポリシー",
@@ -324,7 +801,7 @@
     },
     "termsOfUse": {
       "meta": {
-        "title": "Terms of Use",
+        "title": "利用規約",
         "description": "The terms governing use of the Orbs website and the services offered through it."
       }
     },
@@ -343,13 +820,13 @@
     "faq": {
       "meta": {
         "title": "FAQ",
-        "description": "Answers to common questions about Orbs, its Layer-3 network, Proof-of-Stake, staking and the TON tooling."
+        "description": "Orbsの取引インフラ、dSPOT、dPERPS、Execution Services、資産の管理、ステーキング、統合、セキュリティに関するよくある質問にお答えします。"
       }
     },
     "dtwapDlimitFaq": {
       "meta": {
-        "title": "dTWAP and dLIMIT FAQ",
-        "description": "Answers to common questions about the dTWAP, dLIMIT and dSLTP protocols, troubleshooting and technical documentation."
+        "title": "dTWAP・dLIMITのよくある質問",
+        "description": "dTWAP、dLIMIT、dSLTPプロトコルに関するよくある質問、トラブルシューティング、技術資料をご案内します。"
       }
     },
     "whitePapers": {
@@ -376,7 +853,7 @@
         },
         "proof-of-stake-ecosystem": {
           "title": "OrbsのPoSエコシステムV1",
-          "abstract": "Orbs の Proof-of-Stake（PoS）エコシステムは、Orbs ネットワークとユニバースの重要な基盤です。本ドキュメントは、ディスカッションの目的で提供され、V1 で実装されたジェネシス元年の PoS アーキテクチャとモデルを示しています。"
+          "abstract": "Orbs の プルーフ・オブ・ステーク（PoS）エコシステムは、Orbs ネットワークとユニバースの重要な基盤です。本ドキュメントは、ディスカッションの目的で提供され、V1 で実装されたジェネシス元年の PoS アーキテクチャとモデルを示しています。"
         },
         "orbs-technology-overview-2": {
           "title": "Orbsテクノロジー概要",
@@ -387,12 +864,12 @@
           "abstract": "Orbs のポジションペーパー"
         },
         "ton-vote": {
-          "title": "Decentralized Gasless DAO Governance for TON",
-          "abstract": "[TON.Vote](https://ton.vote/) is a completely decentralized, on-chain DAO governance platform built exclusively for the TON ecosystem, developed by the Orbs team. The core user base is anticipated to be TON DAOs, projects, and other TON-related communities requiring governance activities."
+          "title": "TON向けの分散型ガスレスDAOガバナンス",
+          "abstract": "[TON.Vote](https://ton.vote/)は、OrbsチームがTONエコシステム向けに開発した完全分散型のオンチェーンDAOガバナンスプラットフォームです。ガバナンス活動を必要とするTONのDAO、プロジェクト、関連コミュニティを主な利用者として想定しています。"
         },
         "dTWAP": {
-          "title": "dTWAP for Decentralized Exchanges (DEXs)",
-          "abstract": "This lightpaper outlines the concept and architecture behind Orbs’ new decentralized TWAP protocol and a prototype UI that will allow DEXs to harness this technology to benefit the platform and its users."
+          "title": "分散型取引所（DEX）向けdTWAP",
+          "abstract": "Orbsの分散型TWAPプロトコルの概念とアーキテクチャ、およびDEXがこの技術を活用してプラットフォームとユーザーにメリットを提供するためのUIプロトタイプを説明するライトペーパーです。"
         },
         "use-of-ethereum-as-a-base-layer-for-pos-and-poa-platforms": {
           "title": "PoSおよびPoAプラットフォームのベースレイヤーとしてのイーサリアムの使用",
@@ -443,53 +920,112 @@
           "abstract": "この利用料金のリストは、安定した予測可能な利用料金の全体的なビジョンが Orbs ネットワークでどのように実装されるかについての詳細を提供します。 ORBS トークンの購買力は、定義された計算能力と同様に固定されているため、予測可能性の目標は達成されます。"
         },
         "token-utility-research": {
-          "title": "Orbs Grant Program: Fourth Call For Grants",
-          "abstract": "The Orbs project is launching a new call for grants under the OEGP. In this round, we are looking for research and proposals regarding the uses and utility of the Orbs tokens and refining the token model."
+          "title": "Orbs助成プログラム：第4回募集",
+          "abstract": "OrbsはOEGPにおける新たな助成募集を開始します。今回は、Orbsトークンの用途と有用性、トークンモデルの改善に関する研究と提案を募集します。"
         },
         "grants": {
-          "title": "Orbs Grant Program: Third Call For Grants",
-          "abstract": "The Orbs project is building on the TON Network (ton.org) and is working to provide L3 infrastructure services to TON dapps that can significantly increase their capabilities without relying on centralized infrastructure. In this third call for grants, Orbs is offering developer grants for building and integration work to Orbs core TON protocols. The grants are focused mostly around the TON ecosystem for FunC and TWA developers."
+          "title": "Orbs助成プログラム：第3回募集",
+          "abstract": "OrbsはTON Network（ton.org）上で開発を進め、中央集権型インフラに依存せずTON dAppsの機能を大幅に拡張するL3インフラサービスを提供しています。第3回募集では、Orbsの主要TONプロトコルの構築・統合を行う開発者を支援します。主な対象は、TONエコシステムのFunCおよびTWA開発者です。"
         },
         "orbs-grant-grogram-second-call-for-grants": {
-          "title": "Orbs Grant Program: Second Call for Grants",
-          "abstract": "The Orbs project is launching a new call for grants under the OEGP. For this round, the focus will be on applications that will draw on the power of the Orbs Universe, with its Guardians and Delegators, using their ability to arrive at consensus through the Orbs protocol incentive layer powered by the ORBS token."
+          "title": "Orbs助成プログラム：第2回募集",
+          "abstract": "OrbsはOEGPにおける新たな助成募集を開始します。今回は、ガーディアンとデリゲータからなるOrbs Universeを活用するアプリケーションに重点を置きます。ORBSトークンに支えられたプロトコルのインセンティブレイヤーを通じて合意を形成する能力を活用します。"
         },
         "orbs-grant-program": {
           "title": "Orbs助成金プログラム",
           "abstract": "Orbs は、さらに多くの開発者やプロジェクトチームが Orbs エコシステムの開発に関わることで、分散化のプロセスが前進すると考えています。その取り組みの 1 つとして、Orbs エコシステム助成金プログラム（OEGP）を立ち上げました。助成金を提供することで、Orbs ネットワークが提供するブロックチェーン・インフラストラクチャの魅了的な機能と、Orbs の PoS ユニバースの強力でアクティブなコミュニティが一緒になって、DeFi とのインターフェースやコラボレーションを生めるよう体制を構築しております。"
         },
         "orbs-pos-v2-the-age-of-guardians-section-election-committees": {
-          "title": "Orbs PoS V2: The Age of Guardians – Election Committees",
+          "title": "Orbs PoS V2：ガーディアンの時代 — 選挙委員会",
           "abstract": ""
         },
         "orbs-pos-v2-the-age-of-guardians-section-minimum-self-delegation": {
-          "title": "Orbs PoS V2: The Age of Guardians – Minimum self delegation",
+          "title": "Orbs PoS V2：ガーディアンの時代 — 最低自己委任額",
           "abstract": ""
         },
         "orbs-pos-v2-the-age-of-guardians-section-pos-on-ethereum": {
-          "title": "Orbs PoS V2: The Age of Guardians – PoS on Ethereum",
+          "title": "Orbs PoS V2：ガーディアンの時代 — Ethereum上のPoS",
           "abstract": ""
         },
         "orbs-pos-v2-the-age-of-guardians-section-rewards-distributions": {
-          "title": "Orbs PoS V2: The Age of Guardians – Rewards distribution",
+          "title": "Orbs PoS V2：ガーディアンの時代 — 報酬分配",
           "abstract": ""
         },
         "orbs-pos-v2-the-age-of-guardians-section-rewards-fees-bootstrap-fund": {
-          "title": "Orbs PoS V2: The Age of Guardians – Rewards, Fees and Bootstrap Fund",
+          "title": "Orbs PoS V2：ガーディアンの時代 — 報酬・手数料・ブートストラップ基金",
           "abstract": ""
         }
+      },
+      "ui": {
+        "breadcrumb": "現在位置",
+        "readPdf": "ホワイトペーパーを読む（PDF）",
+        "pdfUnavailable": "このブラウザーではPDFを表示できません。",
+        "download": "ファイルをダウンロード",
+        "notFound": "ホワイトペーパーが見つかりません",
+        "japaneseEdition": "日本語版（PDF）",
+        "koreanEdition": "한국어판 (PDF)"
       }
     },
     "overview": {
       "meta": {
-        "title": "概要",
-        "description": "Orbsとは:高度なオンチェーン取引のために構築された分散型レイヤー3ブロックチェーンインフラ。"
+        "title": "Orbsの概要",
+        "description": "Orbsは機関投資家のオンチェーン金融に向けてスマートコントラクトの機能を拡張します。分散型レイヤー3ネットワークが既存のチェーンと連携し、dSPOT、dPERPS、Execution Servicesを支えます。"
       },
       "hero": {
-        "eyebrow": "[Overview]",
-        "headline": "Bringing CeFi-level\nexecution to DeFi",
-        "intro": "L3 For Advanced On-chain Trading",
-        "cta": "Explore the protocols"
+        "eyebrow": "[ネットワークの概要]",
+        "headline": "オンチェーン金融を支えるL3",
+        "intro": "Orbsはスマートコントラクトの機能を拡張し、機関投資家の取引要件に応えます。分散型レイヤー3ネットワークがdSPOT、dPERPS、Execution Servicesを支え、オンチェーン金融に高度な執行機能を提供します。",
+        "cta": "製品を見る",
+        "secondaryCta": "ステーキングについて"
+      },
+      "execution": {
+        "eyebrow": "[執行]",
+        "title": "機関投資家水準の執行を、既存のチェーンで。",
+        "body": "プロの取引には、個々のトランザクションを超えた継続的な監視、条件付き注文、連携した執行が必要です。Orbsは既存のレイヤー1・レイヤー2と連携してこれらの機能を提供し、アプリケーションが流動性を新しいチェーンに移す必要はありません。"
+      },
+      "decentralisation": {
+        "eyebrow": "[ネットワークのセキュリティ]",
+        "title": "分散型の執行。機関投資家のための設計。",
+        "body": "独立したガーディアンがOrbsネットワークを運営し、プルーフ・オブ・ステークとORBSトークンの委任によって保護します。単一の運営者に依存せず、機関投資家のオンチェーン金融に求められる回復力と分散性を提供します。"
+      },
+      "tech": {
+        "eyebrow": "[製品]",
+        "body": "dSPOT、dPERPS、Execution Services。"
+      },
+      "products": {
+        "title": "オンチェーン金融の執行のために",
+        "items": {
+          "dspot": {
+            "title": "dSPOT",
+            "body": "流動性の集約と高度な現物注文を、自社プラットフォームに。"
+          },
+          "dperps": {
+            "title": "dPERPS",
+            "body": "取引の執行から自社ブランドの取引画面まで、プラットフォームと開発者向けに無期限先物のインフラを提供します。"
+          },
+          "executionServices": {
+            "title": "Execution Services",
+            "body": "Orbs Lambdaによるイベント駆動型関数と、Orbs VMによる常時稼働のコンテナ化サービス。"
+          }
+        },
+        "cta": "{name}について"
+      },
+      "history": {
+        "title": "長期的な成長のために",
+        "stats": {
+          "project": {
+            "value": "2017",
+            "label": "プロジェクト開始"
+          },
+          "mainnet": {
+            "value": "2019",
+            "label": "メインネット稼働開始"
+          },
+          "staked": {
+            "value": "1.1B",
+            "label": "ステーキング済みORBS"
+          }
+        }
       },
       "what": {
         "eyebrow": "[Introduction]",
@@ -505,33 +1041,6 @@
         "eyebrow": "[Solution]",
         "title": "Layer 3 Technology Stack",
         "body": "Orbs Layer 3 brings CeFi-level capabilities to DeFi by providing DeFi platforms with a decentralized backend, delivering scalable, efficient, and secure trading solutions without the need for centralized backends."
-      },
-      "tech": {
-        "eyebrow": "[Tech]",
-        "title": "Layer 3 Technology Stack",
-        "body": "Orbs is a Layer 3 blockchain designed to enhance the capabilities of existing Layer 1 and Layer 2 blockchains. Utilizing Proof-of-Stake consensus, Orbs acts as an intermediary execution layer, facilitating complex logic and scripts beyond the native functionalities of smart contracts. Innovative protocols like dLIMIT, dTWAP, and Liquidity Hub push the boundaries of DeFi and smart contract technology. Orbs provides a scalable, efficient, and customizable environment for dApps, addressing scalability challenges inherent in Ethereum and other L1 blockchains."
-      },
-      "products": {
-        "title": "ORBS infrastructure\npowers four main protocols",
-        "items": {
-          "dtwap": {
-            "title": "dTWAP",
-            "body": "Advanced order type for DEXs allowing for time-based orders to be executed on chain."
-          },
-          "dlimit": {
-            "title": "dLIMIT",
-            "body": "Advanced order type for DEXs allowing for limit orders to be executed on chain."
-          },
-          "liquidityHub": {
-            "title": "Liquidity Hub",
-            "body": "Decentralized optimization layer for DEXs enabling DEXs to tap into external liquidity sources in order to provide CeFi-competitive prices on swaps."
-          },
-          "perpetualHub": {
-            "title": "dPERPS",
-            "body": "Full suite of services for decentralized perpetuals platforms, including hedger, liquidator and oracle, enabling intent-based on-chain perpetual futures trading."
-          }
-        },
-        "cta": "Discover {name}"
       },
       "why": {
         "title": "Why?",
@@ -562,25 +1071,26 @@
             "body": "Protocols powered by Orbs maintain the core principles of decentralization, providing users with enhanced privacy, security, and anonymity. By eliminating the need for centralized backends, Orbs ensures that users can trade in a decentralized manner, protecting their data and maintaining control over their assets."
           }
         }
-      },
-      "marquee": {
-        "liquidity": "Aggregated liquidity.",
-        "orders": "Advanced trading orders.",
-        "derivatives": "Decentralized derivatives."
-      },
-      "closing": {
-        "follow": "Follow us",
-        "community": "Join community",
-        "contact": "Talk to the team"
       }
     },
     "ecosystem": {
       "meta": {
-        "title": "エコシステム",
-        "description": "Projects, exchanges, wallets and chains building on or integrated with the Orbs network."
+        "title": "Orbsエコシステム",
+        "description": "Orbsの取引インフラを利用するプラットフォーム、ソルバー、対応チェーンをご紹介します。"
       },
       "hero": {
+        "headline": "Orbsエコシステム",
         "eyebrow": "[エコシステム]"
+      },
+      "filterLabel": "カテゴリで絞り込む",
+      "viewOnX": "Xで見る（新しいタブで開きます）",
+      "filters": {
+        "all": "すべて",
+        "dperps": "dPERPS",
+        "dspot": "dSPOT",
+        "dsltp": "dSLTP",
+        "solvers": "ソルバー",
+        "chains": "チェーン"
       },
       "categories": {
         "useCases": "Use-cases and Applications",
@@ -602,57 +1112,66 @@
     },
     "executionServices": {
       "meta": {
-        "title": "実行サービス",
-        "description": "Orbs LambdaとOrbs VM — 分散型サーバーレス関数とコンテナベースのコンピュート。"
+        "title": "Execution Services",
+        "description": "分散型Orbsネットワーク上で、Orbs Lambdaのイベント駆動型JavaScript関数とOrbs VMの常時稼働Dockerサービスを使い、スマートコントラクトの外でアプリケーションロジックを実行できます。"
       },
       "eyebrows": {
-        "hero": "[NETWORK / COMPUTE]",
-        "lambdaProduct": "[ORBS LAMBDA]",
-        "vm": "[ORBS VM]",
-        "alternatives": "[COMPARISON]",
-        "evolution": "[EVOLUTION]"
+        "hero": "[ネットワーク / コンピューティング]",
+        "lambdaProduct": "[イベント駆動型の関数]",
+        "vm": "[常時稼働するサービス]",
+        "comparison": "[実行モデル]"
       },
       "hero": {
-        "headline": "Execution Services"
-      },
-      "vm": {
-        "title": "Orbs VM - Decentralized Docker-Based Virtual Machine",
-        "body": "**Dedicated decentralized virtual machine, similar in concept to AWS EC2 - but decentralized.**\n\nImplement your custom service as a Docker container, without any blockchain specific knowledge. Use any programming language you like, such as Go, C++, Rust, JavaScript, Java, Python and more. Deploy your container to have it executed as an always-on service on dozens of independent decentralized validator nodes."
-      },
-      "alternatives": {
-        "title": "Compute Cloud Alternatives",
-        "body": "Amazon Web Services (AWS) is the leading centralized compute cloud platform in the world today. AWS segments the compute cloud market according to the flexibility/complexity tradeoff. For simplicity - AWS offers the serverless AWS Lamda. For flexibility - AWS offers the powerful AWS EC2.\n\nThe Orbs network aspires to be the leading decentralized compute cloud platform. Orbs segments the decentralized compute cloud market in a similar way. For simplicity - Orbs offers the serverless AWS Lambda. For flexibility - Orbs offers the powerful Orbs VM."
-      },
-      "evolution": {
-        "title": "Evolution of Decentralized Execution",
-        "body": "The first decentralized execution platform in the world that was truly Turing-complete is the Ethereum Virtual Machine (EVM). The EVM was a marvel of innovation, but for security considerations as a base layer, had to limit its execution capabilities in a tight security sandbox.\n\nOrbs Lambda expands these capabilities significantly by allowing developers to use the world's most popular language - JavaScript - without limits and fully access data outside the chain.\nOrbs VM takes execution capabilities a step further and allows developers to use any programming language over the world's most popular container - Docker."
+        "headline": "スマートコントラクトの先へ、\n実行ロジックを拡張。",
+        "intro": "機関投資家向け取引アプリケーションには、個々のトランザクションを超えて動作し続ける実行ロジックが必要です。Orbs LambdaとOrbs VMは、使い慣れた開発ツールでイベント駆動型の自動化と常時稼働サービスを支える分散型コンピューティングを提供します。",
+        "cta": "開発を始める"
       },
       "lambdaProduct": {
-        "title": "Orbs Lambda - Decentralized Serverless Cloud Function",
-        "body": "**Event driven, serverless and decentralized computing solution, similar in concept to AWS Lambda - but decentralized.**\n\nWrite your cloud function in regular JavaScript, without any blockchain specific knowledge. Code can utilize familiar node.js libraries such as node-fetch. Select a trigger for execution, like running on a new L1/L2 block or on a new L1/L2 on-chain event, and deploy. Your function will be executed on dozens of independent decentralized validator nodes."
+        "title": "Orbs Lambda — 分散型サーバーレスクラウド関数",
+        "tagline": "オンチェーンのイベントに応答する関数。",
+        "body": "オンチェーンのイベントが発生したときにアプリケーションが行う処理を、JavaScriptの関数として記述します。Orbsにデプロイすると、使い慣れたNode.jsライブラリや外部データを活用しながら、自動的に実行できます。"
+      },
+      "vm": {
+        "title": "Orbs VM — Dockerベースの分散型仮想マシン",
+        "tagline": "使うツールを選び、サービスを継続して稼働させる。",
+        "body": "好みのプログラミング言語やライブラリを使用できます。サービスをDockerコンテナにまとめてOrbsにデプロイすると、継続的に稼働してデータを監視し、アプリケーションを支えます。"
+      },
+      "comparison": {
+        "title": "用途に合う実行モデルを選ぶ",
+        "intro": "どちらもOrbsネットワークで実行されるロジックにより、オンチェーンアプリケーションを拡張します。",
+        "items": {
+          "lambdaProduct": {
+            "title": "Lambda",
+            "body": "関数とトリガーで、特定のタスクを処理します。"
+          },
+          "vm": {
+            "title": "VM",
+            "body": "コンテナと常時稼働環境で、独自のサービスを動かします。"
+          }
+        }
       }
     },
     "pos": {
       "meta": {
-        "title": "Proof of Stake",
+        "title": "OrbsのProof of Stakeユニバース",
         "description": "Orbs PoS V3 — マルチチェーンステーキング、ガーディアン、デリゲーターとネットワークのセキュリティ。"
       },
       "eyebrows": {
-        "hero": "[NETWORK / STAKING]",
+        "hero": "[ネットワーク / ステーキング]",
         "roles": "[ROLES]",
         "v3": "[POS V3]",
         "explainers": "[HOW IT WORKS]"
       },
       "hero": {
-        "headline": "OrbsのPoSユニバース：\nガーディアンの時代",
-        "intro": "The Orbs Proof-of-Stake (PoS) Universe is the backbone of the Orbs network and the Universe that is being created. Orbs’ current PoS model - “Orbs PoS V3: Multi-chain Staking” utilizes Orbs’ hybrid architecture and cross-chain capabilities to deploy multi-chain Orbs PoS staking on both Ethereum and Polygon."
+        "headline": "Orbs プルーフ・オブ・ステーク V3：\nマルチチェーン・ステーキング",
+        "intro": "Orbsのプルーフ・オブ・ステーク（PoS）ユニバースは、Orbsネットワークとそのエコシステムの基盤です。現在のモデル「Orbs PoS V3：マルチチェーン・ステーキング」は、Orbsのハイブリッド構成とクロスチェーン機能を活用し、EthereumとPolygonの両方でPoSステーキングを提供します。"
       },
       "roles": {
         "guardian": {
           "title": "ガーディアン",
           "subtitle": "Orbs のガーディアンは Orbs コミュニティの代表として、ネットワークのセキュリティを維持し、 ネットワークが成功するために時間と労力を割いています。以前はガーディアンと、ノード運用をする技術的な役割のバリデータを区別していましたが、現在はガーディアンがノードの運用も行います。",
           "linkText": "ガーディアンになる！",
-          "body": "役割と責任\n\n- ガーディアンは Orbs ネットワーク・ノードを運用し、アプリケーションを実行します。\n- ガーディアンは、デリゲータのコミュニティへのステーキング報酬分配に責任を負うと同時に、分配比率を決定する権利も有します。\n- Orbs は[ハイブリッドブロックチェーン](https://www.orbs.com/white-papers/orbs-pos-v2-the-age-of-guardians-section-pos-on-ethereum)であり、Orbs PoS エコシステムのセキュリティと透明性を高めるために Ethereum と Polygon を利用しています。Ethereum 上で運用する Orbs ガーディアン--は、Ethereum ノードを実行する必要があります。V3 の一環として、ガーディアンは Polygon ネットワーク上でも運用することができます。その場合は Ethereum ノードを実行する必要はありません。\n- ガーディアンは、[認定委員会](https://www.orbs.com/white-papers/orbs-pos-v2-the-age-of-guardians-section-election-committees)に参加することで、認定ガーディアンのみに与えられる仮想チェーンの運用オプションが得られ、またそれに対する追加のインセンティブを受ける資格が得られます。\n\nインセンティブ\n\n- Orbs で仮想チェーンを実行するアプリケーションは、仮想チェーンに割り当てられた計算リソースにかかる費用を月額料金としてガーディアンに直接支払います。\n- ガーディアンは、ネットワークを運用し、ネットワークのセキュリティに貢献することで、委任されたステーク額の少なくとも 3.33%の報酬を受け取ります。\n- 認定委員会への参加を選択したガーディアンには、DAI で配布されるブートストラップ基金が配布されます。"
+          "body": "役割と責任\n\n- ガーディアンはOrbsネットワークのバリデーターノードを運営し、利用されているアプリケーションを実行します。\n- ガーディアンはデリゲータへのステーキング報酬の分配を担い、その分配比率を変更できます。\n- [認定委員会](https://www.orbs.com/white-papers/orbs-pos-v2-the-age-of-guardians-section-election-committees)に参加し、認定ガーディアンを必要とする仮想チェーンを運営することもできます。認定委員会のメンバーには追加のインセンティブがあります。\n- ガーディアンにはコミュニティとデリゲータのステークに対する責任が求められます。[OGV-1&2](https://www.orbs.com/Reinstating-Guardians-Self-Stake-Requirement/)に従い、総委任ステークの少なくとも3%を自己ステーキングする必要があります。\n\n経済的インセンティブ\n\n- Orbs上で仮想チェーンを利用するアプリケーションは、割り当てられた計算資源の費用として、ガーディアンに直接手数料を支払います。\n- ガーディアンはネットワークの運営と安全性への貢献に対し、委任されたステークの少なくとも3.33%のステーキング報酬を受け取ります。\n- 認定委員会に参加するガーディアンは、DAIで分配されるブートストラップ基金を受け取ります。"
         },
         "delegator": {
           "title": "デリゲータ",
@@ -712,8 +1231,8 @@
         "item6": "バリデータ・ノードの合理化"
       },
       "links": {
-        "v3": "Orbs V3: Multi-chain Staking",
-        "v25": "Orbs V2.5 Update documentation"
+        "v3": "Orbs V3：マルチチェーン・ステーキング",
+        "v25": "Orbs V2.5アップデートのドキュメント"
       }
     },
     "notifications": {
@@ -741,7 +1260,7 @@
         "title": "Recent community contributions"
       },
       "schema": {
-        "title": "Powered by Orbs Network",
+        "title": "Orbsネットワークが支えます",
         "body": "Notification schemas are constantly executed by protocol alert nodes in order to analyze new blocks of on-chain data for notifying protocol subscribers. Alert nodes are running on Orbs Network, a permissionless and decentralized oracle chain, and executed by the public validators of the network. Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019."
       },
       "apps": {
@@ -752,28 +1271,28 @@
     "brandAssets": {
       "meta": {
         "title": "ブランドアセット",
-        "description": "Download the Orbs logo in horizontal, vertical, gradient, black and white variants, as PNG or SVG."
+        "description": "Orbsロゴの横型・縦型、グラデーション・黒・白の各バリエーションをPNGまたはSVGでダウンロードできます。"
       },
       "items": {
-        "horizontal-gradient-logo": "Horizontal gradiant logo",
-        "vertical-gradient-logo": "Vertical gradiant logo",
-        "horizontal-black-logo": "Horizontal Black logo",
-        "vertical-black-logo": "Vertical Black logo",
-        "horizontal-white-logo": "Horizontal White logo",
-        "vertical-white-logo": "Vertical White logo",
-        "white-logo": "White logo",
-        "gradient-logo": "Gradiant logo",
-        "black-logo": "Black logo"
+        "horizontal-gradient-logo": "横型グラデーションロゴ",
+        "vertical-gradient-logo": "縦型グラデーションロゴ",
+        "horizontal-black-logo": "横型ブラックロゴ",
+        "vertical-black-logo": "縦型ブラックロゴ",
+        "horizontal-white-logo": "横型ホワイトロゴ",
+        "vertical-white-logo": "縦型ホワイトロゴ",
+        "white-logo": "ホワイトロゴ",
+        "gradient-logo": "グラデーションロゴ",
+        "black-logo": "ブラックロゴ"
       }
     },
     "contact": {
       "meta": {
-        "title": "Contact Us",
+        "title": "お問い合わせ",
         "description": "Orbsへのお問い合わせ。ネットワーク上での開発、ガーディアンの運営、その他のご相談はこちらから。言語別の公式チャンネル一覧も掲載しています。"
       },
       "hero": {
         "title": "問い合わせ",
-        "subtitle": "たくさんのお問い合わせをお待ちしています。ご連絡方法はこちらです。"
+        "subtitle": ""
       },
       "form": {
         "firstName": "名",
@@ -789,7 +1308,8 @@
         "contactTypes": {
           "venue": "取引プラットフォーム",
           "institution": "機関投資家",
-          "developer": "開発者"
+          "developer": "開発者",
+          "other": "その他"
         },
         "invalidContactType": "有効な選択肢を選んでください",
         "message": "メッセージ",
@@ -807,19 +1327,20 @@
         "orEmail": "または <address></address> までメールでご連絡ください。"
       },
       "channels": {
-        "title": "Social Channels",
+        "title": "ソーシャルチャンネル",
         "groups": {
           "telegram": "Telegram",
           "x": "X",
           "youtube": "YouTube",
-          "community": "Communication",
+          "community": "コミュニティ",
           "blog": "Blog"
         },
         "languages": {
-          "en": "English",
-          "ja": "Japanese",
-          "ko": "Korean",
-          "announcements": "Announcements Channel"
+          "en": "英語",
+          "ja": "日本語",
+          "ko": "韓国語",
+          "announcements": "お知らせ（英語）",
+          "telegramChat": "英語チャット"
         }
       }
     },
@@ -831,7 +1352,7 @@
       "hero": {
         "headline": "HTTP API for The Open Network (TON). Decentralized.",
         "intro": "The most reliable decentralized RPC network for TON dapps making HTTP queries to blockchain state from the browser. Unrestricted anonymous access without an API key.",
-        "cta": "Get started",
+        "cta": "利用を始める",
         "github": "GitHub"
       },
       "cards": {
@@ -879,7 +1400,7 @@
         "telegram": "Telegram support"
       },
       "schema": {
-        "title": "Powered by Orbs Network",
+        "title": "Orbsネットワークが支えます",
         "body": "Orbs Network has dozens of independent validators running Proof-of-Stake consensus with over $100 million staked. The network has been running in mainnet since 2019. By routing your dapp RPC requests through Orbs validators, you maintain decentralized access to the chain without relying on a single centralized business."
       },
       "voices": {
@@ -902,7 +1423,7 @@
       "hero": {
         "headline": "No-code DAO governance tool for The Open Network (TON)",
         "intro": "TON.Vote is a completely decentralized, on-chain and trustless DAO voting platform built exclusively for the TON ecosystem. Official DAO voting platform of the TON Foundation.",
-        "cta": "Get started",
+        "cta": "利用を始める",
         "whitePaper": "White paper"
       },
       "tools": {
@@ -942,7 +1463,7 @@
         },
         "slideLabel": "Show slide {number}",
         "telegram": "Telegram support",
-        "cta": "Get started"
+        "cta": "利用を始める"
       },
       "partners": {
         "title": "Launch partners"
@@ -954,144 +1475,161 @@
     },
     "home": {
       "meta": {
-        "title": "Trading infrastructure for on-chain finance",
-        "description": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected."
+        "title": "オンチェーン金融のための取引インフラ",
+        "description": "流動性の集約、高度な現物注文、無期限先物、分散型実行を提供するオンチェーン金融の取引インフラ。dSPOT、dPERPS、Execution Servicesを支えます。"
       },
       "hero": {
-        "eyebrow": "[$14B+ in trading volume]",
-        "headline": "Trading infrastructure for on-chain finance",
-        "intro": "One execution stack for spot and perpetual futures — aggregated liquidity, advanced orders, and perpetuals, delivered as an API. Non-custodial, gasless, MEV-protected, and proven with $14B+ in executed volume.",
-        "cta": "Talk to the team"
+        "eyebrow": "[累計取引高140億ドル超]",
+        "headline": "オンチェーン金融のための\n取引インフラ",
+        "intro": "流動性の集約、高度な現物注文、無期限先物、分散型コンピューティングをひとつの実行基盤で提供します。dSPOT、dPERPS、Execution Servicesを支え、累計取引高は140億ドルを超えています。",
+        "cta": "チームに相談する"
       },
       "stats": {
         "processed": {
           "value": "$14B+",
-          "label": "Processed"
+          "label": "累計取引高"
         },
         "liveSince": {
-          "value": "2023",
-          "label": "Live since"
+          "value": "2017",
+          "label": "プロジェクト開始"
         },
         "venues": {
           "value": "30+",
-          "label": "Venues"
+          "label": "導入プラットフォーム"
         },
         "chains": {
-          "value": "8",
-          "label": "Chains"
+          "value": "10+",
+          "label": "対応チェーン"
         },
         "staked": {
-          "value": "$100M+",
-          "label": "Staked"
+          "value": "1.1B",
+          "label": "ステーキング済みORBS"
         }
       },
       "stack": {
-        "eyebrow": "[The stack]",
-        "title": "Best price.\nBetter execution.\nOne stack.",
-        "intro": "Institutional-grade trading infrastructure — now available for on-chain execution. Aggregated liquidity for the best price. Advanced order types for execution control. High performance perpetual futures trading protocol. The market structure institutions know, delivered on-chain.",
-        "cta": "Discover",
+        "eyebrow": "[取引執行インフラ]",
+        "title": "最適な価格。\nより良い執行。\nひとつの基盤。",
+        "intro": "流動性の集約と高度な現物注文。無期限先物のインフラ。イベント駆動型の関数と常時稼働するサービス。Orbsネットワークが支える3つの製品を、オンチェーン金融のために提供します。",
+        "cta": "詳しく見る",
         "dspot": {
-          "eyebrow": "Spot market",
+          "eyebrow": "現物市場",
           "title": "dSPOT",
-          "body": "Liquidity Aggregation as well as TWAP, limit, stop-loss and take-profit — the risk-management order types trading teams expect, executed on-chain. ~90% lower gas than the previous generation, 100% fill rate across 8 chains."
+          "body": "流動性の集約と高度な現物注文をプラットフォームに組み込めます。指値、TWAP、損切り、利確に対応し、利用できる機能は各連携先によって異なります。"
         },
         "dperps": {
-          "eyebrow": "Derivatives",
+          "eyebrow": "デリバティブ",
           "title": "dPERPS",
-          "body": "Turn-key on-chain perpetual futures — execution, hedging, liquidation, oracles, and UI — for any venue or developer."
+          "body": "取引の執行から自社ブランドの取引画面まで、プラットフォームと開発者向けに無期限先物のインフラを提供します。"
+        },
+        "executionServices": {
+          "eyebrow": "分散型コンピューティング",
+          "title": "Execution Services",
+          "body": "Orbs Lambdaによるイベント駆動型関数と、Orbs VMによる常時稼働のコンテナ化サービス。"
         }
       },
       "venues": {
-        "title": "Venues running on the stack"
+        "title": "Orbsの実行基盤を導入するプラットフォーム"
       },
       "solutions": {
-        "eyebrow": "[Solutions]",
-        "title": "Built for every on-chain trading team.",
+        "eyebrow": "[ソリューション]",
+        "title": "あらゆるオンチェーン取引チームのために。",
         "venues": {
-          "eyebrow": "Venues",
-          "title": "Exchanges & wallets",
-          "body": "Embed advanced orders and aggregated liquidity in your UI — frontend-only integration, white-label ready.",
-          "cta": "For venues"
+          "eyebrow": "プラットフォーム",
+          "title": "取引所・ウォレット",
+          "body": "流動性の集約、高度な現物注文、無期限先物取引の機能を、自社プラットフォームに統合できます。",
+          "cta": "取引プラットフォーム向け"
         },
         "institutions": {
-          "eyebrow": "Institutions",
-          "title": "Trading organisations",
-          "body": "API access for desks, treasuries and asset managers. Assets never leave the client’s wallet. Works with Fireblocks-class custody and any EIP-712 signer.",
-          "cta": "For institutions"
+          "eyebrow": "機関投資家",
+          "title": "取引を行う組織",
+          "body": "トレーディングデスク、財務部門、資産運用会社向けの取引執行インフラです。主要なカストディ事業者と連携でき、資金の移動方法は製品によって異なります。",
+          "cta": "機関投資家向け"
         },
         "aiAgents": {
-          "eyebrow": "AI agents",
-          "title": "Programmatic traders",
-          "body": "The DeFi agent execution layer — agents prepare, sign and manage orders; every trade is co-signed by an independent oracle.",
-          "cta": "For AI agents"
+          "eyebrow": "AIエージェント",
+          "title": "プログラム取引を行うトレーダー",
+          "body": "DeFiエージェント向けの取引執行レイヤー。AIエージェントが注文の準備、署名、管理を行い、すべての取引に対して独立したオラクルが共同署名します。",
+          "cta": "AIエージェント向け"
         }
       },
       "features": {
-        "eyebrow": "[Key features & benefits]",
-        "title": "Institutional-grade, by default.",
-        "cta": "Talk to the team",
-        "github": "View on GitHub",
+        "eyebrow": "[主な機能とメリット]",
+        "title": "金融機関レベルの品質を、標準で。",
+        "cta": "チームに相談する",
+        "github": "GitHubで見る",
         "nonCustodial": {
-          "title": "Non-custodial by design",
-          "panel": "Assets never leave the client's wallet. Orders sign from the wallet and settle back to it — no handoff to Orbs or any venue."
+          "title": "ノンカストディアル設計",
+          "panel": "dSPOTの注文はウォレットで署名され、資金は執行までウォレットに残ります。dPERPSは自己管理型のスマートコントラクト取引モデルを採用し、担保は該当するコントラクトが扱います。資金の流れは製品によって異なります。"
         },
         "gasless": {
-          "title": "Gasless across every product",
-          "panel": "End users pay nothing for gas. Orbs absorbs chain-level costs and abstracts the complexity behind every transaction."
+          "title": "すべての製品でガス代不要",
+          "panel": "エンドユーザーはガス代を支払いません。Orbsがチェーン上の費用を負担し、各トランザクションの複雑さを抽象化します。"
         },
         "mev": {
-          "title": "MEV protection",
-          "panel": "Trades route through a private RFQ layer that prices off-chain and settles on-chain. No mempool exposure. No sandwich attacks."
+          "title": "MEV対策",
+          "panel": "オフチェーンで価格を決め、オンチェーンで決済する非公開RFQレイヤーを通して取引します。メンプールへの露出やサンドイッチ攻撃を防ぎます。"
         },
         "permissionless": {
-          "title": "Permissionless integration",
-          "panel": "Open SDKs, public smart contracts, audited docs. Integrate without partnership agreements, gatekeepers, or revenue shares."
+          "title": "パーミッションレスな統合",
+          "panel": "公開SDK、公開スマートコントラクト、監査済みドキュメント。提携契約、許可を与える管理者、収益分配を必要とせずに統合できます。"
         },
         "robust": {
-          "title": "Robust infrastructure",
-          "panel": "Spot products live since 2023. $14B+ processed across 30+ venues on 10+ chains. Battle-tested on every critical execution path."
+          "title": "堅牢なインフラ",
+          "panel": "現物取引製品は2023年から稼働しています。10以上のチェーン、30以上のプラットフォームで140億ドル超の取引を処理し、重要な実行経路で実績を重ねています。"
         },
         "whiteLabel": {
-          "title": "White-label ready",
-          "panel": "Embed Orbs execution under your own brand. Custom UI, themed widgets, full UX control — your platform, our pipes."
+          "title": "ホワイトラベル対応",
+          "panel": "自社ブランドのもとにOrbsの実行機能を組み込めます。独自UI、テーマ対応ウィジェット、UX全体の制御。自社のプラットフォームをOrbsの基盤が支えます。"
         },
         "reporting": {
-          "title": "Reporting & audit trails",
-          "panel": "Every order leaves a deterministic on-chain trail. Compliance-ready exports cover trades, slippage, fills, and routing decisions."
+          "title": "レポート作成と監査証跡",
+          "panel": "すべての注文に確定的なオンチェーンの記録が残ります。取引、スリッページ、約定、ルーティング判断のデータを、コンプライアンス対応のために出力できます。"
         },
         "audited": {
-          "title": "Audited, immutable, ownerless contracts",
-          "panel": "No admin keys. No upgrade paths. No kill switches. Audited by leading firms — the code is the contract."
+          "title": "監査済み・変更不可・所有者のいないコントラクト",
+          "panel": "管理者キー、アップグレード経路、停止スイッチはありません。主要監査機関の監査を受けたコードそのものが契約です。"
+        },
+        "grid": {
+          "nonCustodial": "dSPOTでは、注文が執行されるまで資金はユーザーのウォレットに保持されます。dPERPSでは、担保の管理に自己管理型のスマートコントラクトを使用します。",
+          "gasless": "取引ごとにネットワーク手数料を支払うことなく、高度な注文を執行できます。",
+          "mev": "組み込みの保護機能により、取引執行時の不正利用リスクや価格操作からの保護を図ります。",
+          "permissionless": "チェーンやプラットフォームを問わず、開発者に開かれたアクセスを提供します。",
+          "robust": "機関投資家規模の利用を想定した高性能インフラ。",
+          "whiteLabel": "Orbsの技術を統合し、自社ブランドでシームレスな取引体験を提供できます。",
+          "reporting": "オンチェーン上の取引執行記録を、レポート作成や監査証跡の確保に活用できます。",
+          "audited": "公開されているスマートコントラクトの監査報告書とソースコードは、デューデリジェンスに役立ちます。各監査報告書は、指定されたコードとバージョンを対象としています。"
         }
       },
       "network": {
-        "eyebrow": "[Network]",
-        "title": "Powered by the Orbs Network.",
-        "body": "Orbs is a Layer-3 blockchain infrastructure network designed to augment the capabilities of existing smart contracts and power advanced on-chain trading execution.\n\nThe network uses proof-of-stake consensus and dozens of independent validators, with $100M+ staked. Orbs mainnet has been live since 2019."
+        "eyebrow": "[ネットワーク]",
+        "title": "Orbsネットワークが支える実行基盤。",
+        "body": "Orbsはスマートコントラクトの機能を拡張し、機関投資家の取引要件に応えます。分散型レイヤー3ネットワークが既存のレイヤー1・レイヤー2と連携し、dSPOT、dPERPS、Execution Servicesを支えます。アプリケーションが新しいチェーンへ流動性を移す必要はありません。\n\n独立したガーディアンがネットワークを運営し、プルーフ・オブ・ステークとORBSトークンの委任によって保護します。11億ORBSがステーキングされています。プロジェクトは2017年に開始し、メインネットは2019年から稼働しています。"
       },
       "news": {
-        "eyebrow": "[Resources]",
-        "title": "In the news.",
-        "previous": "Previous articles",
-        "next": "More articles",
-        "readTime": "{minutes} min read"
+        "eyebrow": "[リソース]",
+        "title": "最新のニュース。",
+        "previous": "前の記事",
+        "next": "次の記事",
+        "readTime": "読了時間 {minutes}分"
       },
       "discover": {
-        "title": "Discover.",
+        "title": "詳しく知る。",
         "blog": "Blog",
-        "whitePapers": "Whitepapers",
+        "developers": "開発者ドキュメント",
         "faq": "FAQ",
+        "securityAndAudits": "セキュリティと監査",
+        "whitePapers": "Whitepapers",
         "cta": "View resources"
       },
       "marquee": {
-        "oneApi": "One API.",
-        "everyOrderType": "Every on-chain order type.",
-        "institutionalGrade": "Institutional-grade execution."
+        "oneApi": "ひとつのAPI。",
+        "everyOrderType": "あらゆるオンチェーン注文。",
+        "institutionalGrade": "機関投資家水準の執行。"
       },
       "connect": {
-        "follow": "Follow us",
-        "community": "Join community",
-        "contact": "Talk to the team"
+        "follow": "フォローする",
+        "community": "コミュニティに参加する",
+        "contact": "チームに相談する"
       },
       "newsletter": {
         "heading": "チームからの最新情報をお届けします。",
@@ -1100,11 +1638,30 @@
         "email": "メールアドレス",
         "submit": "登録する",
         "sending": "登録中…",
-        "success": "登録が完了しました。ありがとうございます。",
-        "failed": "送信できませんでした。もう一度お試しください。",
+        "success": "登録が完了しました。ご購読ありがとうございます。",
+        "failed": "登録できませんでした。もう一度お試しください。",
         "invalidEmail": "有効なメールアドレスを入力してください。"
       },
-      "sdk": "Start building"
+      "sdk": "開発を始める",
+      "access": {
+        "eyebrow": "[導入方法]",
+        "title": "統合方法を選ぶ。",
+        "whiteLabel": {
+          "title": "ホワイトラベル",
+          "body": "Orbsの取引執行機能を組み込み、自社ブランドの取引サービスを提供できます。",
+          "cta": "チームに相談する"
+        },
+        "startBuilding": {
+          "title": "開発を始める",
+          "body": "取引機能の統合に関するドキュメントをご覧ください。",
+          "cta": "開発を始める"
+        },
+        "agentic": {
+          "title": "Orbs Agentic",
+          "body": "オンチェーン取引の実行に対応したAIエージェントのワークフローをご覧ください。",
+          "cta": "Orbs Agenticの詳細を見る"
+        }
+      }
     },
     "smartContracts": {
       "meta": {
@@ -1148,7 +1705,7 @@
         },
         "item7": {
           "name": "ステーキング報酬",
-          "summary": "ステーキング報酬コントラクトは、PoS エコシステムの参加者のステーキング報酬の状態を管理します。ステーキング報酬アーキテクチャは、フレーミングプールで一般的なシェアあたりの報酬アーキテクチャに基づいています。コントラクトアーキテクチャは、グローバル割り当て、委員会のガーディアンがウエイトに基づいてシェアを受け取る、委任者がステークに基づいてガーディアンの報酬の一部を受け取るという 3 つのレベルに基づく Orbs の PoS アーキテクチャ用に設計されました。",
+          "summary": "ステーキング報酬コントラクトは、PoS エコシステムの参加者のステーキング報酬の状態を管理します。ステーキング報酬アーキテクチャは、フレーミングプールで一般的なシェアあたりの報酬アーキテクチャに基づいています。コントラクトアーキテクチャは、グローバル割り当て、委員会のガーディアンがウエイトに基づいてシェアを受け取る、デリゲータがステークに基づいてガーディアンの報酬の一部を受け取るという 3 つのレベルに基づく Orbs の PoS アーキテクチャ用に設計されました。",
           "extra": "ステーキング報酬コントラクトは、デリゲータのステークの更新とガーディアンの委員会メンバーの変更という2つのイベントで更新します。参加者は、ステーキング・コントラクトで得られたステーキング報酬を請求することができ、それに応じてシステム状態が更新されます。ステーキングは、ステーキング報酬ウォレットから資金を引き出し、すべての参加者の未請求額と同等のトークン数を保持します。"
         },
         "item8": {
@@ -1222,107 +1779,205 @@
       "viewOnEtherscan": "Etherscanで見る",
       "backLink": "Orbsの概要に戻る"
     },
+    "cookies": {
+      "meta": {
+        "title": "Cookie policy",
+        "description": "What this site stores on your device, what each item is for, and how to change or withdraw your choice."
+      }
+    },
+    "dtwapDlimitDisclaimer": {
+      "meta": {
+        "title": "dTWAP and dLIMIT disclaimer",
+        "description": "Risk disclaimer for the Orbs dTWAP and dLIMIT protocols."
+      }
+    },
+    "grantProgramTerms": {
+      "meta": {
+        "title": "Orbs Ecosystem Grant Program terms and conditions",
+        "description": "Terms and conditions governing the Orbs Ecosystem Grant Program."
+      }
+    },
     "nftContestRules": {
       "meta": {
         "title": "Orbs NFT Contest #1 official rules",
         "description": "Official rules for the Orbs NFT Contest #1, which ran in 2021 and has concluded."
       }
     },
-    "aiSkills": {
+    "venues": {
       "meta": {
-        "title": "AI Skills",
-        "description": "DeFi trading tools for AI coding agents like Claude Code, Cursor and Windsurf. Install a skill and let your agent place on-chain orders for you."
+        "title": "取引プラットフォーム向け",
+        "description": "流動性の集約、高度な現物注文、無期限先物を自社プラットフォームに。Orbsの実行機能とSushiSwapの導入事例をご覧ください。"
       },
-      "eyebrow": "[FOR AI AGENTS]",
-      "title": "AI Skills",
-      "intro": "DeFi trading tools for AI coding agents like Claude Code, Cursor, and Windsurf. Install a skill and let your agent place on-chain orders for you.",
-      "listEyebrow": "[SKILLS]",
-      "chainsLabel": "Chains",
-      "orderTypesLabel": "Order types",
-      "items": {
-        "spotOrders": {
-          "description": "Gasless limit, stop-loss, take-profit, and TWAP orders across EVM chains. Non-custodial, oracle-protected execution using immutable, audited contracts."
+      "hero": {
+        "eyebrow": "[プラットフォーム]",
+        "headline": "自社のプラットフォームに、\nより多くの取引手段を。",
+        "intro": "プロのトレーダー、機関の取引デスク、資産運用会社が求める執行ツールを、自社プラットフォームで提供できます。Orbsは流動性の集約、高度な現物注文、無期限先物をまとめて提供し、基盤の構築ではなく顧客と取引体験に注力できるようにします。",
+        "cta": "チームに相談する",
+        "secondaryCta": "開発を始める"
+      },
+      "stats": {
+        "venues": {
+          "value": "30+",
+          "label": "導入プラットフォーム"
+        },
+        "chains": {
+          "value": "10+",
+          "label": "対応チェーン"
+        },
+        "processed": {
+          "value": "$14B+",
+          "label": "累計取引高"
+        }
+      },
+      "partners": {
+        "title": "[導入パートナー]"
+      },
+      "caseStudy": {
+        "eyebrow": "[導入事例 / SushiSwap]",
+        "title": "SushiSwapで高度な現物取引の執行を。",
+        "body": "SushiSwapは、流動性の集約と高度な注文タイプを組み合わせ、Orbsによる現物取引の執行を取引体験に組み込んでいます。トレーダーは使い慣れたプラットフォームで指値注文、取引の時間分散、損切り・利確条件の自動設定を利用できます。\n\n価格、タイミング、決済の制御は、プロの執行に不可欠です。SushiSwap内のdSPOTでは、別のアプリケーションへ移ることなく、目標価格の設定、大口注文の時間分散による価格影響の低減、決済条件の自動化を行えます。",
+        "rollout": "SushiSwapの損切り・利確機能は{chains}に導入されました。",
+        "calloutsLabel": "SushiSwap導入事例のポイント",
+        "callouts": {
+          "execution": "流動性の集約と高度な現物注文。",
+          "orders": "指値、TWAP、損切り、利確。",
+          "chains": "4つのチェーンで損切り・利確機能を展開。"
+        },
+        "cta": "自社プラットフォームにdSPOTを導入"
+      },
+      "marquee": {
+        "advancedOrders": "高度な注文。",
+        "liquidityRoutes": "より多くの流動性経路。",
+        "yourBrand": "自社ブランドで。"
+      }
+    },
+    "dspot": {
+      "meta": {
+        "title": "dSPOT",
+        "description": "指値、TWAP、損切り・利確、最適価格を目指す流動性の集約。Orbs L3が支える、ひとつのノンカストディアルな実行基盤。"
+      },
+      "hero": {
+        "eyebrow": "[dSPOT]",
+        "headline": "高度な現物取引。\n統合された実行基盤。",
+        "intro": "指値、TWAP、損切り・利確、最適価格を目指す流動性の集約。Orbs L3が支える、ひとつのノンカストディアルな実行基盤。",
+        "cta": "注文タイプを見る"
+      },
+      "modules": {
+        "eyebrow": "[dSPOTモジュール]",
+        "heading": "高度な注文と最適価格の流動性を、ひとつの実行基盤に。",
+        "body": "dSPOTは高度な注文タイプとLiquidity Hubを組み合わせます。トレーダーは執行をより細かく制御でき、プラットフォームは追加の流動性経路と競争力のある価格を利用できます。",
+        "dlimit": {
+          "name": "dLIMIT",
+          "body": "指定した価格、またはそれより有利な価格で注文します。",
+          "cta": "dLIMITについて"
+        },
+        "dtwap": {
+          "name": "dTWAP",
+          "body": "大口取引を時間分散し、価格への影響を抑えます。",
+          "cta": "dTWAPについて"
+        },
+        "dsltp": {
+          "name": "dSLTP",
+          "body": "現物市場の損切り・利確注文を自動化します。",
+          "cta": "dSLTPについて"
+        },
+        "liquidityHub": {
+          "name": "Liquidity Hub",
+          "body": "DEXが外部の流動性にアクセスし、より有利なスワップ価格を提供できるようにします。",
+          "cta": "Liquidity Hubについて"
+        },
+        "previous": "前の注文タイプ",
+        "next": "次の注文タイプ"
+      },
+      "solvers": {
+        "title": "ソルバーと流動性の提供元"
+      },
+      "execution": {
+        "eyebrow": "[最適な条件での取引執行]",
+        "heading": "最適な条件での取引執行を目指した設計。",
+        "body": "執行まで資産の管理権を保持しながら、追加の流動性経路と競合する見積もりにアクセスできます。Orbs L3がオンチェーンの処理負荷を減らし、スワップの決済は引き続きオンチェーンで行われます。",
+        "points": {
+          "pricing": "競争力のある価格 — 追加の流動性経路と競合する見積もり",
+          "custody": "ノンカストディアル設計 — 資産は執行までユーザーのウォレットに残ります",
+          "settlement": "オンチェーン決済 — スワップはオンチェーンで透明に決済されます"
+        }
+      },
+      "band": "資産の管理権を保ったまま、高度な取引執行を。",
+      "network": {
+        "eyebrow": "[ネットワーク]",
+        "heading": "Orbs L3が支えます。",
+        "body": "Orbs L3はdSPOTの実行インフラを提供します。オンチェーンの処理負荷を減らしつつ、決済の透明性とオンチェーンでの検証可能性を維持します。",
+        "cta": "ドキュメントを読む"
+      },
+      "marquee": {
+        "control": "より自在な取引を。",
+        "liquidity": "集約された流動性へ。",
+        "custody": "執行まで資産を自己管理。"
+      },
+      "closing": {
+        "follow": "フォローする",
+        "community": "コミュニティに参加する",
+        "contact": "チームに相談する"
+      }
+    },
+    "securityAndAudits": {
+      "meta": {
+        "title": "セキュリティと監査",
+        "description": "製品ごとの執行制御、Orbsネットワークのセキュリティ、dSPOTスマートコントラクトの監査報告書とソースコード。"
+      },
+      "hero": {
+        "eyebrow": "[セキュリティと監査]",
+        "headline": "セキュリティと監査",
+        "intro": "機関投資家の導入には、資産操作の承認方法、注文の制約、検証済みコンポーネントの理解が欠かせません。Orbsは分散型インフラと製品ごとの執行制御を組み合わせ、スマートコントラクトの監査報告書とソースコードを公開してデューデリジェンスを支援します。"
+      },
+      "browse": "セキュリティ資料",
+      "scope": "各監査の対象は、レポートに記載されたコードとバージョンです。",
+      "orders": {
+        "eyebrow": "[執行制御]",
+        "title": "注文の承認と執行",
+        "body": "dSPOTでは、取引チームが署名付き注文を通じて執行権限を定めます。価格上限・下限、スリッページ設定、有効期限が約定条件を制約し、資金は執行までウォレットに残ります。注文の承認と資産の移動を分離する仕組みです。dPERPSでは異なる担保・決済モデルを使用します。"
+      },
+      "network": {
+        "eyebrow": "[Orbs L3]",
+        "title": "ネットワークのセキュリティ",
+        "body": "ガーディアンと呼ばれる独立したバリデーターがOrbs L3を運営します。ネットワークはプルーフ・オブ・ステークを採用し、ORBS保有者がガーディアンへステークを委任します。11億ORBSがステーキングされ、Orbsのサービスを動かすインフラを支えています。"
+      },
+      "spotAudits": {
+        "eyebrow": "[dSPOT]",
+        "title": "dSPOTスマートコントラクト監査",
+        "body": "AstraSecがSpotコントラクトを監査しています。初回と更新版のレポートを以下から確認できます。監査範囲と指摘事項は各レポートに記載されています。",
+        "reports": {
+          "astraInitial": "dSPOTコントラクト：AstraSec初回監査",
+          "astraUpdated": "dSPOTコントラクト：AstraSec更新版監査"
+        }
+      },
+      "earlierAudits": {
+        "eyebrow": "[以前の現物取引コントラクト]",
+        "title": "以前の現物取引コントラクトの監査",
+        "reports": {
+          "peckShield": "PeckShieldレポート",
+          "rdAuditors": "RD Auditorsレポート"
+        }
+      },
+      "sources": {
+        "eyebrow": "[ソースコード]",
+        "title": "ソースコードと技術ドキュメント",
+        "links": {
+          "spot": "dSPOTコントラクトとドキュメント",
+          "network": "Orbsネットワークのリポジトリ"
         }
       }
     },
-    "spotOrders": {
+    "tetraArchive": {
       "meta": {
-        "title": "Spot Advanced Swap Orders",
-        "description": "Install this AI skill in any AI coding agent. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit and TWAP orders on-chain, powered by Orbs L3."
-      },
-      "hero": {
-        "headline": "Gasless advanced\nswap orders for\nAI agents & humans",
-        "intro": "Install this AI skill in any AI coding agent like Claude Code, Cursor, or Codex. Non-custodial, oracle-protected execution for limit, stop-loss, take-profit, and TWAP orders on-chain — powered by Orbs L3.",
-        "cta": "Get Started"
-      },
-      "quickstart": {
-        "title": "Quick Start",
-        "intro": "Install this AI skill in any AI coding agent like Claude Code, Cursor, or Codex in seconds.",
-        "items": {
-          "human": {
-            "title": "For Humans",
-            "body": "Paste this prompt into any AI coding agent."
-          },
-          "agent": {
-            "title": "For AI Agents / LLMs",
-            "body": "Point your agent to the skill spec."
-          }
-        }
-      },
-      "features": {
-        "title": "AI Agent Order Types",
-        "items": {
-          "market": {
-            "title": "Market Orders",
-            "body": "Instant gasless swaps at best available price with oracle protection."
-          },
-          "limit": {
-            "title": "Limit Orders",
-            "body": "Set a target price — the order executes automatically when the market reaches it."
-          },
-          "stopLoss": {
-            "title": "Stop-Loss",
-            "body": "Protect your position with automatic sell triggers below a price threshold."
-          },
-          "takeProfit": {
-            "title": "Take-Profit",
-            "body": "Lock in gains by auto-selling when price rises above your target."
-          },
-          "twap": {
-            "title": "TWAP / Chunked",
-            "body": "Split large orders into time-weighted chunks with oracle protection on every fill."
-          }
-        }
-      },
-      "howItWorks": {
-        "title": "How It Works",
-        "steps": {
-          "intent": {
-            "title": "Define Intent",
-            "body": "User or agent specifies: chain, tokens, amount, order type, and optional price constraints."
-          },
-          "approve": {
-            "title": "Wrap & Approve",
-            "body": "If needed, wrap native tokens and approve the contract to spend your tokens. The skill provides the calldata."
-          },
-          "prepare": {
-            "title": "Prepare Order",
-            "body": "The skill generates approval calldata, EIP-712 typed data, and relay-ready submit payloads."
-          },
-          "sign": {
-            "title": "Sign & Submit",
-            "body": "User signs with their wallet (EIP-712). The signed order is submitted to the decentralized relay."
-          },
-          "execute": {
-            "title": "Oracle-Protected Execution",
-            "body": "Orbs L3 network executes with best-price routing and oracle protection on every chunk."
-          }
-        }
-      },
-      "chains": {
-        "title": "Supported Chains",
-        "nameHeader": "Chain",
-        "idHeader": "Chain ID"
+        "title": "Here’s how to use TETRA, Orbs’ staking wallet",
+        "description": "Archived TETRA staking wallet tutorial by Nate Simantov, preserved with its original screenshots. Original publication date unavailable."
+      }
+    },
+    "challengeArchive": {
+      "meta": {
+        "title": "Orbs Agentic Challenge — アーカイブ",
+        "description": "2026年5月4日〜24日の Orbs Agentic Challenge の情報とルール。参加受付は終了しました。"
       }
     },
     "localizedHome": {
@@ -1334,16 +1989,30 @@
       "intro": "実用的なブロックチェーンソリューション。 スケーリング可能な予測可能な料金。アプリ間の分離。 あらゆる言語のスマートコントラクト。",
       "overview": "詳細はこちら"
     },
-    "challengeArchive": {
+    "news": {
+      "title": "メディアで紹介されたOrbs",
+      "description": "Orbsを紹介する最新の記事や出版物をご覧ください。",
+      "empty": "まだ報道記事はありません。後日改めてご確認ください。",
+      "paginationLabel": "報道記事のページ移動",
       "meta": {
-        "title": "Orbs Agentic Challenge — アーカイブ",
-        "description": "2026年5月4日〜24日の Orbs Agentic Challenge の情報とルール。参加受付は終了しました。"
+        "title": "メディア掲載",
+        "description": "Orbsに関する報道記事や出版物をご紹介します。",
+        "pageTitle": "メディア掲載 — {page}ページ",
+        "notFound": "ページが見つかりません"
       }
     }
   },
   "devDocs": {
     "sdk": "Start building",
     "api": "API",
-    "skill": "Skill"
+    "skill": "スキル",
+    "startBuilding": "開発を始める"
+  },
+  "_note": "Japanese marketing refresh: brand Orbs; established Japanese technical terminology and polite explanatory prose. Product names and published PDF/code/contract identifiers remain unchanged; ordinary navigation labels use Japanese. Historical archives retain their existing copy; policy documents retain their declared source languages.",
+  "pagination": {
+    "label": "ページ送り",
+    "previous": "前へ",
+    "next": "次へ",
+    "page": "{page}ページ"
   }
 }

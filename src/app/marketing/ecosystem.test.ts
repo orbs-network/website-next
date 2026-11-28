@@ -1,10 +1,10 @@
-import { renderToStaticMarkup } from 'react-dom/server'
-import { createTranslator, type AbstractIntlMessages } from 'next-intl'
-import { describe, expect, it, vi } from 'vitest'
+import type { Locale } from '@/i18n/locales'
 import en from '@/i18n/messages/en.json'
 import ja from '@/i18n/messages/ja.json'
 import ko from '@/i18n/messages/ko.json'
-import type { Locale } from '@/i18n/locales'
+import { createTranslator, type AbstractIntlMessages } from 'next-intl'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { describe, expect, it, vi } from 'vitest'
 import { EcosystemPage } from './ecosystem'
 import { VenuesPage } from './venues'
 
@@ -48,12 +48,12 @@ describe('venues and ecosystem handoff', () => {
     expect(html).toContain('https://x.com/CarbonTerminal')
     expect(html).toContain('https://x.com/BuildOnLumia')
   })
-  it.each(['ja'] as const)('retains the existing %s directory', async (locale) => {
+  it.each(['ja'] as const)('uses the refreshed %s grid', async (locale) => {
     const html = renderToStaticMarkup(await EcosystemPage({ locale }))
-    expect(html).toContain('TON Minter')
-    expect(html).toContain('Bybit')
+    expect(html).not.toContain('TON Minter')
+    expect(html).not.toContain('Bybit')
     expect(html).not.toContain('id="dperps"')
-    expect(html).not.toContain('Orbs execution, across the ecosystem.')
+    expect(html).toContain('カテゴリで絞り込む')
   })
   it('uses the supplied venue CTAs and SushiSwap four-chain rollout', async () => {
     const html = renderToStaticMarkup(await VenuesPage({ locale: 'en' }))

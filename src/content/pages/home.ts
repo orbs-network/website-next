@@ -20,8 +20,6 @@ export type HomeCard = {
   /** Message key under its section's namespace. */
   id: string
   href: string
-  /** The content refresh starts in English; other locales retain their current cards. */
-  englishOnly?: true
   /**
    * Product mark, where the card has one.
    *
@@ -44,7 +42,7 @@ export type HomeCard = {
 }
 
 /**
- * [THE STACK] — three products in English; localised refreshes follow.
+ * [THE STACK] — three products shared by all locales.
  *
  * `dSPOT` groups dTWAP, dLIMIT, dSLTP and Liquidity Hub. Their individual
  * pages temporarily redirect to dSPOT while the inner pages are refreshed.
@@ -72,11 +70,12 @@ export const HOME_STACK: readonly HomeCard[] = [
     icon: { src: '/marketing/home/icons/dperps.svg', width: 42, height: 51 },
     accent: 'pink',
   },
-  { id: 'executionServices', href: '/execution-services', accent: 'cyan', englishOnly: true },
+  { id: 'executionServices', href: '/execution-services', accent: 'cyan' },
 ]
 
 export function homeStackForLocale(locale: Locale) {
-  return HOME_STACK.filter((card) => !card.englishOnly || locale !== 'ja')
+  void locale
+  return HOME_STACK
 }
 
 /** The three access paths in the English content handoff. */
@@ -94,7 +93,7 @@ export const HOME_SOLUTIONS: readonly HomeCard[] = [
   { id: 'aiAgents', href: '/agentic', accent: 'pink' },
 ]
 
-/** The shared feature order: English/Korean grid, Japanese legacy tabs. */
+/** The shared feature order for every locale. */
 export const HOME_FEATURES = [
   'nonCustodial',
   'gasless',

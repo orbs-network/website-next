@@ -10,14 +10,9 @@ import { textLang } from '@/i18n/script'
 /**
  * The contact page.
  *
- * The form is genuinely translated in all three locales — `jp/contact/md/form.md`
- * and `ko/contact/md/form.md` are real translations down to the error strings
- * and the success message. The channel list is not: both locale pages point at
- * the SHARED `/contact/socials/index.md`, so the group titles and language
- * prefixes are English everywhere. The catalogs mirror that rather than
- * inventing translations, and `textLang` marks each of those strings as English
- * inside the Japanese and Korean documents — which is the whole reason that
- * helper exists (#103).
+ * Form and channel labels live in the locale catalogs; destinations and order
+ * live in shared content data. Channel-specific label keys must not change the
+ * audience used by locale URL overrides.
  *
  * Two legacy defects are corrected rather than reproduced, both in the Japanese
  * form: the given-name and family-name labels were transposed, and the submit
@@ -44,6 +39,7 @@ export async function ContactPage({ locale }: { locale: Locale }) {
       venue: form('contactTypes.venue'),
       institution: form('contactTypes.institution'),
       developer: form('contactTypes.developer'),
+      other: form('contactTypes.other'),
     },
     message: form('message'),
     messagePlaceholder: form('messagePlaceholder'),
@@ -135,7 +131,7 @@ export async function ContactPage({ locale }: { locale: Locale }) {
 
                 <ul className="mt-3 flex flex-col gap-2">
                   {group.links.map((link) => {
-                    const language = channels(`languages.${link.language}`)
+                    const language = channels(`languages.${link.languageLabelKey ?? link.language}`)
 
                     return (
                       <li key={link.url} className="text-detail">

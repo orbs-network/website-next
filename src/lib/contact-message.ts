@@ -29,7 +29,7 @@ export const CONTACT_LIMITS = {
   message: 5000,
 } as const
 
-export const CONTACT_TYPES = ['venue', 'institution', 'developer'] as const
+export const CONTACT_TYPES = ['venue', 'institution', 'developer', 'other'] as const
 export type ContactType = (typeof CONTACT_TYPES)[number]
 
 export type ContactField = 'firstName' | 'lastName' | 'email' | 'phone' | 'contactType' | 'message'

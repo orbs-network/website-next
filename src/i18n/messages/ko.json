@@ -985,6 +985,15 @@
           "title": "Orbs PoS V2: Guardians의 시대 — 보상, 수수료 및 부트스트랩 지원금",
           "abstract": ""
         }
+      },
+      "ui": {
+        "breadcrumb": "현재 위치",
+        "readPdf": "백서 읽기 (PDF)",
+        "pdfUnavailable": "이 브라우저에서는 PDF를 표시할 수 없습니다.",
+        "download": "파일 다운로드",
+        "notFound": "백서를 찾을 수 없습니다",
+        "japaneseEdition": "日本語版 (PDF)",
+        "koreanEdition": "한국어판 (PDF)"
       }
     },
     "overview": {
@@ -1366,7 +1375,8 @@
         "contactTypes": {
           "venue": "거래 플랫폼",
           "institution": "기관",
-          "developer": "개발자"
+          "developer": "개발자",
+          "other": "기타"
         },
         "invalidContactType": "올바른 항목을 선택해 주세요",
         "message": "문의 내용",
@@ -1396,7 +1406,8 @@
           "en": "영어",
           "ja": "일본어",
           "ko": "한국어",
-          "announcements": "공지 채널"
+          "announcements": "공지 채널",
+          "telegramChat": "영어"
         }
       }
     },
@@ -2046,6 +2057,18 @@
       "overview": "더 알아보기",
       "contact": "문의하기",
       "partners": "DeFi 분야에서 가장 많은 선택을 받은 L3 솔루션"
+    },
+    "news": {
+      "title": "언론 속 Orbs",
+      "description": "Orbs를 소개하는 최신 기사와 발행물을 확인하세요.",
+      "empty": "아직 등록된 기사가 없습니다. 나중에 다시 확인해 주세요.",
+      "paginationLabel": "언론 보도 페이지 이동",
+      "meta": {
+        "title": "언론 보도",
+        "description": "Orbs를 소개하는 언론 보도와 발행물입니다.",
+        "pageTitle": "언론 보도 — {page}페이지",
+        "notFound": "페이지를 찾을 수 없습니다"
+      }
     }
   },
   "devDocs": {
@@ -2054,5 +2077,11 @@
     "skill": "SPOT 스킬",
     "startBuilding": "Start building"
   },
-  "_note": "Existing Korean page translations are preserved. Missing copy uses English placeholders. Header/footer menu labels follow English; the Korean blog remains external and Governance is not offered in Korean."
+  "_note": "Existing Korean page translations are preserved. Missing copy uses English placeholders. Header/footer menu labels follow English; the Korean blog remains external and Governance is not offered in Korean.",
+  "pagination": {
+    "label": "페이지 탐색",
+    "previous": "이전",
+    "next": "다음",
+    "page": "{page}페이지"
+  }
 }

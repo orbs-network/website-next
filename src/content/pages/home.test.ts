@@ -31,14 +31,9 @@ describe('English-first product grouping', () => {
     expect(overviewProductsForLocale('en').map((card) => card.href)).toEqual(destinations)
   })
 
-  it.each(['ja'] as const)('retains the current %s product groupings', (locale) => {
-    expect(homeStackForLocale(locale).map((card) => card.href)).toEqual(['/dspot', '/dperps'])
-    expect(overviewProductsForLocale(locale).map((card) => card.href)).toEqual([
-      '/dtwap',
-      '/dlimit',
-      '/liquidity-hub',
-      '/dperps',
-    ])
+  it('uses the same three products in Japanese', () => {
+    expect(homeStackForLocale('ja')).toEqual(homeStackForLocale('en'))
+    expect(overviewProductsForLocale('ja')).toEqual(overviewProductsForLocale('en'))
   })
 })
 

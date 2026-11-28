@@ -1,6 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { localeHref, localesFor, isPlaceholder, translatedLocalesFor } from './availability'
-import en from './messages/en.json'
+import { isPlaceholder, localeHref, localesFor, translatedLocalesFor } from './availability'
 import ja from './messages/ja.json'
 
 describe('localeHref with fragments and queries', () => {
@@ -12,7 +11,7 @@ describe('localeHref with fragments and queries', () => {
 
   it('uses the page availability before appending the suffix', () => {
     expect(localeHref('/pos#guardians', 'ko')).toBe('/ko/pos/#guardians')
-    expect(localeHref('/institutional#products', 'ja')).toBe('/institutional/#products')
+    expect(localeHref('/institutional#products', 'ja')).toBe('/jp/institutional/#products')
     expect(localeHref('/overview/?ref=home#protocols', 'ko')).toBe('/ko/overview/?ref=home#protocols')
   })
 
@@ -22,18 +21,13 @@ describe('localeHref with fragments and queries', () => {
   })
 })
 
-describe('legacy Japanese AI URLs', () => {
-  it('has complete English placeholder copy for both Japanese page renderers', () => {
-    expect(ja.pages.aiSkills).toEqual(en.pages.aiSkills)
-    expect(ja.pages.spotOrders).toEqual(en.pages.spotOrders)
+describe('Japanese AI routes', () => {
+  it('serves translated skill documentation while preserving the consolidated index', () => {
+    const path = '/ai/skills/spot-advanced-swap-orders'
+    expect(ja.pages.spotOrders.hero.intro).toContain('導入')
+    expect(isPlaceholder(path, 'ja')).toBe(false)
+    expect(translatedLocalesFor(path)).toContain('ja')
+    expect(localeHref(path, 'ja')).toBe(`/jp${path}/`)
+    expect(localesFor('/ai/skills')).toContain('ja')
   })
-  it.each(['/ai/skills', '/ai/skills/spot-advanced-swap-orders'])(
-    'preserves %s without a false translation claim',
-    (path) => {
-      expect(localesFor(path)).toContain('ja')
-      expect(isPlaceholder(path, 'ja')).toBe(true)
-      expect(translatedLocalesFor(path)).not.toContain('ja')
-      expect(localeHref(path, 'ja')).toBe(`/jp${path}/`)
-    }
-  )
 })

@@ -1,15 +1,15 @@
-import Link from 'next/link'
-import { getTranslations } from 'next-intl/server'
 import { OrbsLogo } from '@/components/icons'
 import { FooterLink2 } from '@/components/ui/footer-link'
-import { footerColumnsForLocale, FOOTER_POLICY_LINKS, FOOTER_SOCIALS, FOOTER_STATUS_URL } from '@/content/shared/footer'
-import { NetworkStatusIndicator } from './network-status'
+import { FOOTER_POLICY_LINKS, FOOTER_SOCIALS, FOOTER_STATUS_URL, footerColumnsForLocale } from '@/content/shared/footer'
+import { NAV_GROUPS } from '@/content/shared/navigation'
 import { localeHref } from '@/i18n/availability'
 import { localePath, type Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
-import { NAV_GROUPS } from '@/content/shared/navigation'
+import { getTranslations } from 'next-intl/server'
+import Link from 'next/link'
 import { FooterNavColumn } from './footer-nav'
 import { FooterSocials } from './footer-socials'
+import { NetworkStatusIndicator } from './network-status'
 
 /**
  * The site footer, from the 3.4 `Footer` component in Figma.
@@ -37,11 +37,11 @@ import { FooterSocials } from './footer-socials'
  */
 export async function Footer({ locale, logoFontClassName }: { locale: Locale; logoFontClassName?: string }) {
   const t = await getTranslations({ locale, namespace: 'footer' })
-  const nav = locale !== 'ja' ? await getTranslations({ locale, namespace: 'nav' }) : undefined
+  const nav = await getTranslations({ locale, namespace: 'nav' })
 
   const socialLabels = Object.fromEntries(FOOTER_SOCIALS.map((social) => [social.key, t(`socials.${social.key}`)]))
   const columns = footerColumnsForLocale(locale).map((column) => {
-    const sharedNav = nav && NAV_GROUPS.some((group) => group.key === column.key) ? nav : undefined
+    const sharedNav = NAV_GROUPS.some((group) => group.key === column.key) ? nav : undefined
     return (
       <FooterNavColumn
         key={column.key}

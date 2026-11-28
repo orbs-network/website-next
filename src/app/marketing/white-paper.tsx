@@ -1,23 +1,24 @@
 import { withSocialMetadata } from '@/app/lib/social-metadata'
+import { H1 } from '@/app/components/typography'
+import { MarkdownProse, plainText } from '@/components/marketing/markdown-prose'
+import { Button } from '@/components/ui/button'
+import { WHITE_PAPERS } from '@/content/pages/white-papers'
 import type { Metadata } from 'next'
+import { getTranslations } from 'next-intl/server'
 import Link from 'next/link'
 import { notFound } from 'next/navigation'
-import { getTranslations } from 'next-intl/server'
-import { H1 } from '@/app/components/typography'
-import { Button } from '@/components/ui/button'
-import { MarkdownProse, plainText } from '@/components/marketing/markdown-prose'
-import { WHITE_PAPERS } from '@/content/pages/white-papers'
 
+import { localeAlternates, localeHref, placeholderRobots } from '@/i18n/availability'
 import type { Locale } from '@/i18n/locales'
-import { localeAlternates, placeholderRobots, localeHref } from '@/i18n/availability'
 import { textLang } from '@/i18n/script'
 
 export async function whitePaperMetadata(slug: string, locale: Locale): Promise<Metadata> {
   const paper = WHITE_PAPERS.find((entry) => entry.slug === slug)
 
-  if (!paper) return { title: 'Paper not found' }
-
   const t = await getTranslations({ locale, namespace: 'pages.whitePapers' })
+
+  if (!paper) return { title: t('ui.notFound') }
+
   const title = t(`items.${slug}.title`)
 
   return withSocialMetadata(
@@ -45,7 +46,7 @@ export async function WhitePaperPage({ slug, locale }: { slug: string; locale: L
   return (
     <section className="container pt-16 pb-24">
       <div className="mx-auto max-w-4xl">
-        <nav aria-label={locale === 'ko' ? '현재 위치' : 'Breadcrumb'} className="mb-8">
+        <nav aria-label={t('ui.breadcrumb')} className="mb-8">
           <Link
             href={localeHref('/white-papers', locale)}
             className="text-detail uppercase tracking-widest text-fg-muted transition-colors hover:text-accent-primary"
@@ -75,8 +76,8 @@ export async function WhitePaperPage({ slug, locale }: { slug: string; locale: L
             the document wants the file. The preview below is an enhancement.
           */}
           <Button asChild>
-            <a href={paper.pdf} target="_blank" rel="noopener noreferrer" lang={locale === 'ko' ? 'ko' : 'en'}>
-              {locale === 'ko' ? '백서 읽기 (PDF)' : 'Read the paper (PDF)'}
+            <a href={paper.pdf} target="_blank" rel="noopener noreferrer" lang={locale}>
+              {t('ui.readPdf')}
             </a>
           </Button>
         </div>
@@ -101,7 +102,7 @@ export async function WhitePaperPage({ slug, locale }: { slug: string; locale: L
                   lang="ja"
                   className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
                 >
-                  日本語版 (PDF)
+                  {t('ui.japaneseEdition')}
                 </a>
               </li>
             )}
@@ -114,7 +115,7 @@ export async function WhitePaperPage({ slug, locale }: { slug: string; locale: L
                   lang="ko"
                   className="text-accent-primary underline underline-offset-4 hover:text-accent-primary-hover"
                 >
-                  한국어판 (PDF)
+                  {t('ui.koreanEdition')}
                 </a>
               </li>
             )}
@@ -133,15 +134,15 @@ export async function WhitePaperPage({ slug, locale }: { slug: string; locale: L
           aria-label={t(`items.${slug}.title`)}
         >
           {/* Shown when the browser cannot display a PDF inline. */}
-          <p lang={locale === 'ko' ? 'ko' : 'en'} className="p-6 text-fg-muted">
-            {locale === 'ko' ? '이 브라우저에서는 PDF를 표시할 수 없습니다.' : 'Your browser cannot display this PDF.'}{' '}
+          <p lang={locale} className="p-6 text-fg-muted">
+            {t('ui.pdfUnavailable')}{' '}
             <a
               href={paper.pdf}
               target="_blank"
               rel="noopener noreferrer"
               className="text-accent-primary underline underline-offset-4"
             >
-              {locale === 'ko' ? '파일 다운로드' : 'Download it instead'}
+              {t('ui.download')}
             </a>
             .
           </p>

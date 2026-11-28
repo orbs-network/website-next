@@ -604,6 +604,7 @@ html:lang(ko) footer p:lang(ko) {
 }
 
 /* Preserve catalog casing for Orbs and product names in Korean content. */
-html:lang(ko) main .uppercase {
+html:lang(ko) main .uppercase,
+html:lang(ja) main .uppercase {
   text-transform: none;
 }

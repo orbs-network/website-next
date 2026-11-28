@@ -159,11 +159,16 @@ export const NAV_TOP_LEVEL_LINKS: readonly NavLinkSpec[] = [
 ]
 
 export function navigationForLocale(locale: Locale) {
-  if (locale === 'ko') {
+  if (locale !== 'en') {
     return {
       groups: NAV_GROUPS.map((group) => ({ ...group, links: group.links.filter((link) => link.key !== 'governance') })),
       topLevel: NAV_TOP_LEVEL_LINKS.map((link) =>
-        link.key === 'blog' ? { ...link, href: 'http://blog.naver.com/orbskorea' } : link
+        link.key === 'blog'
+          ? {
+              ...link,
+              href: locale === 'ja' ? 'https://orbs-japan-community.medium.com/' : 'http://blog.naver.com/orbskorea',
+            }
+          : link
       ),
     }
   }

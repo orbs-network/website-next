@@ -12,7 +12,7 @@ import { HOME_LINKS } from '@/content/pages/home'
 import type { Locale } from '@/i18n/locales'
 import { textLang } from '@/i18n/script'
 
-/** English and Korean share the November design. The entire Symmio overview is excluded. */
+/** All supported locales share the November design. The entire Symmio overview is excluded. */
 export async function DperpsPage({ locale }: { locale: Locale }) {
   const t = await getTranslations({ locale, namespace: 'pages.dperps' })
   const closing = await getTranslations({ locale, namespace: 'pages.dspot.closing' })

@@ -27,8 +27,8 @@ async function renderPage(locale: Locale) {
 }
 
 describe('Execution Services Templates refinement', () => {
-  it.each(['en', 'ko'] as const)('renders the shorter flow and both interface themes in %s', async (locale) => {
-    const messages = { en, ko }[locale].pages.executionServices
+  it.each(['en', 'ko', 'ja'] as const)('renders the shorter flow and both interface themes in %s', async (locale) => {
+    const messages = { en, ko, ja }[locale].pages.executionServices
     const html = await renderPage(locale)
     expect(html).toContain(messages.hero.headline)
     expect(html).toContain(messages.lambdaProduct.body.split('\n\n')[0])
@@ -38,15 +38,18 @@ describe('Execution Services Templates refinement', () => {
     expect(html).toContain(`href="${NETWORK_DOCS_URL}"`)
     expect(html).not.toContain(messages.comparison.title)
     expect(html).not.toContain('graph-1.png')
-    expect(html).toContain(`href="${locale === 'ko' ? '/ko/contact/' : '/contact/'}"`)
+    expect(html).toContain(
+      `href="${locale === 'en' ? '/contact/' : locale === 'ja' ? '/jp/contact/' : '/ko/contact/'}"`
+    )
   })
 
-  it('keeps the Japanese archive layout and assets', async () => {
+  it('renders the translated Japanese service descriptions in the current layout', async () => {
     const html = await renderPage('ja')
-    expect(html).toContain(ja.pages.executionServices.alternatives.title)
-    expect(html).toContain(ja.pages.executionServices.evolution.title)
-    expect(html).toContain('graph-1.png')
-    expect(html).toContain('lambda-dark.svg')
-    expect(html).not.toContain('lambda-interface.svg')
+    expect(html).toContain(ja.pages.executionServices.lambdaProduct.body)
+    expect(html).toContain(ja.pages.executionServices.vm.body)
+    expect(html).not.toContain(en.pages.executionServices.lambdaProduct.body)
+    expect(html).not.toContain(en.pages.executionServices.vm.body)
+    expect(html).not.toContain('クラウドコンピューティングの選択肢')
+    expect(html).not.toContain('graph-1.png')
   })
 })

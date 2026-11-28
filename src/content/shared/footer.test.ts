@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { footerColumnsForLocale, LEGACY_FOOTER_COLUMNS } from './footer'
+import { footerColumnsForLocale } from './footer'
 import { NAV_GROUPS } from './navigation'
 
 describe('October English footer', () => {
@@ -19,11 +19,11 @@ describe('October English footer', () => {
     expect(columns.flatMap((column) => column.links).some((link) => link.key === 'team')).toBe(false)
   })
 
-  it.each(['ja'] as const)('leaves the %s footer structure and blog destination intact', (locale) => {
+  it.each(['ja'] as const)('updates the %s structure while preserving the community blog', (locale) => {
     const columns = footerColumnsForLocale(locale)
-    expect(columns).toBe(LEGACY_FOOTER_COLUMNS)
-    const blog = columns.find((column) => column.key === 'community')!.links.find((link) => link.key === 'blog')!
-    expect(blog.localeHref?.[locale]).toContain('medium.com')
+    expect(columns.map(({ key }) => key)).toEqual(['products', 'tools', 'solutions', 'network', 'company'])
+    const blog = columns.find((column) => column.key === 'company')!.links.find((link) => link.key === 'blog')!
+    expect(blog.href).toContain('medium.com')
   })
 })
 

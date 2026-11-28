@@ -1,6 +1,6 @@
+import type { Locale } from '@/i18n/locales'
 import { readFileSync } from 'node:fs'
 import { join } from 'node:path'
-import type { Locale } from '@/i18n/locales'
 
 /**
  * FAQ documents, stored as markdown for the reasons set out in
@@ -19,28 +19,15 @@ function read(file: string): string {
 }
 
 export type FaqDocumentEntry = {
-  /** Markdown source, by locale. A locale absent here has no translation. */
   body: Partial<Record<Locale, string>>
 }
 
 const DOCUMENTS = {
-  /**
-   * No `ja` body, deliberately.
-   *
-   * `content/jp/faq` exists but is the English text — zero Japanese characters
-   * across all 33 answers, and the only difference from the English file is one
-   * trailing slash. Carrying it as a Japanese body would serve English prose
-   * under `lang="ja"`; omitted, Japanese falls back to English and is tagged
-   * `en`, while `AVAILABILITY` keeps the route reachable and `noindex`.
-   *
-   * Korean is a real translation of all 33.
-   */
   '/faq': {
-    body: { en: read('faq.en.md'), ko: read('faq.ko.md') },
+    body: { en: read('faq.en.md'), ja: read('faq.ja.md'), ko: read('faq.ko.md') },
   },
-  /** No `content/jp/dtwap-and-dlimit-faq` at all, so Japanese is not offered. */
   '/dtwap-and-dlimit-faq': {
-    body: { en: read('dtwap-and-dlimit-faq.en.md'), ko: read('dtwap-and-dlimit-faq.ko.md') },
+    body: { en: read('dtwap-and-dlimit-faq.en.md'), ja: read('dtwap-and-dlimit-faq.ja.md'), ko: read('dtwap-and-dlimit-faq.ko.md') },
   },
 } as const satisfies Record<string, FaqDocumentEntry>
 

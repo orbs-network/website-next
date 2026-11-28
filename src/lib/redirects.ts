@@ -54,9 +54,8 @@ export const REDIRECTS: readonly Redirect[] = [
   {
     from: '/perpetual-hub',
     to: '/dperps',
-    // English and Korean only. There is no Japanese Perpetual Hub page and
-    // never was; see the note on `locales`.
-    locales: ['en', 'ko'],
+    // Every translated dPERPS destination is available.
+    locales: ['en', 'ja', 'ko'],
     reason: 'Renamed to dPERPS in design 3.4. Same product, same page — see #149.',
   },
   /*
@@ -173,25 +172,7 @@ export type PrefixRedirect = {
   reason: string
 }
 
-export const PREFIX_REDIRECTS: readonly PrefixRedirect[] = [
-  {
-    prefix: '/white-papers',
-    locales: ['ja'],
-    rename: {
-      ja: {
-        // Live at 200 today; the `grogram` spelling 404s in Japanese. Verified
-        // against production, not inferred from the directory listing.
-        'Orbs-Grant-Program-Second-Call-for-Grants': 'orbs-grant-grogram-second-call-for-grants',
-      },
-    },
-    reason:
-      'Paper pages are English-only: each wraps one PDF, and a localised route ' +
-      'would serve the same document under another language tag. The legacy ' +
-      'site published 23 Japanese and 27 Korean paper URLs that are live and ' +
-      'indexed today, so they are folded onto the canonical page rather than ' +
-      'left to 404 at cutover. See #131.',
-  },
-]
+export const PREFIX_REDIRECTS: readonly PrefixRedirect[] = []
 
 /** The URL segment for each locale. Mirrors `LOCALE_SEGMENTS`; see the note above. */
 const SEGMENTS: Record<Locale, string> = {
@@ -210,13 +191,13 @@ export const TEMPORARY_REDIRECTS: readonly Redirect[] = [
   ...['/liquidity-hub', '/dtwap', '/dlimit', '/dsltp'].map((from) => ({
     from,
     to: '/dspot',
-    locales: ['en', 'ko'] as const,
+    locales: ['en', 'ja', 'ko'] as const,
     reason: 'Individual product pages are being refreshed; use the main dSPOT page for now.',
   })),
   {
     from: '/ai/skills',
     to: '/agentic',
-    locales: ['en', 'ko'],
+    locales: ['en', 'ja', 'ko'],
     reason: 'Consolidate the AI Skills landing page into Orbs Agentic.',
   },
 ]
@@ -316,5 +297,14 @@ export function expandedPrefixRedirects(): { source: string; destination: string
     }))
   )
 
-  return [...renames, ...patterns]
+  return [
+    // Preserve the published Japanese spelling without folding translated pages to English.
+    {
+      source: '/jp/white-papers/Orbs-Grant-Program-Second-Call-for-Grants/',
+      destination: '/jp/white-papers/orbs-grant-grogram-second-call-for-grants/',
+      permanent: true,
+    },
+    ...renames,
+    ...patterns,
+  ]
 }

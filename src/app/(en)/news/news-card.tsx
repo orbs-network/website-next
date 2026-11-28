@@ -3,6 +3,7 @@ import { getAssetUrl, type MediaMentionFields } from '@/app/lib/api'
 import { Card, CardContent, CardHeader } from '@/components/ui/card'
 import { COVER_FRAME } from '@/app/components/blog/cover'
 import { cn } from '@/lib/utils'
+import type { Locale } from '@/i18n/locales'
 
 // These CMS marks have pale lettering. Render them in dark ink so every
 // publisher can use the same white backing in both themes.
@@ -25,7 +26,7 @@ const WHITE_PUBLISHER_LOGOS = new Set([
  * navigate to, so this is a plain `<a>` with `target="_blank"`, not a
  * `next/link`.
  */
-export function MediaCard({ mention }: { mention: MediaMentionFields }) {
+export function MediaCard({ mention, locale = 'en' }: { mention: MediaMentionFields; locale?: Locale }) {
   const thumbnailUrl = getAssetUrl(mention.thumbnail)
   const logoUrl = getAssetUrl(mention.publisherLogo)
   const darkLogoInk = logoUrl && WHITE_PUBLISHER_LOGOS.has(new URL(logoUrl).pathname.split('/').pop()!.toLowerCase())
@@ -75,8 +76,8 @@ export function MediaCard({ mention }: { mention: MediaMentionFields }) {
                 />
               </span>
             )}
-            <time dateTime={mention.date}>
-              {new Date(mention.date).toLocaleDateString('en-US', {
+            <time dateTime={mention.date} lang={locale}>
+              {new Date(mention.date).toLocaleDateString(locale === 'en' ? 'en-US' : locale, {
                 year: 'numeric',
                 month: 'long',
                 day: 'numeric',

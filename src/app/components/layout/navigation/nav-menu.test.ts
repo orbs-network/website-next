@@ -14,13 +14,12 @@ describe('English-first navigation', () => {
     expect(links.every((link) => !link.children)).toBe(true)
   })
 
-  it.each(['ja'] as const)('retains the existing %s Products menu', async (locale) => {
-    const { groups } = await resolveNavigation(locale)
-    expect(groups.find((group) => group.key === 'products')!.links.map((link) => link.key)).toEqual([
-      'sdk',
-      'dspot',
-      'dperps',
-      'agentic',
+  it('offers all three Japanese products', async () => {
+    const { groups } = await resolveNavigation('ja')
+    expect(groups.find(({ key }) => key === 'products')!.links.map(({ href }) => href)).toEqual([
+      '/jp/dspot/',
+      '/jp/dperps/',
+      '/jp/execution-services/',
     ])
   })
 })
@@ -41,16 +40,11 @@ describe('October menu destinations', () => {
     expect(topLevel.map((link) => link.key)).toEqual(['ecosystem', 'blog', 'github'])
   })
 
-  it.each(['ja'] as const)('retains %s legacy navigation and nested capability routes', async (locale) => {
-    const { groups, topLevel } = await resolveNavigation(locale)
-    expect(groups.map((group) => group.key)).toEqual(['products', 'solutions', 'network'])
-    expect(topLevel.some((link) => link.key === 'docs')).toBe(true)
-    const children = groups[0].links.find((link) => link.key === 'dspot')!.children!
-    expect(children.map((link) => link.href)).toEqual(
-      locale === 'ja'
-        ? ['/jp/dtwap/', '/jp/dlimit/', '/dsltp/', '/jp/liquidity-hub/']
-        : ['/ko/dtwap/', '/ko/dlimit/', '/ko/dsltp/', '/ko/liquidity-hub/']
-    )
+  it('uses current Japanese navigation and preserves the Japanese blog', async () => {
+    const { groups, topLevel } = await resolveNavigation('ja')
+    expect(groups.map(({ key }) => key)).toEqual(['products', 'tools', 'solutions', 'network'])
+    expect(topLevel.find(({ key }) => key === 'blog')?.href).toBe('https://orbs-japan-community.medium.com/')
+    expect(groups.flatMap(({ links }) => links).some(({ key }) => key === 'governance')).toBe(false)
   })
 })
 

@@ -38,7 +38,7 @@ describe('validateContactMessage', () => {
     }
   })
 
-  it.each(['other', 'venue\nInjected', 42, null, {}, []])('rejects an invalid category: %j', (contactType) => {
+  it.each(['unsupported', 'venue\nInjected', 42, null, {}, []])('rejects an invalid category: %j', (contactType) => {
     expect(validateContactMessage({ ...VALID, contactType })).toMatchObject({
       ok: false,
       errors: { contactType: 'invalid' },

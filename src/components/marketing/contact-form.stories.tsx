@@ -23,7 +23,7 @@ const LABELS: ContactFormLabels = {
   phonePlaceholder: 'Phone number',
   contactType: 'Who are you? (optional)',
   contactTypePlaceholder: 'Select an option',
-  contactTypes: { venue: 'Venue', institution: 'Institution', developer: 'Developer' },
+  contactTypes: { venue: 'Venue', institution: 'Institution', developer: 'Developer', other: 'Others' },
   message: 'Message',
   messagePlaceholder: 'Something you want to tell us? Or maybe to ask?',
   submit: 'Submit',
@@ -50,7 +50,7 @@ export const SelectedCategoryTravelsWithTheEnquiry: Story = {
       within(select)
         .getAllByRole('option')
         .map((option) => option.textContent)
-    ).toEqual([LABELS.contactTypePlaceholder, 'Venue', 'Institution', 'Developer'])
+    ).toEqual([LABELS.contactTypePlaceholder, 'Venue', 'Institution', 'Developer', 'Others'])
     await userEvent.selectOptions(select, 'developer')
     await userEvent.type(canvas.getByLabelText(LABELS.firstName), 'Ada')
     await userEvent.type(canvas.getByLabelText(LABELS.lastName), 'Lovelace')

@@ -1,17 +1,17 @@
-import { renderToStaticMarkup } from 'react-dom/server'
-import { createTranslator, type AbstractIntlMessages } from 'next-intl'
-import { describe, expect, it, vi } from 'vitest'
+import { isReservedRootSlug } from '@/app/lib/routes'
+import { EARLIER_SPOT_AUDITS, SPOT_AUDITS } from '@/content/pages/security-and-audits'
+import { localeHref, translatedLocalesFor } from '@/i18n/availability'
+import type { Locale } from '@/i18n/locales'
 import en from '@/i18n/messages/en.json'
 import ja from '@/i18n/messages/ja.json'
 import ko from '@/i18n/messages/ko.json'
-import type { Locale } from '@/i18n/locales'
-import { isReservedRootSlug } from '@/app/lib/routes'
-import { localeHref, translatedLocalesFor } from '@/i18n/availability'
-import { EARLIER_SPOT_AUDITS, SPOT_AUDITS } from '@/content/pages/security-and-audits'
-import { SecurityAndAuditsPage } from './security-and-audits'
+import { createTranslator, type AbstractIntlMessages } from 'next-intl'
+import { renderToStaticMarkup } from 'react-dom/server'
+import { describe, expect, it, vi } from 'vitest'
 import { FaqPage } from './faq'
-import { findLocaleMarketingPage } from './registry'
 import { marketingMetadata } from './metadata'
+import { findLocaleMarketingPage } from './registry'
+import { SecurityAndAuditsPage } from './security-and-audits'
 
 const catalogs = { en, ja, ko }
 vi.mock('next-intl/server', () => ({
@@ -59,12 +59,12 @@ describe('FAQ and scoped security resources', () => {
 
   it('advertises the English and translated Korean security routes', async () => {
     expect(isReservedRootSlug('security-and-audits')).toBe(true)
-    expect(translatedLocalesFor('/security-and-audits')).toEqual(['en', 'ko'])
+    expect(translatedLocalesFor('/security-and-audits')).toEqual(['en', 'ja', 'ko'])
     expect(findLocaleMarketingPage('/security-and-audits', 'en')).toBeDefined()
     for (const locale of ['ja'] as const) {
-      expect(findLocaleMarketingPage('/security-and-audits', locale)).toBeUndefined()
-      expect(await marketingMetadata('/security-and-audits', locale)).toEqual({})
-      expect(localeHref('/security-and-audits', locale)).toBe('/security-and-audits/')
+      expect(findLocaleMarketingPage('/security-and-audits', locale)).toBeDefined()
+      expect((await marketingMetadata('/security-and-audits', locale)).robots).toBeUndefined()
+      expect(localeHref('/security-and-audits', locale)).toBe('/jp/security-and-audits/')
     }
     expect(findLocaleMarketingPage('/security-and-audits', 'ko')).toBeDefined()
     expect(localeHref('/security-and-audits', 'ko')).toBe('/ko/security-and-audits/')
@@ -81,6 +81,7 @@ describe('FAQ and scoped security resources', () => {
     expect(korean).not.toContain('Where do I start?')
     const japanese = renderToStaticMarkup(await FaqPage({ path: '/faq', locale: 'ja', namespace: 'pages.faq' }))
     expect(japanese.match(/<details\b/g)).toHaveLength(14)
-    expect(japanese).toMatch(/<summary lang="en"[^>]*>What is Orbs\?/)
+    expect(japanese).toContain('Orbsとは何ですか？')
+    expect(japanese).not.toContain('What is Orbs?')
   })
 })

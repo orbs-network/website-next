@@ -52,6 +52,8 @@ describe('POST /api/revalidate', () => {
     expect(revalidatePath.mock.calls).toEqual([
       ['/news/'],
       ['/news/page/[n]', 'page'],
+      ['/jp/news/'],
+      ['/jp/news/page/[n]', 'page'],
       ['/ko/news/'],
       ['/ko/news/page/[n]', 'page'],
       ['/sitemap.xml', 'layout'],
@@ -59,6 +61,8 @@ describe('POST /api/revalidate', () => {
     expect((await response.json()).revalidated).toEqual([
       '/news/',
       '/news/page/[n]',
+      '/jp/news/',
+      '/jp/news/page/[n]',
       '/ko/news/',
       '/ko/news/page/[n]',
       '/sitemap.xml',

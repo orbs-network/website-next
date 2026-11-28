@@ -205,12 +205,19 @@ export const FOOTER_COLUMNS: readonly FooterColumnSpec[] = [
 ]
 
 export function footerColumnsForLocale(locale: Locale) {
-  if (locale === 'ko') {
+  if (locale !== 'en') {
     return FOOTER_COLUMNS.map((column) => ({
       ...column,
       links: column.links
         .filter((link) => link.key !== 'governance')
-        .map((link) => (link.key === 'blog' ? { ...link, href: 'http://blog.naver.com/orbskorea' } : link)),
+        .map((link) =>
+          link.key === 'blog'
+            ? {
+                ...link,
+                href: locale === 'ja' ? 'https://orbs-japan-community.medium.com/' : 'http://blog.naver.com/orbskorea',
+              }
+            : link
+        ),
     }))
   }
 

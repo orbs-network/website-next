@@ -1,3 +1,6 @@
+import { WHITE_PAPERS } from '@/content/pages/white-papers'
+import { localesFor } from '@/i18n/availability'
+import { LOCALE_SEGMENTS } from '@/i18n/locales'
 import { readdir } from 'node:fs/promises'
 import { dirname, join, relative, resolve } from 'node:path'
 import { fileURLToPath } from 'node:url'
@@ -11,9 +14,6 @@ import {
   expandedRedirects,
   expandedTemporaryRedirects,
 } from './redirects'
-import { localesFor } from '@/i18n/availability'
-import { LOCALE_SEGMENTS } from '@/i18n/locales'
-import { WHITE_PAPERS } from '@/content/pages/white-papers'
 
 /**
  * A redirect map is a set of promises to the internet, and both ways of getting
@@ -40,7 +40,7 @@ describe('temporary inner-page consolidation', () => {
       for (const product of ['liquidity-hub', 'dtwap', 'dlimit', 'dsltp']) {
         expect(expandedTemporaryRedirects()).toContainEqual({
           source: `${prefix}/${product}/`,
-          destination: prefix === '/ko' ? '/ko/dspot/' : '/dspot/',
+          destination: `${prefix}/dspot/`,
           permanent: false,
         })
       }
@@ -51,7 +51,7 @@ describe('temporary inner-page consolidation', () => {
     const rules = expandedTemporaryRedirects()
     for (const [prefix, destination] of [
       ['', '/agentic/'],
-      ['/jp', '/agentic/'],
+      ['/jp', '/jp/agentic/'],
       ['/ko', '/ko/agentic/'],
     ]) {
       expect(rules).toContainEqual({ source: `${prefix}/ai/skills/`, destination, permanent: false })
@@ -200,6 +200,7 @@ describe('expandedRedirects', () => {
     const expected =
       REDIRECTS.reduce((total, { locales }) => total + locales.length, 0) +
       BLOG_REDIRECTS.length +
+      1 + // Preserved Japanese paper spelling alias.
       // One pattern per locale, plus one explicit rule per renamed child.
       PREFIX_REDIRECTS.reduce(
         (total, { locales, rename }) =>
@@ -234,9 +235,8 @@ describe('expandedRedirects', () => {
 
     expect(sources).toContain('/perpetual-hub/')
     expect(sources).toContain('/ko/perpetual-hub/')
-    // NOT Japanese. There is no `/jp/dperps/`, so a rule pointing at it would
-    // be a redirect to a 404 — see the note on `Redirect.locales`.
-    expect(sources).not.toContain('/jp/perpetual-hub/')
+    // Japanese now has a translated dPERPS destination.
+    expect(sources).toContain('/jp/perpetual-hub/')
 
     expect(expandedRedirects().find(({ source }) => source === '/perpetual-hub/')?.destination).toBe('/dperps/')
   })
@@ -257,126 +257,21 @@ describe('legacy duplicate article URLs', () => {
   })
 })
 
-describe('expandedPrefixRedirects', () => {
-  let routes: Set<string>
-
-  beforeAll(async () => {
-    routes = await staticRoutes()
-  }, 30_000)
-
-  it('folds the localised children onto the canonical English path', () => {
-    const rules = expandedPrefixRedirects()
-
-    expect(rules).toContainEqual({
-      source: '/jp/white-papers/:child/',
-      destination: '/white-papers/:child/',
+describe('translated paper detail routes', () => {
+  it('does not fold Japanese or Korean paper details into English', () => {
+    expect(expandedPrefixRedirects().some(({ source }) => source.includes(':child'))).toBe(false)
+    for (const prefix of ['/jp', '/ko']) {
+      expect(expandedPrefixRedirects().some(({ source }) => source === `${prefix}/white-papers/`)).toBe(false)
+    }
+  })
+  it('preserves the historical Japanese paper spelling as a same-locale alias', () => {
+    const slug = 'orbs-grant-grogram-second-call-for-grants'
+    expect(WHITE_PAPERS.some((paper) => paper.slug === slug)).toBe(true)
+    expect(expandedPrefixRedirects()).toContainEqual({
+      source: '/jp/white-papers/Orbs-Grant-Program-Second-Call-for-Grants/',
+      destination: `/jp/white-papers/${slug}/`,
       permanent: true,
     })
-    expect(rules).not.toContainEqual({
-      source: '/ko/white-papers/:child/',
-      destination: '/white-papers/:child/',
-      permanent: true,
-    })
-  })
-
-  /**
-   * THE one that matters here.
-   *
-   * `/jp/white-papers/` and `/ko/white-papers/` are live translated pages, and
-   * a rule whose source also matched the section index would take them out.
-   *
-   * Measured rather than imagined: building with `:child*` in place of `:child`
-   * — the obvious "be more permissive" edit — makes both indexes return **500**,
-   * because the destination interpolates to `/white-papers//`. Not a redirect,
-   * not a 404; a server error on two live pages, and only on the two locales,
-   * so an English smoke test sees nothing wrong.
-   *
-   * `:child` requires a non-empty segment, which is a property of
-   * path-to-regexp rather than of anything in this repo. Hence asserted.
-   */
-  it('never matches the section index itself', () => {
-    // Only the patterns. A rename is an exact path and trivially matches
-    // itself — running it through this check would compare a rule against its
-    // own source and always fail, which says nothing about the index.
-    const patterns = expandedPrefixRedirects().filter(({ source }) => source.includes(':child'))
-
-    expect(patterns.length).toBeGreaterThan(0)
-
-    for (const { source } of patterns) {
-      const index = source.replace(':child/', '')
-
-      expect(matches(source, index), `${source} must not match its own index ${index}`).toBe(false)
-    }
-  })
-
-  it('matches a child, and only one level of it', () => {
-    const source = '/ko/white-papers/:child/'
-
-    expect(matches(source, '/ko/white-papers/orbs-position-paper/')).toBe(true)
-    // Never a URL on either site. Matching it would redirect an arbitrarily
-    // deep path to a destination that cannot exist.
-    expect(matches(source, '/ko/white-papers/a/b/')).toBe(false)
-    expect(matches(source, '/ko/white-papers/')).toBe(false)
-  })
-
-  it('points every pattern at a section that is a real route', () => {
-    // The destination is `/white-papers/:child/`, whose parent must exist for
-    // the redirect to land anywhere. The child itself is a dynamic route, so
-    // the filesystem walk cannot confirm it — `link-integrity.test.ts` covers
-    // paper slugs, and `generateStaticParams` is the source of truth there.
-    for (const { prefix } of PREFIX_REDIRECTS) {
-      expect(routes.has(prefix), `${prefix} is not a route`).toBe(true)
-    }
-  })
-
-  /**
-   * Caught in review, and it would have been permanent.
-   *
-   * `/jp/white-papers/Orbs-Grant-Program-Second-Call-for-Grants/` is live at
-   * 200. English and Korean spell the same paper
-   * `orbs-grant-grogram-second-call-for-grants` — a typo, carried forward
-   * because it is the indexed URL. The pattern passes the child through
-   * unchanged, so without an exception that live page would have 308ed to a
-   * slug that does not exist, and browsers would have cached it forever.
-   */
-  it('sends every renamed child to a paper that exists', () => {
-    const slugs = new Set(WHITE_PAPERS.map(({ slug }) => slug))
-
-    for (const { rename } of PREFIX_REDIRECTS) {
-      for (const [locale, entries] of Object.entries(rename ?? {})) {
-        for (const [from, to] of Object.entries(entries)) {
-          expect(slugs.has(to), `${locale}: ${from} -> ${to} is not a paper slug`).toBe(true)
-          // A rename to itself is the pattern's job and would be dead weight
-          // here — worse, it would read as though something had been handled.
-          expect(from, `${locale}: ${from} renames to itself`).not.toBe(to)
-        }
-      }
-    }
-  })
-
-  it('orders renames before the pattern that would swallow them', () => {
-    // Next takes the FIRST matching rule. `/jp/white-papers/:child/` matches the
-    // renamed path too, so order is the only thing making the exception
-    // effective — and nothing about the output would look wrong if it were
-    // reversed.
-    const rules = expandedPrefixRedirects()
-    const rename = rules.findIndex(({ source }) => source.includes('Orbs-Grant-Program-Second-Call-for-Grants'))
-    const pattern = rules.findIndex(({ source }) => source === '/jp/white-papers/:child/')
-
-    expect(rename).toBeGreaterThanOrEqual(0)
-    expect(pattern).toBeGreaterThanOrEqual(0)
-    expect(rename).toBeLessThan(pattern)
-  })
-
-  it('declares only locales that actually have the section', () => {
-    // A locale-stripping rule for a locale that never served the section would
-    // be a redirect from a URL nobody can request — harmless, but it would mean
-    // the map is describing a site that does not exist.
-    for (const { prefix, locales } of PREFIX_REDIRECTS) {
-      for (const locale of locales) {
-        expect([...localesFor(prefix)], `${prefix} in ${locale}`).toContain(locale)
-      }
-    }
   })
 })
 
